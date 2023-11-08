@@ -1,12 +1,5 @@
-import React from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { Redirect } from "expo-router";
 
 export default function App() {
-  return (
-    <View>
-      <Text>App1</Text>
-    </View>
-  );
+  return <Redirect href={"/splash"} />;
 }
-
-const styles = StyleSheet.create({});
