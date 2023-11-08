@@ -1,14 +1,17 @@
+import { ThemeProvider } from "@react-navigation/native";
 import { Slot } from "expo-router";
-import { StatusBar } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { SafeAreaView } from "react-native";
+import { StatusBar } from "expo-status-bar";
+
+import { DarkTheme, LightTheme } from "../theme";
 
 export default function RootLayout() {
   return (
-    <>
-      <StatusBar hidden />
+    <ThemeProvider value={LightTheme}>
+      <StatusBar style={"dark"} translucent />
       <SafeAreaView>
         <Slot />
       </SafeAreaView>
-    </>
+    </ThemeProvider>
   );
 }

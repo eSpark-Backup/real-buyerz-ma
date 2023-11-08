@@ -11,7 +11,7 @@ export default function App() {
 
   return (
     <ImageBackground
-      source={require("../../assets/images/splash_screen.png")}
+      source={require("../../assets/splash.png")}
       style={{ height: "100%", width: "100%" }}
       resizeMode="cover"
     />
