@@ -1,5 +1,5 @@
 import React from "react";
-import { ImageBackground } from "react-native";
+import { ImageBackground, StatusBar, View } from "react-native";
 import { Slot } from "expo-router";
 
 export default function AuthLayout() {
@@ -9,7 +9,9 @@ export default function AuthLayout() {
       style={{ height: "100%", width: "100%" }}
       resizeMode="cover"
     >
-      <Slot />
+      <View style={{ marginTop: StatusBar.currentHeight }}>
+        <Slot />
+      </View>
     </ImageBackground>
   );
 }
