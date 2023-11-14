@@ -1,13 +1,5 @@
-import {
-  Appearance,
-  StyleSheet,
-  Text,
-  View,
-  KeyboardAvoidingView,
-  Platform,
-} from "react-native";
+import { Appearance, StyleSheet, Text, View, ScrollView } from "react-native";
 import React from "react";
-import { useTheme } from "@react-navigation/native";
 import MyText from "../../components/MyText";
 import MyInput from "../../components/MyInput";
 import MyCheckbox from "../../components/MyCheckbox";
@@ -17,28 +9,16 @@ import { GLogo, RLogo } from "../../assets";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { MaterialIcons } from "@expo/vector-icons";
 import { Link, router } from "expo-router";
-import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
 export default function signIn() {
-  // const { dark, colors } = useTheme() as MyTheme;
-
   const colorScheme = Appearance.getColorScheme();
   const theme = colorScheme === "dark" ? DarkTheme : LightTheme;
   return (
-    // <KeyboardAwareScrollView
-    //   contentContainerStyle={{
-    //     flex: 1,
-    //     alignItems: "center",
-    //     justifyContent: "center",
-    //   }}
-    //   resetScrollToCoords={{ x: 0, y: 0 }}
-    //   scrollEnabled={false}
-    // >
-    //   <KeyboardAvoidingView
-    //     behavior="padding"
-    //     style={{ alignItems: "center", width: "100%", height: "100%" }}
-    //   >
-    <View style={{ alignItems: "center", width: "100%", height: "100%" }}>
+    <ScrollView
+      contentContainerStyle={{
+        alignItems: "center",
+      }}
+    >
       <View
         style={{
           position: "absolute",
@@ -57,20 +37,16 @@ export default function signIn() {
         </TouchableOpacity>
         <MaterialIcons name="keyboard-arrow-right" size={24} color="black" />
       </View>
-      <RLogo style={{ height: 50, width: 50 }} />
-      {/* <View style={{ marginTop: "6%" }}>
-      </View> */}
-
+      <RLogo />
       <View
         style={{
           justifyContent: "center",
           alignItems: "center",
           width: "90%",
-          // backgroundColor: "pink",
           flex: 1,
         }}
       >
-        <MyInput placeholder="Username" style={{ width: "80%" }} />
+        <MyInput placeholder="Username" style={{ width: "90%" }} />
         <MyText
           text="Forgot Username?"
           textColor="#2e6fac"
@@ -82,7 +58,7 @@ export default function signIn() {
           }}
         />
         <MyText text="" size={20} />
-        <MyInput placeholder="Password" style={{ width: "80%" }} />
+        <MyInput placeholder="Password" style={{ width: "90%" }} />
 
         <View
           style={{
@@ -113,7 +89,6 @@ export default function signIn() {
         <View
           style={{
             flexDirection: "row",
-            // backgroundColor: "yellow",
             width: "95%",
             justifyContent: "center",
           }}
@@ -227,7 +202,7 @@ export default function signIn() {
           </Link>
         </View>
       </View>
-    </View>
+    </ScrollView>
     //   </KeyboardAvoidingView>
     // </KeyboardAwareScrollView>
   );

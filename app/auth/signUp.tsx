@@ -1,4 +1,4 @@
-import { Appearance, StyleSheet, Text, View } from "react-native";
+import { Appearance, ScrollView, StyleSheet, Text, View } from "react-native";
 import React from "react";
 import { useTheme } from "@react-navigation/native";
 import MyText from "../../components/MyText";
@@ -17,7 +17,7 @@ export default function signUp() {
   const theme = colorScheme === "dark" ? DarkTheme : LightTheme;
 
   return (
-    <View style={{ alignItems: "center", width: "100%", height: "100%" }}>
+    <ScrollView contentContainerStyle={{ alignItems: "center" }}>
       <View
         style={{
           position: "absolute",
@@ -218,7 +218,7 @@ export default function signUp() {
           />
         </Link>
       </View> */}
-    </View>
+    </ScrollView>
   );
 }
 
