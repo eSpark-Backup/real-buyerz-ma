@@ -6,7 +6,14 @@ import { MyTheme } from "../../types";
 export default function App() {
   const { dark, colors } = useTheme() as MyTheme;
   return (
-    <View>
+    <View
+      style={{
+        flex: 1,
+        height: "100%",
+        width: "100%",
+        // backgroundColor: "pink",
+      }}
+    >
       <Text style={{ color: colors.text }}>App {dark ? "true" : "false"}</Text>
     </View>
   );

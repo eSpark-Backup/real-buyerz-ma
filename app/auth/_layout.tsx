@@ -1,17 +1,94 @@
-import React from "react";
-import { ImageBackground, StatusBar, View } from "react-native";
+import React, { useEffect, useRef } from "react";
+import {
+  ImageBackground,
+  Image,
+  StatusBar,
+  View,
+  Animated,
+  Easing,
+  StyleSheet,
+} from "react-native";
 import { Slot } from "expo-router";
+import { WINDOW_HEIGHT } from "../../constants";
 
 export default function AuthLayout() {
+  const translateX = useRef(new Animated.Value(0)).current;
+  const opacity = useRef(new Animated.Value(0.5)).current;
+
+  useEffect(() => {
+    Animated.timing(opacity, {
+      toValue: 0,
+      duration: 500,
+      useNativeDriver: true,
+      easing: Easing.linear,
+    }).start();
+    const slideAnimation = Animated.loop(
+      Animated.sequence([
+        Animated.timing(translateX, {
+          toValue: -390, // Slide to the left
+          duration: 15000,
+          easing: Easing.linear,
+          useNativeDriver: true,
+        }),
+        Animated.timing(translateX, {
+          toValue: 0, // Slide back to the right
+          duration: 15000,
+          easing: Easing.linear,
+          useNativeDriver: true,
+        }),
+      ])
+    );
+    slideAnimation.start();
+
+    return () => {
+      slideAnimation.stop();
+    };
+  }, [translateX]);
+
   return (
-    <ImageBackground
-      source={require("../../assets/images/background.png")}
-      style={{ height: "100%", width: "100%" }}
-      resizeMode="cover"
+    <View
+      style={{
+        flex: 1,
+      }}
     >
-      <View style={{ marginTop: StatusBar.currentHeight }}>
+      <Animated.View
+        style={{
+          backgroundColor: "#000000",
+          opacity: opacity,
+          zIndex: 5,
+          position: "absolute",
+          height: "100%",
+          width: "100%",
+        }}
+      />
+      <Animated.Image
+        source={require("../../assets/images/bg_wide.png")}
+        style={[
+          styles.backgroundImage,
+          {
+            transform: [{ translateX }], //? 0 to -390 range
+          },
+        ]}
+        resizeMode="cover"
+      />
+      <View
+        style={{
+          marginTop: StatusBar.currentHeight,
+          flex: 1,
+        }}
+      >
         <Slot />
       </View>
-    </ImageBackground>
+    </View>
   );
 }
+
+const styles = StyleSheet.create({
+  backgroundImage: {
+    resizeMode: "cover", // or 'stretch' or 'contain'
+    position: "absolute",
+    width: "200%",
+    height: WINDOW_HEIGHT,
+    zIndex: -1,
+  },
+});

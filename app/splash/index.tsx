@@ -25,7 +25,7 @@ export default function App() {
     );
     rotationAnimation.start();
 
-    const mainAnimation = Animated.timing(translateY, {
+    Animated.timing(translateY, {
       toValue: 0,
       duration: 1000, // Animation duration in milliseconds
       useNativeDriver: true,
@@ -52,9 +52,9 @@ export default function App() {
   }, [translateY, scale]);
 
   useEffect(() => {
-    // setTimeout(() => {
-    //   router.push("/auth");
-    // }, 3000);
+    setTimeout(() => {
+      router.push("/auth");
+    }, 3000);
   }, []);
 
   return (
