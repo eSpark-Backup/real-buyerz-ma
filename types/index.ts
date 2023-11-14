@@ -28,6 +28,8 @@ export type MyInputProps = {
   password?: boolean;
   text?: string;
   onChange?: (val: string) => void;
+  width?: number | string;
+  style?: ViewStyle;
 };
 
 export type MyCheckboxProps = {

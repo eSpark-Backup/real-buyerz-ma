@@ -1,4 +1,11 @@
-import { Appearance, StyleSheet, Text, View } from "react-native";
+import {
+  Appearance,
+  StyleSheet,
+  Text,
+  View,
+  KeyboardAvoidingView,
+  Platform,
+} from "react-native";
 import React from "react";
 import { useTheme } from "@react-navigation/native";
 import MyText from "../../components/MyText";
@@ -7,37 +14,63 @@ import MyCheckbox from "../../components/MyCheckbox";
 import { DarkTheme, LightTheme } from "../../theme";
 import MyButton from "../../components/MyButton";
 import { GLogo, RLogo } from "../../assets";
+import { TouchableOpacity } from "react-native-gesture-handler";
+import { MaterialIcons } from "@expo/vector-icons";
+import { Link, router } from "expo-router";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
-export default function App() {
+export default function signIn() {
   // const { dark, colors } = useTheme() as MyTheme;
 
   const colorScheme = Appearance.getColorScheme();
   const theme = colorScheme === "dark" ? DarkTheme : LightTheme;
   return (
-    
-    <View
-      style={{
-        // justifyContent: "space-between",
-        alignItems: "center",
-        // backgroundColor: "pink",
-        width: "100%",
-        height: "100%",
-      }}
-    > 
-      <View style={{marginTop: "7%"}}>
-      <RLogo />
+    // <KeyboardAwareScrollView
+    //   contentContainerStyle={{
+    //     flex: 1,
+    //     alignItems: "center",
+    //     justifyContent: "center",
+    //   }}
+    //   resetScrollToCoords={{ x: 0, y: 0 }}
+    //   scrollEnabled={false}
+    // >
+    //   <KeyboardAvoidingView
+    //     behavior="padding"
+    //     style={{ alignItems: "center", width: "100%", height: "100%" }}
+    //   >
+    <View style={{ alignItems: "center", width: "100%", height: "100%" }}>
+      <View
+        style={{
+          position: "absolute",
+          top: "3%",
+          right: "7%",
+          flexDirection: "row",
+        }}
+      >
+        <TouchableOpacity>
+          <MyText
+            text="Skip"
+            style={{ textDecorationLine: "underline" }}
+            size={16}
+            weight="500"
+          />
+        </TouchableOpacity>
+        <MaterialIcons name="keyboard-arrow-right" size={24} color="black" />
       </View>
-      
+      <RLogo style={{ height: 50, width: 50 }} />
+      {/* <View style={{ marginTop: "6%" }}>
+      </View> */}
+
       <View
         style={{
           justifyContent: "center",
           alignItems: "center",
           width: "90%",
-          // backgroundColor: "yellow",
+          // backgroundColor: "pink",
           flex: 1,
         }}
       >
-        <MyInput placeholder="Username" />
+        <MyInput placeholder="Username" style={{ width: "80%" }} />
         <MyText
           text="Forgot Username?"
           textColor="#2e6fac"
@@ -49,7 +82,7 @@ export default function App() {
           }}
         />
         <MyText text="" size={20} />
-        <MyInput placeholder="Password" />
+        <MyInput placeholder="Password" style={{ width: "80%" }} />
 
         <View
           style={{
@@ -103,11 +136,17 @@ export default function App() {
               marginRight: 5,
             }}
           />
-         
+
           <View
             style={{ flexDirection: "row", width: "76%", flexWrap: "wrap" }}
           >
-            <Text style={{ color: "#FFFFFF", fontSize: 12 }}>
+            <Text
+              style={{
+                color: "#FFFFFF",
+                fontSize: 12,
+                fontFamily: "Inter",
+              }}
+            >
               I have read and agree the{" "}
             </Text>
             <Text
@@ -117,11 +156,21 @@ export default function App() {
                 textDecorationColor: "#FB631C",
                 textDecorationLine: "underline",
                 fontSize: 10,
+                fontFamily: "Inter",
               }}
             >
               Terms and Conditions
             </Text>
-            <Text style={{ color: "#FFFFFF", fontSize: 12 }}> and </Text>
+            <Text
+              style={{
+                color: "#FFFFFF",
+                fontSize: 12,
+                fontFamily: "Inter",
+              }}
+            >
+              {" "}
+              and{" "}
+            </Text>
             <Text
               style={{
                 color: "#FB631C",
@@ -129,6 +178,7 @@ export default function App() {
                 textDecorationColor: "#FB631C",
                 textDecorationLine: "underline",
                 fontSize: 10,
+                fontFamily: "Inter",
               }}
             >
               Privacy Policy
@@ -151,13 +201,13 @@ export default function App() {
         <MyText text="Or" size={14} weight="600" textColor="white" />
         <MyText text="" size={10} />
         <View style={{ flexDirection: "row" }}>
-          <MyText text="Login with  " size={14} weight="600" textColor="white" />
-          <GLogo/>
-
-          {/* <MyIcon
-            source={require("../../assets/images/google-logo.png")}
-            iconSize={82}
-          /> */}
+          <MyText
+            text="Login with  "
+            size={14}
+            weight="600"
+            textColor="white"
+          />
+          <GLogo />
         </View>
         <MyText text="" size={50} />
         <View style={{ flexDirection: "row" }}>
@@ -167,15 +217,19 @@ export default function App() {
             weight="700"
             textColor="white"
           />
-          <MyText
-            text="Sign Up"
-            size={14}
-            weight="700"
-            textColor={theme.colors.primary}
-          />
+          <Link href={"/auth/signUp"}>
+            <MyText
+              text="Sign Up"
+              size={14}
+              weight="700"
+              textColor={theme.colors.primary}
+            />
+          </Link>
         </View>
       </View>
     </View>
+    //   </KeyboardAvoidingView>
+    // </KeyboardAwareScrollView>
   );
 }
 
