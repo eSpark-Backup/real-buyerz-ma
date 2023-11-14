@@ -5,15 +5,27 @@ import {
   Text,
   Image,
   Animated,
+  Easing,
 } from "react-native";
 import { router } from "expo-router";
 
 export default function App() {
   const translateY = useRef(new Animated.Value(1000)).current;
   const scale = useRef(new Animated.Value(1)).current;
+  const rotate = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
-    Animated.timing(translateY, {
+    const rotationAnimation = Animated.loop(
+      Animated.timing(rotate, {
+        toValue: 1,
+        duration: 1000, // Rotation duration in milliseconds
+        easing: Easing.linear,
+        useNativeDriver: true,
+      })
+    );
+    rotationAnimation.start();
+
+    const mainAnimation = Animated.timing(translateY, {
       toValue: 0,
       duration: 1000, // Animation duration in milliseconds
       useNativeDriver: true,
@@ -34,6 +46,9 @@ export default function App() {
         }),
       ]).start();
     });
+    return () => {
+      rotationAnimation.stop();
+    };
   }, [translateY, scale]);
 
   useEffect(() => {
@@ -50,7 +65,24 @@ export default function App() {
     >
       <Animated.Image
         source={require("../../assets/images/RB_Logo.png")}
-        style={[styles.logo_l, { transform: [{ translateY }, { scale }] }]}
+        style={[styles.logo, { transform: [{ translateY }, { scale }] }]}
+      />
+      <Animated.Image
+        source={require("../../assets/images/loader_white.png")}
+        style={[
+          styles.loader,
+          {
+            transform: [
+              { translateY },
+              {
+                rotate: rotate.interpolate({
+                  inputRange: [0, 1],
+                  outputRange: ["360deg", "0deg"],
+                }),
+              },
+            ],
+          },
+        ]}
       />
     </ImageBackground>
   );
@@ -63,12 +95,13 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
-  logo_l: {
+  logo: {
     height: 195,
     width: 314.68,
   },
-  logo_s: {
-    height: 151.82,
-    width: 245,
+  loader: {
+    height: 56.15,
+    width: 56.15,
+    top: 313,
   },
 });
