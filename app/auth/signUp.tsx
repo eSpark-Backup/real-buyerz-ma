@@ -1,6 +1,5 @@
-import { Appearance, StyleSheet, Text, View } from "react-native";
+import { Appearance, StyleSheet, Text, View, ScrollView } from "react-native";
 import React from "react";
-import { useTheme } from "@react-navigation/native";
 import MyText from "../../components/MyText";
 import MyInput from "../../components/MyInput";
 import MyCheckbox from "../../components/MyCheckbox";
@@ -10,14 +9,19 @@ import { GLogo, RLogo, SLogo } from "../../assets";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { MaterialIcons } from "@expo/vector-icons";
 import { Link, router } from "expo-router";
-import { Feather } from "@expo/vector-icons";
 
 export default function signUp() {
   const colorScheme = Appearance.getColorScheme();
   const theme = colorScheme === "dark" ? DarkTheme : LightTheme;
 
   return (
-    <View style={{ alignItems: "center", width: "100%", height: "100%" }}>
+    <ScrollView
+      contentContainerStyle={{
+        alignItems: "center",
+        width: "100%",
+        height: "100%",
+      }}
+    >
       <View
         style={{
           position: "absolute",
@@ -60,11 +64,11 @@ export default function signUp() {
       <MyText text="" size={18} />
       <View
         style={{
-          justifyContent: "space-evenly",
+          justifyContent: "space-around",
           alignItems: "center",
           width: "85%",
-          flex: 1,
-          //   backgroundColor: "yellow",
+          flex: 0.9,
+          //   backgroundColor: "#1f1f17",
           borderColor: "#FFFFFF",
           borderWidth: 1,
           borderRadius: 15,
@@ -76,48 +80,61 @@ export default function signUp() {
           weight="700"
           size={25}
           textColor={theme.colors.secondary}
-          //   style={{ paddingBottom: 20 }}
+          style={{ paddingTop: 22, paddingBottom: 5 }}
         />
         <View
           style={{
-            flexDirection: "row",
+            justifyContent: "space-evenly",
+            alignItems: "center",
             width: "100%",
             // backgroundColor: "yellow",
-            justifyContent: "center",
-            alignItems: "center",
-            columnGap: 15,
+            flex: 1,
           }}
         >
+          <View
+            style={{
+              flexDirection: "row",
+              width: "100%",
+              //   backgroundColor: "yellow",
+              justifyContent: "center",
+              alignItems: "center",
+              columnGap: 15,
+            }}
+          >
+            <MyInput
+              placeholder="First name"
+              style={{ width: "38%", height: "82%" }}
+            />
+            <MyInput
+              placeholder="Last name"
+              style={{ width: "38%", height: "82%" }}
+            />
+          </View>
+
           <MyInput
-            placeholder="First name"
-            style={{ width: "38%", height: "82%" }}
+            placeholder="Email Address"
+            style={{ width: "80%", height: "10.5%" }}
           />
           <MyInput
-            placeholder="Last name"
-            style={{ width: "38%", height: "82%" }}
+            placeholder="Contact Number"
+            style={{ width: "80%", height: "10.5%" }}
+          />
+          <MyInput
+            placeholder="Applicant"
+            style={{ width: "80%", height: "10.5%" }}
+          />
+          <MyInput
+            placeholder="Password"
+            style={{ width: "80%", height: "10.5%" }}
+          />
+          <MyInput
+            placeholder="Confirm Password"
+            password
+            style={{ width: "80%", height: "10.5%" }}
           />
         </View>
-        <MyInput
-          placeholder="Email Address"
-          style={{ width: "80%", height: "8.15%" }}
-        />
-        <MyInput
-          placeholder="Contact Number"
-          style={{ width: "80%", height: "8.15%" }}
-        />
-        <MyInput
-          placeholder="Applicant"
-          style={{ width: "80%", height: "8.15%" }}
-        />
-        <MyInput
-          placeholder="Password"
-          style={{ width: "80%", height: "8.15%" }}
-        />
-        <MyInput
-          placeholder="Confirm Password"
-          style={{ width: "80%", height: "8.15%" }}
-        />
       </View>
+      {/* </View> */}
       <MyText text="" size={20} />
       <View
         style={{
@@ -202,23 +219,7 @@ export default function signUp() {
         />
         <GLogo />
       </View>
-      {/* <View style={{ flexDirection: "row" }}>
-        <MyText
-          text="Already have an account?"
-          size={14}
-          weight="700"
-          textColor="white"
-        />
-        <Link href={"/auth/signIn"}>
-          <MyText
-            text="Sign In"
-            size={14}
-            weight="700"
-            textColor={theme.colors.primary}
-          />
-        </Link>
-      </View> */}
-    </View>
+    </ScrollView>
   );
 }
 

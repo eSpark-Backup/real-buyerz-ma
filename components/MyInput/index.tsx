@@ -32,7 +32,7 @@ export default function MyInput({
       {password && (
         <Ionicons
           name={showPassword ? "eye-outline" : "md-eye-off-outline"}
-          size={24}
+          size={15}
           color="grey"
           onPress={() => setShowPassword(!showPassword)}
         />
@@ -43,7 +43,7 @@ export default function MyInput({
 
 const styles = StyleSheet.create({
   inputContainerStyle: {
-    marginVertical: 1,
+    // marginVertical: 1,
     backgroundColor: "#f3f4f6",
 
     flexDirection: "row",
