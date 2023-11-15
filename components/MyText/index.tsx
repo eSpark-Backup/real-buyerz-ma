@@ -1,5 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { StyleSheet, Text, TextStyle } from "react-native";
+
 import { MyTextProps } from "../../types";
 
 export default function MyText({

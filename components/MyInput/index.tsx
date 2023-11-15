@@ -1,11 +1,9 @@
 import React, { useState } from "react";
 import { TextInput, View, StyleSheet, ViewStyle } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import { MyInputProps } from "../../types";
-import { useTheme } from "@react-navigation/native";
-import MyText from "../MyText";
-import { MyTheme } from "../../types";
 import { MaterialIcons } from "@expo/vector-icons";
+
+import { MyInputProps } from "../../types";
 
 export default function MyInput({
   label,

@@ -1,11 +1,12 @@
 import React from "react";
 import { Appearance, StyleSheet, Text, View, ScrollView } from "react-native";
-import { MyText, MyButton, MyCheckbox, MyInput } from "../../components/index";
-import { DarkTheme, LightTheme } from "../../theme";
-import { GLogo, RLogo } from "../../assets";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { MaterialIcons } from "@expo/vector-icons";
 import { Link } from "expo-router";
+
+import { GLogo, RLogo } from "../../assets";
+import { DarkTheme, LightTheme } from "../../theme";
+import { MyText, MyButton, MyCheckbox, MyInput } from "../../components/index";
 
 export default function signIn() {
   const colorScheme = Appearance.getColorScheme();
@@ -59,9 +60,9 @@ export default function signIn() {
             width: "90%",
             textAlign: "right",
             marginTop: 5,
+            marginBottom: "6%",
           }}
         />
-        <MyText text="" size={20} />
         <MyInput
           placeholder="Password"
           style={{ width: "90%", height: "10%" }}
@@ -72,7 +73,6 @@ export default function signIn() {
           style={{
             flexDirection: "row",
             width: "90%",
-            // backgroundColor: "red",
           }}
         >
           <MyCheckbox
@@ -93,108 +93,116 @@ export default function signIn() {
           />
         </View>
 
-        <MyText text="" size={30} />
         <View
           style={{
-            flexDirection: "row",
             width: "100%",
             justifyContent: "center",
-            alignContent: "center",
+            alignItems: "center",
+            marginTop: "11%",
           }}
         >
-          <MyCheckbox
-            label=""
-            onChange={(value) => {
-              console.log("Agree checked !");
-            }}
+          <View
             style={{
-              marginRight: 5,
+              flexDirection: "row",
+              width: "105%",
+              justifyContent: "center",
             }}
-            checkboxStyle={{
-              width: 20,
-              height: 20,
-              borderWidth: 1,
-              borderColor: "#b5b7b9",
-              backgroundColor: "white",
-              borderRadius: 4,
-              marginRight: 5,
+          >
+            <MyCheckbox
+              label=""
+              onChange={(value) => {
+                console.log("Agree checked!");
+              }}
+              style={{
+                marginRight: 5,
+              }}
+              checkboxStyle={{
+                width: 20,
+                height: 20,
+                borderWidth: 1,
+                borderColor: "#b5b7b9",
+                backgroundColor: "white",
+                borderRadius: 4,
+                marginRight: 5,
+              }}
+            />
+            <View
+              style={{
+                flexDirection: "row",
+                width: "77%",
+                flexWrap: "wrap",
+                alignItems: "center",
+              }}
+            >
+              <MyText
+                text="I have read and agree to the "
+                style={{
+                  color: "#FFFFFF",
+                  fontSize: 12,
+                  fontFamily: "Inter",
+                }}
+              />
+
+              <MyText
+                text="Terms and Conditions"
+                style={{
+                  color: "#FB631C",
+                  fontWeight: "bold",
+                  textDecorationColor: "#FB631C",
+                  textDecorationLine: "underline",
+                  fontSize: 10,
+                  fontFamily: "Inter",
+                }}
+              />
+              <MyText
+                text="and "
+                style={{ color: "#FFFFFF", fontSize: 12, fontFamily: "Inter" }}
+              />
+
+              <MyText
+                text="Privacy Policy"
+                style={{
+                  color: "#FB631C",
+                  fontWeight: "bold",
+                  textDecorationColor: "#FB631C",
+                  textDecorationLine: "underline",
+                  fontSize: 10,
+                  fontFamily: "Inter",
+                }}
+              />
+            </View>
+          </View>
+          <MyButton
+            label="Submit"
+            textColor="white"
+            style={{
+              width: 110,
+              alignItems: "center",
+              height: 35,
+              justifyContent: "center",
+              alignContent: "center",
+              marginTop: "6%",
             }}
           />
-
-          <View
-            style={{ flexDirection: "row", width: "76%", flexWrap: "wrap" }}
-          >
-            <Text
-              style={{
-                color: "#FFFFFF",
-                fontSize: 12,
-                fontFamily: "Inter",
-              }}
-            >
-              I have read and agree the{" "}
-            </Text>
-            <Text
-              style={{
-                color: "#FB631C",
-                fontWeight: "bold",
-                textDecorationColor: "#FB631C",
-                textDecorationLine: "underline",
-                fontSize: 10,
-                fontFamily: "Inter",
-              }}
-            >
-              Terms and Conditions
-            </Text>
-            <Text
-              style={{
-                color: "#FFFFFF",
-                fontSize: 12,
-                fontFamily: "Inter",
-              }}
-            >
-              {" "}
-              and{" "}
-            </Text>
-            <Text
-              style={{
-                color: "#FB631C",
-                fontWeight: "bold",
-                textDecorationColor: "#FB631C",
-                textDecorationLine: "underline",
-                fontSize: 10,
-                fontFamily: "Inter",
-              }}
-            >
-              Privacy Policy
-            </Text>
-          </View>
-        </View>
-        <MyText text="" size={20} />
-        <MyButton
-          label="Submit"
-          textColor="white"
-          style={{
-            width: 110,
-            alignItems: "center",
-            height: 35,
-            justifyContent: "center",
-            alignContent: "center",
-          }}
-        />
-        <MyText text="" size={10} />
-        <MyText text="Or" size={14} weight="600" textColor="white" />
-        <MyText text="" size={10} />
-        <View style={{ flexDirection: "row" }}>
           <MyText
-            text="Login with  "
+            text="Or"
             size={14}
             weight="600"
             textColor="white"
+            style={{ marginTop: "4%" }}
           />
-          <GLogo />
+          <View style={{ flexDirection: "row", marginTop: "4%" }}>
+            <MyText
+              text="Sign Up with  "
+              size={14}
+              weight="600"
+              textColor="white"
+            />
+            <GLogo />
+          </View>
         </View>
-        <MyText text="" size={55} />
-        <View style={{ flexDirection: "row" }}>
+
+        <View style={{ flexDirection: "row", marginTop: "22%" }}>
           <MyText
             text="Don't have an account?"
             size={14}
@@ -203,7 +211,7 @@ export default function signIn() {
           />
           <Link href={"/auth/signUp"}>
             <MyText
-              text="Sign Up"
+              text=" Sign Up"
               size={14}
               weight="700"
               textColor={theme.colors.primary}
@@ -216,7 +224,3 @@ export default function signIn() {
 }
 
 const styles = StyleSheet.create({});
-
-{
-  /* <Text style={{ color: colors.text }}>App {dark ? "true" : "false"}</Text> */
-}

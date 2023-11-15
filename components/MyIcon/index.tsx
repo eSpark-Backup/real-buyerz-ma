@@ -1,6 +1,7 @@
 import React from "react";
 import { Image, ImageStyle, StyleSheet } from "react-native";
-import { Ionicons } from "@expo/vector-icons"; // Import the appropriate icon library
+import { Ionicons } from "@expo/vector-icons";
+
 import { MyIconProps } from "../../types";
 
 export default function MyIcon({
