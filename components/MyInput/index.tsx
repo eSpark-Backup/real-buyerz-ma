@@ -5,6 +5,7 @@ import { MyInputProps } from "../../types";
 import { useTheme } from "@react-navigation/native";
 import MyText from "../MyText";
 import { MyTheme } from "../../types";
+import { MaterialIcons } from "@expo/vector-icons";
 
 export default function MyInput({
   label,
@@ -13,6 +14,7 @@ export default function MyInput({
   onChange,
   text,
   style,
+  rightIcon,
 }: MyInputProps) {
   const [showPassword, setShowPassword] = useState(false);
   const inputContainerStyle: ViewStyle = {
@@ -35,6 +37,13 @@ export default function MyInput({
           size={15}
           color="grey"
           onPress={() => setShowPassword(!showPassword)}
+        />
+      )}
+      {rightIcon && (
+        <MaterialIcons
+          name={rightIcon.name}
+          size={rightIcon.size || 15}
+          color={rightIcon.color || "grey"}
         />
       )}
     </View>

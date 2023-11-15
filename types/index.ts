@@ -30,6 +30,11 @@ export type MyInputProps = {
   onChange?: (val: string) => void;
   width?: number | string;
   style?: ViewStyle;
+  rightIcon?: {
+    name: any;
+    size?: number;
+    color?: string;
+  };
 };
 
 export type MyCheckboxProps = {

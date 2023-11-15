@@ -5,7 +5,7 @@ import MyInput from "../../components/MyInput";
 import MyCheckbox from "../../components/MyCheckbox";
 import { DarkTheme, LightTheme } from "../../theme";
 import MyButton from "../../components/MyButton";
-import { GLogo, RLogo, SLogo } from "../../assets";
+import { GLogo, RLogo, SLogo } from "../../assets/";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { MaterialIcons } from "@expo/vector-icons";
 import { Link, router } from "expo-router";
@@ -23,7 +23,7 @@ export default function signUp() {
       <View
         style={{
           position: "absolute",
-          top: "1%",
+          // top: "1%",
           left: "7%",
           flexDirection: "row",
         }}
@@ -31,7 +31,7 @@ export default function signUp() {
         <Link href={"/auth/signIn"}>
           <MaterialIcons
             name="arrow-back"
-            size={24}
+            size={20}
             color={theme.colors.secondary}
           />
         </Link>
@@ -39,7 +39,7 @@ export default function signUp() {
       <View
         style={{
           position: "absolute",
-          top: "3%",
+          top: "2%",
           right: "7%",
           flexDirection: "row",
         }}
@@ -55,9 +55,7 @@ export default function signUp() {
         <MaterialIcons name="keyboard-arrow-right" size={24} color="black" />
       </View>
       <View>
-        <View style={{ backgroundColor: "pink", width: 99, height: 61.35 }}>
-          {/* <RLogo  /> */}
-        </View>
+        <SLogo />
       </View>
       <MyText text="" size={18} />
       <View
@@ -117,9 +115,11 @@ export default function signUp() {
             placeholder="Contact Number"
             style={{ width: "100%", height: "12%", marginBottom: "4%" }}
           />
+
           <MyInput
             placeholder="Applicant"
             style={{ width: "100%", height: "12%", marginBottom: "4%" }}
+            rightIcon={{ name: "keyboard-arrow-down", size: 24 }}
           />
           <MyInput
             placeholder="Password"
