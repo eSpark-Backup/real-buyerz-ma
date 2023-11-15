@@ -18,8 +18,6 @@ export default function signUp() {
     <ScrollView
       contentContainerStyle={{
         alignItems: "center",
-        width: "100%",
-        height: "100%",
       }}
     >
       <View
@@ -72,7 +70,7 @@ export default function signUp() {
           borderColor: "#FFFFFF",
           borderWidth: 1,
           borderRadius: 15,
-          padding: 0,
+          padding: 20,
         }}
       >
         <MyText
@@ -80,7 +78,7 @@ export default function signUp() {
           weight="700"
           size={25}
           textColor={theme.colors.secondary}
-          style={{ paddingTop: 22, paddingBottom: 5 }}
+          style={{ paddingTop: "1%", paddingBottom: "8%" }}
         />
         <View
           style={{
@@ -103,34 +101,34 @@ export default function signUp() {
           >
             <MyInput
               placeholder="First name"
-              style={{ width: "38%", height: "82%" }}
+              style={{ width: "48%", height: "75%", marginBottom: "3%" }}
             />
             <MyInput
               placeholder="Last name"
-              style={{ width: "38%", height: "82%" }}
+              style={{ width: "48%", height: "75%", marginBottom: "3%" }}
             />
           </View>
 
           <MyInput
             placeholder="Email Address"
-            style={{ width: "80%", height: "10.5%" }}
+            style={{ width: "100%", height: "12%", marginBottom: "4%" }}
           />
           <MyInput
             placeholder="Contact Number"
-            style={{ width: "80%", height: "10.5%" }}
+            style={{ width: "100%", height: "12%", marginBottom: "4%" }}
           />
           <MyInput
             placeholder="Applicant"
-            style={{ width: "80%", height: "10.5%" }}
+            style={{ width: "100%", height: "12%", marginBottom: "4%" }}
           />
           <MyInput
             placeholder="Password"
-            style={{ width: "80%", height: "10.5%" }}
+            style={{ width: "100%", height: "12%", marginBottom: "4%" }}
           />
           <MyInput
             placeholder="Confirm Password"
             password
-            style={{ width: "80%", height: "10.5%" }}
+            style={{ width: "100%", height: "12%", marginBottom: "4%" }}
           />
         </View>
       </View>
