@@ -1,14 +1,11 @@
-import { Appearance, StyleSheet, Text, View, ScrollView } from "react-native";
 import React from "react";
-import MyText from "../../components/MyText";
-import MyInput from "../../components/MyInput";
-import MyCheckbox from "../../components/MyCheckbox";
+import { Appearance, StyleSheet, Text, View, ScrollView } from "react-native";
+import { MyText, MyButton, MyCheckbox, MyInput } from "../../components/index";
 import { DarkTheme, LightTheme } from "../../theme";
-import MyButton from "../../components/MyButton";
 import { GLogo, RLogo } from "../../assets";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { MaterialIcons } from "@expo/vector-icons";
-import { Link, router } from "expo-router";
+import { Link } from "expo-router";
 
 export default function signIn() {
   const colorScheme = Appearance.getColorScheme();

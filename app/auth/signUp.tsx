@@ -1,14 +1,11 @@
 import { Appearance, StyleSheet, Text, View, ScrollView } from "react-native";
 import React from "react";
-import MyText from "../../components/MyText";
-import MyInput from "../../components/MyInput";
-import MyCheckbox from "../../components/MyCheckbox";
+import { MyText, MyButton, MyCheckbox, MyInput } from "../../components/index";
 import { DarkTheme, LightTheme } from "../../theme";
-import MyButton from "../../components/MyButton";
-import { GLogo, RLogo, SLogo } from "../../assets/";
+import { GLogo, SLogo } from "../../assets/";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { MaterialIcons } from "@expo/vector-icons";
-import { Link, router } from "expo-router";
+import { Link } from "expo-router";
 
 export default function signUp() {
   const colorScheme = Appearance.getColorScheme();
@@ -23,7 +20,6 @@ export default function signUp() {
       <View
         style={{
           position: "absolute",
-          // top: "1%",
           left: "7%",
           flexDirection: "row",
         }}
@@ -64,7 +60,6 @@ export default function signUp() {
           alignItems: "center",
           width: "85%",
           flex: 0.9,
-          //   backgroundColor: "#1f1f17",
           borderColor: "#FFFFFF",
           borderWidth: 1,
           borderRadius: 15,
@@ -83,7 +78,6 @@ export default function signUp() {
             justifyContent: "space-evenly",
             alignItems: "center",
             width: "100%",
-            // backgroundColor: "yellow",
             flex: 1,
           }}
         >
@@ -91,7 +85,6 @@ export default function signUp() {
             style={{
               flexDirection: "row",
               width: "100%",
-              //   backgroundColor: "yellow",
               justifyContent: "center",
               alignItems: "center",
               columnGap: 15,
