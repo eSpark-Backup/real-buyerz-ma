@@ -7,9 +7,10 @@ import {
   Animated,
   Easing,
   StyleSheet,
+  BackHandler,
 } from "react-native";
 import { Slot } from "expo-router";
-import { WINDOW_HEIGHT } from "../../constants";
+import { SCREEN_HEIGHT, WINDOW_HEIGHT } from "../../constants";
 
 export default function AuthLayout() {
   const translateX = useRef(new Animated.Value(0)).current;
@@ -17,7 +18,7 @@ export default function AuthLayout() {
 
   useEffect(() => {
     Animated.timing(opacity, {
-      toValue: 0,
+      toValue: 0.2,
       duration: 500,
       useNativeDriver: true,
       easing: Easing.linear,
@@ -45,6 +46,21 @@ export default function AuthLayout() {
     };
   }, [translateX]);
 
+  useEffect(() => {
+    const backAction = () => {
+      BackHandler.exitApp();
+      console.log("helo");
+      return true;
+    };
+
+    const backHandler = BackHandler.addEventListener(
+      "hardwareBackPress",
+      backAction
+    );
+
+    return () => backHandler.remove();
+  }, []);
+
   return (
     <View
       style={{
@@ -55,9 +71,8 @@ export default function AuthLayout() {
         style={{
           backgroundColor: "#000000",
           opacity: opacity,
-          zIndex: 5,
           position: "absolute",
-          height: "100%",
+          height: SCREEN_HEIGHT,
           width: "100%",
         }}
       />
@@ -75,6 +90,7 @@ export default function AuthLayout() {
         style={{
           marginTop: StatusBar.currentHeight,
           flex: 1,
+          zIndex: 1,
         }}
       >
         <Slot />
@@ -88,7 +104,7 @@ const styles = StyleSheet.create({
     resizeMode: "cover", // or 'stretch' or 'contain'
     position: "absolute",
     width: "200%",
-    height: WINDOW_HEIGHT,
+    height: SCREEN_HEIGHT,
     zIndex: -1,
   },
 });
