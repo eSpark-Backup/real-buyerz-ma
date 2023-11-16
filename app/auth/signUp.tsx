@@ -3,16 +3,25 @@ import { Appearance, StyleSheet, View, ScrollView } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { MaterialIcons } from "@expo/vector-icons";
 import { Link } from "expo-router";
+import { DimensionValue } from "react-native";
 
 import { GLogo, SLogo } from "../../assets/";
 import { DarkTheme, LightTheme } from "../../theme";
 import { MyText, MyButton, MyCheckbox, MyInput } from "../../components/index";
 
+interface InputField {
+  placeholder: string;
+  width: DimensionValue;
+  marginBottom: DimensionValue;
+  rightIcon?: { name: string; size: number };
+  password?: boolean;
+}
+
 export default function signUp() {
   const colorScheme = Appearance.getColorScheme();
   const theme = colorScheme === "dark" ? DarkTheme : LightTheme;
 
-  const inputFields = [
+  const inputFields: InputField[] = [
     { placeholder: "Email Address", width: "100%", marginBottom: "4%" },
     { placeholder: "Contact Number", width: "100%", marginBottom: "4%" },
     {
