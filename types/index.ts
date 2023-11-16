@@ -61,3 +61,8 @@ export type MyIconProps = {
   iconColor?: string;
   style?: TextStyle | ImageStyle;
 };
+
+export type LoginModalProps = {
+  visible?: boolean;
+  onClose: () => void;
+};

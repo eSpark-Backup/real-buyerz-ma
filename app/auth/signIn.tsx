@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Appearance, StyleSheet, Text, View, ScrollView } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { MaterialIcons } from "@expo/vector-icons";
@@ -6,11 +6,23 @@ import { Link } from "expo-router";
 
 import { GLogo, RLogo } from "../../assets";
 import { DarkTheme, LightTheme } from "../../theme";
-import { MyText, MyButton, MyCheckbox, MyInput } from "../../components/index";
+import {
+  MyText,
+  MyButton,
+  MyCheckbox,
+  MyInput,
+  LoginModal,
+} from "../../components/index";
 
 export default function signIn() {
   const colorScheme = Appearance.getColorScheme();
   const theme = colorScheme === "dark" ? DarkTheme : LightTheme;
+
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const toggleModal = () => {
+    setIsModalVisible(!isModalVisible);
+  };
+
   return (
     <ScrollView
       contentContainerStyle={{
@@ -218,6 +230,20 @@ export default function signIn() {
             />
           </Link>
         </View>
+        <MyButton
+          label="PopUp"
+          onPress={toggleModal}
+          style={{
+            width: 110,
+            alignItems: "center",
+            height: 35,
+            justifyContent: "center",
+            alignContent: "center",
+            marginTop: "1%",
+          }}
+          labelStyle={{ color: "white" }}
+        />
+        <LoginModal visible={isModalVisible} onClose={toggleModal} />
       </View>
     </ScrollView>
   );
