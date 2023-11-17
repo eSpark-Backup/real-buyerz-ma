@@ -1,18 +1,12 @@
-import React, { useState } from "react";
+import React from "react";
 import Modal from "react-native-modal";
-import {
-  TouchableOpacity,
-  View,
-  StyleSheet,
-  Appearance,
-  ViewStyle,
-} from "react-native";
+import { Link } from "expo-router";
+import { View, StyleSheet, Appearance, ViewStyle } from "react-native";
 
 import { LoginModalProps } from "../../types";
 import { MyButton, MyCheckbox, MyInput, MyText } from "../index";
 import { GLogo, PLogo } from "../../assets";
 import { DarkTheme, LightTheme } from "../../theme";
-import { Link } from "expo-router";
 
 const colorScheme = Appearance.getColorScheme();
 const theme = colorScheme === "dark" ? DarkTheme : LightTheme;
@@ -28,9 +22,6 @@ function LoginModal({ visible, onClose }: LoginModalProps) {
     paddingHorizontal: "9%",
     paddingVertical: "6%",
   };
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-
   return (
     <Modal
       isVisible={visible}
@@ -119,7 +110,6 @@ function LoginModal({ visible, onClose }: LoginModalProps) {
           style={{
             flexDirection: "row",
             marginTop: "30%",
-            // justifyContent: "center",
           }}
         >
           <MyText
@@ -146,29 +136,7 @@ const styles = StyleSheet.create({
   modal: {
     margin: 0,
     justifyContent: "center",
-    // padding: "5%",
   },
 });
 
 export default LoginModal;
-
-// const colors = {
-//   light: {
-//     primary: "#FB631C",
-//     secondary: "#136FA9",
-//     background: "#FFFFFF",
-//     card: "#f5f6fa",
-//     text: "#333333",
-//     border: "#E9E9E9",
-//     notification: "#FFFFFF", //todo: set later
-//   },
-//   dark: {
-//     primary: "#FB631C",
-//     secondary: "#136FA9",
-//     background: "#101010",
-//     card: "#1A1B1C",
-//     text: "#FFFFFF",
-//     border: "#29292E",
-//     notification: "#FFFFFF", //todo: set later
-//   },
-// };
