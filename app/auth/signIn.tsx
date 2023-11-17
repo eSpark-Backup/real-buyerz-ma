@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Appearance, StyleSheet, Text, View, ScrollView } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { MaterialIcons } from "@expo/vector-icons";
-import { Link } from "expo-router";
+import { Link, router } from "expo-router";
 
 import { GLogo, RLogo } from "../../assets";
 import { DarkTheme, LightTheme } from "../../theme";
@@ -37,7 +37,7 @@ export default function signIn() {
           flexDirection: "row",
         }}
       >
-        <TouchableOpacity>
+        <TouchableOpacity onPress={() => router.push("(user)/anon/home")}>
           <MyText
             text="Skip"
             style={{ textDecorationLine: "underline" }}

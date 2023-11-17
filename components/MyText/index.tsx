@@ -1,22 +1,25 @@
 import React from "react";
-import { StyleSheet, Text, TextStyle } from "react-native";
+import { StyleSheet, Text, TextStyle, TextProps } from "react-native";
 
 import { MyTextProps } from "../../types";
 
 export default function MyText({
   text,
+  children,
   textColor,
   weight,
   size,
   style,
-}: MyTextProps) {
+}: MyTextProps & TextProps) {
   const textStyle: TextStyle = {
     color: textColor,
     fontWeight: weight || "normal",
     fontSize: size || 14,
   };
 
-  return <Text style={[styles.plain, textStyle, style]}>{text}</Text>;
+  return (
+    <Text style={[styles.plain, textStyle, style]}>{children || text}</Text>
+  );
 }
 
 const styles = StyleSheet.create({
