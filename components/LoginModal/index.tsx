@@ -61,7 +61,7 @@ function LoginModal({ visible, onClose }: LoginModalProps) {
             marginBottom: "6%",
           }}
         />
-        <MyInput placeholder="Password" />
+        <MyInput placeholder="Password" password />
         <View
           style={{
             flexDirection: "row",
