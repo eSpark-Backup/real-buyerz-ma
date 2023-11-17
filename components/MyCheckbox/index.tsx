@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { View, StyleSheet, TouchableOpacity, Appearance } from "react-native";
 
-import { MyText } from "../index";
+import MyText from "../MyText";
 import { MyCheckboxProps } from "../../types";
 import { DarkTheme, LightTheme } from "../../theme";
 

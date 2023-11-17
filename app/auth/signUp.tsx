@@ -7,7 +7,7 @@ import { DimensionValue } from "react-native";
 
 import { GLogo, SLogo } from "../../assets/";
 import { DarkTheme, LightTheme } from "../../theme";
-import { MyText, MyButton, MyCheckbox, MyInput } from "../../components/index";
+import { MyText, MyButton, MyCheckbox, MyInput } from "../../components";
 
 interface InputField {
   placeholder: string;
