@@ -203,9 +203,15 @@ export default function signIn() {
             textColor="white"
             style={{ marginTop: "4%" }}
           />
-          <View style={{ flexDirection: "row", marginTop: "4%" }}>
+          <View
+            style={{
+              flexDirection: "row",
+              marginTop: "4%",
+              alignItems: "center",
+            }}
+          >
             <MyText
-              text="Sign Up with  "
+              text="Login with  "
               size={14}
               weight="600"
               textColor="white"
