@@ -29,7 +29,8 @@ export type MyInputProps = {
   text?: string;
   onChange?: (val: string) => void;
   width?: number | string;
-  style?: ViewStyle;
+  style?: any;
+  placeholderColor?: string;
   rightIcon?: {
     name: any;
     size?: number;
