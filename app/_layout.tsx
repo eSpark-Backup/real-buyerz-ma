@@ -9,7 +9,7 @@ export default function RootLayout() {
   return (
     <ThemeProvider value={LightTheme}>
       <StatusBar style={"dark"} translucent />
-      <SafeAreaView>
+      <SafeAreaView style={{ flex: 1 }}>
         <Slot />
       </SafeAreaView>
     </ThemeProvider>

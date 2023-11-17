@@ -12,7 +12,7 @@ import {
   MyCheckbox,
   MyInput,
   LoginModal,
-} from "../../components/index";
+} from "../../components";
 
 export default function signIn() {
   const colorScheme = Appearance.getColorScheme();
