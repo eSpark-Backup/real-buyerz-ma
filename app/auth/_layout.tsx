@@ -8,6 +8,8 @@ import {
   BackHandler,
 } from "react-native";
 import { Slot } from "expo-router";
+import { LinearGradient } from "expo-linear-gradient";
+
 import { SCREEN_HEIGHT, WINDOW_HEIGHT } from "../../constants";
 
 export default function AuthLayout() {
@@ -16,7 +18,7 @@ export default function AuthLayout() {
 
   useEffect(() => {
     Animated.timing(opacity, {
-      toValue: 0.2,
+      toValue: 0,
       duration: 500,
       useNativeDriver: true,
       easing: Easing.linear,
@@ -60,10 +62,12 @@ export default function AuthLayout() {
   }, []);
 
   return (
-    <View
+    <LinearGradient
       style={{
         flex: 1,
       }}
+      // Background Linear Gradient
+      colors={["rgba(255,255,255,0.48)", "rgba(12,12,12,0.47)"]}
     >
       <Animated.View
         style={{
@@ -93,7 +97,7 @@ export default function AuthLayout() {
       >
         <Slot />
       </View>
-    </View>
+    </LinearGradient>
   );
 }
 
@@ -102,7 +106,7 @@ const styles = StyleSheet.create({
     resizeMode: "cover", // or 'stretch' or 'contain'
     position: "absolute",
     width: "200%",
-    height: SCREEN_HEIGHT,
+    height: "140%",
     zIndex: -1,
   },
 });
