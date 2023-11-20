@@ -7,7 +7,8 @@ import { Formik } from "formik";
 
 import { GLogo, RLogo } from "../../assets";
 import { DarkTheme, LightTheme } from "../../theme";
-import { validationSchema } from "../../constants";
+import { UserSignInSchema } from "../../constants/validations/schema";
+
 import {
   MyText,
   MyButton,
@@ -50,13 +51,14 @@ export default function signIn() {
 
       <Formik
         initialValues={{
-          email: "",
+          username: "",
           password: "",
+          agreeToTerms: false,
         }}
         onSubmit={async (values, { resetForm }) => {
           console.log("Login success");
         }}
-        validationSchema={validationSchema}
+        validationSchema={UserSignInSchema.signInForm}
       >
         {({
           handleChange,
@@ -65,6 +67,7 @@ export default function signIn() {
           setFieldTouched,
           touched,
           values,
+          setFieldValue,
         }) => (
           <View
             style={{
@@ -75,25 +78,12 @@ export default function signIn() {
               flex: 1,
             }}
           >
-            {/* {touched.email && errors.email ? (
-              <MyText
-                text={errors.email}
-                textColor={"red"}
-                style={{
-                  opacity: 0.6,
-                  fontSize: 14,
-                  alignSelf: "flex-start",
-                  marginLeft: "5%",
-                }}
-              />
-            ) : (
-              <View style={{ width: "auto", height: "9%" }} />
-            )} */}
             <MyInput
               placeholder="Username"
+              onChange={handleChange("username")}
               style={[
                 { width: "90%", height: "10%" },
-                touched.email && errors.email
+                touched.username && errors.username
                   ? { borderColor: "red", borderWidth: 1 } // Add red border if there's an error
                   : null,
               ]}
@@ -111,22 +101,9 @@ export default function signIn() {
               }}
             />
 
-            {/* {touched.password && errors.password ? (
-              <MyText
-                text={errors.password}
-                textColor={"red"}
-                style={{
-                  opacity: 0.6,
-                  fontSize: 14,
-                  alignSelf: "flex-start",
-                  marginLeft: "5%",
-                }}
-              />
-            ) : (
-              <View style={{ width: "auto", height: "1%" }} />
-            )} */}
             <MyInput
               placeholder="Password"
+              onChange={handleChange("password")}
               style={[
                 { width: "90%", height: "10%" },
                 touched.password && errors.password
@@ -177,21 +154,26 @@ export default function signIn() {
               >
                 <MyCheckbox
                   label=""
-                  onChange={(value) => {
-                    console.log("Agree checked!");
+                  onChange={() => {
+                    setFieldValue("agreeToTerms", !values.agreeToTerms);
                   }}
                   style={{
                     marginRight: 5,
                   }}
-                  checkboxStyle={{
-                    width: 20,
-                    height: 20,
-                    borderWidth: 1,
-                    borderColor: "#b5b7b9",
-                    backgroundColor: "white",
-                    borderRadius: 4,
-                    marginRight: 5,
-                  }}
+                  checkboxStyle={[
+                    {
+                      width: 20,
+                      height: 20,
+                      borderWidth: 1,
+                      borderColor: "#b5b7b9",
+                      backgroundColor: "white",
+                      borderRadius: 4,
+                      marginRight: 5,
+                    },
+                    touched.agreeToTerms && errors.agreeToTerms
+                      ? { borderColor: "red", borderWidth: 1 }
+                      : null,
+                  ]}
                 />
                 <View
                   style={{
@@ -307,19 +289,21 @@ export default function signIn() {
 
 const styles = StyleSheet.create({});
 
-{
-  /* <MyButton
-          label="PopUp"
-          onPress={toggleModal}
-          style={{
-            width: 110,
-            alignItems: "center",
-            height: 35,
-            justifyContent: "center",
-            alignContent: "center",
-            marginTop: "1%",
-          }}
-          labelStyle={{ color: "white" }}
-        />
-        <LoginModal visible={isModalVisible} onClose={toggleModal} /> */
-}
+// const styles = StyleSheet.create({});
+
+// {
+//   /* <MyButton
+//           label="PopUp"
+//           onPress={toggleModal}
+//           style={{
+//             width: 110,
+//             alignItems: "center",
+//             height: 35,
+//             justifyContent: "center",
+//             alignContent: "center",
+//             marginTop: "1%",
+//           }}
+//           labelStyle={{ color: "white" }}
+//         />
+//         <LoginModal visible={isModalVisible} onClose={toggleModal} /> */
+// }

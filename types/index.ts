@@ -28,6 +28,9 @@ export type MyInputProps = {
   password?: boolean;
   text?: string;
   onChange?: (val: string) => void;
+  onBlur?: () => void;
+  onChangeText?: (value: string) => void;
+  value?: string;
   width?: number | string;
   style?: any;
   placeholderColor?: string;
@@ -42,7 +45,7 @@ export type MyCheckboxProps = {
   label?: string;
   onChange?: (checked: boolean) => void;
   style?: ViewStyle;
-  checkboxStyle?: ViewStyle;
+  checkboxStyle?: (ViewStyle | null)[];
   labelStyle?: ViewStyle | TextStyle;
 };
 
