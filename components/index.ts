@@ -5,3 +5,5 @@ export { default as MyButton } from "./MyButton";
 export { default as LoginModal } from "./LoginModal";
 export { default as MyTabBar } from "./MyTabBar";
 export { default as Card } from "./Card";
+export { default as MyAppBar } from "./MyAppBar";
+export { default as MySwitch } from "./MySwitch";
