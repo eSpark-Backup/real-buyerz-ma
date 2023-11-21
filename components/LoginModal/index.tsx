@@ -4,7 +4,7 @@ import Modal from "react-native-modal";
 import { LoginModalProps } from "../../types";
 import { TouchableOpacity, View } from "react-native";
 import MyText from "../MyText";
-import { PLogo } from "../../assets";
+import { PLogo } from "../../assets/images/svg";
 
 function LoginModal({ visible, onClose }: LoginModalProps) {
   const [username, setUsername] = useState("");

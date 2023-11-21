@@ -4,15 +4,9 @@ import { TouchableOpacity } from "react-native-gesture-handler";
 import { MaterialIcons } from "@expo/vector-icons";
 import { Link, router } from "expo-router";
 
-import { GLogo, RLogo } from "../../assets";
-import { DarkTheme, LightTheme } from "../../theme";
-import {
-  MyText,
-  MyButton,
-  MyCheckbox,
-  MyInput,
-  LoginModal,
-} from "../../components";
+import { GLogo, RLogo } from "@assets/images/svg";
+import { DarkTheme, LightTheme } from "@theme";
+import { MyText, MyButton, MyCheckbox, MyInput, LoginModal } from "@components";
 
 export default function signIn() {
   const colorScheme = Appearance.getColorScheme();

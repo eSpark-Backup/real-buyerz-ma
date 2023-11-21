@@ -59,16 +59,16 @@ export default function App() {
 
   return (
     <ImageBackground
-      source={require("../../assets/splash.png")}
+      source={require("@assets/images/png/background.png")}
       style={styles.background}
       resizeMode="cover"
     >
       <Animated.Image
-        source={require("../../assets/images/RB_Logo.png")}
+        source={require("@assets/images/png/RB_Logo.png")}
         style={[styles.logo, { transform: [{ translateY }, { scale }] }]}
       />
       <Animated.Image
-        source={require("../../assets/images/loader_white.png")}
+        source={require("@assets/images/png/loader_white.png")}
         style={[
           styles.loader,
           {

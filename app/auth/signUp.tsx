@@ -5,9 +5,9 @@ import { MaterialIcons } from "@expo/vector-icons";
 import { Link } from "expo-router";
 import { DimensionValue } from "react-native";
 
-import { GLogo, SLogo } from "../../assets/";
-import { DarkTheme, LightTheme } from "../../theme";
-import { MyText, MyButton, MyCheckbox, MyInput } from "../../components";
+import { GLogo, SLogo } from "@assets/images/svg";
+import { DarkTheme, LightTheme } from "@theme";
+import { MyText, MyButton, MyCheckbox, MyInput } from "@components";
 
 interface InputField {
   placeholder: string;
