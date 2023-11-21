@@ -45,7 +45,7 @@ export type MyCheckboxProps = {
   label?: string;
   onChange?: (checked: boolean) => void;
   style?: ViewStyle;
-  checkboxStyle?: (ViewStyle | null)[];
+  checkboxStyle?: ViewStyle;
   labelStyle?: ViewStyle | TextStyle;
 };
 

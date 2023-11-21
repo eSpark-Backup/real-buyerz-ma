@@ -160,20 +160,15 @@ export default function signIn() {
                   style={{
                     marginRight: 5,
                   }}
-                  checkboxStyle={[
-                    {
-                      width: 20,
-                      height: 20,
-                      borderWidth: 1,
-                      borderColor: "#b5b7b9",
-                      backgroundColor: "white",
-                      borderRadius: 4,
-                      marginRight: 5,
-                    },
-                    touched.agreeToTerms && errors.agreeToTerms
-                      ? { borderColor: "red", borderWidth: 1 }
-                      : null,
-                  ]}
+                  checkboxStyle={{
+                    width: 20,
+                    height: 20,
+                    borderWidth: 1,
+                    borderColor: "#b5b7b9",
+                    backgroundColor: "white",
+                    borderRadius: 4,
+                    marginRight: 5,
+                  }}
                 />
                 <View
                   style={{

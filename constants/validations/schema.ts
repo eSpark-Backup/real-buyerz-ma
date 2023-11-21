@@ -20,7 +20,7 @@ export const UserSignInSchema = {
 
 // option 1
 
-export const UserSignUpSchema = object({
+export const UserSignUpSchema = {
   signUpForm: object().shape({
     firstName: string()
       .min(4, "First Name Too Short!")
@@ -59,12 +59,15 @@ export const UserSignUpSchema = object({
       .test("passwords-match", "Passwords must match", function (value) {
         return value === this.parent.password;
       }),
-
+    agreeToTerms: bool().oneOf(
+      [true],
+      "You must agree to the Terms and Conditions"
+    ),
     Username: string()
       .required("Username is required")
       .min(4, "Username must contain at least 4 characters"),
   }),
-});
+};
 
 // option 2
 
