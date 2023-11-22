@@ -33,7 +33,7 @@ const MyCheckbox = ({
         style={[styles.checkbox, checkboxStyle, checked && styles.checked]}
       />
       <View>
-        <MyText text={label} style={restProps.labelStyle} />
+        <MyText text={label} style={restProps.labelStyle} weight="300" />
       </View>
     </TouchableOpacity>
   );
@@ -56,7 +56,6 @@ const styles = StyleSheet.create({
   },
   checked: {
     backgroundColor: theme.colors.secondary,
-    // "#2e6fac"
   },
 });
 

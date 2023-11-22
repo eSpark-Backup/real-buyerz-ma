@@ -6,6 +6,7 @@ import {
   ViewStyle,
   Appearance,
 } from "react-native";
+import MyText from "../MyText";
 
 import { MyButtonProps } from "../../types";
 import { DarkTheme, LightTheme } from "../../theme";
@@ -31,7 +32,7 @@ export default function MyButton({
   };
 
   const buttonTextStyle: TextStyle = {
-    color: textColor || theme.colors.text, // Default color or use the provided one
+    color: textColor || theme.colors.text,
     fontWeight: "500",
     fontSize: 14,
     ...labelStyle,
@@ -39,7 +40,7 @@ export default function MyButton({
 
   return (
     <TouchableOpacity onPress={onPress} style={buttonStyle}>
-      <Text style={buttonTextStyle}>{label}</Text>
+      <MyText text={label} style={buttonTextStyle} />
     </TouchableOpacity>
   );
 }
