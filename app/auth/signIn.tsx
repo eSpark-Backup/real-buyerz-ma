@@ -30,7 +30,7 @@ export default function signIn() {
           flexDirection: "row",
         }}
       >
-        <TouchableOpacity>
+        <TouchableOpacity onPress={() => router.push("(user)/anon/home")}>
           <MyText
             text="Skip"
             style={{ textDecorationLine: "underline" }}
