@@ -7,7 +7,9 @@
       "@components": ["./components/index"],
       "@assets/*": ["./assets/*"],
       "@theme": ["./theme/index"],
-      "@constants": ["./constants/index"]
+      "@constants": ["./constants/index"],
+      "@types": ["./types/index"],
+      "@schema": ["./constants/validations/schema.ts"]
     }
   }
 }

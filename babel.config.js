@@ -24,6 +24,8 @@ module.exports = function (api) {
             "@constants": "./constants",
             "@assets": "./assets",
             "@theme": "./theme",
+            "@types": "./types",
+            "@schema": "./constants/validations",
           },
         },
       ],
