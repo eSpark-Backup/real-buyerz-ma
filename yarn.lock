@@ -1775,6 +1775,11 @@
   dependencies:
     "@hapi/hoek" "^9.0.0"
 
+"@homielab/react-native-auto-scroll@^0.0.10":
+  version "0.0.10"
+  resolved "https://registry.yarnpkg.com/@homielab/react-native-auto-scroll/-/react-native-auto-scroll-0.0.10.tgz#c34ba4bd6c9fca1563777663992c86a6b1af91fb"
+  integrity sha512-ZbB/ITVZrQfrcw3yzF0dlMTPDxmkRRMPc3tAbxB8G/Za3rH6mCXcjSVIl4cUTGYKGz4CvIaOsy6hL97UNSxvNw==
+
 "@jest/create-cache-key-function@^29.2.1":
   version "29.7.0"
   resolved "https://registry.yarnpkg.com/@jest/create-cache-key-function/-/create-cache-key-function-29.7.0.tgz#793be38148fab78e65f40ae30c36785f4ad859f0"
@@ -6771,6 +6776,11 @@ react-native-gesture-handler@~2.12.0:
     invariant "^2.2.4"
     lodash "^4.17.21"
     prop-types "^15.7.2"
+
+react-native-marquee-view@^1.0.5:
+  version "1.0.5"
+  resolved "https://registry.yarnpkg.com/react-native-marquee-view/-/react-native-marquee-view-1.0.5.tgz#545dc561bc9da9fe6da164726268524a12d9c9a1"
+  integrity sha512-KNiJTbieGrASTs6/ECT3lV4fnGwm9HIe68wT+XNGvrwA/ICoS9Ayhr+Yx17PL+xnCyojqiEmXVUcmIfBcqjD+A==
 
 react-native-modal@^13.0.1:
   version "13.0.1"

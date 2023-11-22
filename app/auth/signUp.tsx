@@ -6,10 +6,10 @@ import { Link } from "expo-router";
 import { DimensionValue } from "react-native";
 import { Formik } from "formik";
 
-import { UserSignUpSchema } from "../../constants/validations/schema";
-import { GLogo, SLogo } from "../../assets/";
-import { MyText, MyButton, MyCheckbox, MyInput } from "../../components";
-import { DarkTheme, LightTheme } from "../../theme";
+import { GLogo, SLogo } from "@assets/images/svg";
+import { DarkTheme, LightTheme } from "@theme";
+import { MyText, MyButton, MyCheckbox, MyInput } from "@components";
+import { UserSignUpSchema } from "@schema";
 
 interface InputField {
   placeholder: string;

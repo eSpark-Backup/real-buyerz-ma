@@ -1,6 +1,7 @@
 import React from "react";
 import { StyleSheet, View } from "react-native";
-import { PLogo, RText } from "../../assets";
+
+import { PLogo, RText } from "../../assets/images/svg";
 import { colors } from "../../theme";
 import MySwitch from "../MySwitch";
 

@@ -1,12 +1,12 @@
+import { useEffect, useState } from "react";
+import { SafeAreaView } from "react-native";
 import { ThemeProvider } from "@react-navigation/native";
 import { Slot } from "expo-router";
-import { SafeAreaView } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import * as Font from "expo-font";
-import { useEffect, useState } from "react";
+
 import { customFonts } from "../utils/customFonts";
 import { customImages } from "../utils/customImages";
-
 import { DarkTheme, LightTheme } from "../theme";
 
 export default function RootLayout() {

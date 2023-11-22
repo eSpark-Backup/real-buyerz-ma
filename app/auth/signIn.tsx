@@ -5,12 +5,10 @@ import { MaterialIcons } from "@expo/vector-icons";
 import { Link, router } from "expo-router";
 import { Formik } from "formik";
 
-import { GLogo, RLogo } from "../../assets";
-import { UserSignInSchema } from "../../constants/validations/schema";
-import { DarkTheme, LightTheme } from "../../theme";
-
-import { MyText, MyButton, MyCheckbox, MyInput } from "../../components";
-import Toast from "react-native-toast-message";
+import { GLogo, RLogo } from "@assets/images";
+import { DarkTheme, LightTheme } from "@theme";
+import { MyText, MyButton, MyCheckbox, MyInput, LoginModal } from "@components";
+import { UserSignInSchema } from "@schema";
 
 export default function signIn() {
   const colorScheme = Appearance.getColorScheme();

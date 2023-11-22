@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { TextInput, View, StyleSheet, ViewStyle } from "react-native";
-import { Ionicons } from "@expo/vector-icons";
-import { MaterialIcons } from "@expo/vector-icons";
+import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 
 import { MyInputProps } from "../../types";
 

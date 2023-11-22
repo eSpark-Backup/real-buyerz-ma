@@ -1,12 +1,18 @@
 import React from "react";
 import Modal from "react-native-modal";
 import { Link } from "expo-router";
-import { View, StyleSheet, Appearance, ViewStyle } from "react-native";
+import {
+  View,
+  StyleSheet,
+  Appearance,
+  TouchableOpacity,
+  ViewStyle,
+} from "react-native";
 
 import { LoginModalProps } from "../../types";
 import { MyButton, MyCheckbox, MyInput, MyText } from "../index";
-import { GLogo, PLogo } from "../../assets";
-import { DarkTheme, LightTheme } from "../../theme";
+import { GLogo, PLogo } from "@assets/images";
+import { DarkTheme, LightTheme } from "@theme";
 
 const colorScheme = Appearance.getColorScheme();
 const theme = colorScheme === "dark" ? DarkTheme : LightTheme;

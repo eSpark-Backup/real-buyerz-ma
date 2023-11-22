@@ -10,7 +10,7 @@ import {
 import { Slot } from "expo-router";
 import { LinearGradient } from "expo-linear-gradient";
 
-import { SCREEN_HEIGHT, WINDOW_HEIGHT } from "../../constants";
+import { SCREEN_HEIGHT, WINDOW_HEIGHT } from "@constants";
 
 export default function AuthLayout() {
   const translateX = useRef(new Animated.Value(0)).current;
@@ -79,7 +79,7 @@ export default function AuthLayout() {
         }}
       />
       <Animated.Image
-        source={require("../../assets/images/bg_wide.png")}
+        source={require("@assets/images/png/bg_wide.png")}
         style={[
           styles.backgroundImage,
           {
