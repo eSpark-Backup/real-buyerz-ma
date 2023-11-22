@@ -6,16 +6,11 @@ import { Link, router } from "expo-router";
 import { Formik } from "formik";
 
 import { GLogo, RLogo } from "../../assets";
-import { DarkTheme, LightTheme } from "../../theme";
 import { UserSignInSchema } from "../../constants/validations/schema";
+import { DarkTheme, LightTheme } from "../../theme";
 
-import {
-  MyText,
-  MyButton,
-  MyCheckbox,
-  MyInput,
-  LoginModal,
-} from "../../components";
+import { MyText, MyButton, MyCheckbox, MyInput } from "../../components";
+import Toast from "react-native-toast-message";
 
 export default function signIn() {
   const colorScheme = Appearance.getColorScheme();
@@ -56,7 +51,7 @@ export default function signIn() {
           agreeToTerms: false,
         }}
         onSubmit={async (values, { resetForm }) => {
-          console.log("Login success");
+          console.log("Sign Up success", values);
         }}
         validationSchema={UserSignInSchema.signInForm}
       >
@@ -173,7 +168,7 @@ export default function signIn() {
                 <View
                   style={{
                     flexDirection: "row",
-                    width: "77%",
+                    width: "72%",
                     flexWrap: "wrap",
                     alignItems: "center",
                   }}
@@ -183,7 +178,6 @@ export default function signIn() {
                     style={{
                       color: "#FFFFFF",
                       fontSize: 12,
-                      fontFamily: "Inter",
                     }}
                   />
 
@@ -191,11 +185,9 @@ export default function signIn() {
                     text="Terms and Conditions"
                     style={{
                       color: "#FB631C",
-                      fontWeight: "bold",
                       textDecorationColor: "#FB631C",
                       textDecorationLine: "underline",
                       fontSize: 10,
-                      fontFamily: "Inter",
                     }}
                   />
                   <MyText
@@ -203,7 +195,6 @@ export default function signIn() {
                     style={{
                       color: "#FFFFFF",
                       fontSize: 12,
-                      fontFamily: "Inter",
                     }}
                   />
 
@@ -211,11 +202,9 @@ export default function signIn() {
                     text="Privacy Policy"
                     style={{
                       color: "#FB631C",
-                      fontWeight: "bold",
                       textDecorationColor: "#FB631C",
                       textDecorationLine: "underline",
                       fontSize: 10,
-                      fontFamily: "Inter",
                     }}
                   />
                 </View>
@@ -284,7 +273,7 @@ export default function signIn() {
 
 const styles = StyleSheet.create({});
 
-// const styles = StyleSheet.create({});
+// for login popup
 
 // {
 //   /* <MyButton

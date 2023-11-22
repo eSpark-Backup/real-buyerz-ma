@@ -8,6 +8,7 @@ import {
   BackHandler,
 } from "react-native";
 import { Slot } from "expo-router";
+
 import { SCREEN_HEIGHT, WINDOW_HEIGHT } from "../../constants";
 
 export default function AuthLayout() {

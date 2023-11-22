@@ -4,12 +4,12 @@ import { TouchableOpacity } from "react-native-gesture-handler";
 import { MaterialIcons } from "@expo/vector-icons";
 import { Link } from "expo-router";
 import { DimensionValue } from "react-native";
-import { Formik, FormikHelpers } from "formik";
+import { Formik } from "formik";
 
 import { UserSignUpSchema } from "../../constants/validations/schema";
 import { GLogo, SLogo } from "../../assets/";
-import { DarkTheme, LightTheme } from "../../theme";
 import { MyText, MyButton, MyCheckbox, MyInput } from "../../components";
+import { DarkTheme, LightTheme } from "../../theme";
 
 interface InputField {
   placeholder: string;
@@ -18,7 +18,6 @@ interface InputField {
   rightIcon?: { name: string; size: number };
   password?: boolean;
   name: string;
-  handleChange: (value: string, formikHelpers?: FormikHelpers<any>) => void;
 }
 
 export default function SignUp() {
@@ -31,16 +30,12 @@ export default function SignUp() {
       width: "100%",
       marginBottom: "4%",
       name: "email",
-      handleChange: (value, formikHelpers) =>
-        formikHelpers?.setFieldValue("email", value),
     },
     {
       placeholder: "Contact Number",
       width: "100%",
       marginBottom: "4%",
       name: "phone",
-      handleChange: (value, formikHelpers) =>
-        formikHelpers?.setFieldValue("phone", value),
     },
     {
       placeholder: "Applicant",
@@ -48,16 +43,12 @@ export default function SignUp() {
       marginBottom: "4%",
       rightIcon: { name: "keyboard-arrow-down", size: 24 },
       name: "applicant",
-      handleChange: (value, formikHelpers) =>
-        formikHelpers?.setFieldValue("applicant", value),
     },
     {
       placeholder: "Password",
       width: "100%",
       marginBottom: "4%",
       name: "password",
-      handleChange: (value, formikHelpers) =>
-        formikHelpers?.setFieldValue("password", value),
     },
     {
       placeholder: "Confirm Password",
@@ -65,8 +56,6 @@ export default function SignUp() {
       marginBottom: "4%",
       password: true,
       name: "confirmPassword",
-      handleChange: (value, formikHelpers) =>
-        formikHelpers?.setFieldValue("confirmPassword", value),
     },
   ];
 
@@ -77,6 +66,7 @@ export default function SignUp() {
         lastName: "",
         email: "",
         phone: "",
+        applicant: "",
         password: "",
         confirmPassword: "",
         agreeToTerms: false,
@@ -180,6 +170,7 @@ export default function SignUp() {
                 <MyInput
                   placeholder="First name"
                   // style={{ width: "48%", height: "75%", marginBottom: "3%" }}
+                  // the part below needs to be removed later
                   onChange={handleChange("firstName")}
                   style={[
                     { width: "48%", height: "75%", marginBottom: "3%" },
@@ -191,6 +182,7 @@ export default function SignUp() {
                 <MyInput
                   placeholder="Last name"
                   // style={{ width: "48%", height: "75%", marginBottom: "3%" }}
+                  // the part below needs to be removed later
                   style={[
                     { width: "48%", height: "75%", marginBottom: "3%" },
                     touched.firstName && errors.firstName
@@ -238,7 +230,6 @@ export default function SignUp() {
               onChange={() => {
                 console.log("old: ", values.agreeToTerms);
                 setFieldValue("agreeToTerms", !values.agreeToTerms);
-                // console.log("new: ", values.agreeToTerms);
               }}
               style={{
                 marginRight: 5,
@@ -256,7 +247,7 @@ export default function SignUp() {
             <View
               style={{
                 flexDirection: "row",
-                width: "77%",
+                width: "85%",
                 flexWrap: "wrap",
                 alignItems: "center",
               }}
@@ -266,7 +257,6 @@ export default function SignUp() {
                 style={{
                   color: "#FFFFFF",
                   fontSize: 12,
-                  fontFamily: "Inter",
                 }}
               />
 
@@ -274,11 +264,9 @@ export default function SignUp() {
                 text="Terms and Conditions"
                 style={{
                   color: "#FB631C",
-                  fontWeight: "bold",
                   textDecorationColor: "#FB631C",
                   textDecorationLine: "underline",
                   fontSize: 10,
-                  fontFamily: "Inter",
                 }}
               />
               <MyText
@@ -286,7 +274,6 @@ export default function SignUp() {
                 style={{
                   color: "#FFFFFF",
                   fontSize: 12,
-                  fontFamily: "Inter",
                 }}
               />
 
@@ -294,11 +281,9 @@ export default function SignUp() {
                 text="Privacy Policy"
                 style={{
                   color: "#FB631C",
-                  fontWeight: "bold",
                   textDecorationColor: "#FB631C",
                   textDecorationLine: "underline",
                   fontSize: 10,
-                  fontFamily: "Inter",
                 }}
               />
             </View>
@@ -306,7 +291,14 @@ export default function SignUp() {
           <MyButton
             label="Submit"
             textColor="white"
-            onPress={handleSubmit}
+            onPress={() => {
+              console.log("Form values", values);
+              console.log("Form errors", errors);
+              console.log("Form touched", touched);
+
+              handleSubmit();
+            }}
+            // onPress={handleSubmit}
             style={{
               width: 110,
               alignItems: "center",
@@ -331,7 +323,13 @@ export default function SignUp() {
               textColor="white"
               style={{ marginTop: "3%" }}
             />
-            <View style={{ flexDirection: "row", marginTop: "3%" }}>
+            <View
+              style={{
+                flexDirection: "row",
+                marginTop: "3%",
+                alignItems: "center",
+              }}
+            >
               <MyText
                 text="Sign Up with  "
                 size={14}

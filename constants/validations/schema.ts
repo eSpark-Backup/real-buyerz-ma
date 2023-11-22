@@ -6,14 +6,15 @@ const EMAIL_REGEX =
   /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 const NAME_REGEX = /^[a-zA-Z0-9 ]*$/;
 const PASSWORD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d!@#$%^&*]+$/;
+const PHONE_REGEX = /^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{5})$/;
 
 export const UserSignInSchema = {
   signInForm: object().shape({
-    username: string().required("Username is required"),
+    username: string().required("Username is required!"),
     password: string().required("Password is required!"),
     agreeToTerms: bool().oneOf(
       [true],
-      "You must agree to the Terms and Conditions"
+      "You must agree to the Terms and Conditions!"
     ),
   }),
 };
@@ -42,11 +43,10 @@ export const UserSignUpSchema = {
       .matches(EMAIL_REGEX, { message: "Invalid email" }),
 
     phone: string()
-      .matches(
-        /^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/,
-        "Contact number is not valid"
-      )
+      .matches(PHONE_REGEX, "Contact number is not valid")
       .required("Contact No is Required"),
+
+    applicant: string().required("appplicant is required"),
     password: string()
       .required("Password is required")
       .min(6, "Password must contain at least 8 characters")
@@ -63,9 +63,9 @@ export const UserSignUpSchema = {
       [true],
       "You must agree to the Terms and Conditions"
     ),
-    Username: string()
-      .required("Username is required")
-      .min(4, "Username must contain at least 4 characters"),
+    // Username: string()
+    //   .required("Username is required")
+    //   .min(4, "Username must contain at least 4 characters"),
   }),
 };
 
