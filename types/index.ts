@@ -28,8 +28,12 @@ export type MyInputProps = {
   password?: boolean;
   text?: string;
   onChange?: (val: string) => void;
+  onBlur?: () => void;
+  onChangeText?: (value: string) => void;
+  value?: string;
   width?: number | string;
-  style?: ViewStyle;
+  style?: any;
+  placeholderColor?: string;
   rightIcon?: {
     name: any;
     size?: number;

@@ -9,9 +9,12 @@ export default function MyInput({
   placeholder,
   password = false,
   onChange,
+  onBlur,
+  value,
   text,
   style,
   rightIcon,
+  placeholderColor,
 }: MyInputProps) {
   const [showPassword, setShowPassword] = useState(false);
   const inputContainerStyle: ViewStyle = {
@@ -20,11 +23,14 @@ export default function MyInput({
 
   return (
     <View style={[styles.inputContainerStyle, style, inputContainerStyle]}>
-      {/* {label && <MyText text={label} textColor="grey"/> } */}
       <TextInput
         secureTextEntry={password ? (showPassword ? false : true) : false}
         placeholder={placeholder}
-        style={styles.inputStyle}
+        style={[
+          styles.inputStyle,
+          placeholderColor ? { color: placeholderColor } : null,
+          { fontFamily: "Inter-Regular" },
+        ]}
         value={text!}
         onChangeText={(val): void => onChange?.(val)}
       />
@@ -49,7 +55,6 @@ export default function MyInput({
 
 const styles = StyleSheet.create({
   inputContainerStyle: {
-    // marginVertical: 1,
     backgroundColor: "#f3f4f6",
 
     flexDirection: "row",

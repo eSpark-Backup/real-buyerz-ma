@@ -9,6 +9,8 @@ import {
 } from "react-native";
 import { router } from "expo-router";
 
+import { customImages } from "../../utils/customImages";
+
 export default function App() {
   const translateY = useRef(new Animated.Value(1000)).current;
   const scale = useRef(new Animated.Value(1)).current;
