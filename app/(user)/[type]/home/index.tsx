@@ -10,6 +10,8 @@ import {
   Animated,
   Easing,
 } from "react-native";
+import AutoScroll from "@homielab/react-native-auto-scroll";
+import MarqueeView from "react-native-marquee-view";
 
 import { Card, MyText, MyAppBar, GapView } from "@components";
 import { AgentHome } from "@assets/images";
