@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef, useEffect } from "react";
 import {
   FlatList,
   StyleSheet,
@@ -8,7 +8,11 @@ import {
   ScrollView,
   ImageBackground,
   TouchableOpacity,
+  Animated,
+  Easing,
 } from "react-native";
+import AutoScroll from "@homielab/react-native-auto-scroll";
+import MarqueeView from "react-native-marquee-view";
 
 import { Card, MyText, MyAppBar, GapView } from "@components";
 import { AgentHome } from "@assets/images";
@@ -51,7 +55,7 @@ export default function Home() {
         <PropertyListing title="Newly Listed Properties" />
         <GapView length={30} />
         <Title text="Our Home Partners" />
-        <Carosel />
+        <MarqueeScrollView />
       </View>
     </ScrollView>
   );
@@ -66,8 +70,79 @@ const Title = ({ text }: { text?: string }) => {
   );
 };
 
-const Carosel = () => {
-  return <View style={{ marginTop: 20 }}></View>;
+const MarqueeScrollView = () => {
+  const data = [
+    "one",
+    "two",
+    "three",
+    "four",
+    "one",
+    "two",
+    "three",
+    "four",
+    "one",
+    "two",
+    "three",
+    "four",
+  ];
+  const scrollViewRef = useRef(null);
+  const translateValue = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    const itemWidth = 100; // Adjust the item width based on your content
+    const totalWidth = itemWidth * data.length;
+    const duration = 20000; // Duration for the marquee effect
+
+    Animated.loop(
+      Animated.timing(translateValue, {
+        toValue: -totalWidth,
+        duration,
+        easing: Easing.linear,
+        useNativeDriver: true,
+      })
+    ).start();
+
+    return () => {
+      translateValue.setValue(0);
+    };
+  }, [data]);
+
+  return (
+    <ScrollView
+      horizontal
+      bounces={false}
+      contentContainerStyle={{ marginTop: 20, height: 50, width: "90%" }}
+      showsHorizontalScrollIndicator={false}
+      ref={scrollViewRef}
+    >
+      <Animated.View
+        style={{
+          flexDirection: "row",
+          transform: [{ translateX: translateValue }],
+        }}
+      >
+        {data.map((item, index) => (
+          <Card
+            style={{ padding: 14, width: 100, marginRight: 5 }}
+            radius={10}
+            key={index}
+          >
+            <MyText text={item} />
+          </Card>
+        ))}
+        {/* Repeat items for continuous loop */}
+        {data.map((item, index) => (
+          <Card
+            style={{ padding: 14, width: 100, marginRight: 5 }}
+            radius={10}
+            key={`extra_${index}`}
+          >
+            <MyText text={item} />
+          </Card>
+        ))}
+      </Animated.View>
+    </ScrollView>
+  );
 };
 
 const ImageCard = () => {
