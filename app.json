@@ -12,7 +12,7 @@
       "resizeMode": "cover",
       "backgroundColor": "#ccd4df"
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": ["assets/images/*"],
     "ios": {
       "supportsTablet": true
     },

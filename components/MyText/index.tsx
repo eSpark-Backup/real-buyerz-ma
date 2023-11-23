@@ -1,7 +1,7 @@
 import React from "react";
 import { StyleSheet, Text, TextStyle, TextProps } from "react-native";
 
-import { MyTextProps } from "../../types";
+import { MyTextProps } from "@types";
 
 export default function MyText({
   text,
@@ -9,7 +9,7 @@ export default function MyText({
   textColor,
   weight,
   size,
-  style
+  style,
 }: MyTextProps & TextProps) {
   const getFontFamily = (weight: string) => {
     switch (weight) {
@@ -34,7 +34,5 @@ export default function MyText({
     fontFamily: weight ? getFontFamily(weight) : "Inter-Regular",
   };
 
-  return (
-    <Text style={[styles.plain, textStyle, style]}>{children || text}</Text>
-  );
+  return <Text style={[textStyle, style]}>{children || text}</Text>;
 }
