@@ -1,15 +1,26 @@
 import React from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet } from "react-native";
 import { Tabs } from "expo-router/tabs";
-import { MyTabBar } from "../../../components";
+
+import { MyTabBar, MyHeader } from "@components";
 
 export default function UserTypeLayout() {
   return (
     <Tabs
       initialRouteName="home/index"
       backBehavior="initialRoute"
+      screenOptions={({ navigation, route }) => ({
+        headerShown: false,
+        headerStyle: {
+          height: 60,
+          borderBottomColor: "#E4E4E4",
+          borderBottomWidth: 1,
+        },
+        header: (props) => {
+          return <MyHeader {...props} showRight showBackIcon />;
+        },
+      })}
       tabBar={(props) => {
-        // console.log("pop", JSON.stringify(descriptors));
         return <MyTabBar {...props} />;
       }}
     >
@@ -22,7 +33,7 @@ export default function UserTypeLayout() {
       <Tabs.Screen
         name="home/index"
         options={{
-          headerShown: false,
+          // headerShown: false,
           title: "Home",
           href: "(user)/anon/home",
         }}
@@ -30,7 +41,7 @@ export default function UserTypeLayout() {
       <Tabs.Screen
         name="inbox/index"
         options={{
-          headerShown: false,
+          // headerShown: false,
           title: "Inbox",
           href: "(user)/anon/inbox",
         }}
@@ -38,7 +49,7 @@ export default function UserTypeLayout() {
       <Tabs.Screen
         name="search/index"
         options={{
-          headerShown: false,
+          headerShown: true,
           title: "Search",
           href: "(user)/anon/search",
         }}
@@ -46,7 +57,7 @@ export default function UserTypeLayout() {
       <Tabs.Screen
         name="listings/index"
         options={{
-          headerShown: false,
+          // headerShown: false,
           title: "Listings",
           href: "(user)/anon/listings",
         }}
@@ -54,7 +65,7 @@ export default function UserTypeLayout() {
       <Tabs.Screen
         name="settings/index"
         options={{
-          headerShown: false,
+          // headerShown: false,
           title: "Settings",
           href: "(user)/anon/settings",
         }}

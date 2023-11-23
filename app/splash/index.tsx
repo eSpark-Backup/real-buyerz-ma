@@ -10,9 +10,10 @@ import {
 import { router } from "expo-router";
 
 import { customImages } from "../../utils/customImages";
+import { WINDOW_HEIGHT, WINDOW_WIDTH } from "@constants";
 
 export default function App() {
-  const translateY = useRef(new Animated.Value(1000)).current;
+  const translateY = useRef(new Animated.Value(WINDOW_HEIGHT * 1.5)).current;
   const scale = useRef(new Animated.Value(1)).current;
   const rotate = useRef(new Animated.Value(0)).current;
 
@@ -104,6 +105,6 @@ const styles = StyleSheet.create({
   loader: {
     height: 56.15,
     width: 56.15,
-    top: 313,
+    top: WINDOW_WIDTH / 1.1,
   },
 });
