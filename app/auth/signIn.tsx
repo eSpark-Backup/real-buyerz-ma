@@ -49,7 +49,7 @@ export default function signIn() {
           agreeToTerms: false,
         }}
         onSubmit={async (values, { resetForm }) => {
-          console.log("Sign Up success", values);
+          console.log("Sign In success", values);
         }}
         validationSchema={UserSignInSchema.signInForm}
       >
