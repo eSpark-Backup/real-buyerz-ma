@@ -9,7 +9,7 @@
       "@theme": ["./theme/index"],
       "@constants": ["./constants/index"],
       "@types": ["./types/index"],
-      "@schema": ["./constants/validations/schema.ts"]
+      "@validations/*": ["./constants/validations/*"]
     }
   }
 }

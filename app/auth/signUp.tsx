@@ -9,7 +9,7 @@ import { Formik } from "formik";
 import { GLogo, SLogo } from "@assets/images/svg";
 import { DarkTheme, LightTheme } from "@theme";
 import { MyText, MyButton, MyCheckbox, MyInput } from "@components";
-import { UserSignUpSchema } from "@schema";
+import { UserSignUpSchema } from "@validations/schema";
 
 interface InputField {
   placeholder: string;

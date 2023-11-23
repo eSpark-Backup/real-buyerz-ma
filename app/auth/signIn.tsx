@@ -8,7 +8,7 @@ import { Formik } from "formik";
 import { GLogo, RLogo } from "@assets/images";
 import { DarkTheme, LightTheme } from "@theme";
 import { MyText, MyButton, MyCheckbox, MyInput, LoginModal } from "@components";
-import { UserSignInSchema } from "@schema";
+import { UserSignInSchema } from "@validations/schema";
 
 export default function signIn() {
   const colorScheme = Appearance.getColorScheme();
