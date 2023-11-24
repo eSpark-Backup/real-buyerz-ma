@@ -41,7 +41,7 @@ export default function UserTypeLayout() {
       <Tabs.Screen
         name="inbox/index"
         options={{
-          // headerShown: false,
+          headerShown: true,
           title: "Inbox",
           href: "(user)/anon/inbox",
         }}

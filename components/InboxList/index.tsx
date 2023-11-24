@@ -53,7 +53,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     paddingRight: 20,
-    height: 100,
+    height: 95,
   },
   avatarStyle: {
     justifyContent: "center",
