@@ -11,12 +11,13 @@ import * as Font from "expo-font";
 import { Asset } from "expo-asset";
 import { MaterialCommunityIcons, Ionicons } from "@expo/vector-icons";
 
+import { WINDOW_HEIGHT, WINDOW_WIDTH } from "@constants";
 import { customFonts } from "utils/customFonts";
 import { customImages } from "utils/customImages";
 
 export default function App() {
   const [appIsReady, setAppIsReady] = useState(false);
-  const translateY = useRef(new Animated.Value(1000)).current;
+  const translateY = useRef(new Animated.Value(WINDOW_HEIGHT * 1.5)).current;
   const scale = useRef(new Animated.Value(1)).current;
   const rotate = useRef(new Animated.Value(0)).current;
 
@@ -150,6 +151,6 @@ const styles = StyleSheet.create({
   loader: {
     height: 56.15,
     width: 56.15,
-    top: 313,
+    top: WINDOW_WIDTH / 1.1,
   },
 });
