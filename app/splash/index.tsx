@@ -1,21 +1,63 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   StyleSheet,
   ImageBackground,
-  Text,
   Image,
   Animated,
   Easing,
 } from "react-native";
-import { router } from "expo-router";
+import { SplashScreen, router } from "expo-router";
+import * as Font from "expo-font";
+import { Asset } from "expo-asset";
+import { MaterialCommunityIcons, Ionicons } from "@expo/vector-icons";
 
-import { customImages } from "../../utils/customImages";
 import { WINDOW_HEIGHT, WINDOW_WIDTH } from "@constants";
+import { customFonts } from "utils/customFonts";
+import { customImages } from "utils/customImages";
 
 export default function App() {
+  const [appIsReady, setAppIsReady] = useState(false);
   const translateY = useRef(new Animated.Value(WINDOW_HEIGHT * 1.5)).current;
   const scale = useRef(new Animated.Value(1)).current;
   const rotate = useRef(new Animated.Value(0)).current;
+
+  const cacheImages = (images: any[]) => {
+    return images.map((image) => {
+      if (typeof image === "string") {
+        return Image.prefetch(image);
+      } else {
+        return Asset.fromModule(image).downloadAsync();
+      }
+    });
+  };
+
+  const cacheFonts = (fonts: any[]) => {
+    return fonts.map((font) => Font.loadAsync(font));
+  };
+
+  const loadResourcesAsync = async () => {
+    try {
+      SplashScreen.preventAutoHideAsync();
+
+      const imageAssets = cacheImages(customImages);
+      const customFontAssets = cacheFonts([customFonts]);
+      const fontAssets = cacheFonts([
+        MaterialCommunityIcons.font,
+        Ionicons.font,
+      ]);
+
+      await Promise.all([...imageAssets, ...fontAssets, ...customFontAssets]);
+    } catch (e) {
+      console.warn(e);
+    } finally {
+      setAppIsReady(true);
+      SplashScreen.hideAsync();
+    }
+  };
+
+  useEffect(() => {
+    loadResourcesAsync();
+  }, []);
 
   useEffect(() => {
     const rotationAnimation = Animated.loop(
@@ -59,6 +101,10 @@ export default function App() {
       router.push("/auth");
     }, 3000);
   }, []);
+
+  if (!appIsReady) {
+    return null;
+  }
 
   return (
     <ImageBackground
