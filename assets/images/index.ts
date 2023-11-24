@@ -1,6 +1,14 @@
 //* svgs
 
-export { AgentHome, GLogo, PLogo, RLogo, RText, SLogo } from "./svg";
+export {
+  AgentHome,
+  GLogo,
+  PLogo,
+  RLogo,
+  RText,
+  SLogo,
+  ProfilePin,
+} from "./svg";
 
 //* pngs
 

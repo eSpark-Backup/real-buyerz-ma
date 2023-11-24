@@ -8,3 +8,4 @@ export { default as Card } from "./Card";
 export { default as MyAppBar } from "./MyAppBar";
 export { default as MySwitch } from "./MySwitch";
 export { default as GapView } from "./GapView";
+export { default as MyHeader } from "./MyHeader";
