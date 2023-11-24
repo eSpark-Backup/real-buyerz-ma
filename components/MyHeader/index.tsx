@@ -1,10 +1,11 @@
 import React from "react";
-import { ImageStyle, StyleSheet, Text, View, ViewStyle } from "react-native";
+import { StyleSheet, View, ViewStyle } from "react-native";
 import { BottomTabHeaderProps } from "@react-navigation/bottom-tabs";
 import { Entypo, Feather } from "@expo/vector-icons";
 
 import { PLogo, ProfilePin, RText } from "@assets/images";
 import { GapView } from "@components";
+import { WINDOW_WIDTH } from "@constants";
 
 interface MyProps {
   showBackIcon?: boolean;
@@ -41,15 +42,17 @@ export default function MyHeader({
           {showProfilePin && (
             <>
               <ProfilePin />
-              {/* <GapView mode="horizontal" /> */}
             </>
           )}
           <Entypo
             name="dots-three-vertical"
             size={20}
             color={"#136FA9"}
-            style={!showProfilePin ? { marginLeft: 40 } : {}}
+            style={
+              showProfilePin ? { marginLeft: 20, backgroundColor: "red" } : {}
+            }
           />
+          <View />
         </View>
       )}
     </View>
@@ -59,26 +62,23 @@ export default function MyHeader({
 const styles = StyleSheet.create({
   container: {
     flexDirection: "row",
-    // backgroundColor: "yellow",
+    paddingHorizontal: 20,
+    width: "100%",
+    justifyContent: "center",
   },
   left: {
-    flex: 2,
+    flex: 1,
     alignItems: "flex-start",
-    left: 20,
     justifyContent: "center",
-    // backgroundColor: "red",
   },
   middle: {
-    flex: 5,
     alignItems: "center",
     justifyContent: "center",
-    // backgroundColor: "teal",
   },
   right: {
-    flex: 2,
+    flex: 1,
     flexDirection: "row",
     alignItems: "center",
-    justifyContent: "center",
-    // backgroundColor: "orange",
+    justifyContent: "flex-end",
   },
 });
