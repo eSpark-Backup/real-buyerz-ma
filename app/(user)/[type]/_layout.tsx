@@ -50,6 +50,9 @@ export default function UserTypeLayout() {
         name="search/index"
         options={{
           headerShown: true,
+          header: (props) => {
+            return <MyHeader {...props} hideCenter showBackIcon />;
+          },
           title: "Search",
           href: "(user)/anon/search",
         }}
