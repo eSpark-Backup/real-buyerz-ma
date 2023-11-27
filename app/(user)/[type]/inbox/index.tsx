@@ -22,7 +22,6 @@ const Inbox: React.FC = () => {
 
   const listData: IList[] = [
     {
-      id: 0,
       title: "John Doe",
       subTitle: "Lorem ipsum dolor sit amet, consectetur adipiscing elit",
       time: "10:00 AM",
@@ -30,41 +29,42 @@ const Inbox: React.FC = () => {
       avatarUrl: "https://picsum.photos/id/151/130",
     },
     {
-      id: 1,
       title: "John Doe",
       subTitle: "Lorem ipsum dolor sit amet, consectetur adipiscing elit",
       time: "10:00 AM",
+      avatarUrl: "https://mui.com/static/images/avatar/2.jpg",
+    },
+    {
+      title: "John Doe",
+      subTitle: "Lorem ipsum dolor sit amet, consectetur adipiscing elit",
+      time: "10:00 AM",
+      count: "3",
+      avatarUrl: "https://mui.com/static/images/avatar/1.jpg",
+    },
+    {
+      title: "John Doe",
+      subTitle: "Lorem ipsum dolor sit amet, consectetur adipiscing elit",
+      time: "10:00 AM",
+      avatarUrl: "https://mui.com/static/images/avatar/3.jpg",
+    },
+    {
+      title: "John Doe",
+      subTitle: "Lorem ipsum dolor sit amet, consectetur adipiscing elit",
+      time: "10:00 AM",
+      count: "5",
       avatarUrl: "https://picsum.photos/id/151/130",
     },
     {
-      id: 2,
       title: "John Doe",
       subTitle: "Lorem ipsum dolor sit amet, consectetur adipiscing elit",
       time: "10:00 AM",
-      count: "1",
+      count: "2",
       avatarUrl: "https://picsum.photos/id/151/130",
     },
     {
-      id: 3,
       title: "John Doe",
       subTitle: "Lorem ipsum dolor sit amet, consectetur adipiscing elit",
       time: "10:00 AM",
-      avatarUrl: "https://picsum.photos/id/151/130",
-    },
-    {
-      id: 4,
-      title: "John Doe",
-      subTitle: "Lorem ipsum dolor sit amet, consectetur adipiscing elit",
-      time: "10:00 AM",
-      count: "1",
-      avatarUrl: "https://picsum.photos/id/151/130",
-    },
-    {
-      id: 5,
-      title: "John Doe",
-      subTitle: "Lorem ipsum dolor sit amet, consectetur adipiscing elit",
-      time: "10:00 AM",
-      count: "1",
       avatarUrl: "https://picsum.photos/id/151/130",
     },
   ];

@@ -4,7 +4,6 @@ import MyText from "components/MyText";
 import MyAvatar from "components/MyAvatar";
 
 export interface IList {
-  id?: number;
   title: string;
   subTitle: string;
   time: string;
@@ -13,7 +12,6 @@ export interface IList {
 }
 
 export default function InboxList({
-  id,
   title,
   subTitle,
   time,
@@ -52,8 +50,9 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    paddingRight: 20,
     height: 95,
+    paddingHorizontal: 10,
+    paddingVertical: 15,
   },
   avatarStyle: {
     justifyContent: "center",
@@ -69,6 +68,7 @@ const styles = StyleSheet.create({
     height: "100%",
     alignItems: "center",
     justifyContent: "space-around",
+    paddingEnd: 4,
   },
   circle: {
     backgroundColor: "#126FAA",
