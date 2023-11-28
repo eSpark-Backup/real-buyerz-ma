@@ -7,8 +7,9 @@ import MyText from "../MyText";
 export interface IMySwitch {
   titleSwitchOne: string;
   titleSwitchTwo: string;
-  onPressSwitchOne: () => void;
-  onPressSwitchTwo: () => void;
+  onPressSwitchOne?: () => void;
+  onPressSwitchTwo?: () => void;
+  bgColor?: string;
 }
 
 const MySwitch = ({
@@ -16,6 +17,7 @@ const MySwitch = ({
   titleSwitchTwo,
   onPressSwitchOne,
   onPressSwitchTwo,
+  bgColor,
 }: IMySwitch) => {
   const [activeButton, setActiveButton] = useState(null);
   const slideAnim = useRef(new Animated.Value(0)).current;
@@ -30,13 +32,14 @@ const MySwitch = ({
       }).start();
     }
   };
+
   return (
-    <View style={styles.switchWrapper}>
+    <View style={[styles.switchWrapper, { backgroundColor: bgColor }]}>
       <TouchableOpacity
         style={[styles.buttonStyle]}
         onPress={() => {
           handleButtonPress(titleSwitchOne);
-          onPressSwitchOne();
+          onPressSwitchOne?.();
         }}
       >
         <MyText
@@ -50,7 +53,7 @@ const MySwitch = ({
         style={[styles.buttonStyle]}
         onPress={() => {
           handleButtonPress(titleSwitchTwo);
-          onPressSwitchTwo();
+          onPressSwitchTwo?.();
         }}
       >
         <MyText

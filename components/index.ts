@@ -9,3 +9,5 @@ export { default as MyAppBar } from "./MyAppBar";
 export { default as MySwitch } from "./MySwitch";
 export { default as GapView } from "./GapView";
 export { default as MyHeader } from "./MyHeader";
+export { default as SearchBar } from "./SearchBar";
+export { default as MyDropdown } from "./MyDropdown";

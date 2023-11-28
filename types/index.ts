@@ -1,5 +1,5 @@
 import { Theme } from "@react-navigation/native";
-import { ImageStyle, TextStyle, ViewStyle } from "react-native";
+import { ImageStyle, StyleProp, TextStyle, ViewStyle } from "react-native";
 
 export type MyTheme = Theme & { colors: { secondary: string } };
 
@@ -34,6 +34,7 @@ export type MyInputProps = {
   width?: number | string;
   style?: any;
   placeholderColor?: string;
+  inputStyle?: StyleProp<TextStyle>;
   rightIcon?: {
     name: any;
     size?: number;
