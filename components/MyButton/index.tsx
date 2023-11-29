@@ -36,6 +36,7 @@ export default function MyButton({
     color: textColor || theme.colors.text,
     fontWeight: "500",
     fontSize: 14,
+    fontFamily: "Inter",
     ...labelStyle,
   };
 

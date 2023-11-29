@@ -12,6 +12,7 @@ interface MyProps {
   leftLogo?: boolean;
   showRight?: boolean;
   showProfilePin?: boolean;
+  hideCenter?: boolean;
 }
 
 export default function MyHeader({
@@ -23,6 +24,7 @@ export default function MyHeader({
   showRight,
   leftLogo,
   showProfilePin,
+  hideCenter,
 }: BottomTabHeaderProps & MyProps) {
   console.log("lay", options.headerStyle);
   const headerStyle = options.headerStyle as ViewStyle;
@@ -34,27 +36,31 @@ export default function MyHeader({
         )}
         {leftLogo && <PLogo />}
       </View>
-      <View style={styles.middle}>
-        <RText />
-      </View>
-      {showRight && (
-        <View style={styles.right}>
-          {showProfilePin && (
-            <>
-              <ProfilePin />
-            </>
-          )}
-          <Entypo
-            name="dots-three-vertical"
-            size={20}
-            color={"#136FA9"}
-            style={
-              showProfilePin ? { marginLeft: 20, backgroundColor: "red" } : {}
-            }
-          />
-          <View />
+      {!hideCenter && (
+        <View style={styles.middle}>
+          <RText />
         </View>
       )}
+      <View style={styles.right}>
+        {showRight && (
+          <>
+            {showProfilePin && (
+              <>
+                <ProfilePin />
+              </>
+            )}
+            <>
+              <Entypo
+                name="dots-three-vertical"
+                size={20}
+                color={"#136FA9"}
+                style={showProfilePin ? { marginLeft: 20 } : {}}
+              />
+              <View />
+            </>
+          </>
+        )}
+      </View>
     </View>
   );
 }
