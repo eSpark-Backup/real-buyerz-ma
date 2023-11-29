@@ -10,6 +10,7 @@ export default function MyText({
   weight,
   size,
   style,
+  numberOfLines,
 }: MyTextProps & TextProps) {
   const getFontFamily = (weight: string) => {
     switch (weight) {
@@ -34,5 +35,9 @@ export default function MyText({
     fontFamily: weight ? getFontFamily(weight) : "Inter-Regular",
   };
 
-  return <Text style={[textStyle, style]}>{children || text}</Text>;
+  return (
+    <Text style={[textStyle, style]} numberOfLines={numberOfLines}>
+      {children || text}
+    </Text>
+  );
 }
