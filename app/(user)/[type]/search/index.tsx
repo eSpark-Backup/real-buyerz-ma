@@ -5,10 +5,11 @@ import {
   Card,
   GapView,
   MyDropdown,
-  MySwitch,
+  TabSwitch,
   MyText,
   SearchBar,
   TabFilter,
+  MyButton,
 } from "@components";
 import { testData } from "@constants";
 
@@ -21,7 +22,7 @@ export default function Search() {
       <GapView length={40} />
       <View style={styles.purpose}>
         <MyText text="Select Purpose" />
-        <MySwitch
+        <TabSwitch
           titleSwitchOne="Buy"
           titleSwitchTwo="Rent"
           bgColor="transparent"
@@ -55,6 +56,14 @@ export default function Search() {
           }}
         />
       </View>
+      <View style={styles.button}>
+        <MyButton
+          label="Search"
+          textColor="#ffffff"
+          backgroundColor="#fb631c"
+          style={{ borderRadius: 4, padding: 8, paddingHorizontal: 20 }}
+        />
+      </View>
     </View>
   );
 }
@@ -82,5 +91,8 @@ const styles = StyleSheet.create({
     width: "100%",
     justifyContent: "center",
     alignItems: "center",
+  },
+  button: {
+    marginTop: 50,
   },
 });
