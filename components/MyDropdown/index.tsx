@@ -43,6 +43,7 @@ export default function MyDropdown({ data, onSelect }: DropdownProps) {
       {show && (
         <View
           style={{
+            zIndex: 10,
             width: "101.5%",
             position: "absolute",
             overflow: "hidden",
@@ -89,5 +90,6 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     borderColor: "#E7E7E7",
     alignItems: "center",
+    zIndex: 10,
   },
 });

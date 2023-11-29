@@ -11,3 +11,4 @@ export { default as GapView } from "./GapView";
 export { default as MyHeader } from "./MyHeader";
 export { default as SearchBar } from "./SearchBar";
 export { default as MyDropdown } from "./MyDropdown";
+export { default as TabFilter } from "./TabFilter";

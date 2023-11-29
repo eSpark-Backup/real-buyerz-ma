@@ -71,3 +71,16 @@ export type LoginModalProps = {
   visible?: boolean;
   onClose: () => void;
 };
+
+export interface SearchDataProps {
+  id: string;
+  title: string;
+  selected: boolean;
+  list: SearchListProps[];
+}
+
+export interface SearchListProps {
+  id: string;
+  label: string;
+  selected: boolean;
+}

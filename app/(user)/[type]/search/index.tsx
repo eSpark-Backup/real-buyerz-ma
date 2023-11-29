@@ -8,7 +8,9 @@ import {
   MySwitch,
   MyText,
   SearchBar,
+  TabFilter,
 } from "@components";
+import { testData } from "@constants";
 
 export default function Search() {
   return (
@@ -45,7 +47,14 @@ export default function Search() {
         />
       </View>
       <GapView length={30} />
-      <View style={styles.genre}></View>
+      <View style={styles.genre}>
+        <TabFilter
+          data={testData}
+          onSelect={(value) => {
+            console.log("value", value);
+          }}
+        />
+      </View>
     </View>
   );
 }
@@ -69,5 +78,9 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
   },
-  genre: {},
+  genre: {
+    width: "100%",
+    justifyContent: "center",
+    alignItems: "center",
+  },
 });
