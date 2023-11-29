@@ -5,7 +5,6 @@ import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 import { MyInputProps } from "../../types";
 
 export default function MyInput({
-  label,
   placeholder,
   password = false,
   onChange,

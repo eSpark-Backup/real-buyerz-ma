@@ -65,7 +65,7 @@ export default function UserTypeLayout() {
       <Tabs.Screen
         name="settings/index"
         options={{
-          // headerShown: false,
+          headerShown: true,
           title: "Settings",
           href: "(user)/anon/settings",
         }}

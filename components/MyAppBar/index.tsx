@@ -3,7 +3,7 @@ import { StyleSheet, View } from "react-native";
 
 import { PLogo, RText } from "../../assets/images/svg";
 import { colors } from "../../theme";
-import MySwitch from "../MySwitch";
+import { TabSwitch } from "../MySwitch";
 
 export default function MyAppBar() {
   const switchData = {
@@ -32,7 +32,7 @@ export default function MyAppBar() {
           marginTop: 15,
         }}
       >
-        <MySwitch
+        <TabSwitch
           titleSwitchOne={switchData.titleSwitchOne}
           titleSwitchTwo={switchData.titleSwitchTwo}
           onPressSwitchOne={switchData.onPressSwitchOne}
