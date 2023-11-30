@@ -17,7 +17,7 @@ export default function Search() {
   return (
     <View style={styles.container}>
       <View style={styles.searchBar}>
-        <SearchBar />
+        <SearchBar leftIcon clearIcon />
       </View>
       <GapView length={40} />
       <View style={styles.purpose}>
@@ -38,7 +38,7 @@ export default function Search() {
         <MyText text="City" />
         <MyDropdown
           placeholder="City"
-          // multiSelect
+          multiSelect
           zIndex={8}
           data={[
             "Karachi",
@@ -80,7 +80,10 @@ const styles = StyleSheet.create({
     paddingVertical: 14,
     alignItems: "center",
   },
-  searchBar: {},
+  searchBar: {
+    height: 46,
+    width: "100%",
+  },
   purpose: {
     flexDirection: "row",
     alignItems: "center",
