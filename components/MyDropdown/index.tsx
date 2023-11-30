@@ -1,22 +1,82 @@
 import React, { useState } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { Entypo } from "@expo/vector-icons";
+import { Feather } from "@expo/vector-icons";
 
 import MyText from "components/MyText";
 
 interface DropdownProps {
   data: string[];
-  onSelect: (value: string) => void;
+  placeholder?: string;
+  multiSelect?: boolean;
+  zIndex?: number;
+  onSelect: (value: string | string[]) => void;
 }
 
-export default function MyDropdown({ data, onSelect }: DropdownProps) {
+export default function MyDropdown({
+  data,
+  onSelect,
+  placeholder = "",
+  zIndex = 10,
+  multiSelect = false,
+}: DropdownProps) {
   const [show, setShow] = useState(false);
+  const [selectedItems, setSelectedItems] = useState<string[]>([]);
   const [label, setLabel] = useState("");
+  const listData = multiSelect ? ["All", ...data] : data;
+
+  const handleSelection = (item: string) => {
+    let updatedSelection: string[] = [...selectedItems];
+
+    if (item === "All") {
+      updatedSelection =
+        updatedSelection.length === data.length ? [] : [...data];
+    } else {
+      const index = updatedSelection.indexOf(item);
+      if (index === -1) {
+        if (multiSelect) {
+          updatedSelection.push(item);
+        } else {
+          updatedSelection = [item];
+        }
+      } else {
+        updatedSelection.splice(index, 1);
+      }
+
+      const allIndex = updatedSelection.indexOf("All");
+      if (allIndex !== -1) {
+        updatedSelection.splice(allIndex, 1);
+      }
+    }
+
+    setSelectedItems(updatedSelection);
+    onSelect(updatedSelection);
+
+    if (!multiSelect && updatedSelection.length > 0) {
+      setLabel(item);
+    } else if (updatedSelection.length === data.length) {
+      setLabel("All");
+    } else {
+      setLabel(
+        updatedSelection.length > 0
+          ? `${updatedSelection.length}+ ${placeholder}`
+          : `Select ${placeholder}`
+      );
+    }
+  };
+
+  const isSelected = (item: string) => {
+    return (
+      (item === "All" && selectedItems.length === data.length) ||
+      (item !== "All" && selectedItems.includes(item))
+    );
+  };
 
   return (
     <View
       style={[
         styles.container,
+        { zIndex: zIndex },
         show ? { borderBottomRightRadius: 0, borderBottomLeftRadius: 0 } : {},
       ]}
     >
@@ -28,9 +88,13 @@ export default function MyDropdown({ data, onSelect }: DropdownProps) {
           width: "100%",
           height: "100%",
           paddingHorizontal: 15,
+          zIndex: zIndex - 2,
         }}
       >
-        <MyText text={label ? label : "Select City"} textColor="#969696" />
+        <MyText
+          text={label ? label : `Select ${placeholder}`}
+          textColor="#969696"
+        />
         <Entypo
           name={!show ? "chevron-down" : "chevron-up"}
           color={"#66666666"}
@@ -43,7 +107,7 @@ export default function MyDropdown({ data, onSelect }: DropdownProps) {
       {show && (
         <View
           style={{
-            zIndex: 10,
+            zIndex: zIndex + 2,
             width: "101.5%",
             position: "absolute",
             overflow: "hidden",
@@ -56,24 +120,30 @@ export default function MyDropdown({ data, onSelect }: DropdownProps) {
             borderBottomLeftRadius: 5,
           }}
         >
-          {data.map((item, index) => (
+          {listData.map((item, index) => (
             <TouchableOpacity
               activeOpacity={1}
               style={{
                 height: 30,
                 borderTopWidth: index > 0 ? 1 : 0,
-                justifyContent: "center",
+                justifyContent: "space-between",
                 borderColor: "#E7E7E7",
                 paddingHorizontal: 15,
+                flexDirection: "row",
+                alignItems: "center",
               }}
               key={item}
               onPress={() => {
-                onSelect(item);
-                setLabel(item);
-                setShow(!show);
+                if (!multiSelect) {
+                  setShow(false);
+                }
+                handleSelection(item);
               }}
             >
               <MyText text={item} />
+              {isSelected(item) && (
+                <Feather name="check" size={16} color="#34e145" />
+              )}
             </TouchableOpacity>
           ))}
         </View>

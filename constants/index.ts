@@ -39,7 +39,6 @@ export const testData: SearchDataProps[] = [
     id: "3",
     title: "Commercial",
     selected: false,
-
     list: [
       { id: "1", label: "Office", selected: false },
       { id: "2", label: "Ware house", selected: false },
