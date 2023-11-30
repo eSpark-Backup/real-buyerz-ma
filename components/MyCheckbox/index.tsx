@@ -2,8 +2,8 @@ import React, { useState } from "react";
 import { View, StyleSheet, TouchableOpacity, Appearance } from "react-native";
 
 import MyText from "../MyText";
-import { MyCheckboxProps } from "../../types";
-import { DarkTheme, LightTheme } from "../../theme";
+import { MyCheckboxProps } from "@types";
+import { DarkTheme, LightTheme } from "@theme";
 
 const colorScheme = Appearance.getColorScheme();
 const theme = colorScheme === "dark" ? DarkTheme : LightTheme;

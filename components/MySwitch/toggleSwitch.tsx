@@ -21,13 +21,15 @@ export const ToggleSwtich = ({ value, onValueChange }: IAnimatedButton) => {
 
   const translateX = animatedValue.interpolate({
     inputRange: [0, 1],
-    outputRange: [0, 20],
+    outputRange: [0, 18],
   });
 
   return (
     <TouchableOpacity activeOpacity={0.8} onPress={handleOnPress}>
       <View
-        style={value ? styles.switchContainerActive : styles.switchContainer}
+        style={
+          Boolean(value) ? styles.switchContainerActive : styles.switchContainer
+        }
       >
         <Animated.View
           style={[styles.switchHandle, { transform: [{ translateX }] }]}

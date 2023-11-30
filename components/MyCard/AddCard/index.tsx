@@ -1,8 +1,10 @@
+import React from "react";
+import { View } from "react-native";
+
 import { AgentHome } from "@assets/images";
 import Card from "components/Card";
 import GapView from "components/GapView";
 import MyText from "components/MyText";
-import { View } from "react-native";
 
 export const AdCard = ({
   label,

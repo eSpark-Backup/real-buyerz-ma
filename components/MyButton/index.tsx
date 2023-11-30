@@ -1,16 +1,14 @@
 import React from "react";
 import {
   TouchableOpacity,
-  Text,
   TextStyle,
   ViewStyle,
   Appearance,
 } from "react-native";
 import MyText from "../MyText";
 
-import { MyButtonProps, MyTheme } from "../../types";
-import { DarkTheme, LightTheme } from "../../theme";
-import { useTheme } from "@react-navigation/native";
+import { MyButtonProps, MyTheme } from "@types";
+import { DarkTheme, LightTheme } from "@theme";
 
 const colorScheme = Appearance.getColorScheme();
 const theme = colorScheme === "dark" ? DarkTheme : LightTheme;

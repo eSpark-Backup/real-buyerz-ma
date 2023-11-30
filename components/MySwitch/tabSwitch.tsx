@@ -1,7 +1,8 @@
 import React, { useState, useRef } from "react";
 import { StyleSheet, View, Animated } from "react-native";
-import { colors } from "../../theme";
 import { TouchableOpacity } from "react-native-gesture-handler";
+
+import { colors } from "@theme";
 import MyText from "../MyText";
 
 export interface IMySwitch {
