@@ -135,13 +135,15 @@ export default Inbox;
 
 const styles = StyleSheet.create({
   wrapper: {
-    flex: 1,
-    padding: 20,
+    paddingBottom: 5,
+    paddingHorizontal: 20,
+    paddingTop: 20,
+    height: "100%",
   },
   card: {
     borderRadius: 15,
     borderColor: "#E9E9E9",
-    height: 580,
+    height: "95%",
     borderWidth: 1,
     padding: 0,
   },
