@@ -1,8 +1,8 @@
 import React from "react";
 import { StyleSheet, View } from "react-native";
 
-import { PLogo, RText } from "../../assets/images/svg";
-import { colors } from "../../theme";
+import { PLogo, RText } from "@assets/images/svg";
+import { colors } from "@theme";
 import { TabSwitch } from "../MySwitch";
 
 export default function MyAppBar() {

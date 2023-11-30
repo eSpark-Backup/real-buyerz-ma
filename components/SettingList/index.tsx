@@ -1,5 +1,6 @@
-import { StyleSheet, View } from "react-native";
 import React, { useState } from "react";
+import { StyleSheet, View } from "react-native";
+
 import MyText from "components/MyText";
 import {
   ArrowRight,
@@ -10,7 +11,7 @@ import {
   PrivacyPolicyIcon,
   TermConditionsIcon,
 } from "@assets/images/svg";
-import { ToggleSwtich } from "components/MySwitch/toggleSwitch";
+import { ToggleSwitch } from "components/MySwitch";
 
 export interface IList {
   title: string;
@@ -44,7 +45,7 @@ export default function InboxList({ title, indexIcon }: IList) {
 
         <View style={styles.dateTimeStyle}>
           {indexIcon === 0 && (
-            <ToggleSwtich value={switchValue} onValueChange={setSwitchValue} />
+            <ToggleSwitch value={switchValue} onValueChange={setSwitchValue} />
           )}
           {indexIcon !== 0 && indexIcon !== 5 && <ArrowRight />}
         </View>

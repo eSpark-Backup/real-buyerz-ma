@@ -1,16 +1,13 @@
 import React from "react";
 import Modal from "react-native-modal";
 import { Link } from "expo-router";
-import {
-  View,
-  StyleSheet,
-  Appearance,
-  TouchableOpacity,
-  ViewStyle,
-} from "react-native";
+import { View, StyleSheet, Appearance, ViewStyle } from "react-native";
 
-import { LoginModalProps } from "../../types";
-import { MyButton, MyCheckbox, MyInput, MyText } from "../index";
+import { LoginModalProps } from "@types";
+import MyButton from "../MyButton";
+import MyCheckbox from "../MyCheckbox";
+import MyInput from "../MyInput";
+import MyText from "../MyText";
 import { GLogo, PLogo } from "@assets/images";
 import { DarkTheme, LightTheme } from "@theme";
 

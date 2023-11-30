@@ -1,5 +1,6 @@
-import { SearchDataProps } from "@types";
 import { Dimensions } from "react-native";
+
+import { SearchDataProps } from "@types";
 
 export const WINDOW_HEIGHT = Dimensions.get("window").height;
 export const WINDOW_WIDTH = Dimensions.get("window").width;
@@ -38,7 +39,6 @@ export const testData: SearchDataProps[] = [
     id: "3",
     title: "Commercial",
     selected: false,
-
     list: [
       { id: "1", label: "Office", selected: false },
       { id: "2", label: "Ware house", selected: false },

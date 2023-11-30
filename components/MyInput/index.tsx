@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { TextInput, View, StyleSheet, ViewStyle } from "react-native";
 import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 
-import { MyInputProps } from "../../types";
+import { MyInputProps } from "@types";
 
 export default function MyInput({
   placeholder,

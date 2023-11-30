@@ -1,9 +1,9 @@
-import { StyleSheet, View } from "react-native";
 import React from "react";
+import { StyleSheet, View, TouchableWithoutFeedback } from "react-native";
+
 import MyText from "components/MyText";
 import GapView from "components/GapView";
 import Card from "components/Card";
-import { TouchableWithoutFeedback } from "react-native-gesture-handler";
 
 interface IClickableCard {
   title: string;

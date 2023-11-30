@@ -1,12 +1,5 @@
-import React, { useEffect, useRef, useState } from "react";
-import {
-  FlatList,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import React, { useEffect, useMemo, useRef, useState } from "react";
+import { ScrollView, StyleSheet, TouchableOpacity, View } from "react-native";
 
 import Card from "components/Card";
 import MyText from "components/MyText";
@@ -20,51 +13,59 @@ interface TabFilterProps {
 export default function TabFilter({ data, onSelect }: TabFilterProps) {
   const [list, setList] = useState<SearchDataProps[] | null>(data);
   const [selectedItem, setSelectedItem] = useState<SearchDataProps | null>(
-    null
+    data[0]
   );
   const scrollViewRef = useRef<ScrollView>(null);
-  const savedScrollPosition = useRef<number>(0);
 
   const handleSelect = (index: number) => {
-    setList((prevList): SearchDataProps[] =>
-      (prevList || []).map(
-        (listItem, i): SearchDataProps => ({
-          ...listItem,
-          selected: i === index, // Set only the clicked item's selected property to true
-        })
-      )
-    );
+    setList((prevList) => {
+      if (!prevList) return prevList;
+      const updatedList = prevList.map((listItem, i) => ({
+        ...listItem,
+        selected: i === index ? true : false,
+      }));
+
+      return updatedList;
+    });
+  };
+
+  const handleItemSelect = (index: number) => {
+    setSelectedItem((prevState) => {
+      if (!prevState) return prevState;
+
+      const updatedList = [...prevState.list];
+      updatedList[index].selected = !updatedList[index].selected;
+
+      return { ...prevState, list: updatedList };
+    });
   };
 
   useEffect(() => {
     // Use the last item in the updated 'list' as the selected item
     const selectedItem = list?.find((item) => item.selected);
-    if (selectedItem) {
-      setSelectedItem(selectedItem);
+    console.log(
+      "🚀 ~ file: index.tsx:36 ~ useEffect ~ selectedItem:",
+      selectedItem
+    );
+    setSelectedItem(selectedItem!);
+
+    if (scrollViewRef.current && selectedItem) {
+      scrollViewRef.current.scrollTo({
+        x: 0,
+        animated: true,
+      });
     }
   }, [list]);
 
   useEffect(() => {
-    if (scrollViewRef.current && selectedItem) {
-      scrollViewRef.current.scrollTo({
-        x: savedScrollPosition.current,
-        animated: false,
-      });
-    }
     onSelect(selectedItem!);
-  }, [selectedItem]);
+  }, [selectedItem, onSelect]);
 
-  const handleScroll = (event: any) => {
-    if (scrollViewRef.current) {
-      savedScrollPosition.current = event.nativeEvent.contentOffset.x;
-    }
-  };
-
-  const handleItemSelect = (index: number) => {
-    const data = [...selectedItem?.list!];
-    data[index].selected = !data[index].selected;
-    setSelectedItem((state) => ({ ...state, list: data } as SearchDataProps));
-  };
+  const memoizedList = useMemo((): SearchDataProps[] | null => list, [list]);
+  const memoizedSelectedItem = useMemo(
+    (): SearchDataProps | null => selectedItem,
+    [selectedItem]
+  );
 
   return (
     <Card
@@ -74,9 +75,6 @@ export default function TabFilter({ data, onSelect }: TabFilterProps) {
       }}
     >
       <ScrollView
-        ref={scrollViewRef}
-        onScroll={handleScroll}
-        key={Math.random().toString(36).substring(2) + "_s1"}
         horizontal
         showsHorizontalScrollIndicator={false}
         contentContainerStyle={{
@@ -86,7 +84,7 @@ export default function TabFilter({ data, onSelect }: TabFilterProps) {
         }}
         style={{ borderBottomWidth: 1, borderColor: "#E9E9E9" }}
       >
-        {list?.map((item, index) => (
+        {memoizedList?.map((item, index) => (
           <TouchableOpacity
             key={index.toString()}
             onPress={() => handleSelect(index)}
@@ -107,9 +105,9 @@ export default function TabFilter({ data, onSelect }: TabFilterProps) {
           </TouchableOpacity>
         ))}
       </ScrollView>
-      {selectedItem && (
+      {memoizedSelectedItem && (
         <ScrollView
-          key={Math.random().toString(36).substring(2) + "_s2"}
+          ref={scrollViewRef}
           horizontal
           showsHorizontalScrollIndicator={false}
           contentContainerStyle={{
@@ -117,7 +115,7 @@ export default function TabFilter({ data, onSelect }: TabFilterProps) {
             padding: 10,
           }}
         >
-          {selectedItem.list.map((nestedItem, nestedIndex) => (
+          {memoizedSelectedItem.list.map((nestedItem, nestedIndex) => (
             <TouchableOpacity
               key={nestedIndex.toString()}
               onPress={() => handleItemSelect(nestedIndex)}
@@ -128,7 +126,7 @@ export default function TabFilter({ data, onSelect }: TabFilterProps) {
                 borderRadius: 4,
                 backgroundColor: nestedItem.selected ? "#EDF7FF" : "#FFFFFF",
                 marginRight:
-                  nestedIndex !== selectedItem.list.length - 1 ? 10 : 0,
+                  nestedIndex !== selectedItem?.list?.length! - 1 ? 10 : 0,
               }}
             >
               <MyText text={nestedItem.label} size={12} />

@@ -4,8 +4,6 @@ import { BottomTabHeaderProps } from "@react-navigation/bottom-tabs";
 import { Entypo, Feather } from "@expo/vector-icons";
 
 import { PLogo, ProfilePin, RText } from "@assets/images";
-import { GapView } from "@components";
-import { WINDOW_WIDTH } from "@constants";
 
 interface MyProps {
   showBackIcon?: boolean;

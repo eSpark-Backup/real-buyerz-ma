@@ -1,5 +1,6 @@
-import { StyleSheet, Text, View } from "react-native";
 import React from "react";
+import { StyleSheet, Text, View } from "react-native";
+
 import MyText from "components/MyText";
 import MyAvatar from "components/MyAvatar";
 

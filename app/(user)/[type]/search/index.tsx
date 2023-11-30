@@ -17,15 +17,18 @@ export default function Search() {
   return (
     <View style={styles.container}>
       <View style={styles.searchBar}>
-        <SearchBar />
+        <SearchBar leftIcon clearIcon />
       </View>
       <GapView length={40} />
       <View style={styles.purpose}>
         <MyText text="Select Purpose" />
-        <TabSwitch
-          titleSwitchOne="Buy"
-          titleSwitchTwo="Rent"
-          bgColor="transparent"
+        <MyDropdown
+          placeholder="Type"
+          multiSelect
+          data={["Buy", "Rent"]}
+          onSelect={(value) => {
+            console.log("data", value);
+          }}
         />
       </View>
       <GapView length={30} />
@@ -34,6 +37,9 @@ export default function Search() {
       <View style={styles.city}>
         <MyText text="City" />
         <MyDropdown
+          placeholder="City"
+          multiSelect
+          zIndex={8}
           data={[
             "Karachi",
             "Lahore",
@@ -74,7 +80,10 @@ const styles = StyleSheet.create({
     paddingVertical: 14,
     alignItems: "center",
   },
-  searchBar: {},
+  searchBar: {
+    height: 46,
+    width: "100%",
+  },
   purpose: {
     flexDirection: "row",
     alignItems: "center",

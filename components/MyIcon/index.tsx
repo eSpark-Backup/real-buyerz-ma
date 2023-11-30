@@ -2,7 +2,7 @@ import React from "react";
 import { Image, ImageStyle, StyleSheet } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 
-import { MyIconProps } from "../../types";
+import { MyIconProps } from "@types";
 
 export default function MyIcon({
   name,
