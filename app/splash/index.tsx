@@ -99,7 +99,7 @@ export default function App() {
   useEffect(() => {
     setTimeout(() => {
       router.push("/auth");
-    }, 3000);
+    }, 5000);
   }, []);
 
   if (!appIsReady) {
@@ -151,6 +151,6 @@ const styles = StyleSheet.create({
   loader: {
     height: 56.15,
     width: 56.15,
-    top: WINDOW_WIDTH / 1.1,
+    top: WINDOW_WIDTH,
   },
 });
