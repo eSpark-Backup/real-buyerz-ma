@@ -40,7 +40,7 @@ function MyTabBar({ state, descriptors, navigation }: BottomTabBarProps) {
           };
 
           const btnStyle =
-            route.name == "search/index"
+            route.name == "search"
               ? styles(isFocused).searchStyle
               : styles(isFocused).normalStyle;
 
@@ -56,7 +56,7 @@ function MyTabBar({ state, descriptors, navigation }: BottomTabBarProps) {
               onLongPress={onLongPress}
               style={btnStyle}
             >
-              {route.name == "search/index" ? (
+              {route.name == "search" ? (
                 <View
                   style={{
                     backgroundColor: "#136fa9",

@@ -7,7 +7,7 @@ import { MyTabBar, MyHeader } from "@components";
 export default function UserTypeLayout() {
   return (
     <Tabs
-      initialRouteName="home/index"
+      initialRouteName="home"
       backBehavior="initialRoute"
       screenOptions={({ navigation, route }) => ({
         headerShown: false,
@@ -31,7 +31,7 @@ export default function UserTypeLayout() {
         }}
       />
       <Tabs.Screen
-        name="home/index"
+        name="home"
         options={{
           // headerShown: false,
           title: "Home",
@@ -39,7 +39,7 @@ export default function UserTypeLayout() {
         }}
       />
       <Tabs.Screen
-        name="inbox/index"
+        name="inbox"
         options={{
           headerShown: true,
           title: "Inbox",
@@ -47,7 +47,7 @@ export default function UserTypeLayout() {
         }}
       />
       <Tabs.Screen
-        name="search/index"
+        name="search"
         options={{
           headerShown: true,
           header: (props) => {
@@ -58,7 +58,7 @@ export default function UserTypeLayout() {
         }}
       />
       <Tabs.Screen
-        name="listings/index"
+        name="listings"
         options={{
           // headerShown: false,
           title: "Listings",
@@ -66,7 +66,7 @@ export default function UserTypeLayout() {
         }}
       />
       <Tabs.Screen
-        name="settings/index"
+        name="settings"
         options={{
           headerShown: true,
           title: "Settings",

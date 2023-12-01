@@ -12,6 +12,7 @@ import {
   MyButton,
 } from "@components";
 import { testData } from "@constants";
+import { router } from "expo-router";
 
 export default function Search() {
   return (
@@ -67,6 +68,7 @@ export default function Search() {
           label="Search"
           textColor="#ffffff"
           backgroundColor="#fb631c"
+          onPress={() => router.push("(user)/anon/search/searchList")}
           style={{ borderRadius: 4, padding: 8, paddingHorizontal: 20 }}
         />
       </View>
