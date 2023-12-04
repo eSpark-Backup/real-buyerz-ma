@@ -1,8 +1,8 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { StyleSheet, Text, View, FlatList, Image } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
 
 import { GapView, MyText, SearchBar } from "@components";
-import { Ionicons } from "@expo/vector-icons";
 import { BathOutline, BedOutline, LandPlot, Parking } from "@assets/images";
 
 interface SearchList {

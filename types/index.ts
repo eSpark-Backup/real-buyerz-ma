@@ -72,15 +72,15 @@ export type LoginModalProps = {
   onClose: () => void;
 };
 
-export interface SearchDataProps {
+export type SearchDataProps = {
   id: string;
   title: string;
   selected: boolean;
   list: SearchListProps[];
-}
+};
 
-export interface SearchListProps {
+export type SearchListProps = {
   id: string;
   label: string;
   selected: boolean;
-}
+};
