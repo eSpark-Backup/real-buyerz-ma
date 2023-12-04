@@ -8,13 +8,11 @@ import { Formik } from "formik";
 
 import { GLogo, SLogo } from "@assets/images/svg";
 import { DarkTheme, LightTheme } from "@theme";
-import { MyText, MyButton, MyCheckbox, MyInput } from "@components";
+import { MyText, MyButton, MyCheckbox, MyInput, MyDropdown } from "@components";
 import { UserSignUpSchema } from "@validations/schema";
 
 interface InputField {
   placeholder: string;
-  width: DimensionValue;
-  marginBottom: DimensionValue;
   rightIcon?: { name: string; size: number };
   password?: boolean;
   name: string;
@@ -27,33 +25,22 @@ export default function SignUp() {
   const inputFields: InputField[] = [
     {
       placeholder: "Email Address",
-      width: "100%",
-      marginBottom: "4%",
       name: "email",
     },
     {
       placeholder: "Contact Number",
-      width: "100%",
-      marginBottom: "4%",
       name: "phone",
     },
     {
       placeholder: "Applicant",
-      width: "100%",
-      marginBottom: "4%",
-      rightIcon: { name: "keyboard-arrow-down", size: 24 },
       name: "applicant",
     },
     {
       placeholder: "Password",
-      width: "100%",
-      marginBottom: "4%",
       name: "password",
     },
     {
       placeholder: "Confirm Password",
-      width: "100%",
-      marginBottom: "4%",
       password: true,
       name: "confirmPassword",
     },
@@ -85,18 +72,8 @@ export default function SignUp() {
         values,
         setFieldValue,
       }) => (
-        <ScrollView
-          contentContainerStyle={{
-            alignItems: "center",
-          }}
-        >
-          <View
-            style={{
-              position: "absolute",
-              left: "7%",
-              flexDirection: "row",
-            }}
-          >
+        <ScrollView contentContainerStyle={styles.mainContainer}>
+          <View style={styles.back}>
             <Link href={"/auth/signIn"}>
               <MaterialIcons
                 name="arrow-back"
@@ -105,14 +82,7 @@ export default function SignUp() {
               />
             </Link>
           </View>
-          <View
-            style={{
-              position: "absolute",
-              top: "2%",
-              right: "7%",
-              flexDirection: "row",
-            }}
-          >
+          <View style={styles.header}>
             <TouchableOpacity>
               <MyText
                 text="Skip"
@@ -130,101 +100,51 @@ export default function SignUp() {
           <View>
             <SLogo />
           </View>
-          <View
-            style={{
-              justifyContent: "space-around",
-              alignItems: "center",
-              width: "85%",
-              flex: 0.9,
-              borderColor: "#FFFFFF",
-              borderWidth: 1,
-              borderRadius: 15,
-              padding: 20,
-              marginTop: "6%",
-            }}
-          >
+          <View style={styles.form}>
             <MyText
               text="Sign Up"
               weight="700"
               size={25}
               textColor={theme.colors.secondary}
-              style={{ paddingTop: "1%", paddingBottom: "8%" }}
+              style={styles.title}
             />
-            <View
-              style={{
-                justifyContent: "space-evenly",
-                alignItems: "center",
-                width: "100%",
-                flex: 1,
-              }}
-            >
-              <View
-                style={{
-                  flexDirection: "row",
-                  width: "100%",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  columnGap: 15,
-                }}
-              >
+            <View style={styles.fields}>
+              <View style={styles.name}>
                 <MyInput
                   placeholder="First name"
-                  // style={{ width: "48%", height: "75%", marginBottom: "3%" }}
-                  // the part below needs to be removed later
+                  style={styles.fname}
                   onChange={handleChange("firstName")}
-                  style={[
-                    { width: "48%", height: "75%", marginBottom: "3%" },
-                    touched.firstName && errors.firstName
-                      ? { borderColor: "red", borderWidth: 1 } // Add red border if there's an error
-                      : null,
-                  ]}
                 />
                 <MyInput
                   placeholder="Last name"
-                  // style={{ width: "48%", height: "75%", marginBottom: "3%" }}
-                  // the part below needs to be removed later
-                  style={[
-                    { width: "48%", height: "75%", marginBottom: "3%" },
-                    touched.firstName && errors.firstName
-                      ? { borderColor: "red", borderWidth: 1 } // Add red border if there's an error
-                      : null,
-                  ]}
+                  style={styles.fname}
                   onChange={handleChange("lastName")}
                 />
               </View>
-              {inputFields.map((field, index) => (
-                <MyInput
-                  key={index}
-                  placeholder={field.placeholder}
-                  style={[
-                    {
-                      width: field.width,
-                      height: "12%",
-                      marginBottom: field.marginBottom,
-                    },
-                    errors[field.name as keyof typeof values] &&
-                    touched[field.name as keyof typeof values]
-                      ? {
-                          borderColor: "red",
-                          borderWidth: 1,
-                        }
-                      : null,
-                  ]}
-                  rightIcon={field?.rightIcon}
-                  password={field?.password}
-                  onChange={handleChange(field.name)}
-                />
-              ))}
+              {inputFields.map((field, index) =>
+                field.name === "applicant" ? (
+                  <MyDropdown
+                    key={index}
+                    data={["user", "agent"]}
+                    onSelect={(value) => setFieldValue("applicant", value)}
+                    placeholder={field.placeholder}
+                    zIndex={10}
+                    style={styles.dropdown}
+                  />
+                ) : (
+                  <MyInput
+                    key={index}
+                    placeholder={field.placeholder}
+                    style={styles.input}
+                    rightIcon={field?.rightIcon}
+                    password={field?.password}
+                    onChange={handleChange(field.name)}
+                  />
+                )
+              )}
             </View>
           </View>
-          <View
-            style={{
-              marginTop: "6%",
-              flexDirection: "row",
-              width: "80%",
-              justifyContent: "center",
-            }}
-          >
+          <View style={styles.terms}>
             <MyCheckbox
               label=""
               onChange={() => {
@@ -234,58 +154,18 @@ export default function SignUp() {
               style={{
                 marginRight: 5,
               }}
-              checkboxStyle={{
-                width: 20,
-                height: 20,
-                borderWidth: 1,
-                borderColor: "#b5b7b9",
-                backgroundColor: "white",
-                borderRadius: 4,
-                marginRight: 5,
-              }}
+              checkboxStyle={styles.checkbox}
             />
-            <View
-              style={{
-                flexDirection: "row",
-                width: "85%",
-                flexWrap: "wrap",
-                alignItems: "center",
-              }}
-            >
+            <View style={styles.termsTextContainer}>
               <MyText
                 text="I have read and agree to the "
-                style={{
-                  color: "#FFFFFF",
-                  fontSize: 12,
-                }}
+                style={styles.termsText}
               />
 
-              <MyText
-                text="Terms and Conditions"
-                style={{
-                  color: "#FB631C",
-                  textDecorationColor: "#FB631C",
-                  textDecorationLine: "underline",
-                  fontSize: 10,
-                }}
-              />
-              <MyText
-                text="and "
-                style={{
-                  color: "#FFFFFF",
-                  fontSize: 12,
-                }}
-              />
+              <MyText text="Terms and Conditions" style={styles.termsDecText} />
+              <MyText text="and " style={styles.termsText} />
 
-              <MyText
-                text="Privacy Policy"
-                style={{
-                  color: "#FB631C",
-                  textDecorationColor: "#FB631C",
-                  textDecorationLine: "underline",
-                  fontSize: 10,
-                }}
-              />
+              <MyText text="Privacy Policy" style={styles.termsDecText} />
             </View>
           </View>
           <MyButton
@@ -298,24 +178,10 @@ export default function SignUp() {
 
               handleSubmit();
             }}
-            // onPress={handleSubmit}
-            style={{
-              width: 110,
-              alignItems: "center",
-              height: 35,
-              justifyContent: "center",
-              alignContent: "center",
-              marginTop: "6%",
-            }}
+            style={styles.button}
           />
 
-          <View
-            style={{
-              width: "100%",
-              justifyContent: "center",
-              alignItems: "center",
-            }}
-          >
+          <View style={styles.bottom}>
             <MyText
               text="Or"
               size={14}
@@ -323,13 +189,7 @@ export default function SignUp() {
               textColor="white"
               style={{ marginTop: "3%" }}
             />
-            <View
-              style={{
-                flexDirection: "row",
-                marginTop: "3%",
-                alignItems: "center",
-              }}
-            >
+            <View style={styles.google}>
               <MyText
                 text="Sign Up with  "
                 size={14}
@@ -345,4 +205,107 @@ export default function SignUp() {
   );
 }
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  mainContainer: {
+    alignItems: "center",
+  },
+  back: {
+    position: "absolute",
+    left: "7%",
+    flexDirection: "row",
+  },
+  header: {
+    position: "absolute",
+    top: "2%",
+    right: "7%",
+    flexDirection: "row",
+  },
+  form: {
+    justifyContent: "space-around",
+    alignItems: "center",
+    width: "85%",
+    flex: 0.9,
+    borderColor: "#FFFFFF",
+    borderWidth: 1,
+    borderRadius: 15,
+    padding: 20,
+    marginTop: "6%",
+  },
+  fields: {
+    justifyContent: "space-evenly",
+    alignItems: "center",
+    width: "100%",
+    flex: 1,
+  },
+  name: {
+    flexDirection: "row",
+    width: "100%",
+    justifyContent: "center",
+    alignItems: "center",
+    columnGap: 15,
+  },
+  title: { paddingTop: "1%", paddingBottom: "8%" },
+  fname: { width: "48%", height: "75%", marginBottom: "3%" },
+  dropdown: {
+    backgroundColor: "#f3f4f6",
+    borderRadius: 5,
+    elevation: 3,
+    width: "100%",
+    height: "12%",
+    marginBottom: "4%",
+  },
+  input: {
+    width: "100%",
+    height: "12%",
+    marginBottom: "4%",
+  },
+  terms: {
+    marginTop: "6%",
+    flexDirection: "row",
+    width: "80%",
+    justifyContent: "center",
+  },
+  checkbox: {
+    width: 20,
+    height: 20,
+    borderWidth: 1,
+    borderColor: "#b5b7b9",
+    backgroundColor: "white",
+    borderRadius: 4,
+    marginRight: 5,
+  },
+  termsTextContainer: {
+    flexDirection: "row",
+    width: "85%",
+    flexWrap: "wrap",
+    alignItems: "center",
+  },
+  termsText: {
+    color: "#FFFFFF",
+    fontSize: 12,
+  },
+  termsDecText: {
+    color: "#FB631C",
+    textDecorationColor: "#FB631C",
+    textDecorationLine: "underline",
+    fontSize: 10,
+  },
+  button: {
+    width: 110,
+    alignItems: "center",
+    height: 35,
+    justifyContent: "center",
+    alignContent: "center",
+    marginTop: "6%",
+  },
+  bottom: {
+    width: "100%",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  google: {
+    flexDirection: "row",
+    marginTop: "3%",
+    alignItems: "center",
+  },
+});

@@ -1,7 +1,5 @@
 import { object, string, bool } from "yup";
 
-// import * as Yup from "yup";
-
 const EMAIL_REGEX =
   /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 const NAME_REGEX = /^[a-zA-Z0-9 ]*$/;
@@ -18,8 +16,6 @@ export const UserSignInSchema = {
     ),
   }),
 };
-
-// option 1
 
 export const UserSignUpSchema = {
   signUpForm: object().shape({
@@ -63,5 +59,13 @@ export const UserSignUpSchema = {
       [true],
       "You must agree to the Terms and Conditions"
     ),
+  }),
+};
+
+export const ForgorPasswordSchema = {
+  ForgotPasswordForm: object().shape({
+    input: string()
+      .matches(EMAIL_REGEX || PHONE_REGEX, "Enter valid Email or Phone Number")
+      .required("This field is required"),
   }),
 };

@@ -1,5 +1,12 @@
 import React, { useState } from "react";
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import {
+  StyleProp,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+  ViewStyle,
+} from "react-native";
 import { Entypo } from "@expo/vector-icons";
 import { Feather } from "@expo/vector-icons";
 
@@ -11,6 +18,7 @@ interface DropdownProps {
   multiSelect?: boolean;
   zIndex?: number;
   onSelect: (value: string | string[]) => void;
+  style?: StyleProp<ViewStyle>;
 }
 
 export default function MyDropdown({
@@ -19,6 +27,7 @@ export default function MyDropdown({
   placeholder = "",
   zIndex = 10,
   multiSelect = false,
+  style,
 }: DropdownProps) {
   const [show, setShow] = useState(false);
   const [selectedItems, setSelectedItems] = useState<string[]>([]);
@@ -78,6 +87,7 @@ export default function MyDropdown({
         styles.container,
         { zIndex: zIndex },
         show ? { borderBottomRightRadius: 0, borderBottomLeftRadius: 0 } : {},
+        style,
       ]}
     >
       <View

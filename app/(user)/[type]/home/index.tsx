@@ -62,7 +62,8 @@ const Title = ({ text }: { text?: string }) => {
   return (
     <MyText
       text={text}
-      style={{ fontSize: 16, fontWeight: "700", color: "#000000" }}
+      weight="700"
+      style={{ fontSize: 16, color: "#000000" }}
     />
   );
 };
