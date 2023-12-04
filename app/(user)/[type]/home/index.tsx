@@ -10,6 +10,7 @@ import {
   Animated,
   Easing,
 } from "react-native";
+import { Image as EImage } from "expo-image";
 
 import { Card, MyText, MyAppBar, GapView } from "@components";
 import { AgentHome } from "@assets/images";
@@ -290,8 +291,12 @@ const PropertyListing = ({ title }: { title?: string }) => {
     return (
       <Card radius={2} style={{ height: 180, width: 130 }}>
         <Image
-          source={{ uri: item?.image }}
+          source={{
+            uri: item?.image,
+          }}
           style={{ height: 80, borderRadius: 2 }}
+          onLoadStart={() => console.log("start")}
+          onLoadEnd={() => console.log("end")}
         />
         <View style={{ padding: 8 }}>
           <MyText

@@ -8,6 +8,10 @@ export {
   RText,
   SLogo,
   ProfilePin,
+  BathOutline,
+  Parking,
+  BedOutline,
+  LandPlot,
 } from "./svg";
 
 //* pngs
