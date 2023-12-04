@@ -1,5 +1,6 @@
 import React from "react";
 import { StyleSheet, Text, View } from "react-native";
+import { router } from "expo-router";
 
 import {
   Card,
@@ -12,7 +13,6 @@ import {
   MyButton,
 } from "@components";
 import { testData } from "@constants";
-import { router } from "expo-router";
 
 export default function Search() {
   return (
@@ -78,8 +78,6 @@ export default function Search() {
 
 const styles = StyleSheet.create({
   container: {
-    paddingHorizontal: 20,
-    paddingVertical: 14,
     alignItems: "center",
   },
   searchBar: {

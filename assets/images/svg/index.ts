@@ -15,3 +15,7 @@ export { default as FeedBackIcon } from "./feedback-icon.svg";
 export { default as PrivacyPolicyIcon } from "./privacy-policy-icon.svg";
 export { default as TermConditionsIcon } from "./term-conditions-icon.svg";
 export { default as ArrowRight } from "./arrow-right.svg";
+export { default as BathOutline } from "./bath-outline.svg";
+export { default as BedOutline } from "./bed-outline.svg";
+export { default as LandPlot } from "./land-plot.svg";
+export { default as Parking } from "./parking.svg";
