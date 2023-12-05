@@ -1,34 +1,20 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-
-interface ThemeOptions {
-  theme: "Default" | "Dark";
-}
+import { ThemeTypes } from "@types";
 
 interface ThemeState {
-  value: ThemeOptions["theme"];
+  value: ThemeTypes;
 }
 
 const initialState: ThemeState = {
   value: "Default",
 };
 
-type ThemePayload = {
-  type: string; // Define your specific types for the action here
-  payload: ThemeOptions["theme"]; // Assuming ThemeOptions is defined somewhere
-};
-
 export const themeSlice = createSlice({
   name: "AppTheme",
   initialState,
   reducers: {
-    toggleTheme: (state, action: PayloadAction<ThemeOptions["theme"]>) => {
-      switch (action.type) {
-        case "ADD":
-          state.value = action.payload;
-          break;
-        default:
-          break;
-      }
+    toggleTheme: (state, action: PayloadAction<ThemeTypes, string>) => {
+      state.value = action.payload;
     },
   },
 });

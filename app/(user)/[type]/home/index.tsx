@@ -10,7 +10,7 @@ import {
   Animated,
   Easing,
 } from "react-native";
-import { Image as EImage } from "expo-image";
+import { Feather } from "@expo/vector-icons";
 
 import { Card, MyText, MyAppBar, GapView } from "@components";
 import { AgentHome } from "@assets/images";
@@ -40,9 +40,19 @@ export default function Home() {
             flexDirection: "row",
           }}
         >
-          <MyText text="0" style={{ marginRight: 10 }} />
+          <Feather
+            name="chevron-left"
+            size={18}
+            color="#979797"
+            style={{ right: 5 }}
+          />
           <BrowseProps />
-          <MyText text="0" style={{ marginLeft: 10 }} />
+          <Feather
+            name="chevron-right"
+            size={18}
+            color="#979797"
+            style={{ left: 5 }}
+          />
         </View>
         <PropertyListing title="Featured Properties" />
         <ImageCard />

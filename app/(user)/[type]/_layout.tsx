@@ -1,25 +1,25 @@
 import React from "react";
 import { StyleSheet } from "react-native";
 import { Tabs } from "expo-router/tabs";
+import { useTheme } from "@react-navigation/native";
 
 import { MyTabBar, MyHeader } from "@components";
+import { MyTheme } from "@types";
 
 export default function UserTypeLayout() {
+  const theme = useTheme() as MyTheme;
+
   return (
     <Tabs
       initialRouteName="home"
       backBehavior="initialRoute"
-      screenOptions={({ navigation, route }) => ({
+      screenOptions={{
         headerShown: false,
-        headerStyle: {
-          height: 60,
-          borderBottomColor: "#E4E4E4",
-          borderBottomWidth: 1,
-        },
+        headerStyle: styles(theme).headerStyle,
         header: (props) => {
           return <MyHeader {...props} showRight showBackIcon />;
         },
-      })}
+      }}
       tabBar={(props) => {
         return <MyTabBar {...props} />;
       }}
@@ -77,4 +77,11 @@ export default function UserTypeLayout() {
   );
 }
 
-const styles = StyleSheet.create({});
+const styles = (theme: MyTheme) =>
+  StyleSheet.create({
+    headerStyle: {
+      height: 60,
+      borderBottomColor: theme.colors.border,
+      borderBottomWidth: 1,
+    },
+  });

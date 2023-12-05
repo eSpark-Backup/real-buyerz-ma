@@ -15,6 +15,8 @@ import { WINDOW_HEIGHT, WINDOW_WIDTH } from "@constants";
 import { customFonts } from "utils/customFonts";
 import { customImages } from "utils/customImages";
 
+SplashScreen.preventAutoHideAsync();
+
 export default function App() {
   const [appIsReady, setAppIsReady] = useState(false);
   const translateY = useRef(new Animated.Value(WINDOW_HEIGHT * 1.5)).current;
@@ -37,8 +39,6 @@ export default function App() {
 
   const loadResourcesAsync = async () => {
     try {
-      SplashScreen.preventAutoHideAsync();
-
       const imageAssets = cacheImages(customImages);
       const customFontAssets = cacheFonts([customFonts]);
       const fontAssets = cacheFonts([
