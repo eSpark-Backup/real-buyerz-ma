@@ -84,3 +84,10 @@ export interface SearchListProps {
   label: string;
   selected: boolean;
 }
+
+export interface MyVerificationModalProps {
+  type?: "email" | "phone number";
+  value?: string;
+  visible?: boolean;
+  onClose: () => void;
+}

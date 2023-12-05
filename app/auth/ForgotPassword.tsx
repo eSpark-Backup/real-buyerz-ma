@@ -5,13 +5,21 @@ import { Link } from "expo-router";
 import { Formik } from "formik";
 import ExpoStatusBar from "expo-status-bar/build/ExpoStatusBar";
 
-import { MyButton, MyInput, MyText } from "@components";
+import { MyButton, MyInput, MyText, MyVerificationModal } from "@components";
 import { OnRadioBtn, OffRadioBtn } from "@assets/images/svg";
 import { ForgorPasswordSchema } from "@validations/schema";
+
+type InputType = "email" | "phone number";
 
 export default function ForgotPassword() {
   const [formSubmitted, setFormSubmitted] = useState(false);
   const [inputValue, setInputValue] = useState("");
+  const [inputType, setInputType] = useState<InputType>("email");
+  const [isModalVisible, setIsModalVisible] = useState(false);
+
+  const toggleModal = () => {
+    setIsModalVisible(!isModalVisible);
+  };
 
   return (
     <>
@@ -19,6 +27,12 @@ export default function ForgotPassword() {
           needs to be edited
           temporarily adjusted by negative margin */}
       <ExpoStatusBar backgroundColor="white" />
+      <MyVerificationModal
+        visible={isModalVisible}
+        onClose={toggleModal}
+        type={inputType}
+        value={inputValue}
+      />
       <ScrollView
         showsVerticalScrollIndicator={false}
         style={styles.wrapper}
@@ -40,18 +54,23 @@ export default function ForgotPassword() {
             <>
               <View style={styles.row}>
                 <OnRadioBtn />
-                <MyText style={{ color: "#666666" }}>Via text message</MyText>
+                <MyText style={styles.plain}>Via text message</MyText>
               </View>
               <MyText style={styles.text}>03*******07</MyText>
             </>
             <>
               <View style={styles.row}>
                 <OffRadioBtn />
-                <MyText style={{ color: "#666666" }}>Via email</MyText>
+                <MyText style={styles.plain}>Via email</MyText>
               </View>
               <MyText style={styles.text}>Du******65@gmail.com</MyText>
             </>
-            <MyButton label="Send Code" style={styles.sendButton} />
+            <MyButton
+              label="Send Code"
+              style={styles.sendButton}
+              labelStyle={styles.label}
+              onPress={toggleModal}
+            />
           </View>
         ) : (
           <Formik
@@ -60,6 +79,11 @@ export default function ForgotPassword() {
             }}
             onSubmit={async (values, { resetForm }) => {
               console.log("Validation Success", values);
+              setInputValue(values.input);
+              setInputType(
+                values.input.includes("@") ? "email" : "phone number"
+              );
+              setFormSubmitted(true);
             }}
             validationSchema={ForgorPasswordSchema.ForgotPasswordForm}
           >
@@ -86,10 +110,9 @@ export default function ForgotPassword() {
                 <MyButton
                   label="Continue"
                   style={styles.button}
+                  labelStyle={styles.label}
                   onPress={() => {
                     handleSubmit();
-                    setInputValue(values.input);
-                    setFormSubmitted(true);
                   }}
                 />
               </View>
@@ -107,11 +130,13 @@ const styles = StyleSheet.create({
     marginTop: -5,
   },
   link: { top: "2%", left: 21 },
+  label: { color: "white" },
   box: {
     width: "76%",
     height: 600,
     alignSelf: "center",
     marginTop: "20%",
+    // backgroundColor: "pink",
   },
   title: {
     marginBottom: "5%",
@@ -151,4 +176,5 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     marginTop: "14%",
   },
+  plain: { color: "#666666" },
 });

@@ -17,3 +17,4 @@ export { default as TermConditionsIcon } from "./term-conditions-icon.svg";
 export { default as ArrowRight } from "./arrow-right.svg";
 export { default as OffRadioBtn } from "./off_radiobtn.svg";
 export { default as OnRadioBtn } from "./on_radiobtn.svg";
+export { default as CloseBtn } from "./close-button.svg";
