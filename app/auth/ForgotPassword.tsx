@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { ScrollView, View, StyleSheet } from "react-native";
+import { ScrollView, View, StyleSheet, TouchableOpacity } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
 import { Link } from "expo-router";
 import { Formik } from "formik";
@@ -7,7 +7,7 @@ import ExpoStatusBar from "expo-status-bar/build/ExpoStatusBar";
 
 import { MyButton, MyInput, MyText, MyVerificationModal } from "@components";
 import { OnRadioBtn, OffRadioBtn } from "@assets/images/svg";
-import { ForgorPasswordSchema } from "@validations/schema";
+import { ForgotPasswordSchema, ResetPasswordSchema } from "@validations/schema";
 
 type InputType = "email" | "phone number";
 
@@ -16,22 +16,30 @@ export default function ForgotPassword() {
   const [inputValue, setInputValue] = useState("");
   const [inputType, setInputType] = useState<InputType>("email");
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [emailIsOn, setEmailIsOn] = useState(false);
+  const [phoneIsOn, setPhoneIsOn] = useState(true);
+  const [isConfirm, setIsConfirm] = useState(false);
 
   const toggleModal = () => {
     setIsModalVisible(!isModalVisible);
   };
 
+  const handleConfirm = () => {
+    setIsConfirm(true);
+    setIsModalVisible(false);
+  };
   return (
     <>
+      <ExpoStatusBar backgroundColor="white" />
       {/* there is some space coming in between status bar and scroll view
           needs to be edited
           temporarily adjusted by negative margin */}
-      <ExpoStatusBar backgroundColor="white" />
       <MyVerificationModal
         visible={isModalVisible}
         onClose={toggleModal}
-        type={inputType}
+        type={emailIsOn ? "email" : "phone number"}
         value={inputValue}
+        onPress={handleConfirm}
       />
       <ScrollView
         showsVerticalScrollIndicator={false}
@@ -43,39 +51,119 @@ export default function ForgotPassword() {
         </Link>
 
         {formSubmitted ? (
-          <View style={styles.box}>
-            <MyText size={16} weight="600" style={styles.title}>
-              Verify Identity
-            </MyText>
-            <MyText style={[styles.title, { color: "#666666" }]}>
-              We’ll send you a verification code to confirm your identity. How
-              should we reach you?
-            </MyText>
-            <>
-              <View style={styles.row}>
-                <OnRadioBtn />
-                <MyText style={styles.plain}>Via text message</MyText>
-              </View>
-              <MyText style={styles.text}>03*******07</MyText>
-            </>
-            <>
-              <View style={styles.row}>
-                <OffRadioBtn />
-                <MyText style={styles.plain}>Via email</MyText>
-              </View>
-              <MyText style={styles.text}>Du******65@gmail.com</MyText>
-            </>
-            <MyButton
-              label="Send Code"
-              style={styles.sendButton}
-              labelStyle={styles.label}
-              onPress={toggleModal}
-            />
-          </View>
+          isConfirm ? (
+            <Formik
+              initialValues={{
+                password: "",
+                confirmPassword: "",
+              }}
+              onSubmit={async (values, { resetForm }) => {
+                console.log("Validation Success", values);
+                setFormSubmitted(true);
+              }}
+              validationSchema={ResetPasswordSchema.resetForm}
+            >
+              {({ handleChange, handleSubmit, touched, errors }) => (
+                <View style={styles.box}>
+                  <MyText size={16} weight="600" style={styles.title}>
+                    Reset Password
+                  </MyText>
+                  <MyText textColor="#383838">
+                    Please create a new password
+                  </MyText>
+
+                  <MyInput
+                    placeholder="New password"
+                    password
+                    width="90%"
+                    style={styles.input}
+                    onChange={handleChange("password")}
+                  />
+                  <View style={styles.errorBox}>
+                    {touched.password && errors.password ? (
+                      <MyText size={10} style={styles.error}>
+                        Password must contain at least one uppercase letter, one
+                        lowercase letter, and one number
+                      </MyText>
+                    ) : null}
+                  </View>
+                  <MyInput
+                    placeholder="Confirm new password"
+                    password
+                    width="90%"
+                    style={styles.rst_input}
+                    onChange={handleChange("confirmPassword")}
+                  />
+                  <View style={styles.errorBox}>
+                    {touched.confirmPassword && errors.confirmPassword ? (
+                      <MyText size={10} style={styles.error}>
+                        Passwords must match
+                      </MyText>
+                    ) : null}
+                  </View>
+                  <MyButton
+                    label="Continue"
+                    style={styles.rst_button}
+                    labelStyle={styles.label}
+                    onPress={() => {
+                      handleSubmit();
+                      console.log(errors);
+                    }}
+                  />
+                </View>
+              )}
+            </Formik>
+          ) : (
+            <View style={styles.box}>
+              <MyText size={16} weight="600" style={styles.title}>
+                Verify Identity
+              </MyText>
+              <MyText style={[styles.title, { color: "#666666" }]}>
+                We’ll send you a verification code to confirm your identity. How
+                should we reach you?
+              </MyText>
+              <>
+                <View style={styles.row}>
+                  <TouchableOpacity
+                    onPress={() => {
+                      setPhoneIsOn(!phoneIsOn);
+                      setEmailIsOn(!emailIsOn);
+                    }}
+                  >
+                    {phoneIsOn ? <OnRadioBtn /> : <OffRadioBtn />}
+                  </TouchableOpacity>
+
+                  <MyText style={styles.plain}>Via text message</MyText>
+                </View>
+                <MyText style={styles.text}>03*******07</MyText>
+              </>
+              <>
+                <View style={styles.row}>
+                  <TouchableOpacity
+                    onPress={() => {
+                      setEmailIsOn(!emailIsOn);
+                      setPhoneIsOn(!phoneIsOn);
+                    }}
+                  >
+                    {emailIsOn ? <OnRadioBtn /> : <OffRadioBtn />}
+                  </TouchableOpacity>
+                  <MyText style={styles.plain}>Via email</MyText>
+                </View>
+                <MyText style={styles.text}>Du******65@gmail.com</MyText>
+              </>
+              <MyButton
+                label="Send Code"
+                style={styles.sendButton}
+                labelStyle={styles.label}
+                onPress={toggleModal}
+              />
+            </View>
+          )
         ) : (
           <Formik
             initialValues={{
               input: "",
+              type: "",
             }}
             onSubmit={async (values, { resetForm }) => {
               console.log("Validation Success", values);
@@ -85,9 +173,16 @@ export default function ForgotPassword() {
               );
               setFormSubmitted(true);
             }}
-            validationSchema={ForgorPasswordSchema.ForgotPasswordForm}
+            validationSchema={ForgotPasswordSchema}
           >
-            {({ handleChange, handleSubmit, touched, errors, values }) => (
+            {({
+              handleChange,
+              handleSubmit,
+              setFieldValue,
+              touched,
+              errors,
+              values,
+            }) => (
               <View style={styles.box}>
                 <MyText size={16} weight="600" style={styles.title}>
                   Forgot Password
@@ -113,6 +208,10 @@ export default function ForgotPassword() {
                   labelStyle={styles.label}
                   onPress={() => {
                     handleSubmit();
+                    setFieldValue(
+                      "type",
+                      (values.input as string).includes("@") ? "email" : "phone"
+                    );
                   }}
                 />
               </View>
@@ -136,7 +235,6 @@ const styles = StyleSheet.create({
     height: 600,
     alignSelf: "center",
     marginTop: "20%",
-    // backgroundColor: "pink",
   },
   title: {
     marginBottom: "5%",
@@ -177,4 +275,14 @@ const styles = StyleSheet.create({
     marginTop: "14%",
   },
   plain: { color: "#666666" },
+  rst_input: {
+    backgroundColor: "white",
+    elevation: 1.5,
+  },
+  rst_button: {
+    width: 110,
+    height: 35,
+    alignSelf: "center",
+    marginTop: "20%",
+  },
 });

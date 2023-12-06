@@ -90,4 +90,5 @@ export interface MyVerificationModalProps {
   value?: string;
   visible?: boolean;
   onClose: () => void;
+  onPress: () => void;
 }
