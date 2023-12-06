@@ -92,3 +92,9 @@ export interface MyVerificationModalProps {
   onClose: () => void;
   onPress: () => void;
 }
+
+export interface SuccessMessageModalProps {
+  message?: string;
+  visible?: boolean;
+  onPress: () => void;
+}

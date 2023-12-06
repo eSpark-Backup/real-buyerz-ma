@@ -9,6 +9,7 @@ import { GLogo, RLogo } from "@assets/images";
 import { DarkTheme, LightTheme } from "@theme";
 import { MyText, MyButton, MyCheckbox, MyInput, LoginModal } from "@components";
 import { UserSignInSchema } from "@validations/schema";
+import SuccessMessageModal from "components/SuccessMessageModal";
 
 export default function signIn() {
   const colorScheme = Appearance.getColorScheme();
@@ -242,22 +243,3 @@ const styles = StyleSheet.create({
   label: { color: "#FFFFFF", fontSize: 14 },
   bottom: { flexDirection: "row", marginTop: "22%" },
 });
-
-// for login popup
-
-// {
-//   /* <MyButton
-//           label="PopUp"
-//           onPress={toggleModal}
-//           style={{
-//             width: 110,
-//             alignItems: "center",
-//             height: 35,
-//             justifyContent: "center",
-//             alignContent: "center",
-//             marginTop: "1%",
-//           }}
-//           labelStyle={{ color: "white" }}
-//         />
-//         <LoginModal visible={isModalVisible} onClose={toggleModal} /> */
-// }

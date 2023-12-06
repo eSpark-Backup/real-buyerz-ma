@@ -19,6 +19,7 @@ interface DropdownProps {
   zIndex?: number;
   onSelect: (value: string | string[]) => void;
   style?: StyleProp<ViewStyle>;
+  placeholderColor?: string;
 }
 
 export default function MyDropdown({
@@ -28,6 +29,7 @@ export default function MyDropdown({
   zIndex = 10,
   multiSelect = false,
   style,
+  placeholderColor,
 }: DropdownProps) {
   const [show, setShow] = useState(false);
   const [selectedItems, setSelectedItems] = useState<string[]>([]);
@@ -103,7 +105,7 @@ export default function MyDropdown({
       >
         <MyText
           text={label ? label : `Select ${placeholder}`}
-          textColor="#969696"
+          textColor={placeholderColor ? placeholderColor : "#969696"}
         />
         <Entypo
           name={!show ? "chevron-down" : "chevron-up"}

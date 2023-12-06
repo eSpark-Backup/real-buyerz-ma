@@ -31,7 +31,7 @@ export default function ForgotPassword() {
   return (
     <>
       <ExpoStatusBar backgroundColor="white" />
-      {/* there is some space coming in between status bar and scroll view
+      {/* Todo: there is some space coming in between status bar and scroll view
           needs to be edited
           temporarily adjusted by negative margin */}
       <MyVerificationModal

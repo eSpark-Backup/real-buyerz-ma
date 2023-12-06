@@ -67,7 +67,6 @@ export default function SignUp() {
         handleChange,
         handleSubmit,
         errors,
-        setFieldTouched,
         touched,
         values,
         setFieldValue,
@@ -130,6 +129,7 @@ export default function SignUp() {
                     placeholder={field.placeholder}
                     zIndex={10}
                     style={styles.dropdown}
+                    placeholderColor="#666666"
                   />
                 ) : (
                   <MyInput
@@ -139,6 +139,7 @@ export default function SignUp() {
                     rightIcon={field?.rightIcon}
                     password={field?.password}
                     onChange={handleChange(field.name)}
+                    placeholderColor="#666666"
                   />
                 )
               )}
@@ -187,7 +188,7 @@ export default function SignUp() {
               size={14}
               weight="600"
               textColor="white"
-              style={{ marginTop: "3%" }}
+              style={styles.google}
             />
             <View style={styles.google}>
               <MyText
