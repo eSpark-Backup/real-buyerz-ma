@@ -1,6 +1,12 @@
 import React from "react";
 import { StyleSheet, View, ViewStyle } from "react-native";
+
+import {
+  NativeStackHeaderProps,
+  NativeStackNavigationOptions,
+} from "@react-navigation/native-stack";
 import { BottomTabHeaderProps } from "@react-navigation/bottom-tabs";
+
 import { Entypo, Feather } from "@expo/vector-icons";
 import { router } from "expo-router";
 
@@ -13,11 +19,15 @@ interface MyProps {
   showRight?: boolean;
   showProfilePin?: boolean;
   hideCenter?: boolean;
+  type?: string;
   theme?: MyTheme;
 }
 
+type HeaderProps = NativeStackHeaderProps &
+  NativeStackNavigationOptions &
+  MyProps;
+
 export default function MyHeader({
-  layout,
   options,
   navigation,
   route,
@@ -78,6 +88,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     width: "100%",
     justifyContent: "center",
+    height: 60,
+    borderBottomColor: "#E4E4E4",
+    borderBottomWidth: 1,
   },
   left: {
     flex: 1,

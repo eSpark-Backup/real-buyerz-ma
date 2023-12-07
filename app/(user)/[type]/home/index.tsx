@@ -9,6 +9,7 @@ import {
   TouchableOpacity,
   Animated,
   Easing,
+  TouchableWithoutFeedback,
 } from "react-native";
 import { Feather } from "@expo/vector-icons";
 import { useTheme } from "@react-navigation/native";
@@ -16,6 +17,7 @@ import { useTheme } from "@react-navigation/native";
 import { Card, MyText, MyAppBar, GapView } from "@components";
 import { AgentHome } from "@assets/images";
 import { WINDOW_WIDTH } from "@constants";
+import { router } from "expo-router";
 import { MyTheme } from "@types";
 
 export default function Home() {
@@ -319,42 +321,45 @@ const PropertyListing = ({
 
   function renderList({ item, index }: { item: any; index: number }) {
     return (
-      <Card radius={2} style={{ height: 180, width: 130 }}>
-        <Image
-          source={{
-            uri: item?.image,
-          }}
-          style={{ height: 80, borderRadius: 2 }}
-          onLoadStart={() => console.log("start")}
-          onLoadEnd={() => console.log("end")}
-        />
-        <View style={{ padding: 8 }}>
-          <MyText
-            text="Contact for price"
-            size={10}
-            textColor={theme?.colors.text}
-            style={{ fontWeight: "500", marginBottom: 10 }}
+      <TouchableOpacity
+        onPress={() => {
+          console.log("Hello world");
+          router.push("(user)/anon/home/propertyDetail");
+        }}
+      >
+        <Card radius={2} style={{ height: 180, width: 130 }}>
+          <Image
+            source={{ uri: item?.image }}
+            style={{ height: 80, borderRadius: 2 }}
           />
-          <MyText
-            text={item.name}
-            size={10}
-            textColor={theme?.colors.text}
-            style={{ fontWeight: "400", marginBottom: 10 }}
-          />
-          <MyText
-            text={item.location}
-            size={10}
-            textColor={theme?.colors.text + "77"}
-            style={{ fontWeight: "400", marginBottom: 10 }}
-          />
-          <MyText
-            text={item.size}
-            size={8}
-            textColor={theme?.colors.text + "77"}
-            style={{ fontWeight: "400", marginBottom: 10 }}
-          />
-        </View>
-      </Card>
+          <View style={{ padding: 8 }}>
+            <MyText
+              text="Contact for price"
+              size={10}
+              textColor="#000000"
+              style={{ fontWeight: "500", marginBottom: 10 }}
+            />
+            <MyText
+              text={item.name}
+              size={10}
+              textColor="#000000"
+              style={{ fontWeight: "400", marginBottom: 10 }}
+            />
+            <MyText
+              text={item.location}
+              size={10}
+              textColor="#898989"
+              style={{ fontWeight: "400", marginBottom: 10 }}
+            />
+            <MyText
+              text={item.size}
+              size={8}
+              textColor="#898989"
+              style={{ fontWeight: "400", marginBottom: 10 }}
+            />
+          </View>
+        </Card>
+      </TouchableOpacity>
     );
   }
 
