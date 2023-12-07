@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { StyleSheet, View } from "react-native";
+import { useDispatch } from "react-redux";
 
 import MyText from "components/MyText";
 import {
@@ -12,16 +13,19 @@ import {
   TermConditionsIcon,
 } from "@assets/images/svg";
 import { ToggleSwitch } from "components/MySwitch";
+import { toggleTheme } from "features/themeSlice";
 
 export interface IList {
   title: string;
   indexIcon: number;
 }
 
+interface SvgIcon {
+  [key: number]: any;
+}
+
 export default function InboxList({ title, indexIcon }: IList) {
-  type SvgIcon = {
-    [key: number]: any;
-  };
+  const dispatch = useDispatch();
   const [switchValue, setSwitchValue] = useState(false);
 
   const svgIcons: SvgIcon = {
@@ -45,7 +49,13 @@ export default function InboxList({ title, indexIcon }: IList) {
 
         <View style={styles.dateTimeStyle}>
           {indexIcon === 0 && (
-            <ToggleSwitch value={switchValue} onValueChange={setSwitchValue} />
+            <ToggleSwitch
+              value={switchValue}
+              onValueChange={() => {
+                dispatch(toggleTheme(!switchValue ? "Dark" : "Default"));
+                setSwitchValue(!switchValue);
+              }}
+            />
           )}
           {indexIcon !== 0 && indexIcon !== 5 && <ArrowRight />}
         </View>

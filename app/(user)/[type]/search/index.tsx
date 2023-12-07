@@ -1,20 +1,23 @@
 import React from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { router } from "expo-router";
+import { useTheme } from "@react-navigation/native";
 
 import {
   Card,
   GapView,
   MyDropdown,
-  TabSwitch,
   MyText,
   SearchBar,
   TabFilter,
   MyButton,
 } from "@components";
 import { testData } from "@constants";
+import { MyTheme } from "@types";
 
 export default function Search() {
+  const theme = useTheme() as MyTheme;
+
   return (
     <View style={styles.container}>
       <View style={styles.searchBar}>
@@ -66,8 +69,8 @@ export default function Search() {
       <View style={styles.button}>
         <MyButton
           label="Search"
-          textColor="#ffffff"
-          backgroundColor="#fb631c"
+          textColor={"#ffffff"}
+          backgroundColor={theme.colors.primary}
           onPress={() => router.push("(user)/anon/search/searchList")}
           style={{ borderRadius: 4, padding: 8, paddingHorizontal: 20 }}
         />

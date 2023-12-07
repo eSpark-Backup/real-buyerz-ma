@@ -17,11 +17,11 @@ export default function UserTypeLayout() {
         headerShown: false,
         headerStyle: styles(theme).headerStyle,
         header: (props) => {
-          return <MyHeader {...props} showRight showBackIcon />;
+          return <MyHeader {...props} showRight showBackIcon theme={theme} />;
         },
       }}
       tabBar={(props) => {
-        return <MyTabBar {...props} />;
+        return <MyTabBar {...props} theme={theme} />;
       }}
     >
       <Tabs.Screen
@@ -51,7 +51,9 @@ export default function UserTypeLayout() {
         options={{
           headerShown: true,
           header: (props) => {
-            return <MyHeader {...props} hideCenter showBackIcon />;
+            return (
+              <MyHeader {...props} hideCenter showBackIcon theme={theme} />
+            );
           },
           title: "Search",
           href: "(user)/anon/search",
@@ -60,7 +62,7 @@ export default function UserTypeLayout() {
       <Tabs.Screen
         name="listings"
         options={{
-          // headerShown: false,
+          headerShown: true,
           title: "Listings",
           href: "(user)/anon/listings",
         }}

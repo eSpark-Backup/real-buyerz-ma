@@ -12,3 +12,7 @@ export { default as MyHeader } from "./MyHeader";
 export { default as SearchBar } from "./SearchBar";
 export { default as MyDropdown } from "./MyDropdown";
 export { default as TabFilter } from "./TabFilter";
+export { default as InboxList } from "./InboxList";
+export { default as MyAvatar } from "./MyAvatar";
+export { AddCard, MyClickableCard } from "./MyCard";
+export { default as SettingList } from "./SettingList";

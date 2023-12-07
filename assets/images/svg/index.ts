@@ -19,3 +19,8 @@ export { default as BathOutline } from "./bath-outline.svg";
 export { default as BedOutline } from "./bed-outline.svg";
 export { default as LandPlot } from "./land-plot.svg";
 export { default as Parking } from "./parking.svg";
+export { default as HomeTab } from "./home-vector.svg";
+export { default as InboxTab } from "./inbox-vector.svg";
+export { default as SearchTab } from "./search-vector.svg";
+export { default as ListingTab } from "./listing-vector.svg";
+export { default as SettingsTab } from "./settings-vector.svg";

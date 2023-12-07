@@ -12,6 +12,14 @@ export {
   Parking,
   BedOutline,
   LandPlot,
+  HomeTab,
+  InboxTab,
+  SearchTab,
+  ListingTab,
+  SettingsTab,
+  ReloadIcon,
+  HeartIcon,
+  ProfileIcon,
 } from "./svg";
 
 //* pngs
