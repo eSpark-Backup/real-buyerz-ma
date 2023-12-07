@@ -38,7 +38,6 @@ export default function InboxList({
           )}
         </View>
       </View>
-      <View style={styles.divider} />
     </View>
   );
 }

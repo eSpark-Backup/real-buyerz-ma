@@ -61,6 +61,7 @@ export type MyButtonProps = {
   backgroundColor?: string;
   style?: ViewStyle;
   labelStyle?: TextStyle;
+  leftIcon?: React.ReactNode;
 };
 
 export type MyIconProps = {
