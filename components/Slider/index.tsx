@@ -53,7 +53,7 @@ const styles = StyleSheet.create({
     width: "100%",
   },
   sliderTrack: {
-    height: 250,
+    height: 228,
     backgroundColor: "#ddd",
     borderRadius: 5,
     flexDirection: "row",

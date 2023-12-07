@@ -1,12 +1,10 @@
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, View } from "react-native";
 import React from "react";
 import CustomSlider from "components/Slider";
-import { Card, MyText } from "@components";
-import MyAvatar from "components/MyAvatar";
+import { Card, MyText, PropertyList, MyAvatar } from "@components";
 import PrimaryBtn from "components/MyButton/primaryBtn";
 import { LocationIcon } from "@assets/images/svg";
 import { ScrollView } from "react-native-gesture-handler";
-import { PropertyListing } from ".";
 
 const PropertyDetail = () => {
   const images = [
@@ -129,7 +127,7 @@ const PropertyDetail = () => {
               text="Overview"
               size={16}
               weight="600"
-              textColor="#696969"
+              textColor="#000000"
             />
           </View>
           <View style={styles.detailsWrapper}>
@@ -171,16 +169,23 @@ const PropertyDetail = () => {
                 text="Description"
                 size={16}
                 weight="600"
-                textColor="#696969"
+                textColor="#000000"
               />
               <View style={styles.descriptionWrapper}>
                 {description.map((item, index) => (
-                  <MyText key={index} text={item} size={14} weight="400" />
+                  <MyText
+                    key={index}
+                    textColor="#333333"
+                    text={item}
+                    size={14}
+                    weight="400"
+                  />
                 ))}
               </View>
             </View>
             <View style={styles.mt5}>
               <MyText text="Nearby Locations" size={16} weight="600" />
+              <MyText text="Amenities" size={16} weight="600" />
               {amentiesList.map((item, index) => (
                 <MyText key={index} text={item} size={14} weight="400" />
               ))}
@@ -195,7 +200,7 @@ const PropertyDetail = () => {
             </View>
           </View>
         </Card>
-        <PropertyListing title="Featured Properties" />
+        <PropertyList title="Similar Projects" />
       </View>
     </ScrollView>
   );
@@ -212,7 +217,8 @@ const styles = StyleSheet.create({
     display: "flex",
     flexDirection: "row",
     alignItems: "center",
-    padding: 10,
+    paddingVertical: 15,
+    paddingHorizontal: 10,
     marginTop: 25,
     borderRadius: 10,
     justifyContent: "space-around",
@@ -234,7 +240,7 @@ const styles = StyleSheet.create({
     marginTop: 15,
   },
   overViewCard: {
-    marginTop: 15,
+    marginTop: 30,
   },
   headingStyle: {
     justifyContent: "center",
@@ -254,7 +260,7 @@ const styles = StyleSheet.create({
   },
   row: {
     flexDirection: "row",
-    paddingVertical: 8,
+    paddingVertical: 10,
     paddingHorizontal: 10,
   },
   columnOne: {
