@@ -88,3 +88,16 @@ export type SearchListProps = {
   label: string;
   selected: boolean;
 };
+export interface MyVerificationModalProps {
+  type?: "email" | "phone number";
+  value?: string;
+  visible?: boolean;
+  onClose: () => void;
+  onPress: () => void;
+}
+
+export interface SuccessMessageModalProps {
+  message?: string;
+  visible?: boolean;
+  onPress: () => void;
+}

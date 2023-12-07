@@ -16,3 +16,4 @@ export { default as InboxList } from "./InboxList";
 export { default as MyAvatar } from "./MyAvatar";
 export { AddCard, MyClickableCard } from "./MyCard";
 export { default as SettingList } from "./SettingList";
+export { default as MyVerificationModal } from "./MyVerificationModal";

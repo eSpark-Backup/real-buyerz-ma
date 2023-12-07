@@ -79,7 +79,8 @@ const Title = ({ text, theme }: { text?: string; theme?: MyTheme }) => {
   return (
     <MyText
       text={text}
-      style={{ fontSize: 16, fontWeight: "700", color: theme?.colors.text }}
+      weight="700"
+      style={{ fontSize: 16, color: theme?.colors.text }}
     />
   );
 };
