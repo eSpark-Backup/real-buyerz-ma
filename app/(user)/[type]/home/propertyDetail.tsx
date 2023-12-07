@@ -1,5 +1,6 @@
 import { StyleSheet, View } from "react-native";
 import React from "react";
+
 import CustomSlider from "components/Slider";
 import { Card, MyText, PropertyList, MyAvatar } from "@components";
 import PrimaryBtn from "components/MyButton/primaryBtn";

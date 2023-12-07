@@ -1,10 +1,7 @@
 import React from "react";
 import { StyleSheet, View, ViewStyle } from "react-native";
 
-import {
-  NativeStackHeaderProps,
-  NativeStackNavigationOptions,
-} from "@react-navigation/native-stack";
+import { NativeStackHeaderProps } from "@react-navigation/native-stack";
 import { BottomTabHeaderProps } from "@react-navigation/bottom-tabs";
 
 import { Entypo, Feather } from "@expo/vector-icons";
@@ -23,9 +20,7 @@ interface MyProps {
   theme?: MyTheme;
 }
 
-type HeaderProps = NativeStackHeaderProps &
-  NativeStackNavigationOptions &
-  MyProps;
+type HeaderProps = (NativeStackHeaderProps | BottomTabHeaderProps) & MyProps;
 
 export default function MyHeader({
   options,
@@ -37,7 +32,7 @@ export default function MyHeader({
   showProfilePin,
   hideCenter,
   theme,
-}: BottomTabHeaderProps & MyProps) {
+}: HeaderProps & MyProps) {
   console.log("lay", options.headerStyle);
   const headerStyle = options.headerStyle as ViewStyle;
   return (

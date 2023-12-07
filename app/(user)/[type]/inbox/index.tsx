@@ -6,10 +6,10 @@ import {
   View,
   FlatList,
 } from "react-native";
+import { useTheme } from "@react-navigation/native";
 
 import { ReloadIcon } from "@assets/images";
-import { MyText, InboxList } from "@components";
-import { useTheme } from "@react-navigation/native";
+import { MyText, InboxList, Card } from "@components";
 import { MyTheme } from "@types";
 
 const Inbox: React.FC = () => {
@@ -126,6 +126,9 @@ const Inbox: React.FC = () => {
                 count={item.count}
                 avatarUrl={item.avatarUrl}
               />
+            )}
+            ItemSeparatorComponent={() => (
+              <Card.Divider style={{ width: "85%", alignSelf: "center" }} />
             )}
           />
         )}

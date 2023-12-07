@@ -288,7 +288,7 @@ const BrowseProps = ({ theme }: { theme?: MyTheme }) => {
   );
 };
 
-const PropertyListing = ({
+export const PropertyListing = ({
   title,
   theme,
 }: {
