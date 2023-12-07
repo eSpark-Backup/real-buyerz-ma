@@ -15,3 +15,6 @@ export { default as FeedBackIcon } from "./feedback-icon.svg";
 export { default as PrivacyPolicyIcon } from "./privacy-policy-icon.svg";
 export { default as TermConditionsIcon } from "./term-conditions-icon.svg";
 export { default as ArrowRight } from "./arrow-right.svg";
+export { default as RightIconCarousel } from "./right-icon.svg";
+export { default as LeftIconCarousel } from "./left-icon.svg";
+export { default as LocationIcon } from "./location-icon.svg";

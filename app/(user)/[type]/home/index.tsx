@@ -9,11 +9,13 @@ import {
   TouchableOpacity,
   Animated,
   Easing,
+  TouchableWithoutFeedback,
 } from "react-native";
 
 import { Card, MyText, MyAppBar, GapView } from "@components";
 import { AgentHome } from "@assets/images";
 import { WINDOW_WIDTH } from "@constants";
+import { router } from "expo-router";
 
 export default function Home() {
   return (
@@ -26,6 +28,7 @@ export default function Home() {
         />
         <GapView length={30} />
         <Title text="Browse Properties" />
+
         <View
           style={{
             marginTop: 10,
@@ -261,7 +264,7 @@ const BrowseProps = () => {
   );
 };
 
-const PropertyListing = ({ title }: { title?: string }) => {
+export const PropertyListing = ({ title }: { title?: string }) => {
   const data = [
     {
       id: 0,
@@ -288,38 +291,45 @@ const PropertyListing = ({ title }: { title?: string }) => {
 
   function renderList({ item, index }: { item: any; index: number }) {
     return (
-      <Card radius={2} style={{ height: 180, width: 130 }}>
-        <Image
-          source={{ uri: item?.image }}
-          style={{ height: 80, borderRadius: 2 }}
-        />
-        <View style={{ padding: 8 }}>
-          <MyText
-            text="Contact for price"
-            size={10}
-            textColor="#000000"
-            style={{ fontWeight: "500", marginBottom: 10 }}
+      <TouchableOpacity
+        onPress={() => {
+          console.log("Hello world");
+          router.push("(user)/anon/home/propertyDetail");
+        }}
+      >
+        <Card radius={2} style={{ height: 180, width: 130 }}>
+          <Image
+            source={{ uri: item?.image }}
+            style={{ height: 80, borderRadius: 2 }}
           />
-          <MyText
-            text={item.name}
-            size={10}
-            textColor="#000000"
-            style={{ fontWeight: "400", marginBottom: 10 }}
-          />
-          <MyText
-            text={item.location}
-            size={10}
-            textColor="#898989"
-            style={{ fontWeight: "400", marginBottom: 10 }}
-          />
-          <MyText
-            text={item.size}
-            size={8}
-            textColor="#898989"
-            style={{ fontWeight: "400", marginBottom: 10 }}
-          />
-        </View>
-      </Card>
+          <View style={{ padding: 8 }}>
+            <MyText
+              text="Contact for price"
+              size={10}
+              textColor="#000000"
+              style={{ fontWeight: "500", marginBottom: 10 }}
+            />
+            <MyText
+              text={item.name}
+              size={10}
+              textColor="#000000"
+              style={{ fontWeight: "400", marginBottom: 10 }}
+            />
+            <MyText
+              text={item.location}
+              size={10}
+              textColor="#898989"
+              style={{ fontWeight: "400", marginBottom: 10 }}
+            />
+            <MyText
+              text={item.size}
+              size={8}
+              textColor="#898989"
+              style={{ fontWeight: "400", marginBottom: 10 }}
+            />
+          </View>
+        </Card>
+      </TouchableOpacity>
     );
   }
 

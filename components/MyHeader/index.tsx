@@ -1,6 +1,11 @@
 import React from "react";
 import { StyleSheet, View, ViewStyle } from "react-native";
-import { BottomTabHeaderProps } from "@react-navigation/bottom-tabs";
+
+import {
+  NativeStackHeaderProps,
+  NativeStackNavigationOptions,
+} from "@react-navigation/native-stack";
+
 import { Entypo, Feather } from "@expo/vector-icons";
 
 import { PLogo, ProfilePin, RText } from "@assets/images";
@@ -11,10 +16,14 @@ interface MyProps {
   showRight?: boolean;
   showProfilePin?: boolean;
   hideCenter?: boolean;
+  type?: string;
 }
 
+type HeaderProps = NativeStackHeaderProps &
+  NativeStackNavigationOptions &
+  MyProps;
+
 export default function MyHeader({
-  layout,
   options,
   navigation,
   route,
@@ -23,7 +32,7 @@ export default function MyHeader({
   leftLogo,
   showProfilePin,
   hideCenter,
-}: BottomTabHeaderProps & MyProps) {
+}: HeaderProps) {
   console.log("lay", options.headerStyle);
   const headerStyle = options.headerStyle as ViewStyle;
   return (
@@ -69,6 +78,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     width: "100%",
     justifyContent: "center",
+    height: 60,
+    borderBottomColor: "#E4E4E4",
+    borderBottomWidth: 1,
   },
   left: {
     flex: 1,
