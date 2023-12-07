@@ -11,6 +11,7 @@ import {
   Easing,
   TouchableWithoutFeedback,
 } from "react-native";
+import { Image as EImage } from "expo-image";
 
 import { Card, MyText, MyAppBar, GapView } from "@components";
 import { AgentHome } from "@assets/images";
@@ -65,7 +66,8 @@ const Title = ({ text }: { text?: string }) => {
   return (
     <MyText
       text={text}
-      style={{ fontSize: 16, fontWeight: "700", color: "#000000" }}
+      weight="700"
+      style={{ fontSize: 16, color: "#000000" }}
     />
   );
 };

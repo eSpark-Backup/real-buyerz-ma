@@ -7,6 +7,7 @@ import {
 } from "@react-navigation/native-stack";
 
 import { Entypo, Feather } from "@expo/vector-icons";
+import { router } from "expo-router";
 
 import { PLogo, ProfilePin, RText } from "@assets/images";
 
@@ -39,7 +40,12 @@ export default function MyHeader({
     <View style={{ ...styles.container, ...headerStyle }}>
       <View style={styles.left}>
         {showBackIcon && (
-          <Feather name="arrow-left" color={"#136FA9"} size={25} />
+          <Feather
+            name="arrow-left"
+            color={"#136FA9"}
+            size={25}
+            onPress={() => router.back()}
+          />
         )}
         {leftLogo && <PLogo />}
       </View>

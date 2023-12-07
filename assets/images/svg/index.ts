@@ -18,3 +18,10 @@ export { default as ArrowRight } from "./arrow-right.svg";
 export { default as RightIconCarousel } from "./right-icon.svg";
 export { default as LeftIconCarousel } from "./left-icon.svg";
 export { default as LocationIcon } from "./location-icon.svg";
+export { default as OffRadioBtn } from "./off_radiobtn.svg";
+export { default as OnRadioBtn } from "./on_radiobtn.svg";
+export { default as CloseBtn } from "./close-button.svg";
+export { default as BathOutline } from "./bath-outline.svg";
+export { default as BedOutline } from "./bed-outline.svg";
+export { default as LandPlot } from "./land-plot.svg";
+

@@ -8,6 +8,7 @@ export default function SearchLayout() {
       initialRouteName="search/index"
       screenOptions={{
         headerShown: false,
+        contentStyle: { paddingHorizontal: 20, paddingTop: 14 },
       }}
     />
   );
