@@ -5,6 +5,7 @@ import { Entypo, Feather } from "@expo/vector-icons";
 import { router } from "expo-router";
 
 import { PLogo, ProfilePin, RText } from "@assets/images";
+import { MyTheme } from "@types";
 
 interface MyProps {
   showBackIcon?: boolean;
@@ -12,6 +13,7 @@ interface MyProps {
   showRight?: boolean;
   showProfilePin?: boolean;
   hideCenter?: boolean;
+  theme?: MyTheme;
 }
 
 export default function MyHeader({
@@ -24,6 +26,7 @@ export default function MyHeader({
   leftLogo,
   showProfilePin,
   hideCenter,
+  theme,
 }: BottomTabHeaderProps & MyProps) {
   console.log("lay", options.headerStyle);
   const headerStyle = options.headerStyle as ViewStyle;
@@ -33,7 +36,7 @@ export default function MyHeader({
         {showBackIcon && (
           <Feather
             name="arrow-left"
-            color={"#136FA9"}
+            color={theme?.colors.secondary}
             size={25}
             onPress={() => router.back()}
           />
@@ -57,7 +60,7 @@ export default function MyHeader({
               <Entypo
                 name="dots-three-vertical"
                 size={20}
-                color={"#136FA9"}
+                color={theme?.colors.secondary}
                 style={showProfilePin ? { marginLeft: 20 } : {}}
               />
               <View />
