@@ -42,3 +42,5 @@ export const AdCard = ({
     </Card>
   );
 };
+
+export default AdCard;

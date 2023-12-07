@@ -1,3 +1,4 @@
+import React, { useState } from "react";
 import {
   StyleSheet,
   Text,
@@ -5,22 +6,23 @@ import {
   View,
   FlatList,
 } from "react-native";
-import React, { useState, ReactNode } from "react";
-import { ReloadIcon } from "@assets/images/svg";
-import { MyText } from "@components";
-import InboxList from "components/InboxList";
-import { colors } from "@theme";
-import { IList } from "components/InboxList";
+
+import { ReloadIcon } from "@assets/images";
+import { MyText, InboxList } from "@components";
+import { useTheme } from "@react-navigation/native";
+import { MyTheme } from "@types";
 
 const Inbox: React.FC = () => {
+  const theme = useTheme() as MyTheme;
   const [tab, setTab] = useState("inbox");
+
   const handleTab = (buttonName: string) => {
     if (tab !== buttonName) {
       setTab(buttonName);
     }
   };
 
-  const listData: IList[] = [
+  const listData = [
     {
       title: "John Doe",
       subTitle: "Lorem ipsum dolor sit amet, consectetur adipiscing elit",
@@ -68,40 +70,45 @@ const Inbox: React.FC = () => {
       avatarUrl: "https://picsum.photos/id/151/130",
     },
   ];
+
   return (
-    <View style={styles.wrapper}>
-      <View style={styles.card}>
-        <View style={styles.tabRow}>
-          <View style={styles.tabsStyle}>
+    <View style={styles(theme).wrapper}>
+      <View style={styles(theme).card}>
+        <View style={styles(theme).tabRow}>
+          <View style={styles(theme).tabsStyle}>
             <TouchableOpacity>
               <ReloadIcon />
             </TouchableOpacity>
             <View>
               <TouchableOpacity
                 style={[
-                  styles.singleTab,
-                  tab === "inbox" ? styles.selectedTab : null,
+                  styles(theme).singleTab,
+                  tab === "inbox" ? styles(theme).selectedTab : null,
                 ]}
                 onPress={() => handleTab("inbox")}
               >
                 <MyText
                   text="Inbox"
                   size={17}
-                  textColor={tab === "inbox" ? colors.dark.primary : "#000000"}
+                  textColor={
+                    tab === "inbox" ? theme.colors.primary : theme.colors.text
+                  }
                 />
               </TouchableOpacity>
             </View>
             <TouchableOpacity
               onPress={() => handleTab("archieve")}
               style={[
-                styles.singleTab,
-                tab === "archieve" ? styles.selectedTab : null,
+                styles(theme).singleTab,
+                tab === "archieve" ? styles(theme).selectedTab : null,
               ]}
             >
               <MyText
                 text="Archive"
                 size={17}
-                textColor={tab === "archieve" ? colors.dark.primary : "#000000"}
+                textColor={
+                  tab === "archieve" ? theme.colors.primary : theme.colors.text
+                }
               />
             </TouchableOpacity>
           </View>
@@ -122,54 +129,52 @@ const Inbox: React.FC = () => {
             )}
           />
         )}
-        {tab === "archive" && (
-          <View>
-            <MyText text="Archive" />
-          </View>
-        )}
+        {tab === "archive" && <MyText text="Archive" />}
       </View>
     </View>
   );
 };
 export default Inbox;
 
-const styles = StyleSheet.create({
-  wrapper: {
-    paddingBottom: 5,
-    paddingHorizontal: 20,
-    paddingTop: 20,
-    height: "100%",
-  },
-  card: {
-    borderRadius: 15,
-    borderColor: "#E9E9E9",
-    height: "95%",
-    borderWidth: 1,
-    padding: 0,
-  },
-  tabRow: {
-    paddingTop: 8,
-    paddingStart: 4,
-    borderBottomColor: "#E9E9E9",
-    borderBottomWidth: 1,
-  },
-  tabsStyle: {
-    justifyContent: "space-between",
-    alignItems: "center",
-    flexDirection: "row",
-    width: "60%",
-    paddingHorizontal: 15,
-  },
-  singleTab: {
-    height: 40,
-    justifyContent: "center",
-  },
-  selectedTab: {
-    borderBottomColor: "#FB631C",
-    borderBottomWidth: 2,
-    paddingBottom: 4,
-  },
-  tabColor: {
-    color: "#FB631C",
-  },
-});
+const styles = (theme?: MyTheme) =>
+  StyleSheet.create({
+    wrapper: {
+      paddingBottom: 5,
+      paddingHorizontal: 20,
+      paddingTop: 20,
+      height: "100%",
+    },
+    card: {
+      borderRadius: 15,
+      borderColor: theme?.colors.border,
+      height: "95%",
+      borderWidth: 1,
+      padding: 0,
+      overflow: "hidden",
+    },
+    tabRow: {
+      paddingTop: 8,
+      paddingStart: 4,
+      borderBottomColor: theme?.colors.border,
+      borderBottomWidth: 1,
+    },
+    tabsStyle: {
+      justifyContent: "space-between",
+      alignItems: "center",
+      flexDirection: "row",
+      width: "60%",
+      paddingHorizontal: 15,
+    },
+    singleTab: {
+      height: 40,
+      justifyContent: "center",
+    },
+    selectedTab: {
+      borderBottomColor: theme?.colors.primary,
+      borderBottomWidth: 2,
+      paddingBottom: 4,
+    },
+    tabColor: {
+      color: theme?.colors.primary,
+    },
+  });
