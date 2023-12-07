@@ -20,10 +20,11 @@ export default function MyButton({
   backgroundColor,
   style,
   labelStyle,
+  leftIcon,
 }: MyButtonProps) {
   const buttonStyle: ViewStyle = {
     backgroundColor: backgroundColor || theme.colors.secondary,
-
+    flexDirection: "row",
     borderRadius: 8,
     alignItems: "center",
     justifyContent: "center",
@@ -40,6 +41,7 @@ export default function MyButton({
 
   return (
     <TouchableOpacity onPress={onPress} style={buttonStyle}>
+      {leftIcon && leftIcon}
       <MyText text={label} style={buttonTextStyle} />
     </TouchableOpacity>
   );

@@ -1,11 +1,12 @@
-import { StyleSheet, Text, View } from "react-native";
 import React from "react";
+import { StyleSheet, Text, View } from "react-native";
+import { ScrollView } from "react-native-gesture-handler";
+
 import CustomSlider from "components/Slider";
 import { Card, MyText } from "@components";
 import MyAvatar from "components/MyAvatar";
 import PrimaryBtn from "components/MyButton/primaryBtn";
 import { LocationIcon } from "@assets/images/svg";
-import { ScrollView } from "react-native-gesture-handler";
 import { PropertyListing } from ".";
 
 const PropertyDetail = () => {

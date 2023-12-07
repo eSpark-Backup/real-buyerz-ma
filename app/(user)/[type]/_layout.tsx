@@ -33,7 +33,7 @@ export default function UserTypeLayout() {
       <Tabs.Screen
         name="home"
         options={{
-          // headerShown: false,
+          headerShown: false,
           title: "Home",
           href: "(user)/anon/home",
         }}
