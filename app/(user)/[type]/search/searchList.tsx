@@ -1,9 +1,11 @@
-import React from "react";
-import { StyleSheet, Text, View, FlatList, Image } from "react-native";
+import React, { useEffect } from "react";
+import { StyleSheet, View, FlatList, Image } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
+import { useTheme } from "@react-navigation/native";
 
 import { GapView, MyText, SearchBar } from "@components";
-import { Ionicons } from "@expo/vector-icons";
 import { BathOutline, BedOutline, LandPlot, Parking } from "@assets/images";
+import { MyTheme } from "@types";
 
 interface SearchList {
   id: string;
@@ -76,12 +78,14 @@ const testData: SearchList[] = [
 ];
 
 export default function SearchList() {
+  const theme = useTheme() as MyTheme;
+
   return (
-    <View style={styles.container}>
-      <View style={styles.searchBar}>
+    <View style={styles(theme).container}>
+      <View style={styles(theme).searchBar}>
         <SearchBar button />
       </View>
-      <View style={styles.filterList}>
+      <View style={styles(theme).filterList}>
         <FlatList
           data={[
             "Buy",
@@ -93,13 +97,17 @@ export default function SearchList() {
           horizontal
           showsHorizontalScrollIndicator={false}
           ItemSeparatorComponent={() => <GapView mode="horizontal" />}
-          renderItem={renderTagList}
+          renderItem={({ item, index }) =>
+            renderTagList({ index, item, theme })
+          }
         />
       </View>
-      <View style={styles.searchList}>
+      <View style={styles(theme).searchList}>
         <FlatList
           data={testData}
-          renderItem={renderSearchList}
+          renderItem={({ index, item }) =>
+            renderSearchList({ index, item, theme })
+          }
           showsVerticalScrollIndicator={false}
           ListFooterComponent={() => <GapView length={36} />}
           ItemSeparatorComponent={() => <GapView />}
@@ -113,12 +121,14 @@ export default function SearchList() {
 const renderSearchList = ({
   item,
   index,
+  theme,
 }: {
   item: SearchList;
   index: number;
+  theme: MyTheme;
 }) => {
   return (
-    <View style={styles.searchItem}>
+    <View style={styles(theme).searchItem}>
       <Image
         source={{ uri: item.image }}
         style={{ width: 120, height: 120, borderRadius: 2 }}
@@ -128,19 +138,27 @@ const renderSearchList = ({
           flex: 1,
           height: 120,
           marginLeft: 5,
-          // backgroundColor: "powderblue",
           justifyContent: "space-between",
         }}
       >
         <View style={{ flexDirection: "row", alignItems: "center" }}>
           <MyText text="PKR " size={12} />
-          <MyText text={item.cost} size={14} textColor="#333333" weight="500" />
+          <MyText
+            text={item.cost}
+            size={14}
+            textColor={theme.colors.text}
+            weight="500"
+          />
         </View>
-        <MyText text={item.title} textColor="#696969" size={10} />
+        <MyText
+          text={item.title}
+          textColor={theme.colors.text + "88"}
+          size={10}
+        />
         <MyText
           text={item.address + "some other ext"}
           numberOfLines={1}
-          textColor="#333333"
+          textColor={theme.colors.text}
           size={12}
           weight="300"
         />
@@ -188,53 +206,66 @@ const renderSearchList = ({
             />
           </View>
         </View>
-        <MyText text={"Posted 3 hours ago"} size={8} textColor="#696969" />
+        <MyText
+          text={"Posted 3 hours ago"}
+          size={8}
+          textColor={theme.colors.text + "88"}
+        />
       </View>
     </View>
   );
 };
 
-const renderTagList = ({ item, index }: { item: string; index: number }) => {
+const renderTagList = ({
+  item,
+  index,
+  theme,
+}: {
+  item: string;
+  index: number;
+  theme: MyTheme;
+}) => {
   return (
-    <View style={styles.filterItem}>
-      <Ionicons name="close" color={"#333333"} size={16} />
+    <View style={styles(theme).filterItem}>
+      <Ionicons name="close" color={theme.colors.text} size={16} />
       <GapView mode="horizontal" />
       <MyText text={item} size={12} />
     </View>
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  searchBar: {
-    height: 46,
-    width: "100%",
-  },
-  filterList: {
-    paddingVertical: 10,
-  },
-  filterItem: {
-    flexDirection: "row",
-    padding: 10,
-    borderRadius: 20,
-    justifyContent: "space-between",
-    alignItems: "center",
-    borderWidth: 1,
-    borderColor: "#E9E9E9",
-  },
-  searchList: {
-    flex: 1,
-    paddingTop: 10,
-  },
-  searchItem: {
-    flexDirection: "row",
-    padding: 10,
-    alignItems: "center",
-    justifyContent: "space-between",
-    borderWidth: 1,
-    borderRadius: 5,
-    borderColor: "#E9E9E9",
-  },
-});
+const styles = (theme?: MyTheme) =>
+  StyleSheet.create({
+    container: {
+      flex: 1,
+    },
+    searchBar: {
+      height: 46,
+      width: "100%",
+    },
+    filterList: {
+      paddingVertical: 10,
+    },
+    filterItem: {
+      flexDirection: "row",
+      padding: 10,
+      borderRadius: 20,
+      justifyContent: "space-between",
+      alignItems: "center",
+      borderWidth: 1,
+      borderColor: theme?.colors.border,
+    },
+    searchList: {
+      flex: 1,
+      paddingTop: 10,
+    },
+    searchItem: {
+      flexDirection: "row",
+      padding: 10,
+      alignItems: "center",
+      justifyContent: "space-between",
+      borderWidth: 1,
+      borderRadius: 5,
+      borderColor: theme?.colors.border,
+    },
+  });

@@ -1,7 +1,11 @@
 import { ImageStyle, StyleProp, TextStyle, ViewStyle } from "react-native";
 import { Theme } from "@react-navigation/native";
 
-export type MyTheme = Theme & { colors: { secondary: string } };
+export type MyTheme = Theme & {
+  colors: { secondary: string; popupbg: string };
+};
+
+export type ThemeTypes = "Default" | "Dark";
 
 export type MyTextProps = {
   text?: string;
@@ -57,6 +61,7 @@ export type MyButtonProps = {
   backgroundColor?: string;
   style?: ViewStyle;
   labelStyle?: TextStyle;
+  leftIcon?: React.ReactNode;
 };
 
 export type MyIconProps = {
@@ -72,19 +77,18 @@ export type LoginModalProps = {
   onClose: () => void;
 };
 
-export interface SearchDataProps {
+export type SearchDataProps = {
   id: string;
   title: string;
   selected: boolean;
   list: SearchListProps[];
-}
+};
 
-export interface SearchListProps {
+export type SearchListProps = {
   id: string;
   label: string;
   selected: boolean;
-}
-
+};
 export interface MyVerificationModalProps {
   type?: "email" | "phone number";
   value?: string;

@@ -1,27 +1,27 @@
 import React from "react";
 import { StyleSheet } from "react-native";
 import { Tabs } from "expo-router/tabs";
+import { useTheme } from "@react-navigation/native";
 
 import { MyTabBar, MyHeader } from "@components";
+import { MyTheme } from "@types";
 
 export default function UserTypeLayout() {
+  const theme = useTheme() as MyTheme;
+
   return (
     <Tabs
       initialRouteName="home"
       backBehavior="initialRoute"
-      screenOptions={({ navigation, route }) => ({
+      screenOptions={{
         headerShown: false,
-        headerStyle: {
-          height: 60,
-          borderBottomColor: "#E4E4E4",
-          borderBottomWidth: 1,
-        },
+        headerStyle: styles(theme).headerStyle,
         header: (props) => {
-          return <MyHeader {...props} showRight showBackIcon />;
+          return <MyHeader {...props} showRight showBackIcon theme={theme} />;
         },
-      })}
+      }}
       tabBar={(props) => {
-        return <MyTabBar {...props} />;
+        return <MyTabBar {...props} theme={theme} />;
       }}
     >
       <Tabs.Screen
@@ -33,7 +33,7 @@ export default function UserTypeLayout() {
       <Tabs.Screen
         name="home"
         options={{
-          // headerShown: false,
+          headerShown: false,
           title: "Home",
           href: "(user)/anon/home",
         }}
@@ -51,7 +51,9 @@ export default function UserTypeLayout() {
         options={{
           headerShown: true,
           header: (props) => {
-            return <MyHeader {...props} hideCenter showBackIcon />;
+            return (
+              <MyHeader {...props} hideCenter showBackIcon theme={theme} />
+            );
           },
           title: "Search",
           href: "(user)/anon/search",
@@ -60,7 +62,7 @@ export default function UserTypeLayout() {
       <Tabs.Screen
         name="listings"
         options={{
-          // headerShown: false,
+          headerShown: true,
           title: "Listings",
           href: "(user)/anon/listings",
         }}
@@ -77,4 +79,11 @@ export default function UserTypeLayout() {
   );
 }
 
-const styles = StyleSheet.create({});
+const styles = (theme: MyTheme) =>
+  StyleSheet.create({
+    headerStyle: {
+      height: 60,
+      borderBottomColor: theme.colors.border,
+      borderBottomWidth: 1,
+    },
+  });

@@ -1,14 +1,17 @@
-import { StyleSheet, Text, View, ScrollView } from "react-native";
 import React from "react";
-import { MyText } from "@components";
-import MyAvatar from "components/MyAvatar";
-import MyClickableCard from "components/MyCard/MyClickableCard";
-import { HeartIcon, ProfileIcon } from "@assets/images/svg";
-import { AdCard } from "components/MyCard/AddCard";
-import SettingList, { IList } from "components/SettingList";
+import { StyleSheet, View, ScrollView } from "react-native";
+
+import {
+  MyText,
+  MyAvatar,
+  MyClickableCard,
+  AddCard,
+  SettingList,
+} from "@components";
+import { HeartIcon, ProfileIcon } from "@assets/images";
 
 export default function Settings() {
-  const listData: IList[] = [
+  const listData = [
     {
       title: "Notifications",
       indexIcon: 0,
@@ -70,7 +73,7 @@ export default function Settings() {
             <HeartIcon />
           </MyClickableCard>
         </View>
-        <AdCard
+        <AddCard
           label="Looking to sell or rent out your property?"
           btnLabel="Post an Ad"
         />

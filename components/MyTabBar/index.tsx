@@ -3,10 +3,23 @@ import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import { BottomTabBarProps } from "@react-navigation/bottom-tabs";
 
 import MyText from "../MyText";
+import { MyTheme } from "@types";
+import {
+  HomeTab,
+  InboxTab,
+  ListingTab,
+  SearchTab,
+  SettingsTab,
+} from "@assets/images";
 
-function MyTabBar({ state, descriptors, navigation }: BottomTabBarProps) {
+function MyTabBar({
+  state,
+  descriptors,
+  navigation,
+  theme,
+}: BottomTabBarProps & { theme: MyTheme }) {
   return (
-    <View style={styles().container}>
+    <View style={styles({ theme }).container}>
       {state.routes.map((route, index) => {
         if (route.name !== "index") {
           const { options } = descriptors[route.key];
@@ -41,8 +54,8 @@ function MyTabBar({ state, descriptors, navigation }: BottomTabBarProps) {
 
           const btnStyle =
             route.name == "search"
-              ? styles(isFocused).searchStyle
-              : styles(isFocused).normalStyle;
+              ? styles({ isFocused, theme }).searchStyle
+              : styles({ isFocused, theme }).normalStyle;
 
           return (
             <TouchableOpacity
@@ -57,25 +70,31 @@ function MyTabBar({ state, descriptors, navigation }: BottomTabBarProps) {
               style={btnStyle}
             >
               {route.name == "search" ? (
-                <View
-                  style={{
-                    backgroundColor: "#136fa9",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    borderRadius: 35,
-                    width: "84%",
-                    height: "84%",
-                  }}
-                >
-                  <Text>Icon</Text>
-                  <MyText style={{ color: "#ffffff" }}>
+                <View style={styles({ theme }).searchInnerStyle}>
+                  <SearchTab
+                    style={{
+                      color: theme.colors.background,
+                    }}
+                  />
+                  <MyText
+                    style={{ color: theme.colors.background, marginTop: 4 }}
+                    size={10}
+                  >
                     {label as string}
                   </MyText>
                 </View>
               ) : (
                 <>
-                  <Text>Icon</Text>
-                  <MyText style={{ color: isFocused ? "#fb631c" : "#ffffff" }}>
+                  {renderTabIcon(route.name, theme, isFocused)}
+                  <MyText
+                    style={{
+                      color: isFocused
+                        ? theme.colors.primary
+                        : theme.colors.background,
+                      marginTop: 4,
+                    }}
+                    size={10}
+                  >
                     {label as string}
                   </MyText>
                 </>
@@ -88,13 +107,61 @@ function MyTabBar({ state, descriptors, navigation }: BottomTabBarProps) {
   );
 }
 
+const renderTabIcon = (
+  routeName: string,
+  theme: MyTheme,
+  isFocused?: boolean
+) => {
+  console.log("routeName", routeName);
+  switch (routeName) {
+    case "home":
+      return (
+        <HomeTab
+          style={{
+            color: isFocused ? theme.colors.primary : theme.colors.background,
+          }}
+        />
+      );
+    case "inbox":
+      return (
+        <InboxTab
+          style={{
+            color: isFocused ? theme.colors.primary : theme.colors.background,
+          }}
+        />
+      );
+    case "listings":
+      return (
+        <ListingTab
+          style={{
+            color: isFocused ? theme.colors.primary : theme.colors.background,
+          }}
+        />
+      );
+    case "settings":
+      return (
+        <SettingsTab
+          style={{
+            color: isFocused ? theme.colors.primary : theme.colors.background,
+          }}
+        />
+      );
+  }
+};
+
 export default MyTabBar;
 
-const styles = (isFocused?: boolean) =>
+const styles = ({
+  isFocused,
+  theme,
+}: {
+  isFocused?: boolean;
+  theme?: MyTheme;
+}) =>
   StyleSheet.create({
     container: {
       flexDirection: "row",
-      backgroundColor: "#136fa9",
+      backgroundColor: theme?.colors.secondary,
       justifyContent: "center",
       alignItems: "center",
       height: 52,
@@ -105,7 +172,7 @@ const styles = (isFocused?: boolean) =>
       width: "21%",
       height: "100%",
       borderTopWidth: isFocused ? 3 : 0,
-      borderColor: isFocused ? "#fb631c" : "transparent",
+      borderColor: isFocused ? theme?.colors.primary : "transparent",
     },
     searchStyle: {
       justifyContent: "center",
@@ -114,6 +181,14 @@ const styles = (isFocused?: boolean) =>
       bottom: 25,
       width: 72,
       height: 72,
-      backgroundColor: "#fff",
+      backgroundColor: theme?.colors.background,
+    },
+    searchInnerStyle: {
+      backgroundColor: theme?.colors.secondary,
+      justifyContent: "center",
+      alignItems: "center",
+      borderRadius: 35,
+      width: "84%",
+      height: "84%",
     },
   });

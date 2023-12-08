@@ -1,10 +1,14 @@
 import React from "react";
 import { StyleSheet, View, ViewStyle } from "react-native";
+
+import { NativeStackHeaderProps } from "@react-navigation/native-stack";
 import { BottomTabHeaderProps } from "@react-navigation/bottom-tabs";
+
 import { Entypo, Feather } from "@expo/vector-icons";
 import { router } from "expo-router";
 
 import { PLogo, ProfilePin, RText } from "@assets/images";
+import { MyTheme } from "@types";
 
 interface MyProps {
   showBackIcon?: boolean;
@@ -12,10 +16,13 @@ interface MyProps {
   showRight?: boolean;
   showProfilePin?: boolean;
   hideCenter?: boolean;
+  type?: string;
+  theme?: MyTheme;
 }
 
+type HeaderProps = (NativeStackHeaderProps | BottomTabHeaderProps) & MyProps;
+
 export default function MyHeader({
-  layout,
   options,
   navigation,
   route,
@@ -24,7 +31,8 @@ export default function MyHeader({
   leftLogo,
   showProfilePin,
   hideCenter,
-}: BottomTabHeaderProps & MyProps) {
+  theme,
+}: HeaderProps & MyProps) {
   console.log("lay", options.headerStyle);
   const headerStyle = options.headerStyle as ViewStyle;
   return (
@@ -33,7 +41,7 @@ export default function MyHeader({
         {showBackIcon && (
           <Feather
             name="arrow-left"
-            color={"#136FA9"}
+            color={theme?.colors.secondary}
             size={25}
             onPress={() => router.back()}
           />
@@ -57,7 +65,7 @@ export default function MyHeader({
               <Entypo
                 name="dots-three-vertical"
                 size={20}
-                color={"#136FA9"}
+                color={theme?.colors.secondary}
                 style={showProfilePin ? { marginLeft: 20 } : {}}
               />
               <View />
@@ -75,6 +83,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     width: "100%",
     justifyContent: "center",
+    height: 60,
+    borderBottomColor: "#E4E4E4",
+    borderBottomWidth: 1,
   },
   left: {
     flex: 1,

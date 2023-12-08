@@ -9,15 +9,20 @@ import {
   TouchableOpacity,
   Animated,
   Easing,
+  TouchableWithoutFeedback,
 } from "react-native";
-import { Image as EImage } from "expo-image";
+import { Feather } from "@expo/vector-icons";
+import { useTheme } from "@react-navigation/native";
 
 import { Card, MyText, MyAppBar, GapView, MyHeader } from "@components";
 import { AgentHome } from "@assets/images";
 import { WINDOW_WIDTH } from "@constants";
+import { router } from "expo-router";
+import { MyTheme } from "@types";
 import HomeHeader from "components/HomeHeader";
 
 export default function Home() {
+  const theme = useTheme() as MyTheme;
   const scrollOffsetY = useRef(new Animated.Value(0)).current;
   const Header_Max_height = 120;
   const Header_Min_height = 60;
@@ -81,35 +86,48 @@ export default function Home() {
           <AdCard
             label="View Your listings or post your ad to rent or sell your house"
             btnLabel="Go to Dashboard"
+            theme={theme}
           />
           <GapView length={30} />
-          <Title text="Browse Properties" />
+          <Title text="Browse Properties" theme={theme} />
+
           <View
             style={{
               marginTop: 10,
               width: "100%",
-              backgroundColor: "#F5F6FB",
+              backgroundColor: theme.colors.card,
               borderWidth: 0.9,
-              borderColor: "#E9E9E9",
+              borderColor: theme.colors.border,
               paddingVertical: 15,
               paddingHorizontal: 11,
               alignItems: "center",
               flexDirection: "row",
             }}
           >
-            <MyText text="0" style={{ marginRight: 10 }} />
-            <BrowseProps />
-            <MyText text="0" style={{ marginLeft: 10 }} />
+            <Feather
+              name="chevron-left"
+              size={18}
+              color={theme.colors.text + "77"}
+              style={{ right: 5 }}
+            />
+            <BrowseProps theme={theme} />
+            <Feather
+              name="chevron-right"
+              size={18}
+              color={theme.colors.text + "77"}
+              style={{ left: 5 }}
+            />
           </View>
-          <PropertyListing title="Featured Properties" />
+          <PropertyListing title="Featured Properties" theme={theme} />
           <ImageCard />
           <AdCard
             label="Looking to sell or rent out your property?"
             btnLabel="Post an Ad"
+            theme={theme}
           />
-          <PropertyListing title="Newly Listed Properties" />
+          <PropertyListing title="Newly Listed Properties" theme={theme} />
           <GapView length={30} />
-          <Title text="Our Home Partners" />
+          <Title text="Our Home Partners" theme={theme} />
           <MarqueeScrollView />
         </View>
       </ScrollView>
@@ -117,12 +135,12 @@ export default function Home() {
   );
 }
 
-const Title = ({ text }: { text?: string }) => {
+const Title = ({ text, theme }: { text?: string; theme?: MyTheme }) => {
   return (
     <MyText
       text={text}
       weight="700"
-      style={{ fontSize: 16, color: "#000000" }}
+      style={{ fontSize: 16, color: theme?.colors.text }}
     />
   );
 };
@@ -222,7 +240,6 @@ const ImageCard = () => {
           position: "absolute",
           backgroundColor: "#00000033",
           borderRadius: 10,
-          // zIndex
         }}
       />
       <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
@@ -254,7 +271,15 @@ const ImageCard = () => {
   );
 };
 
-const AdCard = ({ label, btnLabel }: { label?: string; btnLabel?: string }) => {
+const AdCard = ({
+  label,
+  btnLabel,
+  theme,
+}: {
+  label?: string;
+  btnLabel?: string;
+  theme?: MyTheme;
+}) => {
   return (
     <Card style={{ width: "90%", marginTop: 30 }}>
       <View style={{ paddingHorizontal: 20, paddingVertical: 12 }}>
@@ -271,21 +296,21 @@ const AdCard = ({ label, btnLabel }: { label?: string; btnLabel?: string }) => {
         <GapView length={15} />
         <View
           style={{
-            backgroundColor: "#FB631C33",
+            backgroundColor: theme?.colors.primary + "33",
             alignItems: "center",
             justifyContent: "center",
             paddingVertical: 7,
             borderRadius: 2,
           }}
         >
-          <MyText textColor="#FB631C">{btnLabel}</MyText>
+          <MyText textColor={theme?.colors.primary}>{btnLabel}</MyText>
         </View>
       </View>
     </Card>
   );
 };
 
-const BrowseProps = () => {
+const BrowseProps = ({ theme }: { theme?: MyTheme }) => {
   function renderList({ item, index }: { item: any; index: number }) {
     return (
       <Card
@@ -293,7 +318,7 @@ const BrowseProps = () => {
           height: 90,
           width: WINDOW_WIDTH / 3.9,
           borderWidth: 1,
-          borderColor: "#E9E9E9",
+          borderColor: theme?.colors.border,
           borderRadius: 5,
           padding: 17,
           alignItems: "center",
@@ -321,7 +346,13 @@ const BrowseProps = () => {
   );
 };
 
-const PropertyListing = ({ title }: { title?: string }) => {
+export const PropertyListing = ({
+  title,
+  theme,
+}: {
+  title?: string;
+  theme?: MyTheme;
+}) => {
   const data = [
     {
       id: 0,
@@ -348,42 +379,45 @@ const PropertyListing = ({ title }: { title?: string }) => {
 
   function renderList({ item, index }: { item: any; index: number }) {
     return (
-      <Card radius={2} style={{ height: 180, width: 130 }}>
-        <Image
-          source={{
-            uri: item?.image,
-          }}
-          style={{ height: 80, borderRadius: 2 }}
-          onLoadStart={() => console.log("start")}
-          onLoadEnd={() => console.log("end")}
-        />
-        <View style={{ padding: 8 }}>
-          <MyText
-            text="Contact for price"
-            size={10}
-            textColor="#000000"
-            style={{ fontWeight: "500", marginBottom: 10 }}
+      <TouchableOpacity
+        onPress={() => {
+          console.log("Hello world");
+          router.push("(user)/anon/home/propertyDetail");
+        }}
+      >
+        <Card radius={2} style={{ height: 180, width: 130 }}>
+          <Image
+            source={{ uri: item?.image }}
+            style={{ height: 80, borderRadius: 2 }}
           />
-          <MyText
-            text={item.name}
-            size={10}
-            textColor="#000000"
-            style={{ fontWeight: "400", marginBottom: 10 }}
-          />
-          <MyText
-            text={item.location}
-            size={10}
-            textColor="#898989"
-            style={{ fontWeight: "400", marginBottom: 10 }}
-          />
-          <MyText
-            text={item.size}
-            size={8}
-            textColor="#898989"
-            style={{ fontWeight: "400", marginBottom: 10 }}
-          />
-        </View>
-      </Card>
+          <View style={{ padding: 8 }}>
+            <MyText
+              text="Contact for price"
+              size={10}
+              textColor="#000000"
+              style={{ fontWeight: "500", marginBottom: 10 }}
+            />
+            <MyText
+              text={item.name}
+              size={10}
+              textColor="#000000"
+              style={{ fontWeight: "400", marginBottom: 10 }}
+            />
+            <MyText
+              text={item.location}
+              size={10}
+              textColor="#898989"
+              style={{ fontWeight: "400", marginBottom: 10 }}
+            />
+            <MyText
+              text={item.size}
+              size={8}
+              textColor="#898989"
+              style={{ fontWeight: "400", marginBottom: 10 }}
+            />
+          </View>
+        </Card>
+      </TouchableOpacity>
     );
   }
 
@@ -399,7 +433,7 @@ const PropertyListing = ({ title }: { title?: string }) => {
           justifyContent: "center",
         }}
       >
-        <MyText textColor="#FB631C" style={{ marginBottom: 25 }}>
+        <MyText textColor={theme?.colors.primary} style={{ marginBottom: 25 }}>
           Find your dream projects from our latest projects
         </MyText>
         <FlatList

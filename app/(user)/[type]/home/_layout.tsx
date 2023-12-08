@@ -1,9 +1,25 @@
 import React from "react";
-import { StyleSheet, Text, View } from "react-native";
-import { Slot } from "expo-router";
+import { StyleSheet } from "react-native";
+import { Stack } from "expo-router";
+import { useTheme } from "@react-navigation/native";
+
+import { MyTheme } from "@types";
+import { MyHeader } from "@components";
 
 export default function HomeLayout() {
-  return <Slot />;
+  const theme = useTheme() as MyTheme;
+
+  return (
+    <Stack
+      initialRouteName="home/propertyDetail"
+      screenOptions={({ navigation, route }) => ({
+        headerShown: route.name == "index" ? false : true,
+        header: (props) => {
+          return <MyHeader {...props} showRight showBackIcon theme={theme} />;
+        },
+      })}
+    />
+  );
 }
 
 const styles = StyleSheet.create({});

@@ -38,7 +38,6 @@ export default function InboxList({
           )}
         </View>
       </View>
-      <View style={styles.divider} />
     </View>
   );
 }
@@ -85,6 +84,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#FFF9F6",
     paddingHorizontal: 10,
     paddingVertical: 15,
+    overflow: "hidden",
   },
   divider: {
     borderBottomColor: "#E9E9E9",
