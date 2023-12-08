@@ -9,15 +9,14 @@ import {
   TouchableOpacity,
   Animated,
   Easing,
-  TouchableWithoutFeedback,
 } from "react-native";
 import { Feather } from "@expo/vector-icons";
 import { useTheme } from "@react-navigation/native";
+import { router } from "expo-router";
 
 import { Card, MyText, MyAppBar, GapView } from "@components";
 import { AgentHome } from "@assets/images";
 import { WINDOW_WIDTH } from "@constants";
-import { router } from "expo-router";
 import { MyTheme } from "@types";
 
 export default function Home() {
@@ -26,7 +25,12 @@ export default function Home() {
   return (
     <ScrollView style={styles.wrapper}>
       <MyAppBar />
-      <View style={{ alignItems: "center", marginBottom: 35 }}>
+      <View
+        style={{
+          alignItems: "center",
+          marginBottom: 35, //? FIXME: do we need this?
+        }}
+      >
         <AdCard
           label="View Your listings or post your ad to rent or sell your house"
           btnLabel="Go to Dashboard"
