@@ -12,50 +12,108 @@ import {
 } from "react-native";
 import { Image as EImage } from "expo-image";
 
-import { Card, MyText, MyAppBar, GapView } from "@components";
+import { Card, MyText, MyAppBar, GapView, MyHeader } from "@components";
 import { AgentHome } from "@assets/images";
 import { WINDOW_WIDTH } from "@constants";
+import HomeHeader from "components/HomeHeader";
 
 export default function Home() {
+  const scrollOffsetY = useRef(new Animated.Value(0)).current;
+  const Header_Max_height = 120;
+  const Header_Min_height = 60;
+  const Scroll_Distance = Header_Max_height - Header_Min_height;
+
+  const DynamicHeader = ({ value }: any) => {
+    const headerOpacity = scrollOffsetY.interpolate({
+      inputRange: [0, Scroll_Distance],
+      outputRange: [1, 0],
+      extrapolate: "clamp",
+    });
+
+    return (
+      <Animated.View
+        style={[styles.header, { opacity: headerOpacity, zIndex: 5 }]}
+      >
+        <MyAppBar />
+      </Animated.View>
+    );
+  };
+  scrollOffsetY.addListener(({ value }) => {
+    console.log("Scroll Offset Y:", value);
+  });
+
+  const DynamicHomeHeader = () => {
+    const homeHeaderOpacity = scrollOffsetY.interpolate({
+      inputRange: [0, Scroll_Distance],
+      outputRange: [0, 1],
+      extrapolate: "clamp",
+    });
+
+    return (
+      <Animated.View
+        style={{
+          opacity: homeHeaderOpacity,
+          position: "absolute",
+          width: "100%",
+        }}
+      >
+        <HomeHeader />
+      </Animated.View>
+    );
+  };
+
   return (
-    <ScrollView style={styles.wrapper}>
-      <MyAppBar />
-      <View style={{ alignItems: "center", marginBottom: 35 }}>
-        <AdCard
-          label="View Your listings or post your ad to rent or sell your house"
-          btnLabel="Go to Dashboard"
-        />
-        <GapView length={30} />
-        <Title text="Browse Properties" />
-        <View
-          style={{
-            marginTop: 10,
-            width: "100%",
-            backgroundColor: "#F5F6FB",
-            borderWidth: 0.9,
-            borderColor: "#E9E9E9",
-            paddingVertical: 15,
-            paddingHorizontal: 11,
-            alignItems: "center",
-            flexDirection: "row",
-          }}
-        >
-          <MyText text="0" style={{ marginRight: 10 }} />
-          <BrowseProps />
-          <MyText text="0" style={{ marginLeft: 10 }} />
-        </View>
-        <PropertyListing title="Featured Properties" />
-        <ImageCard />
-        <AdCard
-          label="Looking to sell or rent out your property?"
-          btnLabel="Post an Ad"
-        />
-        <PropertyListing title="Newly Listed Properties" />
-        <GapView length={30} />
-        <Title text="Our Home Partners" />
-        <MarqueeScrollView />
+    <>
+      <View style={{ position: "absolute", top: 0, width: "100%", zIndex: 1 }}>
+        <DynamicHomeHeader />
       </View>
-    </ScrollView>
+
+      <ScrollView
+        style={[styles.wrapper]}
+        onScroll={Animated.event(
+          [{ nativeEvent: { contentOffset: { y: scrollOffsetY } } }],
+          { useNativeDriver: false }
+        )}
+        scrollEventThrottle={16}
+      >
+        <DynamicHeader value={scrollOffsetY} />
+        <View style={{ alignItems: "center", marginBottom: 35 }}>
+          <AdCard
+            label="View Your listings or post your ad to rent or sell your house"
+            btnLabel="Go to Dashboard"
+          />
+          <GapView length={30} />
+          <Title text="Browse Properties" />
+          <View
+            style={{
+              marginTop: 10,
+              width: "100%",
+              backgroundColor: "#F5F6FB",
+              borderWidth: 0.9,
+              borderColor: "#E9E9E9",
+              paddingVertical: 15,
+              paddingHorizontal: 11,
+              alignItems: "center",
+              flexDirection: "row",
+            }}
+          >
+            <MyText text="0" style={{ marginRight: 10 }} />
+            <BrowseProps />
+            <MyText text="0" style={{ marginLeft: 10 }} />
+          </View>
+          <PropertyListing title="Featured Properties" />
+          <ImageCard />
+          <AdCard
+            label="Looking to sell or rent out your property?"
+            btnLabel="Post an Ad"
+          />
+          <PropertyListing title="Newly Listed Properties" />
+          <GapView length={30} />
+          <Title text="Our Home Partners" />
+          <MarqueeScrollView />
+        </View>
+      </ScrollView>
+    </>
   );
 }
 
@@ -361,4 +419,5 @@ const styles = StyleSheet.create({
   wrapper: {
     flex: 1,
   },
+  header: {},
 });
