@@ -3,10 +3,6 @@ import { View, StyleSheet, TouchableOpacity, Appearance } from "react-native";
 
 import MyText from "../MyText";
 import { MyCheckboxProps } from "@types";
-import { DarkTheme, LightTheme } from "@theme";
-
-const colorScheme = Appearance.getColorScheme();
-const theme = colorScheme === "dark" ? DarkTheme : LightTheme;
 
 const MyCheckbox = ({
   label,
@@ -55,7 +51,7 @@ const styles = StyleSheet.create({
     marginRight: 5,
   },
   checked: {
-    backgroundColor: theme.colors.secondary,
+    backgroundColor: "#136FA9",
   },
 });
 
