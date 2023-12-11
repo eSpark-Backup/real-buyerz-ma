@@ -64,14 +64,6 @@ export type MyButtonProps = {
   leftIcon?: React.ReactNode;
 };
 
-export type MyIconProps = {
-  name?: string | any;
-  source?: { uri: string } | number; // Image source
-  iconSize?: number;
-  iconColor?: string;
-  style?: TextStyle | ImageStyle;
-};
-
 export type LoginModalProps = {
   visible?: boolean;
   onClose: () => void;

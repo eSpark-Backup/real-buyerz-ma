@@ -14,70 +14,119 @@ import { Feather } from "@expo/vector-icons";
 import { useTheme } from "@react-navigation/native";
 import { router } from "expo-router";
 
-import { Card, MyText, MyAppBar, GapView } from "@components";
+import { Card, MyText, MyAppBar, GapView, MyHeader } from "@components";
 import { AgentHome } from "@assets/images";
 import { WINDOW_WIDTH } from "@constants";
 import { MyTheme } from "@types";
+import HomeHeader from "components/HomeHeader";
 
 export default function Home() {
   const theme = useTheme() as MyTheme;
+  const scrollOffsetY = useRef(new Animated.Value(0)).current;
 
-  return (
-    <ScrollView style={styles.wrapper}>
-      <MyAppBar />
-      <View
+  const handleScroll = Animated.event(
+    [{ nativeEvent: { contentOffset: { y: scrollOffsetY } } }],
+    { useNativeDriver: false }
+  );
+
+  const DynamicAppBar = ({ value }: any) => {
+    const headerOpacity = scrollOffsetY.interpolate({
+      inputRange: [0, 80],
+      outputRange: [1, 0],
+      extrapolate: "clamp",
+    });
+
+    return (
+      <Animated.View
+        style={[styles.header, { opacity: headerOpacity, zIndex: 5 }]}
+      >
+        <MyAppBar />
+      </Animated.View>
+    );
+  };
+
+  const DynamicHomeHeader = () => {
+    const homeHeaderOpacity = scrollOffsetY.interpolate({
+      inputRange: [0, 80],
+      outputRange: [0, 1],
+      extrapolate: "clamp",
+    });
+
+    return (
+      <Animated.View
         style={{
-          alignItems: "center",
-          marginBottom: 35, //? FIXME: do we need this?
+          opacity: homeHeaderOpacity,
+          position: "absolute",
+          width: "100%",
         }}
       >
-        <AdCard
-          label="View Your listings or post your ad to rent or sell your house"
-          btnLabel="Go to Dashboard"
-          theme={theme}
-        />
-        <GapView length={30} />
-        <Title text="Browse Properties" theme={theme} />
-        <View
-          style={{
-            marginTop: 10,
-            width: "100%",
-            backgroundColor: theme.colors.card,
-            borderWidth: 0.9,
-            borderColor: theme.colors.border,
-            paddingVertical: 15,
-            paddingHorizontal: 11,
-            alignItems: "center",
-            flexDirection: "row",
-          }}
-        >
-          <Feather
-            name="chevron-left"
-            size={18}
-            color={theme.colors.text + "77"}
-            style={{ right: 5 }}
-          />
-          <BrowseProps theme={theme} />
-          <Feather
-            name="chevron-right"
-            size={18}
-            color={theme.colors.text + "77"}
-            style={{ left: 5 }}
-          />
-        </View>
-        <PropertyListing title="Featured Properties" theme={theme} />
-        <ImageCard />
-        <AdCard
-          label="Looking to sell or rent out your property?"
-          btnLabel="Post an Ad"
-          theme={theme}
-        />
-        <PropertyListing title="Newly Listed Properties" theme={theme} />
-        <GapView length={30} />
-        <Title text="Our Home Partners" theme={theme} />
-        <MarqueeScrollView />
+        <HomeHeader />
+      </Animated.View>
+    );
+  };
+
+  return (
+    <>
+      <View style={styles.HomeHeader}>
+        <DynamicHomeHeader />
       </View>
-    </ScrollView>
+
+      <ScrollView
+        style={[styles.wrapper]}
+        onScroll={handleScroll}
+        scrollEventThrottle={16}
+      >
+        <DynamicAppBar value={scrollOffsetY} />
+        <View style={{ alignItems: "center", marginBottom: 35 }}>
+          <AdCard
+            label="View Your listings or post your ad to rent or sell your house"
+            btnLabel="Go to Dashboard"
+            theme={theme}
+          />
+          <GapView length={30} />
+          <Title text="Browse Properties" theme={theme} />
+
+          <View
+            style={{
+              marginTop: 10,
+              width: "100%",
+              backgroundColor: theme.colors.card,
+              borderWidth: 0.9,
+              borderColor: theme.colors.border,
+              paddingVertical: 15,
+              paddingHorizontal: 11,
+              alignItems: "center",
+              flexDirection: "row",
+            }}
+          >
+            <Feather
+              name="chevron-left"
+              size={18}
+              color={theme.colors.text + "77"}
+              style={{ right: 5 }}
+            />
+            <BrowseProps theme={theme} />
+            <Feather
+              name="chevron-right"
+              size={18}
+              color={theme.colors.text + "77"}
+              style={{ left: 5 }}
+            />
+          </View>
+          <PropertyListing title="Featured Properties" theme={theme} />
+          <ImageCard />
+          <AdCard
+            label="Looking to sell or rent out your property?"
+            btnLabel="Post an Ad"
+            theme={theme}
+          />
+          <PropertyListing title="Newly Listed Properties" theme={theme} />
+          <GapView length={30} />
+          <Title text="Our Home Partners" theme={theme} />
+          <MarqueeScrollView />
+        </View>
+      </ScrollView>
+    </>
   );
 }
 
@@ -399,4 +448,6 @@ const styles = StyleSheet.create({
   wrapper: {
     flex: 1,
   },
+  header: {},
+  HomeHeader: { position: "absolute", top: 0, width: "100%", zIndex: 1 },
 });
