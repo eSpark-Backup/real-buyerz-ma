@@ -14,7 +14,14 @@ import {
 import { Feather } from "@expo/vector-icons";
 import { useTheme } from "@react-navigation/native";
 
-import { Card, MyText, MyAppBar, GapView, MyHeader } from "@components";
+import {
+  Card,
+  MyText,
+  MyAppBar,
+  GapView,
+  MyHeader,
+  LoginModal,
+} from "@components";
 import { AgentHome } from "@assets/images";
 import { WINDOW_WIDTH } from "@constants";
 import { router } from "expo-router";

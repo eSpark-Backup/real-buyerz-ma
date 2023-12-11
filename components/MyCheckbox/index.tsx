@@ -9,7 +9,7 @@ const MyCheckbox = ({
   onChange,
   style,
   checkboxStyle,
-  ...restProps // Collect any additional props for TouchableOpacity
+  ...restProps
 }: MyCheckboxProps) => {
   const [checked, setChecked] = useState(false);
 

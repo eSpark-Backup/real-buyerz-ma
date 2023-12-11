@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import { TextInput, View, StyleSheet, ViewStyle } from "react-native";
 import { Ionicons, MaterialIcons } from "@expo/vector-icons";
+import { useTheme } from "@react-navigation/native";
 
-import { MyInputProps } from "@types";
+import { MyInputProps, MyTheme } from "@types";
 
 export default function MyInput({
   placeholder,
@@ -18,18 +19,14 @@ export default function MyInput({
   const inputContainerStyle: ViewStyle = {
     ...styles.inputContainerStyle,
   };
-
+  const theme = useTheme() as MyTheme;
   return (
     <View style={[inputContainerStyle, style]}>
       <TextInput
         secureTextEntry={password ? (showPassword ? false : true) : false}
         placeholder={placeholder}
-        style={[
-          styles.inputStyle,
-          placeholderColor ? { color: placeholderColor } : null,
-          { fontFamily: "Inter-Regular" },
-          inputStyle,
-        ]}
+        placeholderTextColor={placeholderColor}
+        style={[styles.inputStyle, { fontFamily: "Inter-Regular" }, inputStyle]}
         value={text!}
         onChangeText={(val): void => onChange?.(val)}
       />
@@ -37,7 +34,7 @@ export default function MyInput({
         <Ionicons
           name={showPassword ? "eye-outline" : "md-eye-off-outline"}
           size={15}
-          color="grey"
+          color={theme.colors.placeholderText}
           onPress={() => setShowPassword(!showPassword)}
         />
       )}
@@ -54,7 +51,7 @@ export default function MyInput({
 
 const styles = StyleSheet.create({
   inputContainerStyle: {
-    backgroundColor: "#f3f4f6",
+    backgroundColor: "#f3f4f6", //todo: theme edit
     flexDirection: "row",
     paddingHorizontal: 10,
     borderRadius: 5,

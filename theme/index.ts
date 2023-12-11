@@ -10,6 +10,7 @@ const colors = {
     border: "#E9E9E9",
     notification: "#FFFFFF", //todo: set later
     popupbg: "#F4F4F4",
+    placeholderText: "#666666",
   },
   dark: {
     primary: "#FB631C",
@@ -20,6 +21,7 @@ const colors = {
     border: "#29292E",
     notification: "#FFFFFF", //todo: set later
     popupbg: "#29292E",
+    placeholderText: "#FFFFFF",
   },
 };
 
