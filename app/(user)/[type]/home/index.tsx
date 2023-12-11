@@ -28,7 +28,12 @@ export default function Home() {
   const Header_Min_height = 60;
   const Scroll_Distance = Header_Max_height - Header_Min_height;
 
-  const DynamicHeader = ({ value }: any) => {
+  const handleScroll = Animated.event(
+    [{ nativeEvent: { contentOffset: { y: scrollOffsetY } } }],
+    { useNativeDriver: false }
+  );
+
+  const DynamicAppBar = ({ value }: any) => {
     const headerOpacity = scrollOffsetY.interpolate({
       inputRange: [0, Scroll_Distance],
       outputRange: [1, 0],
@@ -75,13 +80,10 @@ export default function Home() {
 
       <ScrollView
         style={[styles.wrapper]}
-        onScroll={Animated.event(
-          [{ nativeEvent: { contentOffset: { y: scrollOffsetY } } }],
-          { useNativeDriver: false }
-        )}
+        onScroll={handleScroll}
         scrollEventThrottle={16}
       >
-        <DynamicHeader value={scrollOffsetY} />
+        <DynamicAppBar value={scrollOffsetY} />
         <View style={{ alignItems: "center", marginBottom: 35 }}>
           <AdCard
             label="View Your listings or post your ad to rent or sell your house"
