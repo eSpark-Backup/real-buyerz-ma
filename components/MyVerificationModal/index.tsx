@@ -8,6 +8,7 @@ import {
 } from "react-native";
 import MyText from "../MyText";
 import MyButton from "../MyButton";
+import { useTheme } from "@react-navigation/native";
 
 import { CloseBtn } from "@assets/images/svg";
 import { MyVerificationModalProps } from "@types";
@@ -19,6 +20,7 @@ const MyVerificationModal = ({
   onClose,
   onPress,
 }: MyVerificationModalProps) => {
+  const theme = useTheme();
   return (
     <Modal visible={visible} transparent>
       <View style={styles.popupStyle}>
