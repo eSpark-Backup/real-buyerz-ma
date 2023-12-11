@@ -3,7 +3,6 @@ import { Appearance, StyleSheet, View, ScrollView } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { MaterialIcons } from "@expo/vector-icons";
 import { Link } from "expo-router";
-import { DimensionValue } from "react-native";
 import { Formik } from "formik";
 
 import { GLogo, SLogo } from "@assets/images/svg";

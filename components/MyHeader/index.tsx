@@ -33,7 +33,6 @@ export default function MyHeader({
   hideCenter,
   theme,
 }: HeaderProps & MyProps) {
-  console.log("lay", options.headerStyle);
   const headerStyle = options.headerStyle as ViewStyle;
   return (
     <View style={{ ...styles.container, ...headerStyle }}>

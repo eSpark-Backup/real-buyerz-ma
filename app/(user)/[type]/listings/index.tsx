@@ -1,10 +1,11 @@
 import React from "react";
-import { StyleSheet, View, FlatList, ScrollView } from "react-native";
+import { StyleSheet, View, FlatList, ScrollView, Image } from "react-native";
 import { useTheme } from "@react-navigation/native";
 import { Feather } from "@expo/vector-icons";
 
-import { Card, GapView, MyButton, MyText } from "@components";
+import { Card, GapView, MyButton, MyText, SearchBar } from "@components";
 import { MyTheme } from "@types";
+import { MiFilter } from "@assets/images";
 
 interface Posting {
   id: number;
@@ -16,6 +17,15 @@ interface Posting {
   city: string;
   area: string;
   proposal: number;
+}
+
+interface Proposals {
+  id: number;
+  name: string;
+  region: string;
+  price: number; // 0.00 decimals
+  image: string;
+  description: string;
 }
 
 const minutesAgo: number = 30;
@@ -72,6 +82,18 @@ const testPostingData: Posting[] = [
   },
 ];
 
+const testProposalsData: Proposals[] = [
+  {
+    id: 1,
+    name: "John Doe",
+    image: "https://picsum.photos/200",
+    region: "Pakistan",
+    description:
+      "Enim eiusmod nisi commodo sunt officia dolore officia ut veniam elit reprehe. Exercitation quis id aliqua ullamco aute laborum cupidatat excepteur elit id",
+    price: 100.0,
+  },
+];
+
 function timeAgo(date: Date, minutesAgo: number = 0): string {
   const diff: number =
     Math.floor((new Date().getTime() - date.getTime()) / 60000) - minutesAgo;
@@ -82,53 +104,117 @@ export default function Listings() {
   const theme = useTheme() as MyTheme;
 
   return (
-    <ScrollView style={styles.container} nestedScrollEnabled>
-      <View style={styles.top}>
-        <MyText text="Dashboard" size={20} weight="600" />
-        <MyButton
-          label="Post a Request"
-          backgroundColor={theme.colors.primary}
-          textColor="#ffffff"
-          labelStyle={{ fontSize: 10, fontWeight: "500" }}
-          style={{ borderRadius: 4, padding: 10 }}
-          leftIcon={
-            <Feather
-              name="plus"
-              size={14}
-              color="#ffffff"
-              style={{ marginRight: 5 }}
-            />
-          }
-        />
-      </View>
-      <View style={styles.content}>
-        <Card>
-          <View
-            style={{
-              flexDirection: "row",
-              justifyContent: "space-between",
-              padding: 12,
-              borderBottomWidth: 1,
-              borderColor: theme.colors.border,
-            }}
-          >
-            <MyText text="Your Posting" />
-            <MyText text="see all postings" />
-          </View>
-          <View
-            style={{ paddingVertical: 17, paddingHorizontal: 11, height: 410 }}
-          >
-            <FlatList
-              data={testPostingData}
-              renderItem={({ item, index }) =>
-                renderPostingList({ item, index, theme })
-              }
-              showsVerticalScrollIndicator={false}
-              ItemSeparatorComponent={() => <GapView length={20} />}
-              keyExtractor={(item) => item.id.toString()}
-            />
-          </View>
-        </Card>
+    <ScrollView style={{ flex: 1 }} nestedScrollEnabled>
+      <View style={styles.container}>
+        <View style={styles.top}>
+          <MyText text="Dashboard" size={20} weight="600" />
+          <MyButton
+            label="Post a Request"
+            backgroundColor={theme.colors.primary}
+            textColor="#ffffff"
+            labelStyle={{ fontSize: 10, fontWeight: "500" }}
+            style={{ borderRadius: 4, padding: 10 }}
+            leftIcon={
+              <Feather
+                name="plus"
+                size={14}
+                color="#ffffff"
+                style={{ marginRight: 5 }}
+              />
+            }
+          />
+        </View>
+        <View style={styles.content}>
+          <Card>
+            <View
+              style={{
+                flexDirection: "row",
+                justifyContent: "space-between",
+                padding: 12,
+                borderBottomWidth: 1,
+                borderColor: theme.colors.border,
+              }}
+            >
+              <MyText text="Your Posting" weight="600" size={16} />
+              <MyText text="see all postings" />
+            </View>
+            <View
+              style={{
+                paddingVertical: 17,
+                paddingHorizontal: 11,
+                height: 410,
+              }}
+            >
+              <FlatList
+                data={testPostingData}
+                nestedScrollEnabled
+                renderItem={({ item, index }) =>
+                  renderPostingList({ item, index, theme })
+                }
+                showsVerticalScrollIndicator={false}
+                ItemSeparatorComponent={() => <GapView length={20} />}
+                keyExtractor={(item) => item.id.toString()}
+              />
+            </View>
+          </Card>
+          <Card style={{ marginTop: 17 }}>
+            <View
+              style={{
+                flexDirection: "row",
+                justifyContent: "space-between",
+                padding: 12,
+                borderBottomWidth: 1,
+                borderColor: theme.colors.border,
+              }}
+            >
+              <MyText text="All Proposals (1)" weight="600" size={16} />
+            </View>
+            <View
+              style={{
+                paddingVertical: 17,
+                paddingHorizontal: 11,
+                height: 410,
+              }}
+            >
+              <FlatList
+                data={testProposalsData}
+                nestedScrollEnabled
+                ListHeaderComponent={() => (
+                  <View>
+                    <View style={{ height: 35 }}>
+                      <SearchBar button placeholder="Search by name" />
+                    </View>
+                    <View style={{ alignItems: "flex-end" }}>
+                      <MyButton
+                        label="Filter"
+                        labelStyle={{
+                          color: theme.colors.primary,
+                          marginLeft: 5,
+                        }}
+                        leftIcon={<MiFilter />}
+                        style={{
+                          paddingHorizontal: 15,
+                          paddingVertical: 5,
+                          backgroundColor: "transparent",
+                          borderWidth: 1,
+                          borderColor: theme.colors.primary,
+                          borderRadius: 4,
+                          marginVertical: 10,
+                        }}
+                      />
+                    </View>
+                  </View>
+                )}
+                renderItem={({ item, index }) =>
+                  renderProposalsList({ item, index, theme })
+                }
+                showsVerticalScrollIndicator={false}
+                ItemSeparatorComponent={() => <GapView length={20} />}
+                keyExtractor={(item) => item.id.toString()}
+              />
+            </View>
+          </Card>
+        </View>
       </View>
     </ScrollView>
   );
@@ -216,9 +302,66 @@ const renderPostingList = ({
   );
 };
 
+const renderProposalsList = ({
+  item,
+  index,
+  theme,
+}: {
+  item: Proposals;
+  index: number;
+  theme: MyTheme;
+}) => {
+  return (
+    <View>
+      <View style={styles.ap_top}>
+        <View style={styles.ap_top1}>
+          <Image
+            source={{ uri: item.image }}
+            style={{ height: 50, borderRadius: 50, width: 50 }}
+            resizeMode="contain"
+          />
+          <View>
+            <MyText text={item.name} />
+            <MyText text={item.region} />
+          </View>
+        </View>
+        <MyText text={item.price.toFixed(2).toString()} />
+      </View>
+      <View style={styles.ap_mid}>
+        <MyText
+          text={item.description}
+          numberOfLines={3}
+          weight="300"
+          size={12}
+          textColor={theme.dark ? "#ffffff" : "#000000"}
+        />
+      </View>
+      <View style={styles.ap_bot}>
+        <MyButton
+          label="View"
+          labelStyle={{
+            color: theme.colors.primary,
+            fontSize: 10,
+          }}
+          style={{
+            paddingHorizontal: 19,
+            paddingVertical: 3,
+            backgroundColor: "transparent",
+            borderWidth: 1,
+            borderColor: theme.colors.primary,
+            borderRadius: 100,
+            marginTop: 10,
+          }}
+        />
+      </View>
+    </View>
+  );
+};
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    marginBottom: 40,
     paddingTop: 26,
     paddingHorizontal: 22,
   },
@@ -228,4 +371,17 @@ const styles = StyleSheet.create({
     marginBottom: 17,
   },
   content: {},
+  ap_top: {
+    alignItems: "center",
+    justifyContent: "space-between",
+    flexDirection: "row",
+  },
+  ap_top1: {
+    alignItems: "center",
+    flexDirection: "row",
+  },
+  ap_mid: {},
+  ap_bot: {
+    alignItems: "flex-end",
+  },
 });

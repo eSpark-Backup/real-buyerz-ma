@@ -9,7 +9,6 @@ import { GLogo, RLogo } from "@assets/images";
 import { DarkTheme, LightTheme } from "@theme";
 import { MyText, MyButton, MyCheckbox, MyInput, LoginModal } from "@components";
 import { UserSignInSchema } from "@validations/schema";
-import SuccessMessageModal from "components/SuccessMessageModal";
 
 export default function signIn() {
   const colorScheme = Appearance.getColorScheme();

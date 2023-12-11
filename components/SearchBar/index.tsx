@@ -9,6 +9,7 @@ interface SearchBarProps {
   button?: boolean;
   onPress?: () => void;
   leftIcon?: boolean;
+  placeholder?: string;
 }
 
 export default function SearchBar({
@@ -16,6 +17,7 @@ export default function SearchBar({
   button,
   onPress,
   leftIcon,
+  placeholder,
 }: SearchBarProps) {
   return (
     <View
@@ -37,7 +39,7 @@ export default function SearchBar({
       <MyInput
         style={styles.inputContainer}
         inputStyle={styles.inputStyle}
-        placeholder="Search"
+        placeholder={placeholder ? placeholder : "Search"}
       />
       {clearIcon && (
         <Ionicons

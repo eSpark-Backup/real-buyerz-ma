@@ -142,7 +142,8 @@ export default Inbox;
 const styles = (theme?: MyTheme) =>
   StyleSheet.create({
     wrapper: {
-      paddingBottom: 5,
+      flex: 1,
+      marginBottom: 45,
       paddingHorizontal: 20,
       paddingTop: 20,
       height: "100%",

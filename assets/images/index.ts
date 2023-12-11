@@ -20,6 +20,7 @@ export {
   ReloadIcon,
   HeartIcon,
   ProfileIcon,
+  MiFilter,
 } from "./svg";
 
 //* pngs

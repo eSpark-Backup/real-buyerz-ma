@@ -83,7 +83,7 @@ export default function Home() {
         scrollEventThrottle={16}
       >
         <DynamicAppBar value={scrollOffsetY} />
-        <View style={{ alignItems: "center" }}>
+        <View style={{ alignItems: "center", marginBottom: 35 }}>
           <AdCard
             label="View Your listings or post your ad to rent or sell your house"
             btnLabel="Go to Dashboard"
