@@ -1,5 +1,6 @@
 import React from "react";
 import { StyleSheet, Text, TextStyle, TextProps } from "react-native";
+import { useTheme } from "@react-navigation/native";
 
 import { MyTextProps } from "@types";
 
@@ -12,6 +13,7 @@ export default function MyText({
   style,
   numberOfLines,
 }: MyTextProps & TextProps) {
+  const theme = useTheme();
   const getFontFamily = (weight: string) => {
     switch (weight) {
       case "700":
@@ -29,7 +31,7 @@ export default function MyText({
     }
   };
   const textStyle: TextStyle = {
-    color: textColor,
+    color: textColor || theme.colors.text,
     fontWeight: weight || "normal",
     fontSize: size || 14,
     fontFamily: weight ? getFontFamily(weight) : "Inter-Regular",

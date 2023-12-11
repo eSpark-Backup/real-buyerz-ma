@@ -24,9 +24,6 @@ import HomeHeader from "components/HomeHeader";
 export default function Home() {
   const theme = useTheme() as MyTheme;
   const scrollOffsetY = useRef(new Animated.Value(0)).current;
-  const Header_Max_height = 120;
-  const Header_Min_height = 60;
-  const Scroll_Distance = Header_Max_height - Header_Min_height;
 
   const handleScroll = Animated.event(
     [{ nativeEvent: { contentOffset: { y: scrollOffsetY } } }],
@@ -35,7 +32,7 @@ export default function Home() {
 
   const DynamicAppBar = ({ value }: any) => {
     const headerOpacity = scrollOffsetY.interpolate({
-      inputRange: [0, Scroll_Distance],
+      inputRange: [0, 80],
       outputRange: [1, 0],
       extrapolate: "clamp",
     });
@@ -48,13 +45,10 @@ export default function Home() {
       </Animated.View>
     );
   };
-  scrollOffsetY.addListener(({ value }) => {
-    console.log("Scroll Offset Y:", value);
-  });
 
   const DynamicHomeHeader = () => {
     const homeHeaderOpacity = scrollOffsetY.interpolate({
-      inputRange: [0, Scroll_Distance],
+      inputRange: [0, 80],
       outputRange: [0, 1],
       extrapolate: "clamp",
     });
@@ -74,7 +68,7 @@ export default function Home() {
 
   return (
     <>
-      <View style={{ position: "absolute", top: 0, width: "100%", zIndex: 1 }}>
+      <View style={styles.HomeHeader}>
         <DynamicHomeHeader />
       </View>
 
@@ -456,4 +450,5 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   header: {},
+  HomeHeader: { position: "absolute", top: 0, width: "100%", zIndex: 1 },
 });
