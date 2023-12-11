@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { router } from "expo-router";
 import { useTheme } from "@react-navigation/native";
 
@@ -23,11 +23,18 @@ export default function Search() {
       <View style={styles.searchBar}>
         <SearchBar leftIcon clearIcon />
       </View>
-      <GapView length={40} />
+      <TouchableOpacity style={styles.filterCont}>
+        <MyText
+          size={10}
+          text="Clear Filter"
+          style={[styles.filter, { color: theme.colors.secondary }]}
+        />
+      </TouchableOpacity>
+      <GapView length={25} />
       <View style={styles.purpose}>
-        <MyText text="Select Purpose" />
+        <MyText text="Purpose" size={14} />
         <MyDropdown
-          placeholder="Type"
+          placeholder="Purpose"
           multiSelect
           data={["Buy", "Rent"]}
           onSelect={(value) => {
@@ -73,6 +80,7 @@ export default function Search() {
           backgroundColor={theme.colors.primary}
           onPress={() => router.push("(user)/anon/search/searchList")}
           style={{ borderRadius: 4, padding: 8, paddingHorizontal: 20 }}
+          labelStyle={{ fontSize: 15 }}
         />
       </View>
     </View>
@@ -107,4 +115,8 @@ const styles = StyleSheet.create({
   button: {
     marginTop: 50,
   },
+  filter: {
+    textDecorationLine: "underline",
+  },
+  filterCont: { alignSelf: "flex-end" },
 });

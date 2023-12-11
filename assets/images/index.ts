@@ -20,6 +20,7 @@ export {
   ReloadIcon,
   HeartIcon,
   ProfileIcon,
+  LikeButton,
 } from "./svg";
 
 //* pngs

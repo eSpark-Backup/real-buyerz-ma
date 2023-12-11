@@ -2,7 +2,12 @@ import { ImageStyle, StyleProp, TextStyle, ViewStyle } from "react-native";
 import { Theme } from "@react-navigation/native";
 
 export type MyTheme = Theme & {
-  colors: { secondary: string; popupbg: string; placeholderText: string };
+  colors: {
+    secondary: string;
+    popupbg: string;
+    placeholderText: string;
+    listText: string;
+  };
 };
 
 export type ThemeTypes = "Default" | "Dark";

@@ -3,6 +3,8 @@ import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { FontAwesome, Ionicons } from "@expo/vector-icons";
 
 import MyInput from "components/MyInput";
+import { useTheme } from "@react-navigation/native";
+import { MyTheme } from "@types";
 
 interface SearchBarProps {
   clearIcon?: boolean;
@@ -17,6 +19,7 @@ export default function SearchBar({
   onPress,
   leftIcon,
 }: SearchBarProps) {
+  const theme = useTheme() as MyTheme;
   return (
     <View
       style={[
@@ -38,6 +41,7 @@ export default function SearchBar({
         style={styles.inputContainer}
         inputStyle={styles.inputStyle}
         placeholder="Search"
+        placeholderColor={theme.colors.placeholderText}
       />
       {clearIcon && (
         <Ionicons

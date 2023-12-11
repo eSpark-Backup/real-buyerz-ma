@@ -57,6 +57,7 @@ export default function signIn() {
               placeholder="Username"
               onChange={handleChange("username")}
               style={styles.input}
+              placeholderColor="#666666"
             />
 
             <MyText
@@ -71,6 +72,7 @@ export default function signIn() {
               onChange={handleChange("password")}
               style={styles.input}
               password
+              placeholderColor="#666666"
             />
 
             <View style={styles.coupleConatiner}>
