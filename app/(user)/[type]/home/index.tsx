@@ -14,11 +14,17 @@ import { Feather } from "@expo/vector-icons";
 import { useTheme } from "@react-navigation/native";
 import { router } from "expo-router";
 
-import { Card, MyText, MyAppBar, GapView, MyHeader } from "@components";
+import {
+  Card,
+  MyText,
+  MyAppBar,
+  GapView,
+  MyHeader,
+  HomeHeader,
+} from "@components";
 import { AgentHome } from "@assets/images";
 import { WINDOW_WIDTH } from "@constants";
 import { MyTheme } from "@types";
-import HomeHeader from "components/HomeHeader";
 
 export default function Home() {
   const theme = useTheme() as MyTheme;
@@ -77,7 +83,7 @@ export default function Home() {
         scrollEventThrottle={16}
       >
         <DynamicAppBar value={scrollOffsetY} />
-        <View style={{ alignItems: "center", marginBottom: 35 }}>
+        <View style={{ alignItems: "center" }}>
           <AdCard
             label="View Your listings or post your ad to rent or sell your house"
             btnLabel="Go to Dashboard"
@@ -449,5 +455,10 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   header: {},
-  HomeHeader: { position: "absolute", top: 0, width: "100%", zIndex: 1 },
+  HomeHeader: {
+    position: "absolute",
+    top: 0,
+    width: "100%",
+    zIndex: 1,
+  },
 });

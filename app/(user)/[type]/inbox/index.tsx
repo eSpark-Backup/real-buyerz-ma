@@ -150,7 +150,7 @@ const styles = (theme?: MyTheme) =>
     card: {
       borderRadius: 15,
       borderColor: theme?.colors.border,
-      height: "95%",
+      height: "100%",
       borderWidth: 1,
       padding: 0,
       overflow: "hidden",
