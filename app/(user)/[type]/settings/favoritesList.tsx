@@ -2,7 +2,7 @@ import React from "react";
 import { StyleSheet, View, FlatList } from "react-native";
 import { useTheme } from "@react-navigation/native";
 
-import { FavoriteListItem, GapView, MyText } from "@components";
+import { MyListItem, GapView, MyText } from "@components";
 import { MyTheme } from "@types";
 
 interface FavoritesList {
@@ -101,7 +101,7 @@ export default function FavoritesList() {
         <FlatList
           data={testData}
           renderItem={({ index, item }) => (
-            <FavoriteListItem item={item} index={index} theme={theme} fav />
+            <MyListItem item={item} index={index} theme={theme} fav />
           )}
           showsVerticalScrollIndicator={false}
           ListFooterComponent={() => <GapView length={36} />}

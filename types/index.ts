@@ -100,7 +100,7 @@ export interface SuccessMessageModalProps {
   onPress: () => void;
 }
 
-export type FavoriteListItemProps = {
+export type MyListItemProps = {
   item: {
     title: string;
     cost: string;

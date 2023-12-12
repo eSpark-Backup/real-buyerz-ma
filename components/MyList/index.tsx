@@ -9,15 +9,10 @@ import {
   LikeButton,
 } from "@assets/images";
 import { MyText } from "@components";
-import { FavoriteListItemProps, MyTheme } from "@types";
+import { MyListItemProps, MyTheme } from "@types";
 import PrimaryBtn from "components/MyButton/primaryBtn";
 
-const FavoriteListItem: React.FC<FavoriteListItemProps> = ({
-  item,
-  index,
-  theme,
-  fav,
-}) => {
+const MyListItem: React.FC<MyListItemProps> = ({ item, index, theme, fav }) => {
   return (
     <View style={styles(theme).searchItem}>
       <View>
@@ -192,4 +187,4 @@ const styles = (theme?: MyTheme) =>
     },
   });
 
-export default FavoriteListItem;
+export default MyListItem;

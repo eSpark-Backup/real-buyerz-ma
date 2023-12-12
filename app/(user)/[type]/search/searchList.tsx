@@ -3,7 +3,7 @@ import { StyleSheet, View, FlatList } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useTheme } from "@react-navigation/native";
 
-import { FavoriteListItem, GapView, MyText, SearchBar } from "@components";
+import { GapView, MyListItem, MyText, SearchBar } from "@components";
 import { MyTheme } from "@types";
 
 interface SearchList {
@@ -105,7 +105,7 @@ export default function SearchList() {
         <FlatList
           data={testData}
           renderItem={({ index, item }) => (
-            <FavoriteListItem item={item} index={index} theme={theme} />
+            <MyListItem item={item} index={index} theme={theme} />
           )}
           showsVerticalScrollIndicator={false}
           ListFooterComponent={() => <GapView length={36} />}

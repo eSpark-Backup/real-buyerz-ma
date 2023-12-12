@@ -18,4 +18,4 @@ export { AddCard, MyClickableCard } from "./MyCard";
 export { default as SettingList } from "./SettingList";
 export { default as MyVerificationModal } from "./MyVerificationModal";
 export { default as PropertyList } from "./PropertyList";
-export { default as FavoriteListItem } from "./FavoriteList";
+export { default as MyListItem } from "./MyList";
