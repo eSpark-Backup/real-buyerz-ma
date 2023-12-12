@@ -86,7 +86,25 @@ const testProposalsData: Proposals[] = [
   {
     id: 1,
     name: "John Doe",
-    image: "https://picsum.photos/200",
+    image: "https://picsum.photos/id/212/200",
+    region: "Pakistan",
+    description:
+      "Enim eiusmod nisi commodo sunt officia dolore officia ut veniam elit reprehe. Exercitation quis id aliqua ullamco aute laborum cupidatat excepteur elit id",
+    price: 100.0,
+  },
+  {
+    id: 2,
+    name: "John Depp",
+    image: "https://picsum.photos/id/312/200",
+    region: "Pakistan",
+    description:
+      "Enim eiusmod nisi commodo sunt officia dolore officia ut veniam elit reprehe. Exercitation quis id aliqua ullamco aute laborum cupidatat excepteur elit id",
+    price: 100.0,
+  },
+  {
+    id: 3,
+    name: "John Bravo",
+    image: "https://picsum.photos/id/315/200",
     region: "Pakistan",
     description:
       "Enim eiusmod nisi commodo sunt officia dolore officia ut veniam elit reprehe. Exercitation quis id aliqua ullamco aute laborum cupidatat excepteur elit id",
@@ -172,7 +190,6 @@ export default function Listings() {
             <View
               style={{
                 paddingVertical: 17,
-                paddingHorizontal: 11,
                 height: 410,
               }}
             >
@@ -209,7 +226,11 @@ export default function Listings() {
                   renderProposalsList({ item, index, theme })
                 }
                 showsVerticalScrollIndicator={false}
-                ItemSeparatorComponent={() => <GapView length={20} />}
+                ItemSeparatorComponent={() => (
+                  <View style={{ marginVertical: 10 }}>
+                    <Card.Divider style={{ width: "100%" }} />
+                  </View>
+                )}
                 keyExtractor={(item) => item.id.toString()}
               />
             </View>
@@ -312,20 +333,35 @@ const renderProposalsList = ({
   theme: MyTheme;
 }) => {
   return (
-    <View>
+    <View style={{ paddingHorizontal: 11 }}>
       <View style={styles.ap_top}>
         <View style={styles.ap_top1}>
           <Image
             source={{ uri: item.image }}
-            style={{ height: 50, borderRadius: 50, width: 50 }}
+            style={{ height: 40, borderRadius: 40, width: 40, marginRight: 5 }}
             resizeMode="contain"
           />
           <View>
-            <MyText text={item.name} />
-            <MyText text={item.region} />
+            <MyText
+              text={item.name}
+              size={12}
+              weight="600"
+              textColor={theme.colors.secondary}
+            />
+            <MyText
+              text={item.region}
+              size={10}
+              weight="400"
+              textColor={theme.colors.text + "77"}
+            />
           </View>
         </View>
-        <MyText text={item.price.toFixed(2).toString()} />
+        <MyText
+          text={"$" + item.price.toFixed(2).toString()}
+          size={12}
+          weight="500"
+          textColor={theme.dark ? "#ffffff" : "#000000"}
+        />
       </View>
       <View style={styles.ap_mid}>
         <MyText
@@ -379,9 +415,11 @@ const styles = StyleSheet.create({
   ap_top1: {
     alignItems: "center",
     flexDirection: "row",
+    marginBottom: 5,
   },
   ap_mid: {},
   ap_bot: {
     alignItems: "flex-end",
+    marginBottom: 10,
   },
 });
