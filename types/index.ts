@@ -99,3 +99,19 @@ export interface SuccessMessageModalProps {
   visible?: boolean;
   onPress: () => void;
 }
+
+export type FavoriteListItemProps = {
+  item: {
+    title: string;
+    cost: string;
+    address: string;
+    beds: number;
+    bathroom: number;
+    parking: number;
+    sqft: number;
+    image: string;
+  };
+  index: number;
+  theme: MyTheme;
+  fav?: boolean;
+};

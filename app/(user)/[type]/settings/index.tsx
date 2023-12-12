@@ -9,6 +9,7 @@ import {
   SettingList,
 } from "@components";
 import { HeartIcon, ProfileIcon } from "@assets/images";
+import { router } from "expo-router";
 
 export default function Settings() {
   const listData = [
@@ -67,7 +68,10 @@ export default function Settings() {
             <ProfileIcon />
           </MyClickableCard>
           <MyClickableCard
-            onPress={() => console.log("Favourites")}
+            onPress={() => {
+              console.log("Favourites");
+              router.push("(user)/anon/settings/favoritesList");
+            }}
             title="Favourites"
           >
             <HeartIcon />

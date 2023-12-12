@@ -1,5 +1,10 @@
 import React from "react";
-import { StyleSheet, View, TouchableWithoutFeedback } from "react-native";
+import {
+  StyleSheet,
+  View,
+  TouchableWithoutFeedback,
+  TouchableOpacity,
+} from "react-native";
 
 import MyText from "components/MyText";
 import GapView from "components/GapView";
@@ -14,7 +19,7 @@ interface IClickableCard {
 const MyClickableCard = ({ title, onPress, children }: IClickableCard) => {
   return (
     <View>
-      <TouchableWithoutFeedback onPress={onPress}>
+      <TouchableOpacity onPress={onPress}>
         <Card
           style={{
             height: 100,
@@ -32,7 +37,7 @@ const MyClickableCard = ({ title, onPress, children }: IClickableCard) => {
             {title}
           </MyText>
         </Card>
-      </TouchableWithoutFeedback>
+      </TouchableOpacity>
     </View>
   );
 };

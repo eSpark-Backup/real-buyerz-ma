@@ -7,7 +7,14 @@ import { Formik } from "formik";
 
 import { GLogo, RLogo } from "@assets/images";
 import { DarkTheme, LightTheme } from "@theme";
-import { MyText, MyButton, MyCheckbox, MyInput, LoginModal } from "@components";
+import {
+  MyText,
+  MyButton,
+  MyCheckbox,
+  MyInput,
+  LoginModal,
+  GapView,
+} from "@components";
 import { UserSignInSchema } from "@validations/schema";
 import SuccessMessageModal from "components/SuccessMessageModal";
 
@@ -34,7 +41,7 @@ export default function signIn() {
 
       <Formik
         initialValues={{
-          username: "",
+          email: "",
           password: "",
           agreeToTerms: false,
         }}
@@ -54,18 +61,12 @@ export default function signIn() {
         }) => (
           <View style={styles.form}>
             <MyInput
-              placeholder="Username"
+              placeholder="Email address"
               onChange={handleChange("username")}
               style={styles.input}
               placeholderColor="#666666"
             />
-
-            <MyText
-              text="Forgot Username?"
-              textColor="#2e6fac"
-              size={14}
-              style={styles.forgotUN}
-            />
+            <GapView length={25} />
 
             <MyInput
               placeholder="Password"
