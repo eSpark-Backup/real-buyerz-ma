@@ -5,8 +5,8 @@ import {
   ViewStyle,
   Appearance,
 } from "react-native";
-import MyText from "../MyText";
 
+import MyText from "../MyText";
 import { MyButtonProps, MyTheme } from "@types";
 import { DarkTheme, LightTheme } from "@theme";
 

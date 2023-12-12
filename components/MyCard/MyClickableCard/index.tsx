@@ -1,9 +1,9 @@
 import React from "react";
 import { StyleSheet, View, TouchableWithoutFeedback } from "react-native";
 
-import MyText from "components/MyText";
-import GapView from "components/GapView";
-import Card from "components/Card";
+import MyText from "../../MyText";
+import GapView from "../../GapView";
+import Card from "../../Card";
 
 interface IClickableCard {
   title: string;

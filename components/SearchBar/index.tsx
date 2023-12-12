@@ -2,7 +2,7 @@ import React from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { FontAwesome, Ionicons } from "@expo/vector-icons";
 
-import MyInput from "components/MyInput";
+import MyInput from "../MyInput";
 
 interface SearchBarProps {
   clearIcon?: boolean;

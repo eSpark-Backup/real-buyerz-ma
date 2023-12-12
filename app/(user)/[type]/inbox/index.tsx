@@ -7,6 +7,7 @@ import {
   FlatList,
 } from "react-native";
 import { useTheme } from "@react-navigation/native";
+import { router } from "expo-router";
 
 import { ReloadIcon } from "@assets/images";
 import { MyText, InboxList, Card } from "@components";
@@ -125,6 +126,7 @@ const Inbox: React.FC = () => {
                 time={item.time}
                 count={item.count}
                 avatarUrl={item.avatarUrl}
+                onPress={() => router.push("(user)/anon/inbox/chat")}
               />
             )}
             ItemSeparatorComponent={() => (

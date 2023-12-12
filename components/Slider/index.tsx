@@ -6,9 +6,8 @@ import {
   ImageBackground,
 } from "react-native";
 
-import Card from "components/Card";
-import MyText from "components/MyText";
-import { Entypo } from "@expo/vector-icons";
+import Card from "../Card";
+import MyText from "../MyText";
 import { LeftIconCarousel, RightIconCarousel } from "@assets/images/svg";
 
 interface ICustomSlider {

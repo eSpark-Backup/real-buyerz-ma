@@ -8,8 +8,8 @@ import MyButton from "../MyButton";
 import MyCheckbox from "../MyCheckbox";
 import MyInput from "../MyInput";
 import { LoginModalProps } from "@types";
-import { GLogo, PLogo } from "@assets/images";
 import { DarkTheme, LightTheme } from "@theme";
+import { GLogo, PLogo } from "@assets/images";
 
 const colorScheme = Appearance.getColorScheme();
 const theme = colorScheme === "dark" ? DarkTheme : LightTheme;

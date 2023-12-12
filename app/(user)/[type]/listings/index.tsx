@@ -196,6 +196,7 @@ export default function Listings() {
               <FlatList
                 data={testProposalsData}
                 nestedScrollEnabled
+                ListHeaderComponentStyle={{ paddingHorizontal: 11 }}
                 ListHeaderComponent={() => (
                   <View>
                     <View style={{ height: 35 }}>

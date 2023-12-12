@@ -6,7 +6,8 @@ import {
   ViewStyle,
 } from "react-native";
 import React from "react";
-import MyText from "components/MyText";
+
+import MyText from "../MyText";
 
 interface IPropsBtn {
   title: string;

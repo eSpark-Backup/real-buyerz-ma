@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { useDispatch } from "react-redux";
 
-import MyText from "components/MyText";
 import {
   ArrowRight,
   FeedBackIcon,
@@ -12,8 +11,9 @@ import {
   PrivacyPolicyIcon,
   TermConditionsIcon,
 } from "@assets/images/svg";
-import { ToggleSwitch } from "components/MySwitch";
 import { toggleTheme } from "features/themeSlice";
+import MyText from "../MyText";
+import { ToggleSwitch } from "../MySwitch";
 
 export interface IList {
   title: string;

@@ -19,3 +19,5 @@ export { default as SettingList } from "./SettingList";
 export { default as MyVerificationModal } from "./MyVerificationModal";
 export { default as PropertyList } from "./PropertyList";
 export { default as HomeHeader } from "./HomeHeader";
+export { default as CustomSlider } from "./Slider";
+export { default as PrimaryBtn } from "./MyButton/primaryBtn";

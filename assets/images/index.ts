@@ -21,6 +21,9 @@ export {
   HeartIcon,
   ProfileIcon,
   MiFilter,
+  CloseBtn,
+  OnRadioBtn,
+  OffRadioBtn,
 } from "./svg";
 
 //* pngs
