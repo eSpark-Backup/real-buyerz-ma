@@ -150,7 +150,11 @@ const renderFooter = (theme?: MyTheme) => {
       >
         <MyFab
           items={[
-            { key: "1", icon: "image-area" },
+            {
+              key: "1",
+              icon: "image-area",
+              onPress: () => console.log("hello"),
+            },
             { key: "2", icon: "paperclip" },
             { key: "3", icon: "microphone" },
           ]}

@@ -50,6 +50,7 @@ const MyFab = ({
       style={{
         opacity: opacityValue,
         position: "absolute",
+        display: isExpanded ? "flex" : "none",
         transform: [
           {
             translateY: rotationValue.interpolate({
