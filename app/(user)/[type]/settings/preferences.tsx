@@ -11,21 +11,25 @@ export default function Preferences() {
   const listData = [
     {
       title: "Dark Theme",
+      value: false,
       indexIcon: 0,
       subtitle: "Enable dark mode throughout the app",
     },
     {
       title: "Email Notification",
+      value: false,
       indexIcon: 1,
       subtitle: "Allow to receive email notification",
     },
     {
       title: "NewsLetters",
+      value: false,
       indexIcon: 2,
       subtitle: "Allow to stay updated & receive newsLetter",
     },
     {
       title: "Automated Reports",
+      value: false,
       indexIcon: 3,
       subtitle: "Allow to send us reports automatically incase of any issue.",
     },
@@ -43,6 +47,8 @@ export default function Preferences() {
           {listData.map((item, index) => (
             <PrefernceList
               title={item.title}
+              value={item.value}
+              index={index}
               key={index}
               indexIcon={item.indexIcon}
               subtitle={item.subtitle}

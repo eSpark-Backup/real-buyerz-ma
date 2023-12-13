@@ -2,26 +2,33 @@ import React, { useState } from "react";
 import { Pressable, StyleSheet, View } from "react-native";
 import { useDispatch } from "react-redux";
 
-import MyText from "components/MyText";
-import { ToggleSwitch } from "components/MySwitch";
+import { ToggleSwitch, MyText } from "@components";
 import { toggleTheme } from "features/themeSlice";
 
 export interface PList {
   title: string;
+  value: boolean;
   subtitle: string;
   indexIcon: number;
+  index: number;
   onPress?: () => void;
 }
 
 export default function PreferencesList({
   title,
+  value,
   subtitle,
   indexIcon,
+  index,
   onPress,
 }: PList) {
   const dispatch = useDispatch();
   const [switchValue, setSwitchValue] = useState(false);
-  const [toggleValue, setToggleValue] = useState(false);
+  const [toggleValue, setToggleValue] = useState(value);
+
+  const handleToggleValue = (key: number) => {
+    console.log("key", key);
+  };
 
   return (
     <View style={styles.wrapper}>
@@ -43,9 +50,10 @@ export default function PreferencesList({
           )}
           {indexIcon !== 0 && indexIcon !== 4 && (
             <ToggleSwitch
-              value={switchValue}
+              value={toggleValue}
               onValueChange={() => {
                 console.log("toggle");
+                handleToggleValue(index);
                 setToggleValue(!toggleValue);
               }}
             />
