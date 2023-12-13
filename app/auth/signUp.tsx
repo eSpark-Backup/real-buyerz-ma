@@ -112,11 +112,13 @@ export default function SignUp() {
                   placeholder="First name"
                   style={styles.fname}
                   onChange={handleChange("firstName")}
+                  placeholderColor="#666666"
                 />
                 <MyInput
                   placeholder="Last name"
                   style={styles.fname}
                   onChange={handleChange("lastName")}
+                  placeholderColor="#666666"
                 />
               </View>
               {inputFields.map((field, index) =>

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { StyleSheet, View } from "react-native";
+import { Pressable, StyleSheet, View } from "react-native";
 import { useDispatch } from "react-redux";
 
 import {
@@ -18,13 +18,14 @@ import { ToggleSwitch } from "../MySwitch";
 export interface IList {
   title: string;
   indexIcon: number;
+  onPress?: () => void;
 }
 
 interface SvgIcon {
   [key: number]: any;
 }
 
-export default function InboxList({ title, indexIcon }: IList) {
+export default function InboxList({ title, indexIcon, onPress }: IList) {
   const dispatch = useDispatch();
   const [switchValue, setSwitchValue] = useState(false);
 
@@ -39,7 +40,7 @@ export default function InboxList({ title, indexIcon }: IList) {
 
   return (
     <View style={styles.wrapper}>
-      <View style={styles.dflex}>
+      <Pressable style={styles.dflex} onPress={onPress}>
         <View style={styles.avatarStyle}>
           {svgIcons[indexIcon]}
           <View style={styles.textStyle}>
@@ -59,7 +60,7 @@ export default function InboxList({ title, indexIcon }: IList) {
           )}
           {indexIcon !== 0 && indexIcon !== 5 && <ArrowRight />}
         </View>
-      </View>
+      </Pressable>
       {indexIcon !== 5 && <View style={styles.divider} />}
     </View>
   );

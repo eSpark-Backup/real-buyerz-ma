@@ -25,6 +25,8 @@ export {
   OnRadioBtn,
   OffRadioBtn,
   SendFlag,
+  LikeButton,
+  LikeActiveButton,
 } from "./svg";
 
 //* pngs

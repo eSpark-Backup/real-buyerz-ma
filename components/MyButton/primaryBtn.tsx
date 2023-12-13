@@ -1,6 +1,7 @@
 import {
   StyleSheet,
   Text,
+  TextStyle,
   TouchableOpacity,
   View,
   ViewStyle,
@@ -13,8 +14,21 @@ interface IPropsBtn {
   title: string;
   onPress?: () => void;
   textColor?: string;
-  width: number;
+  width?: any;
   btnStyle?: ViewStyle;
+  labelStyle?: TextStyle;
+  weight?:
+    | "normal"
+    | "bold"
+    | "100"
+    | "200"
+    | "300"
+    | "400"
+    | "500"
+    | "600"
+    | "700"
+    | "800"
+    | "900";
 }
 
 const PrimaryBtn = ({
@@ -23,6 +37,8 @@ const PrimaryBtn = ({
   textColor,
   width,
   btnStyle,
+  labelStyle,
+  weight,
 }: IPropsBtn) => {
   return (
     <TouchableOpacity
@@ -40,7 +56,12 @@ const PrimaryBtn = ({
       ]}
       onPress={() => console.log("asd")}
     >
-      <MyText textColor={textColor} size={10} style={{ fontWeight: "600" }}>
+      <MyText
+        textColor={textColor}
+        size={10}
+        weight={weight}
+        style={labelStyle}
+      >
         {title}
       </MyText>
     </TouchableOpacity>

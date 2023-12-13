@@ -107,6 +107,7 @@ const PropertyDetail = () => {
             <View style={styles.btnWrapper}>
               <PrimaryBtn
                 title="View"
+                weight="600"
                 textColor="#ffffff"
                 width={100}
                 onPress={() => console.log("asd")}
@@ -116,6 +117,7 @@ const PropertyDetail = () => {
               />
               <PrimaryBtn
                 width={100}
+                weight="600"
                 title="Contact"
                 textColor="#ffffff"
                 onPress={() => console.log("asd")}

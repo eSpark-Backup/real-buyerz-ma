@@ -2,19 +2,18 @@ import React from "react";
 import Modal from "react-native-modal";
 import { Link } from "expo-router";
 import { View, StyleSheet, Appearance, ViewStyle } from "react-native";
+import { useTheme } from "@react-navigation/native";
 
 import MyText from "../MyText";
 import MyButton from "../MyButton";
 import MyCheckbox from "../MyCheckbox";
 import MyInput from "../MyInput";
-import { LoginModalProps } from "@types";
-import { DarkTheme, LightTheme } from "@theme";
+import { LoginModalProps, MyTheme } from "@types";
 import { GLogo, PLogo } from "@assets/images";
 
-const colorScheme = Appearance.getColorScheme();
-const theme = colorScheme === "dark" ? DarkTheme : LightTheme;
-
 function LoginModal({ visible, onClose }: LoginModalProps) {
+  const theme = useTheme() as MyTheme;
+
   return (
     <Modal
       isVisible={visible}
@@ -24,7 +23,9 @@ function LoginModal({ visible, onClose }: LoginModalProps) {
       animationOut={"slideOutDown"}
       style={styles.modal}
     >
-      <View style={styles.popupStyle}>
+      <View
+        style={[styles.popupStyle, { backgroundColor: theme.colors.popupbg }]}
+      >
         <PLogo />
         <MyText
           text="Log In to Continue"
@@ -33,14 +34,20 @@ function LoginModal({ visible, onClose }: LoginModalProps) {
           size={16}
           style={{ paddingVertical: "4%" }}
         />
-        <MyInput placeholder="Username" style={{ marginTop: "8%" }} />
-        <MyText
-          text="Forgot Username?"
-          textColor="#2e6fac"
-          size={14}
-          style={styles.frg_un}
+        <MyInput
+          placeholder="Email Address"
+          style={{ marginVertical: "8%", backgroundColor: "#29292E" }}
+          placeholderColor={theme.colors.placeholderText}
         />
-        <MyInput placeholder="Password" password />
+
+        <MyInput
+          placeholder="Password"
+          password
+          style={{
+            backgroundColor: "#29292E",
+          }}
+          placeholderColor={theme.colors.placeholderText}
+        />
         <View style={styles.coupleContainer}>
           <MyCheckbox
             label="Remember"
@@ -50,7 +57,7 @@ function LoginModal({ visible, onClose }: LoginModalProps) {
             style={{
               width: "50%",
             }}
-            labelStyle={styles.label}
+            labelStyle={[styles.label, { color: theme.colors.text }]}
           />
           <MyText
             text="Forgot Password?"
@@ -109,7 +116,6 @@ const styles = StyleSheet.create({
   },
 
   popupStyle: {
-    backgroundColor: theme.colors.popupbg,
     alignItems: "center",
     height: "100%",
     marginTop: "55%",

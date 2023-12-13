@@ -9,7 +9,10 @@ const PHONE_REGEX = /^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{5})$/;
 
 export const UserSignInSchema = {
   signInForm: object().shape({
-    username: string().required("Username is required!"),
+    email: string()
+      .email("Invalid email")
+      .required("Email is required")
+      .matches(EMAIL_REGEX, { message: "Invalid email" }),
     password: string().required("Password is required!"),
     agreeToTerms: bool().oneOf(
       [true],

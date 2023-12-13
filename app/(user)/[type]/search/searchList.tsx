@@ -4,8 +4,7 @@ import { useLocalSearchParams } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import { useTheme } from "@react-navigation/native";
 
-import { GapView, MyText, SearchBar } from "@components";
-import { BathOutline, BedOutline, LandPlot, Parking } from "@assets/images";
+import { GapView, MyListItem, MyText, SearchBar } from "@components";
 import { MyTheme } from "@types";
 
 interface SearchList {
@@ -109,9 +108,9 @@ export default function SearchList() {
       <View style={styles(theme).searchList}>
         <FlatList
           data={testData}
-          renderItem={({ index, item }) =>
-            renderSearchList({ index, item, theme })
-          }
+          renderItem={({ index, item }) => (
+            <MyListItem item={item} index={index} theme={theme} />
+          )}
           showsVerticalScrollIndicator={false}
           ListFooterComponent={() => <GapView length={36} />}
           ItemSeparatorComponent={() => <GapView />}
@@ -121,104 +120,6 @@ export default function SearchList() {
     </View>
   );
 }
-
-const renderSearchList = ({
-  item,
-  index,
-  theme,
-}: {
-  item: SearchList;
-  index: number;
-  theme: MyTheme;
-}) => {
-  return (
-    <View style={styles(theme).searchItem}>
-      <Image
-        source={{ uri: item.image }}
-        style={{ width: 120, height: 120, borderRadius: 2 }}
-      />
-      <View
-        style={{
-          flex: 1,
-          height: 120,
-          marginLeft: 5,
-          justifyContent: "space-between",
-        }}
-      >
-        <View style={{ flexDirection: "row", alignItems: "center" }}>
-          <MyText text="PKR " size={12} />
-          <MyText
-            text={item.cost}
-            size={14}
-            textColor={theme.colors.text}
-            weight="500"
-          />
-        </View>
-        <MyText
-          text={item.title}
-          textColor={theme.colors.text + "88"}
-          size={10}
-        />
-        <MyText
-          text={item.address + "some other ext"}
-          numberOfLines={1}
-          textColor={theme.colors.text}
-          size={12}
-          weight="300"
-        />
-        <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
-          <View style={{ flexDirection: "row", alignItems: "center" }}>
-            <BedOutline />
-            <MyText
-              text={item.beds.toString().padStart(2, "0")}
-              style={{ marginLeft: 5 }}
-              size={8}
-              weight="300"
-            />
-          </View>
-          <View style={{ flexDirection: "row", alignItems: "center" }}>
-            <BathOutline />
-            <MyText
-              text={item.bathroom.toString().padStart(2, "0")}
-              style={{ marginLeft: 5 }}
-              size={8}
-              weight="300"
-            />
-          </View>
-          <View style={{ flexDirection: "row", alignItems: "center" }}>
-            <Parking />
-            <MyText
-              text={item.parking.toString().padStart(2, "0")}
-              style={{ marginLeft: 5 }}
-              size={8}
-              weight="300"
-            />
-          </View>
-          <View
-            style={{
-              flexDirection: "row",
-              alignItems: "center",
-              marginRight: 10,
-            }}
-          >
-            <LandPlot />
-            <MyText
-              text={item.sqft.toString().padStart(2, "0") + " sqft"}
-              style={{ marginLeft: 5 }}
-              size={8}
-              weight="300"
-            />
-          </View>
-        </View>
-        <MyText
-          text={"Posted 3 hours ago"}
-          size={8}
-          textColor={theme.colors.text + "88"}
-        />
-      </View>
-    </View>
-  );
-};
 
 const renderTagList = ({
   item,
@@ -262,14 +163,5 @@ const styles = (theme?: MyTheme) =>
     searchList: {
       flex: 1,
       paddingTop: 10,
-    },
-    searchItem: {
-      flexDirection: "row",
-      padding: 10,
-      alignItems: "center",
-      justifyContent: "space-between",
-      borderWidth: 1,
-      borderRadius: 5,
-      borderColor: theme?.colors.border,
     },
   });
