@@ -1,5 +1,6 @@
 import React from "react";
 import { StyleSheet, View, ScrollView } from "react-native";
+import { router } from "expo-router";
 
 import {
   MyText,
@@ -9,9 +10,17 @@ import {
   SettingList,
 } from "@components";
 import { HeartIcon, ProfileIcon } from "@assets/images";
-import { router } from "expo-router";
 
 export default function Settings() {
+  const handlePrefernecesPress = () => {
+    console.log("Preferences");
+    router.push("(user)/anon/settings/preferences");
+  };
+
+  const handleAnyPress = () => {
+    console.log("static");
+  };
+
   const listData = [
     {
       title: "Notifications",
@@ -20,22 +29,27 @@ export default function Settings() {
     {
       title: "Preferences",
       indexIcon: 1,
+      handlePress: handlePrefernecesPress,
     },
     {
       title: "Feedback",
       indexIcon: 2,
+      handlePress: handleAnyPress,
     },
     {
       title: "Privacy Policy",
       indexIcon: 3,
+      handlePress: handleAnyPress,
     },
     {
       title: "Terms and Conditions",
       indexIcon: 4,
+      handlePress: handleAnyPress,
     },
     {
       title: "Logout",
       indexIcon: 5,
+      handlePress: handleAnyPress,
     },
   ];
 
@@ -87,6 +101,7 @@ export default function Settings() {
               title={item.title}
               key={index}
               indexIcon={item.indexIcon}
+              onPress={item?.handlePress}
             />
           ))}
         </View>
