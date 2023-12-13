@@ -26,7 +26,6 @@ interface SvgIcon {
 }
 
 export default function InboxList({ title, indexIcon, onPress }: IList) {
-  const dispatch = useDispatch();
   const [switchValue, setSwitchValue] = useState(false);
 
   const svgIcons: SvgIcon = {
@@ -53,7 +52,6 @@ export default function InboxList({ title, indexIcon, onPress }: IList) {
             <ToggleSwitch
               value={switchValue}
               onValueChange={() => {
-                dispatch(toggleTheme(!switchValue ? "Dark" : "Default"));
                 setSwitchValue(!switchValue);
               }}
             />

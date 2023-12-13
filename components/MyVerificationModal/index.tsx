@@ -7,9 +7,9 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { useTheme } from "@react-navigation/native";
+
 import MyText from "../MyText";
 import MyButton from "../MyButton";
-
 import { CloseBtn } from "@assets/images";
 import { MyVerificationModalProps } from "@types";
 

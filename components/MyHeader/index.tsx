@@ -3,7 +3,6 @@ import { StyleSheet, View, ViewStyle } from "react-native";
 
 import { NativeStackHeaderProps } from "@react-navigation/native-stack";
 import { BottomTabHeaderProps } from "@react-navigation/bottom-tabs";
-
 import { Entypo, Feather } from "@expo/vector-icons";
 import { router } from "expo-router";
 

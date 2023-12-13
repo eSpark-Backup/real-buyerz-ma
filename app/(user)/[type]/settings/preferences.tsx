@@ -1,10 +1,9 @@
 import React from "react";
 import { ScrollView, StyleSheet, View } from "react-native";
-import PrimaryBtn from "components/MyButton/primaryBtn";
 import { useTheme } from "@react-navigation/native";
 
 import { MyTheme } from "@types";
-import { MyInput, MyText, PrefernceList } from "@components";
+import { MyInput, MyText, PrefernceList, PrimaryBtn } from "@components";
 
 export default function Preferences() {
   const theme = useTheme() as MyTheme;
@@ -34,6 +33,7 @@ export default function Preferences() {
       subtitle: "Allow to send us reports automatically incase of any issue.",
     },
   ];
+
   return (
     <ScrollView showsVerticalScrollIndicator={false}>
       <View style={styles(theme).wrapper}>

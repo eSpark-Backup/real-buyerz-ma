@@ -7,8 +7,7 @@ import {
   View,
   ViewStyle,
 } from "react-native";
-import { Entypo } from "@expo/vector-icons";
-import { Feather } from "@expo/vector-icons";
+import { Entypo, Feather } from "@expo/vector-icons";
 
 import MyText from "../MyText";
 

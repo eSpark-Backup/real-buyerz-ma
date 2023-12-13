@@ -1,9 +1,9 @@
 import React from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { FontAwesome, Ionicons } from "@expo/vector-icons";
+import { useTheme } from "@react-navigation/native";
 
 import MyInput from "../MyInput";
-import { useTheme } from "@react-navigation/native";
 import { MyTheme } from "@types";
 
 interface SearchBarProps {
