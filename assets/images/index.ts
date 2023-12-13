@@ -24,6 +24,7 @@ export {
   CloseBtn,
   OnRadioBtn,
   OffRadioBtn,
+  SendFlag,
 } from "./svg";
 
 //* pngs

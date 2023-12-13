@@ -31,3 +31,4 @@ export { default as SearchTab } from "./search-vector.svg";
 export { default as ListingTab } from "./listing-vector.svg";
 export { default as SettingsTab } from "./settings-vector.svg";
 export { default as MiFilter } from "./mi-filter.svg";
+export { default as SendFlag } from "./send-flag.svg";

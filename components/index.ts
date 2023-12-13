@@ -21,3 +21,4 @@ export { default as PropertyList } from "./PropertyList";
 export { default as HomeHeader } from "./HomeHeader";
 export { default as CustomSlider } from "./Slider";
 export { default as PrimaryBtn } from "./MyButton/primaryBtn";
+export { default as MyFab } from "./MyFab";
