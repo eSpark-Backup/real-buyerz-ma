@@ -2,7 +2,12 @@ import { ImageStyle, StyleProp, TextStyle, ViewStyle } from "react-native";
 import { Theme } from "@react-navigation/native";
 
 export type MyTheme = Theme & {
-  colors: { secondary: string; popupbg: string };
+  colors: {
+    secondary: string;
+    popupbg: string;
+    placeholderText: string;
+    listText: string;
+  };
 };
 
 export type ThemeTypes = "Default" | "Dark";
@@ -51,7 +56,7 @@ export type MyCheckboxProps = {
   onChange?: (checked: boolean) => void;
   style?: ViewStyle;
   checkboxStyle?: ViewStyle;
-  labelStyle?: ViewStyle | TextStyle;
+  labelStyle?: ViewStyle | TextStyle | ViewStyle[] | TextStyle[];
 };
 
 export type MyButtonProps = {
@@ -94,3 +99,19 @@ export interface SuccessMessageModalProps {
   visible?: boolean;
   onPress: () => void;
 }
+
+export type MyListItemProps = {
+  item: {
+    title: string;
+    cost: string;
+    address: string;
+    beds: number;
+    bathroom: number;
+    parking: number;
+    sqft: number;
+    image: string;
+  };
+  index: number;
+  theme: MyTheme;
+  fav?: boolean;
+};

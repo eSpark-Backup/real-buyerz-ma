@@ -1,11 +1,12 @@
 import React from "react";
 import { View, StyleSheet } from "react-native";
-
-import { PLogo, RText } from "@assets/images";
 import { useTheme } from "@react-navigation/native";
 
+import { PLogo, RText } from "@assets/images";
+import { MyTheme } from "@types";
+
 export default function HomeHeader() {
-  const theme = useTheme();
+  const theme = useTheme() as MyTheme;
   return (
     <View
       style={[styles.container, { backgroundColor: theme.colors.background }]}

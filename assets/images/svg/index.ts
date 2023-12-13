@@ -30,3 +30,5 @@ export { default as InboxTab } from "./inbox-vector.svg";
 export { default as SearchTab } from "./search-vector.svg";
 export { default as ListingTab } from "./listing-vector.svg";
 export { default as SettingsTab } from "./settings-vector.svg";
+export { default as LikeButton } from "./like-button.svg";
+export { default as LikeActiveButton } from "./like-active-button.svg";
