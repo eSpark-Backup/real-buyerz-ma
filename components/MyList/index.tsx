@@ -159,7 +159,7 @@ const styles = (theme?: MyTheme) =>
     likeBtn: {
       position: "absolute",
       alignSelf: "flex-end",
-      padding: 4,
+      padding: 1,
     },
     row1: {
       flexDirection: "row",

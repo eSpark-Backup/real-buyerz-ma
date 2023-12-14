@@ -84,7 +84,8 @@ export default function FavoritesList() {
         style={{
           borderBottomWidth: 1,
           marginHorizontal: 5,
-          marginVertical: 8,
+          marginTop: 8,
+          marginBottom: 4,
           borderColor: "#E9E9E9",
         }}
       >
@@ -117,9 +118,11 @@ const styles = (theme?: MyTheme) =>
   StyleSheet.create({
     container: {
       flex: 1,
-      margin: 10,
+      marginHorizontal: 10,
+      marginTop: 12,
       borderColor: "#E4E4E4",
       borderWidth: 1,
+      marginBottom: 50,
       borderRadius: 9,
     },
     singleTab: {
