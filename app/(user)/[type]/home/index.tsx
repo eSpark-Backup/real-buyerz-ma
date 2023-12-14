@@ -46,7 +46,7 @@ export default function Home() {
 
     return (
       <Animated.View
-        style={[styles.header, { opacity: headerOpacity, zIndex: 5 }]}
+        style={[styles(theme).header, { opacity: headerOpacity, zIndex: 5 }]}
       >
         <MyAppBar />
       </Animated.View>
@@ -75,17 +75,17 @@ export default function Home() {
 
   return (
     <>
-      <View style={styles.HomeHeader}>
+      <View style={styles(theme).HomeHeader}>
         <DynamicHomeHeader />
       </View>
 
       <ScrollView
-        style={[styles.wrapper]}
+        style={[styles(theme).wrapper]}
         onScroll={handleScroll}
         scrollEventThrottle={16}
       >
         <DynamicAppBar value={scrollOffsetY} />
-        <View style={{ alignItems: "center", marginBottom: 35 }}>
+        <View style={styles(theme).container}>
           <AdCard
             label="View Your listings or post your ad to rent or sell your house"
             btnLabel="Go to Dashboard"
@@ -94,19 +94,7 @@ export default function Home() {
           <GapView length={30} />
           <Title text="Browse Properties" theme={theme} />
 
-          <View
-            style={{
-              marginTop: 10,
-              width: "100%",
-              backgroundColor: theme.colors.card,
-              borderWidth: 0.9,
-              borderColor: theme.colors.border,
-              paddingVertical: 15,
-              paddingHorizontal: 11,
-              alignItems: "center",
-              flexDirection: "row",
-            }}
-          >
+          <View style={styles(theme).carousel}>
             <Feather
               name="chevron-left"
               size={18}
@@ -284,28 +272,15 @@ const AdCard = ({
   theme?: MyTheme;
 }) => {
   return (
-    <Card style={{ width: "90%", marginTop: 30 }}>
-      <View style={{ paddingHorizontal: 20, paddingVertical: 12 }}>
-        <View
-          style={{
-            flexDirection: "row",
-            alignItems: "center",
-            justifyContent: "space-around",
-          }}
-        >
+    <Card style={styles(theme).cardConatainer}>
+      <View style={styles(theme).row1}>
+        <View style={styles(theme).wrap}>
+          {/* todo: svgs color update on theme change */}
           <AgentHome />
-          <MyText style={{ width: "70%" }}>{label}</MyText>
+          <MyText style={styles(theme).label}>{label}</MyText>
         </View>
         <GapView length={15} />
-        <View
-          style={{
-            backgroundColor: theme?.colors.primary + "33",
-            alignItems: "center",
-            justifyContent: "center",
-            paddingVertical: 7,
-            borderRadius: 2,
-          }}
-        >
+        <View style={styles(theme).btn}>
           <MyText textColor={theme?.colors.primary}>{btnLabel}</MyText>
         </View>
       </View>
@@ -316,21 +291,10 @@ const AdCard = ({
 const BrowseProps = ({ theme }: { theme?: MyTheme }) => {
   function renderList({ item, index }: { item: any; index: number }) {
     return (
-      <Card
-        style={{
-          height: 90,
-          width: WINDOW_WIDTH / 3.9,
-          borderWidth: 1,
-          borderColor: theme?.colors.border,
-          borderRadius: 5,
-          padding: 17,
-          alignItems: "center",
-          justifyContent: "center",
-        }}
-      >
+      <Card style={styles(theme).bCard}>
         <MyText>Icon</MyText>
         <GapView />
-        <MyText size={10} textColor="#838383" style={{ textAlign: "center" }}>
+        <MyText size={10} textColor="#838383" style={styles(theme).bText}>
           Residential House
         </MyText>
       </Card>
@@ -452,10 +416,55 @@ export const PropertyListing = ({
   );
 };
 
-const styles = StyleSheet.create({
-  wrapper: {
-    flex: 1,
-  },
-  header: {},
-  HomeHeader: { position: "absolute", top: 0, width: "100%", zIndex: 1 },
-});
+const styles = (theme?: MyTheme) =>
+  StyleSheet.create({
+    wrapper: {
+      flex: 1,
+    },
+    header: {},
+    HomeHeader: { position: "absolute", top: 0, width: "100%", zIndex: 1 },
+    carousel: {
+      marginTop: 10,
+      width: "100%",
+      backgroundColor: theme?.colors.card,
+      borderWidth: 0.9,
+      borderColor: theme?.colors.border,
+      paddingVertical: 15,
+      paddingHorizontal: 11,
+      alignItems: "center",
+      flexDirection: "row",
+    },
+    container: { alignItems: "center", marginBottom: 35 },
+    cardConatainer: {
+      width: "90%",
+      marginTop: 30,
+      backgroundColor: theme?.colors.card,
+      borderColor: theme?.colors.border,
+    },
+    row1: { paddingHorizontal: 20, paddingVertical: 12 },
+    wrap: {
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "space-around",
+    },
+    label: { width: "70%" },
+    btn: {
+      backgroundColor: theme?.colors.primary + "33",
+      alignItems: "center",
+      justifyContent: "center",
+      paddingVertical: 7,
+      borderRadius: 2,
+    },
+    bCard: {
+      height: 90,
+      width: WINDOW_WIDTH / 3.9,
+      borderWidth: 1,
+      borderColor: theme?.colors.border,
+      borderRadius: 5,
+      padding: 17,
+      alignItems: "center",
+      justifyContent: "center",
+      backgroundColor: theme?.colors.background,
+    },
+    bText: { textAlign: "center" },
+  });

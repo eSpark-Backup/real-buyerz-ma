@@ -12,6 +12,8 @@ const colors = {
     popupbg: "#F4F4F4",
     placeholderText: "#969696",
     listText: "#696969",
+    positive: "#FFFFFF",
+    negative: "#000000",
   },
   dark: {
     primary: "#FB631C",
@@ -24,6 +26,8 @@ const colors = {
     popupbg: "#29292E",
     placeholderText: "#FFFFFF",
     listText: "#696969", //to be updated
+    positive: "#000000",
+    negative: "#FFFFFF",
   },
 };
 

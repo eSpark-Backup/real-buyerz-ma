@@ -2,6 +2,7 @@ import React from "react";
 import { StyleSheet, Text, View, ViewStyle, TextStyle } from "react-native";
 
 import MyText from "../MyText";
+import { MyTheme } from "@types";
 
 export default function Card({
   style,
@@ -55,7 +56,7 @@ function Divider({
 Card.Title = Title;
 Card.Divider = Divider;
 
-const styles = ({ radius }: { radius?: number }) =>
+const styles = ({ radius, theme }: { radius?: number; theme?: MyTheme }) =>
   StyleSheet.create({
     cardStyle: {
       minHeight: 10,
