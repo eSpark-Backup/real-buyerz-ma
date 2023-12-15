@@ -23,7 +23,7 @@ export default function SearchBar({
   return (
     <View
       style={[
-        styles.container,
+        styles(theme).container,
         button
           ? { paddingLeft: 15, justifyContent: "space-between" }
           : { padding: 10, paddingHorizontal: 10 },
@@ -38,8 +38,8 @@ export default function SearchBar({
         />
       )}
       <MyInput
-        style={styles.inputContainer}
-        inputStyle={styles.inputStyle}
+        style={styles(theme).inputContainer}
+        inputStyle={styles(theme).inputStyle}
         placeholder="Search"
         placeholderColor={theme.colors.placeholderText}
       />
@@ -72,31 +72,32 @@ export default function SearchBar({
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flexDirection: "row",
-    borderWidth: 1,
-    borderRadius: 5,
-    borderColor: "#e7e7e7",
-    alignItems: "center",
-    justifyContent: "flex-start",
-    height: "100%",
-    width: "100%",
-  },
-  inputContainer: {
-    backgroundColor: "transparent",
-    flexDirection: "row",
-    paddingHorizontal: 0,
-    borderRadius: 0,
-    alignItems: "flex-start",
-    elevation: 0,
-    width: "85%",
-  },
-  inputStyle: {
-    flex: 1,
-    padding: 0,
-    fontSize: 14,
-    fontWeight: "300",
-    fontFamily: "Inter",
-  },
-});
+const styles = (theme?: MyTheme) =>
+  StyleSheet.create({
+    container: {
+      flexDirection: "row",
+      borderWidth: 1,
+      borderRadius: 5,
+      borderColor: theme?.colors.border,
+      alignItems: "center",
+      justifyContent: "flex-start",
+      height: "100%",
+      width: "100%",
+    },
+    inputContainer: {
+      backgroundColor: "transparent",
+      flexDirection: "row",
+      paddingHorizontal: 0,
+      borderRadius: 0,
+      alignItems: "flex-start",
+      elevation: 0,
+      width: "85%",
+    },
+    inputStyle: {
+      flex: 1,
+      padding: 0,
+      fontSize: 14,
+      fontWeight: "300",
+      fontFamily: "Inter",
+    },
+  });

@@ -88,6 +88,7 @@ export default function SignUp() {
                 style={{ textDecorationLine: "underline" }}
                 size={16}
                 weight="500"
+                textColor="black"
               />
             </TouchableOpacity>
             <MaterialIcons
@@ -252,6 +253,7 @@ const styles = StyleSheet.create({
   dropdown: {
     backgroundColor: "#f3f4f6",
     borderRadius: 5,
+    borderWidth: 0,
     elevation: 3,
     width: "100%",
     height: "12%",

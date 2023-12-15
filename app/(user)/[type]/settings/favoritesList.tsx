@@ -80,14 +80,7 @@ export default function FavoritesList() {
 
   return (
     <View style={styles(theme).container}>
-      <View
-        style={{
-          borderBottomWidth: 1,
-          marginHorizontal: 5,
-          marginVertical: 8,
-          borderColor: "#E9E9E9",
-        }}
-      >
+      <View style={styles(theme).innerContainer}>
         <View style={styles(theme).singleTab}>
           <MyText
             text="Favorites"
@@ -117,10 +110,19 @@ const styles = (theme?: MyTheme) =>
   StyleSheet.create({
     container: {
       flex: 1,
-      margin: 10,
-      borderColor: "#E4E4E4",
+      marginHorizontal: 10,
+      marginTop: 12,
+      borderColor: theme?.colors.border,
       borderWidth: 1,
+      marginBottom: 50,
       borderRadius: 9,
+    },
+    innerContainer: {
+      borderBottomWidth: 1,
+      marginHorizontal: 5,
+      marginTop: 8,
+      marginBottom: 4,
+      borderColor: theme?.colors.border,
     },
     singleTab: {
       height: 40,
@@ -128,7 +130,7 @@ const styles = (theme?: MyTheme) =>
       borderBottomColor: theme?.colors.primary,
       borderBottomWidth: 2,
       marginLeft: "3%",
-      width: "20%",
+      width: "24%",
     },
     searchList: {
       flex: 1,
