@@ -45,45 +45,47 @@ const MyFab = ({
     </Animated.View>
   );
 
-  const renderStackItems = () => (
-    <Animated.View
-      style={{
-        opacity: opacityValue,
-        position: "absolute",
-        display: isExpanded ? "flex" : "none",
-        transform: [
-          {
-            translateY: rotationValue.interpolate({
-              inputRange: [0, 1],
-              outputRange: [5 * -items.length, -18 * items.length],
-            }),
-          },
-        ],
-      }}
-    >
-      {items.map((item) => (
-        <View key={item.key} style={{ bottom: 10, marginBottom: 10 }}>
-          <TouchableOpacity
-            onPress={item.onPress}
-            style={{
-              alignItems: "center",
-              justifyContent: "center",
-              backgroundColor: "#9B9B9B",
-              borderRadius: 30,
-              height: 25,
-              width: 25,
-            }}
-          >
-            <MaterialCommunityIcons
-              name={item.icon}
-              size={15}
-              color="#ffffff"
-            />
-          </TouchableOpacity>
-        </View>
-      ))}
-    </Animated.View>
-  );
+  const renderStackItems = () => {
+    return (
+      <Animated.View
+        style={{
+          opacity: opacityValue,
+          position: "absolute",
+          transform: [
+            {
+              translateY: rotationValue.interpolate({
+                inputRange: [0, 1],
+                outputRange: [5 * -items.length, -18 * items.length],
+              }),
+            },
+          ],
+        }}
+      >
+        {items.map((item) => (
+          <View key={item.key} style={{ bottom: 10, marginBottom: 10 }}>
+            <TouchableOpacity
+              onPress={item.onPress}
+              disabled={!isExpanded}
+              style={{
+                alignItems: "center",
+                justifyContent: "center",
+                backgroundColor: "#9B9B9B",
+                borderRadius: 30,
+                height: 25,
+                width: 25,
+              }}
+            >
+              <MaterialCommunityIcons
+                name={item.icon}
+                size={15}
+                color="#ffffff"
+              />
+            </TouchableOpacity>
+          </View>
+        ))}
+      </Animated.View>
+    );
+  };
 
   return (
     <View

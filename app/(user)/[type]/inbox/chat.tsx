@@ -111,7 +111,7 @@ const renderList = ({ item, index }: { item: Chat; index: number }) => {
       <View
         style={
           item.sender.tag == "other"
-            ? {}
+            ? { flex: 1, alignItems: "flex-start" }
             : {
                 flex: 1,
                 flexDirection: "row-reverse",
