@@ -3,6 +3,7 @@ import { StyleSheet, Text, View, ViewStyle, TextStyle } from "react-native";
 
 import MyText from "../MyText";
 import { MyTheme } from "@types";
+import { useTheme } from "@react-navigation/native";
 
 export default function Card({
   style,
@@ -13,8 +14,11 @@ export default function Card({
   radius?: number;
   children?: React.ReactNode;
 }) {
+  const theme = useTheme() as MyTheme;
   return (
-    <View style={[styles({ radius }).cardStyle, { ...style }]}>{children}</View>
+    <View style={[styles({ radius, theme }).cardStyle, { ...style }]}>
+      {children}
+    </View>
   );
 }
 
@@ -56,15 +60,15 @@ function Divider({
 Card.Title = Title;
 Card.Divider = Divider;
 
-const styles = ({ radius }: { radius?: number }) =>
+const styles = ({ radius, theme }: { radius?: number; theme?: MyTheme }) =>
   StyleSheet.create({
     cardStyle: {
       minHeight: 10,
       width: "100%",
-      backgroundColor: "#fff",
+      backgroundColor: theme?.colors.cardBg,
       borderRadius: radius,
       borderWidth: 1,
-      borderColor: "#E4E4E4",
+      borderColor: theme?.colors.cardBorder,
       shadowColor: "#000",
       shadowOffset: {
         width: 0,
