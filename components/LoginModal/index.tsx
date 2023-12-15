@@ -2,6 +2,7 @@ import React from "react";
 import Modal from "react-native-modal";
 import { Link } from "expo-router";
 import { View, StyleSheet, Appearance, ViewStyle } from "react-native";
+import { useTheme } from "@react-navigation/native";
 
 import MyText from "../MyText";
 import MyButton from "../MyButton";
@@ -9,7 +10,6 @@ import MyCheckbox from "../MyCheckbox";
 import MyInput from "../MyInput";
 import { LoginModalProps, MyTheme } from "@types";
 import { GLogo, PLogo } from "@assets/images";
-import { useTheme } from "@react-navigation/native";
 
 function LoginModal({ visible, onClose }: LoginModalProps) {
   const theme = useTheme() as MyTheme;

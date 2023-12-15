@@ -2,7 +2,8 @@ import React, { useState } from "react";
 import { Pressable, StyleSheet, View } from "react-native";
 import { useDispatch } from "react-redux";
 
-import { ToggleSwitch, MyText } from "@components";
+import ToggleSwitch from "../MySwitch/toggleSwitch";
+import MyText from "../MyText";
 import { toggleTheme } from "features/themeSlice";
 
 export interface PList {

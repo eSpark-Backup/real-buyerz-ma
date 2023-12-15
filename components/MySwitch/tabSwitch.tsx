@@ -1,6 +1,5 @@
 import React, { useState, useRef } from "react";
-import { StyleSheet, View, Animated } from "react-native";
-import { TouchableOpacity } from "react-native-gesture-handler";
+import { StyleSheet, View, Animated, TouchableOpacity } from "react-native";
 
 import { colors } from "@theme";
 import MyText from "../MyText";

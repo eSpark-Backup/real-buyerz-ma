@@ -7,12 +7,11 @@ import {
   View,
   ViewStyle,
 } from "react-native";
-import { Entypo } from "@expo/vector-icons";
-import { Feather } from "@expo/vector-icons";
-
-import MyText from "components/MyText";
-import { MyTheme } from "@types";
+import { Entypo, Feather } from "@expo/vector-icons";
 import { useTheme } from "@react-navigation/native";
+
+import MyText from "../MyText";
+import { MyTheme } from "@types";
 
 interface DropdownProps {
   data: string[];

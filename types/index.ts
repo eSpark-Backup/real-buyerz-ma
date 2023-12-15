@@ -71,6 +71,7 @@ export type MyButtonProps = {
   style?: ViewStyle;
   labelStyle?: TextStyle;
   leftIcon?: React.ReactNode;
+  key?: string;
 };
 
 export type LoginModalProps = {

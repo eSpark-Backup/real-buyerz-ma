@@ -9,10 +9,10 @@ import {
   TouchableOpacity,
   Animated,
   Easing,
-  TouchableWithoutFeedback,
 } from "react-native";
 import { Feather } from "@expo/vector-icons";
 import { useTheme } from "@react-navigation/native";
+import { router } from "expo-router";
 
 import {
   Card,
@@ -20,13 +20,12 @@ import {
   MyAppBar,
   GapView,
   MyHeader,
+  HomeHeader,
   LoginModal,
 } from "@components";
 import { AgentHome } from "@assets/images";
 import { WINDOW_WIDTH } from "@constants";
-import { router } from "expo-router";
 import { MyTheme } from "@types";
-import HomeHeader from "components/HomeHeader";
 
 export default function Home() {
   const theme = useTheme() as MyTheme;

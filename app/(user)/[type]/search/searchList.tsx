@@ -1,5 +1,6 @@
-import React from "react";
-import { StyleSheet, View, FlatList } from "react-native";
+import React, { useEffect } from "react";
+import { StyleSheet, View, FlatList, Image } from "react-native";
+import { useLocalSearchParams } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import { useTheme } from "@react-navigation/native";
 
@@ -78,6 +79,9 @@ const testData: SearchList[] = [
 
 export default function SearchList() {
   const theme = useTheme() as MyTheme;
+  const params = useLocalSearchParams();
+
+  console.log("para", params);
 
   return (
     <View style={styles(theme).container}>

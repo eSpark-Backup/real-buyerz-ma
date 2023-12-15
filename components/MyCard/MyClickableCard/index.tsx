@@ -5,12 +5,12 @@ import {
   TouchableWithoutFeedback,
   TouchableOpacity,
 } from "react-native";
-
-import MyText from "components/MyText";
-import GapView from "components/GapView";
-import Card from "components/Card";
-import { MyTheme } from "@types";
 import { useTheme } from "@react-navigation/native";
+
+import MyText from "../../MyText";
+import GapView from "../../GapView";
+import Card from "../../Card";
+import { MyTheme } from "@types";
 
 interface IClickableCard {
   title: string;

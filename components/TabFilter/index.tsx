@@ -1,8 +1,8 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { ScrollView, StyleSheet, TouchableOpacity, View } from "react-native";
 
-import Card from "components/Card";
-import MyText from "components/MyText";
+import Card from "../Card";
+import MyText from "../MyText";
 import { SearchDataProps } from "@types";
 
 interface TabFilterProps {

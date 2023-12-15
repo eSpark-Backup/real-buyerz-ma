@@ -6,9 +6,8 @@ import {
   ImageBackground,
 } from "react-native";
 
-import Card from "components/Card";
-import MyText from "components/MyText";
-import { Entypo } from "@expo/vector-icons";
+import Card from "../Card";
+import MyText from "../MyText";
 import { LeftIconCarousel, RightIconCarousel } from "@assets/images/svg";
 import { MyTheme } from "@types";
 import { useTheme } from "@react-navigation/native";
@@ -86,7 +85,6 @@ const styles = (theme?: MyTheme) =>
       alignItems: "center",
       alignContent: "center",
       paddingVertical: 10,
-
       backgroundColor: theme?.colors.background,
     },
     dFlex: {

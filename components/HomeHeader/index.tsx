@@ -9,7 +9,14 @@ export default function HomeHeader() {
   const theme = useTheme() as MyTheme;
   return (
     <View
-      style={[styles.container, { backgroundColor: theme.colors.background }]}
+      style={[
+        styles.container,
+        {
+          backgroundColor: theme.colors.background,
+          borderBottomWidth: 1,
+          borderColor: theme.colors.border,
+        },
+      ]}
     >
       <View style={styles.left}>
         <PLogo />

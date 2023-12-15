@@ -1,9 +1,15 @@
 import React, { useEffect } from "react";
-import { Appearance, StyleSheet, Text, View } from "react-native";
-
-import MyText from "components/MyText";
-import MyAvatar from "components/MyAvatar";
+import {
+  Appearance,
+  StyleSheet,
+  Text,
+  View,
+  TouchableOpacity,
+} from "react-native";
 import { useTheme } from "@react-navigation/native";
+
+import MyText from "../MyText";
+import MyAvatar from "../MyAvatar";
 import { MyTheme } from "@types";
 
 export interface IList {
@@ -12,6 +18,7 @@ export interface IList {
   time: string;
   count?: string;
   avatarUrl: string;
+  onPress?: () => void;
 }
 
 export default function InboxList({
@@ -20,12 +27,13 @@ export default function InboxList({
   time,
   count,
   avatarUrl,
+  onPress,
 }: IList) {
   const theme = useTheme() as MyTheme;
   const colorScheme = Appearance.getColorScheme();
 
   return (
-    <View style={styles.wrapper}>
+    <TouchableOpacity style={styles.wrapper} onPress={onPress}>
       <View style={[styles.dflex, count ? styles.countStyle : null]}>
         <View style={styles.avatarStyle}>
           <MyAvatar size={50} imageUrl={avatarUrl} />
@@ -48,7 +56,7 @@ export default function InboxList({
           )}
         </View>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 }
 
@@ -64,11 +72,17 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     paddingVertical: 15,
   },
+  countStyle: {
+    backgroundColor: "#FFF9F6",
+    paddingHorizontal: 10,
+    paddingVertical: 15,
+    overflow: "hidden",
+  },
   avatarStyle: {
+    flex: 1,
     justifyContent: "center",
     alignContent: "center",
     alignItems: "center",
-    flex: 1,
   },
   textStyle: {
     flex: 3,
@@ -89,12 +103,6 @@ const styles = StyleSheet.create({
     width: 35,
     height: 35,
     marginTop: 3,
-  },
-  countStyle: {
-    backgroundColor: "#FFF9F6",
-    paddingHorizontal: 10,
-    paddingVertical: 15,
-    overflow: "hidden",
   },
   divider: {
     borderBottomColor: "#E9E9E9",

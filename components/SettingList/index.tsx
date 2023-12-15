@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { Pressable, StyleSheet, View } from "react-native";
 import { useDispatch } from "react-redux";
 
-import MyText from "components/MyText";
 import {
   ArrowRight,
   FeedBackIcon,
@@ -12,9 +11,9 @@ import {
   PrivacyPolicyIcon,
   TermConditionsIcon,
 } from "@assets/images/svg";
-import { ToggleSwitch } from "components/MySwitch";
 import { toggleTheme } from "features/themeSlice";
-import { TouchableOpacity } from "react-native-gesture-handler";
+import MyText from "../MyText";
+import { ToggleSwitch } from "../MySwitch";
 
 export interface IList {
   title: string;
@@ -27,7 +26,6 @@ interface SvgIcon {
 }
 
 export default function InboxList({ title, indexIcon, onPress }: IList) {
-  const dispatch = useDispatch();
   const [switchValue, setSwitchValue] = useState(false);
 
   const svgIcons: SvgIcon = {
@@ -54,7 +52,6 @@ export default function InboxList({ title, indexIcon, onPress }: IList) {
             <ToggleSwitch
               value={switchValue}
               onValueChange={() => {
-                dispatch(toggleTheme(!switchValue ? "Dark" : "Default"));
                 setSwitchValue(!switchValue);
               }}
             />

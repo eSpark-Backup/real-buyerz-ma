@@ -7,6 +7,7 @@ import {
   FlatList,
 } from "react-native";
 import { useTheme } from "@react-navigation/native";
+import { router } from "expo-router";
 
 import { ReloadIcon } from "@assets/images";
 import { MyText, InboxList, Card } from "@components";
@@ -125,6 +126,7 @@ const Inbox: React.FC = () => {
                 time={item.time}
                 count={item.count}
                 avatarUrl={item.avatarUrl}
+                onPress={() => router.push("(user)/anon/inbox/chat")}
               />
             )}
             ItemSeparatorComponent={() => (
@@ -142,7 +144,8 @@ export default Inbox;
 const styles = (theme?: MyTheme) =>
   StyleSheet.create({
     wrapper: {
-      paddingBottom: 5,
+      flex: 1,
+      marginBottom: 45,
       paddingHorizontal: 20,
       paddingTop: 20,
       height: "100%",
@@ -150,7 +153,7 @@ const styles = (theme?: MyTheme) =>
     card: {
       borderRadius: 15,
       borderColor: theme?.colors.border,
-      height: "95%",
+      height: "100%",
       borderWidth: 1,
       padding: 0,
       overflow: "hidden",

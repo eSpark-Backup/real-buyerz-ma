@@ -6,7 +6,7 @@ import { Formik } from "formik";
 import ExpoStatusBar from "expo-status-bar/build/ExpoStatusBar";
 
 import { MyButton, MyInput, MyText, MyVerificationModal } from "@components";
-import { OnRadioBtn, OffRadioBtn } from "@assets/images/svg";
+import { OnRadioBtn, OffRadioBtn } from "@assets/images";
 import { ForgotPasswordSchema, ResetPasswordSchema } from "@validations/schema";
 
 type InputType = "email" | "phone number";

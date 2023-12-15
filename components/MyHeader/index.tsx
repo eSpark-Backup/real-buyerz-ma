@@ -3,7 +3,6 @@ import { StyleSheet, View, ViewStyle } from "react-native";
 
 import { NativeStackHeaderProps } from "@react-navigation/native-stack";
 import { BottomTabHeaderProps } from "@react-navigation/bottom-tabs";
-
 import { Entypo, Feather } from "@expo/vector-icons";
 import { router } from "expo-router";
 
@@ -33,7 +32,6 @@ export default function MyHeader({
   hideCenter,
   theme,
 }: HeaderProps & MyProps) {
-  console.log("lay", options.headerStyle);
   const headerStyle = options.headerStyle as ViewStyle;
   return (
     <View style={{ ...styles.container, ...headerStyle }}>

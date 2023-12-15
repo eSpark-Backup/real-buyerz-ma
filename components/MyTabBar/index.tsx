@@ -23,7 +23,6 @@ function MyTabBar({
       {state.routes.map((route, index) => {
         if (route.name !== "index") {
           const { options } = descriptors[route.key];
-          console.log("route", route);
           const label =
             options.tabBarLabel !== undefined
               ? options.tabBarLabel
@@ -112,7 +111,6 @@ const renderTabIcon = (
   theme: MyTheme,
   isFocused?: boolean
 ) => {
-  console.log("routeName", routeName);
   switch (routeName) {
     case "home":
       return (

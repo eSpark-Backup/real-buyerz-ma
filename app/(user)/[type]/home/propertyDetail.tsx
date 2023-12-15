@@ -1,13 +1,18 @@
-import { StyleSheet, View } from "react-native";
 import React from "react";
-
-import CustomSlider from "components/Slider";
-import { Card, MyText, PropertyList, MyAvatar } from "@components";
-import PrimaryBtn from "components/MyButton/primaryBtn";
-import { LocationIcon } from "@assets/images/svg";
+import { StyleSheet, View } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import { MyTheme } from "@types";
 import { useTheme } from "@react-navigation/native";
+
+import {
+  Card,
+  MyText,
+  PropertyList,
+  MyAvatar,
+  CustomSlider,
+  PrimaryBtn,
+} from "@components";
+import { LocationIcon } from "@assets/images/svg";
 
 const PropertyDetail = () => {
   const theme = useTheme() as MyTheme;

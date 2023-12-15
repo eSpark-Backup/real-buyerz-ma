@@ -1,9 +1,9 @@
 import React from "react";
 import { View, StyleSheet, Modal } from "react-native";
-import MyText from "../MyText";
-import MyButton from "../MyButton";
 import { LinearGradient } from "expo-linear-gradient";
 
+import MyText from "../MyText";
+import MyButton from "../MyButton";
 import { SuccessMessageModalProps } from "@types";
 
 const SuccessMessageModal = ({

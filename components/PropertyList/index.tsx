@@ -1,6 +1,9 @@
-import { MyTheme } from "@types";
-import { Card, GapView, MyText } from "components";
 import { FlatList, Image, TouchableOpacity, View } from "react-native";
+
+import { MyTheme } from "@types";
+import Card from "../Card";
+import GapView from "../GapView";
+import MyText from "../MyText";
 
 const PropertyListing = ({
   title,

@@ -118,7 +118,8 @@ const styles = StyleSheet.create({
   wrapper: {
     flex: 1,
     paddingHorizontal: 20,
-    paddingVertical: 15,
+    paddingTop: 15,
+    marginBottom: 35,
   },
   dflexCenter: {
     alignItems: "center",

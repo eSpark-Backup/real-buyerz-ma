@@ -16,7 +16,6 @@ import {
   GapView,
 } from "@components";
 import { UserSignInSchema } from "@validations/schema";
-import SuccessMessageModal from "components/SuccessMessageModal";
 
 export default function signIn() {
   const colorScheme = Appearance.getColorScheme();

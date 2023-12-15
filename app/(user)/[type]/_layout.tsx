@@ -1,7 +1,7 @@
 import React from "react";
 import { StyleSheet } from "react-native";
 import { Tabs } from "expo-router/tabs";
-import { useTheme } from "@react-navigation/native";
+import { useTheme, useNavigation } from "@react-navigation/native";
 
 import { MyTabBar, MyHeader } from "@components";
 import { MyTheme } from "@types";
@@ -13,6 +13,7 @@ export default function UserTypeLayout() {
     <Tabs
       initialRouteName="home"
       backBehavior="initialRoute"
+      // sceneContainerStyle={{ paddingBottom: 35 }}
       screenOptions={{
         headerShown: false,
         headerStyle: styles(theme).headerStyle,
@@ -51,8 +52,17 @@ export default function UserTypeLayout() {
         options={{
           headerShown: true,
           header: (props) => {
+            const searchRoute = props.navigation
+              .getState()
+              .routes.find((item) => item.name === "search");
+            const isSearchList = searchRoute?.state?.index !== 1;
             return (
-              <MyHeader {...props} hideCenter showBackIcon theme={theme} />
+              <MyHeader
+                {...props}
+                hideCenter={isSearchList}
+                showBackIcon
+                theme={theme}
+              />
             );
           },
           title: "Search",
