@@ -27,8 +27,7 @@ const MyListItem: React.FC<MyListItemProps> = ({ item, index, theme, fav }) => {
             text={item.title}
             textColor={theme.colors.listText}
             size={12}
-            style={{ width: "63%" }}
-            numberOfLines={2}
+            style={{ width: "59%" }}
           />
           <View style={styles(theme).row1_inner}>
             <MyText text="PKR " size={12} />
@@ -181,7 +180,7 @@ const styles = (theme?: MyTheme) =>
     sqft: {
       flexDirection: "row",
       alignItems: "center",
-      marginRight: 10,
+      marginRight: 5,
     },
     prim_button: {
       height: 25,
