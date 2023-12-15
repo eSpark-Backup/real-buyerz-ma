@@ -14,6 +14,8 @@ const colors = {
     listText: "#696969",
     positive: "#FFFFFF",
     negative: "#000000",
+    cardBorder: "#E4E4E4",
+    cardBg: "#fff",
   },
   dark: {
     primary: "#FB631C",
@@ -28,6 +30,8 @@ const colors = {
     listText: "#696969", //to be updated
     positive: "#000000",
     negative: "#FFFFFF",
+    cardBorder: "#29292E",
+    cardBg: "#000",
   },
 };
 

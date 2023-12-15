@@ -9,6 +9,8 @@ export type MyTheme = Theme & {
     listText: string;
     positive: string;
     negative: string;
+    cardBorder: string;
+    cardBg: string;
   };
 };
 

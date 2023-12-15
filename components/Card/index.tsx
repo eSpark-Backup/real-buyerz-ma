@@ -56,7 +56,7 @@ function Divider({
 Card.Title = Title;
 Card.Divider = Divider;
 
-const styles = ({ radius, theme }: { radius?: number; theme?: MyTheme }) =>
+const styles = ({ radius }: { radius?: number }) =>
   StyleSheet.create({
     cardStyle: {
       minHeight: 10,
