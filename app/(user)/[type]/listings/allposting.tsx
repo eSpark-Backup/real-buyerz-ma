@@ -47,7 +47,12 @@ export default function AllPosting() {
       </View>
       <View style={styles.top_selection_btns}>
         {filterBtns.map((item, index) => (
-          <FilterBtnComp item={item} index={index} theme={theme} />
+          <FilterBtnComp
+            item={item}
+            index={index}
+            theme={theme}
+            key={item.id.toString()}
+          />
         ))}
       </View>
     </View>
@@ -65,7 +70,7 @@ const FilterBtnComp = ({
 }) => {
   return (
     <MyButton
-      key={item.id}
+      key={item.id.toString()}
       label={`${item.label} (${item.count.toString()})`}
       labelStyle={{
         color: item.selected ? "#ffffff" : theme.colors.primary,
