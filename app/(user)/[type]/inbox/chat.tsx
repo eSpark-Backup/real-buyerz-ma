@@ -33,28 +33,28 @@ const testData: Chat[] = [
     message:
       "Hello, finally i found time to text you please help in finding the right home for me. Lorem ipsum.",
     timestamp: date,
-    sender: { tag: "other", image: "https://i.pravatar.cc/300" },
+    sender: { tag: "other", image: "https://i.pravatar.cc/300?img=47" },
   },
   {
     message: "Will you?",
     timestamp: date,
-    sender: { tag: "other", image: "https://i.pravatar.cc/300" },
+    sender: { tag: "other", image: "https://i.pravatar.cc/300?img=47" },
   },
   {
     message: "Hi, sure!",
     timestamp: date,
-    sender: { tag: "me", image: "https://i.pravatar.cc/300" },
+    sender: { tag: "me", image: "https://i.pravatar.cc/300?img=47" },
   },
   {
     message: "Call?",
     timestamp: date,
-    sender: { tag: "other", image: "https://i.pravatar.cc/300" },
+    sender: { tag: "other", image: "https://i.pravatar.cc/300?img=47" },
   },
   {
     message:
       "You can directly liaise with me about the range. We want to negotiate a settlement that is fair to both sides. Lorem Ipsum,",
     timestamp: date,
-    sender: { tag: "me", image: "https://i.pravatar.cc/300" },
+    sender: { tag: "me", image: "https://i.pravatar.cc/300?img=47" },
   },
 ];
 
@@ -80,7 +80,7 @@ const renderHeader = (theme?: MyTheme) => {
     <View style={styles.header}>
       <View style={{ flexDirection: "row", alignItems: "center" }}>
         <Image
-          source={{ uri: "https://i.pravatar.cc/300" }}
+          source={{ uri: "https://i.pravatar.cc/300?img=47" }}
           style={{ width: 35, height: 35, borderRadius: 35, marginRight: 20 }}
         />
         <MyText
@@ -96,40 +96,75 @@ const renderHeader = (theme?: MyTheme) => {
 };
 
 const renderList = ({ item, index }: { item: Chat; index: number }) => {
+  console.log("tag", testData[index - 1]?.sender?.tag === item.sender.tag);
+  const isPreviousMsgSame =
+    testData[index - 1]?.sender?.tag === item.sender.tag;
+
   return (
-    <View style={styles.content}>
-      {item.sender.tag == "other" ? (
-        <Image
-          source={{ uri: "https://i.pravatar.cc/300" }}
-          style={{ width: 25, height: 25, borderRadius: 25, marginRight: 10 }}
-        />
-      ) : (
-        <View
-          style={{ width: 25, height: 25, borderRadius: 25, marginRight: 10 }}
-        />
-      )}
+    <>
       <View
-        style={
-          item.sender.tag == "other"
-            ? { flex: 1, alignItems: "flex-start" }
-            : {
-                flex: 1,
-                flexDirection: "row-reverse",
-              }
-        }
+        style={[
+          styles.content,
+          {
+            paddingVertical: isPreviousMsgSame ? 0 : undefined,
+          },
+        ]}
       >
-        <View
-          style={item.sender.tag == "other" ? styles.incoming : styles.outgoing}
-        >
-          <MyText
-            text={item.message}
-            weight="400"
-            size={12}
-            style={{ textAlign: item.sender.tag == "other" ? "left" : "right" }}
+        {item.sender.tag == "other" && !isPreviousMsgSame ? (
+          <Image
+            source={{ uri: item.sender.image }}
+            style={{ width: 25, height: 25, borderRadius: 25, marginRight: 10 }}
           />
+        ) : (
+          <View
+            style={{ width: 25, height: 25, borderRadius: 25, marginRight: 10 }}
+          />
+        )}
+        <View
+          style={
+            item.sender.tag == "other"
+              ? { flex: 1, alignItems: "flex-start" }
+              : {
+                  flex: 1,
+                  flexDirection: "row-reverse",
+                }
+          }
+        >
+          <View
+            style={
+              item.sender.tag == "other" ? styles.incoming : styles.outgoing
+            }
+          >
+            <MyText
+              text={item.message}
+              weight="400"
+              size={12}
+              style={{
+                textAlign: item.sender.tag == "other" ? "left" : "right",
+              }}
+            />
+          </View>
         </View>
       </View>
-    </View>
+      {index == testData.length - 2 && (
+        <View
+          style={{
+            justifyContent: "center",
+            alignItems: "center",
+            flexDirection: "row",
+          }}
+        >
+          <Card.Divider />
+          <MyText
+            text="2 days ago"
+            textColor="#969696"
+            size={10}
+            style={{ paddingHorizontal: 10 }}
+          />
+          <Card.Divider />
+        </View>
+      )}
+    </>
   );
 };
 
@@ -189,7 +224,7 @@ const styles = StyleSheet.create({
     width: "100%",
     flexDirection: "row",
     padding: 20,
-    paddingBottom: 5,
+    // paddingBottom: 5,
   },
   incoming: {
     padding: 10,

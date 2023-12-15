@@ -2,10 +2,12 @@ import React from "react";
 import { StyleSheet, View, FlatList, ScrollView, Image } from "react-native";
 import { useTheme } from "@react-navigation/native";
 import { Feather } from "@expo/vector-icons";
+import { router } from "expo-router";
 
 import { Card, GapView, MyButton, MyText, SearchBar } from "@components";
 import { MyTheme } from "@types";
 import { MiFilter } from "@assets/images";
+import { TouchableOpacity } from "react-native-gesture-handler";
 
 interface Posting {
   id: number;
@@ -122,7 +124,11 @@ export default function Listings() {
   const theme = useTheme() as MyTheme;
 
   return (
-    <ScrollView style={{ flex: 1 }} nestedScrollEnabled>
+    <ScrollView
+      style={{ flex: 1 }}
+      nestedScrollEnabled
+      showsVerticalScrollIndicator={false}
+    >
       <View style={styles.container}>
         <View style={styles.top}>
           <MyText text="Dashboard" size={20} weight="600" />
@@ -154,7 +160,16 @@ export default function Listings() {
               }}
             >
               <MyText text="Your Posting" weight="600" size={16} />
-              <MyText text="see all postings" />
+              <TouchableOpacity
+                activeOpacity={1}
+                onPress={() => router.push("(user)/anon/listings/allposting")}
+              >
+                <MyText
+                  text="see all postings"
+                  textColor={theme.colors.secondary}
+                  style={{ textDecorationLine: "underline" }}
+                />
+              </TouchableOpacity>
             </View>
             <View
               style={{
@@ -200,7 +215,11 @@ export default function Listings() {
                 ListHeaderComponent={() => (
                   <View>
                     <View style={{ height: 35 }}>
-                      <SearchBar button placeholder="Search by name" />
+                      <SearchBar
+                        button
+                        placeholder="Search by name"
+                        searchBtnColor={theme.colors.secondary}
+                      />
                     </View>
                     <View style={{ alignItems: "flex-end" }}>
                       <MyButton

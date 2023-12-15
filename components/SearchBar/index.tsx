@@ -12,6 +12,7 @@ interface SearchBarProps {
   onPress?: () => void;
   leftIcon?: boolean;
   placeholder?: string;
+  searchBtnColor?: string;
 }
 
 export default function SearchBar({
@@ -20,6 +21,7 @@ export default function SearchBar({
   onPress,
   leftIcon,
   placeholder,
+  searchBtnColor = "#fb631c",
 }: SearchBarProps) {
   const theme = useTheme() as MyTheme;
   return (
@@ -60,7 +62,7 @@ export default function SearchBar({
           style={{
             justifyContent: "center",
             alignItems: "center",
-            backgroundColor: clearIcon ? "#ffffff" : "#fb631c",
+            backgroundColor: clearIcon ? "#ffffff" : searchBtnColor,
             height: "100%",
             width: "14%",
             borderTopRightRadius: 5,
