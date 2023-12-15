@@ -8,8 +8,10 @@ import {
   ViewStyle,
 } from "react-native";
 import { Entypo, Feather } from "@expo/vector-icons";
+import { useTheme } from "@react-navigation/native";
 
 import MyText from "../MyText";
+import { MyTheme } from "@types";
 
 interface DropdownProps {
   data: string[];
@@ -30,6 +32,7 @@ export default function MyDropdown({
   style,
   placeholderColor,
 }: DropdownProps) {
+  const theme = useTheme() as MyTheme;
   const [show, setShow] = useState(false);
   const [selectedItems, setSelectedItems] = useState<string[]>([]);
   const [label, setLabel] = useState("");
@@ -85,7 +88,7 @@ export default function MyDropdown({
   return (
     <View
       style={[
-        styles.container,
+        styles(theme).container,
         { zIndex: zIndex },
         show ? { borderBottomRightRadius: 0, borderBottomLeftRadius: 0 } : {},
         style,
@@ -163,14 +166,15 @@ export default function MyDropdown({
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    width: 150,
-    height: 30,
-    borderWidth: 1,
-    borderRadius: 5,
-    borderColor: "#E7E7E7",
-    alignItems: "center",
-    zIndex: 10,
-  },
-});
+const styles = (theme?: MyTheme) =>
+  StyleSheet.create({
+    container: {
+      width: 150,
+      height: 30,
+      borderWidth: 1,
+      borderRadius: 5,
+      borderColor: theme?.colors.border,
+      alignItems: "center",
+      zIndex: 10,
+    },
+  });

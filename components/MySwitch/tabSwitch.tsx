@@ -3,6 +3,8 @@ import { StyleSheet, View, Animated, TouchableOpacity } from "react-native";
 
 import { colors } from "@theme";
 import MyText from "../MyText";
+import { useTheme } from "@react-navigation/native";
+import { MyTheme } from "@types";
 
 export interface IMySwitch {
   titleSwitchOne: string;
@@ -19,7 +21,8 @@ const TabSwitch = ({
   onPressSwitchTwo,
   bgColor,
 }: IMySwitch) => {
-  const [activeButton, setActiveButton] = useState(null);
+  const theme = useTheme() as MyTheme;
+  const [activeButton, setActiveButton] = useState(titleSwitchOne);
   const slideAnim = useRef(new Animated.Value(0)).current;
 
   const handleButtonPress = (buttonName: any) => {
@@ -33,9 +36,9 @@ const TabSwitch = ({
     }
   };
   return (
-    <View style={[styles.switchWrapper, { backgroundColor: bgColor }]}>
+    <View style={[styles(theme).switchWrapper, { backgroundColor: bgColor }]}>
       <TouchableOpacity
-        style={[styles.buttonStyle]}
+        style={[styles(theme).buttonStyle]}
         onPress={() => {
           handleButtonPress(titleSwitchOne);
           onPressSwitchOne?.();
@@ -44,12 +47,14 @@ const TabSwitch = ({
         <MyText
           text={titleSwitchOne}
           textColor={
-            activeButton === titleSwitchOne ? colors.dark.primary : "#000000"
+            activeButton === titleSwitchOne
+              ? theme.colors.primary
+              : theme.colors.negative
           }
         />
       </TouchableOpacity>
       <TouchableOpacity
-        style={[styles.buttonStyle]}
+        style={[styles(theme).buttonStyle]}
         onPress={() => {
           handleButtonPress(titleSwitchTwo);
           onPressSwitchTwo?.();
@@ -58,13 +63,15 @@ const TabSwitch = ({
         <MyText
           text={titleSwitchTwo}
           textColor={
-            activeButton === titleSwitchTwo ? colors.dark.primary : "#000000"
+            activeButton === titleSwitchTwo
+              ? theme.colors.primary
+              : theme.colors.negative
           }
         />
       </TouchableOpacity>
       <Animated.View
         style={[
-          styles.slider,
+          styles(theme).slider,
           {
             transform: [
               {
@@ -83,30 +90,31 @@ const TabSwitch = ({
 
 export default TabSwitch;
 
-const styles = StyleSheet.create({
-  switchWrapper: {
-    backgroundColor: colors.light.border,
-    flexDirection: "row",
-    width: 107,
-    justifyContent: "space-between",
-    height: 30,
-    alignItems: "center",
-    borderRadius: 35,
-  },
-  buttonStyle: {
-    justifyContent: "center",
-    alignItems: "center",
-    width: 54,
-    height: 30,
-  },
-  slider: {
-    position: "absolute",
-    backgroundColor: "#FFD9C7",
-    width: 54,
-    height: 30,
-    borderRadius: 15,
-    borderColor: "#FB631C",
-    borderWidth: 1,
-    zIndex: -1,
-  },
-});
+const styles = (theme?: MyTheme) =>
+  StyleSheet.create({
+    switchWrapper: {
+      backgroundColor: colors.light.border,
+      flexDirection: "row",
+      width: 107,
+      justifyContent: "space-between",
+      height: 30,
+      alignItems: "center",
+      borderRadius: 35,
+    },
+    buttonStyle: {
+      justifyContent: "center",
+      alignItems: "center",
+      width: 54,
+      height: 30,
+    },
+    slider: {
+      position: "absolute",
+      backgroundColor: "#FFD9C7",
+      width: 54,
+      height: 30,
+      borderRadius: 15,
+      borderColor: "#FB631C",
+      borderWidth: 1,
+      zIndex: -1,
+    },
+  });

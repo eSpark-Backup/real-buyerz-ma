@@ -75,21 +75,25 @@ export default function Settings() {
           />
         </View>
         <View style={styles.dFlexJustify}>
-          <MyClickableCard
-            onPress={() => console.log("profile")}
-            title="Profile Settings"
-          >
-            <ProfileIcon />
-          </MyClickableCard>
-          <MyClickableCard
-            onPress={() => {
-              console.log("Favourites");
-              router.push("(user)/anon/settings/favoritesList");
-            }}
-            title="Favourites"
-          >
-            <HeartIcon />
-          </MyClickableCard>
+          <View style={styles.cards}>
+            <MyClickableCard
+              onPress={() => console.log("profile")}
+              title="Profile Settings"
+            >
+              <ProfileIcon />
+            </MyClickableCard>
+          </View>
+          <View style={styles.cards}>
+            <MyClickableCard
+              onPress={() => {
+                console.log("Favourites");
+                router.push("(user)/anon/settings/favoritesList");
+              }}
+              title="Favourites"
+            >
+              <HeartIcon />
+            </MyClickableCard>
+          </View>
         </View>
         <AddCard
           label="Looking to sell or rent out your property?"
@@ -126,9 +130,14 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     flexDirection: "row",
     marginTop: 4,
+    width: "100%",
+    gap: 30,
   },
   ListItemWrapper: {
     marginTop: 15,
   },
   mt5: { marginTop: 5 },
+  cards: {
+    flex: 1,
+  },
 });

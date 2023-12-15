@@ -1,8 +1,16 @@
-import React from "react";
-import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
+import React, { useEffect } from "react";
+import {
+  Appearance,
+  StyleSheet,
+  Text,
+  View,
+  TouchableOpacity,
+} from "react-native";
+import { useTheme } from "@react-navigation/native";
 
 import MyText from "../MyText";
 import MyAvatar from "../MyAvatar";
+import { MyTheme } from "@types";
 
 export interface IList {
   title: string;
@@ -21,6 +29,9 @@ export default function InboxList({
   avatarUrl,
   onPress,
 }: IList) {
+  const theme = useTheme() as MyTheme;
+  const colorScheme = Appearance.getColorScheme();
+
   return (
     <TouchableOpacity style={styles.wrapper} onPress={onPress}>
       <View style={[styles.dflex, count ? styles.countStyle : null]}>
@@ -28,7 +39,12 @@ export default function InboxList({
           <MyAvatar size={50} imageUrl={avatarUrl} />
         </View>
         <View style={styles.textStyle}>
-          <MyText text={title} size={16} weight="500" />
+          <MyText
+            text={title}
+            size={16}
+            weight="500"
+            textColor={colorScheme === "dark" ? "#919090" : theme.colors.text}
+          />
           <MyText text={subTitle} textColor="#909394" />
         </View>
         <View style={styles.dateTimeStyle}>

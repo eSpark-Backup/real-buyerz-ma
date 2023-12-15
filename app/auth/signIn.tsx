@@ -30,6 +30,7 @@ export default function signIn() {
             style={{ textDecorationLine: "underline" }}
             size={16}
             weight="500"
+            textColor="black"
           />
         </TouchableOpacity>
         <MaterialIcons name="keyboard-arrow-right" size={24} color="black" />

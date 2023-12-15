@@ -17,6 +17,7 @@ interface IPropsBtn {
   width?: any;
   btnStyle?: ViewStyle;
   labelStyle?: TextStyle;
+  paddingV?: number;
   weight?:
     | "normal"
     | "bold"
@@ -39,6 +40,7 @@ const PrimaryBtn = ({
   btnStyle,
   labelStyle,
   weight,
+  paddingV,
 }: IPropsBtn) => {
   return (
     <TouchableOpacity
@@ -47,7 +49,7 @@ const PrimaryBtn = ({
           backgroundColor: "#FF631C",
           alignItems: "center",
           justifyContent: "center",
-          paddingVertical: 7,
+          paddingVertical: paddingV ? paddingV : 7,
           paddingHorizontal: 10,
           borderRadius: 3,
           width: width,

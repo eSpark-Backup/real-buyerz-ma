@@ -1,6 +1,8 @@
 import React from "react";
 import { StyleSheet, View } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
+import { MyTheme } from "@types";
+import { useTheme } from "@react-navigation/native";
 
 import {
   Card,
@@ -13,6 +15,7 @@ import {
 import { LocationIcon } from "@assets/images/svg";
 
 const PropertyDetail = () => {
+  const theme = useTheme() as MyTheme;
   const images = [
     "https://picsum.photos/id/299/620",
     "https://picsum.photos/id/400/620",
@@ -69,9 +72,9 @@ const PropertyDetail = () => {
 
   const colorDetector = (value: number) => {
     if (value % 2 === 0) {
-      return "#ffffff";
+      return theme.colors.positive;
     } else {
-      return "#F4F4F4";
+      return theme.colors.popupbg;
     }
   };
   const borderRadiusDetector = (index: number, count: number) => {
@@ -82,20 +85,20 @@ const PropertyDetail = () => {
   };
   return (
     <ScrollView>
-      <View style={styles.wrapper}>
+      <View style={styles(theme).wrapper}>
         <CustomSlider images={images} title={"4 BEDROOMS APARTMENT"} />
-        <Card style={styles.cardWrapper}>
+        <Card style={styles(theme).cardWrapper}>
           <View>
             <MyAvatar size={70} imageUrl="https://picsum.photos/id/151/130" />
           </View>
-          <View style={styles.textWrapper}>
+          <View style={styles(theme).textWrapper}>
             <MyText
               text="Moin khan"
               size={16}
               weight="600"
               textColor="#696969"
             />
-            <View style={styles.dFlex}>
+            <View style={styles(theme).dFlex}>
               <LocationIcon />
               <MyText
                 text="Lahore-Pakistan"
@@ -104,7 +107,7 @@ const PropertyDetail = () => {
                 weight="600"
               />
             </View>
-            <View style={styles.btnWrapper}>
+            <View style={styles(theme).btnWrapper}>
               <PrimaryBtn
                 title="View"
                 weight="600"
@@ -129,23 +132,28 @@ const PropertyDetail = () => {
             </View>
           </View>
         </Card>
-        <Card style={styles.overViewCard}>
-          <View style={styles.headingStyle}>
+        <Card style={styles(theme).overViewCard}>
+          <View style={styles(theme).headingStyle}>
             <MyText
               text="Overview"
               size={16}
               weight="600"
-              textColor="#000000"
+              textColor={theme.colors.negative}
             />
           </View>
-          <View style={styles.detailsWrapper}>
-            <MyText text="Details" size={16} weight="600" textColor="#000000" />
-            <Card style={styles.table}>
+          <View style={styles(theme).detailsWrapper}>
+            <MyText
+              text="Details"
+              size={16}
+              weight="600"
+              textColor={theme.colors.negative}
+            />
+            <Card style={styles(theme).table}>
               {tableList.map((item, index) => (
                 <View
                   key={index}
                   style={[
-                    styles.row,
+                    styles(theme).row,
                     { backgroundColor: colorDetector(index) },
                     {
                       borderRadius: borderRadiusDetector(
@@ -160,30 +168,30 @@ const PropertyDetail = () => {
                     size={13}
                     weight="400"
                     textColor="#696969"
-                    style={styles.columnOne}
+                    style={styles(theme).columnOne}
                   />
                   <MyText
                     text={item.value}
                     size={13}
                     weight="400"
-                    textColor="#333333"
-                    style={styles.columnTwo}
+                    textColor={theme.colors.text}
+                    style={styles(theme).columnTwo}
                   />
                 </View>
               ))}
             </Card>
-            <View style={styles.mt5}>
+            <View style={styles(theme).mt5}>
               <MyText
                 text="Description"
                 size={16}
                 weight="600"
-                textColor="#000000"
+                textColor={theme.colors.negative}
               />
-              <View style={styles.descriptionWrapper}>
+              <View style={styles(theme).descriptionWrapper}>
                 {description.map((item, index) => (
                   <MyText
                     key={index}
-                    textColor="#333333"
+                    textColor={theme.colors.text}
                     text={item}
                     size={14}
                     weight="400"
@@ -191,18 +199,18 @@ const PropertyDetail = () => {
                 ))}
               </View>
             </View>
-            <View style={styles.mt5}>
+            <View style={styles(theme).mt5}>
               <MyText text="Nearby Locations" size={16} weight="600" />
               <MyText text="Amenities" size={16} weight="600" />
               {amentiesList.map((item, index) => (
                 <MyText key={index} text={item} size={14} weight="400" />
               ))}
             </View>
-            <View style={styles.mt5}>
+            <View style={styles(theme).mt5}>
               <MyText text="Area" size={16} weight="600" />
               <MyText text={"250000 sq.m"} size={14} weight="400" />
             </View>
-            <View style={styles.mt5}>
+            <View style={styles(theme).mt5}>
               <MyText text="Demand" size={16} weight="600" />
               <MyText text={"1 Crore 50 lac"} size={14} weight="400" />
             </View>
@@ -216,74 +224,80 @@ const PropertyDetail = () => {
 
 export default PropertyDetail;
 
-const styles = StyleSheet.create({
-  wrapper: {
-    flex: 1,
-    padding: 25,
-    paddingBottom: 40,
-  },
-  cardWrapper: {
-    display: "flex",
-    flexDirection: "row",
-    alignItems: "center",
-    paddingVertical: 15,
-    paddingHorizontal: 10,
-    marginTop: 25,
-    borderRadius: 10,
-    justifyContent: "space-around",
-  },
+const styles = (theme?: MyTheme) =>
+  StyleSheet.create({
+    wrapper: {
+      flex: 1,
+      padding: 25,
+    },
+    cardWrapper: {
+      display: "flex",
+      flexDirection: "row",
+      alignItems: "center",
+      paddingVertical: 15,
+      paddingHorizontal: 10,
+      marginTop: 25,
+      borderRadius: 10,
+      justifyContent: "space-around",
+      backgroundColor: theme?.colors.background,
+      borderColor: theme?.colors.border,
+    },
 
-  dFlex: {
-    display: "flex",
-    flexDirection: "row",
-    alignItems: "center",
-    marginTop: 5,
-  },
-  textWrapper: {
-    marginTop: 5,
-  },
-  btnWrapper: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    marginTop: 15,
-  },
-  overViewCard: {
-    marginTop: 30,
-  },
-  headingStyle: {
-    justifyContent: "center",
-    alignContent: "center",
-    alignItems: "center",
-    padding: 10,
-    borderBottomWidth: 1, // Set the width of the bottom border
-    borderBottomColor: "#E9E9E9", // Set the color of the bottom border
-    borderBottomStyle: "solid", // Se
-  },
-  detailsWrapper: {
-    padding: 15,
-  },
-  table: {
-    borderRadius: 10,
-    marginTop: 10,
-  },
-  row: {
-    flexDirection: "row",
-    paddingVertical: 10,
-    paddingHorizontal: 10,
-  },
-  columnOne: {
-    flex: 1,
-  },
-  columnTwo: {
-    flex: 3,
-  },
-  descriptionWrapper: {
-    marginTop: 10,
-    height: 165,
-    justifyContent: "space-between",
-  },
-  mt5: {
-    marginTop: 15,
-  },
-});
+    dFlex: {
+      display: "flex",
+      flexDirection: "row",
+      alignItems: "center",
+      marginTop: 5,
+    },
+    textWrapper: {
+      marginTop: 5,
+    },
+    btnWrapper: {
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "space-between",
+      marginTop: 15,
+    },
+    overViewCard: {
+      marginTop: 30,
+      backgroundColor: theme?.colors.background,
+      borderColor: theme?.colors.border,
+    },
+    headingStyle: {
+      justifyContent: "center",
+      alignContent: "center",
+      alignItems: "center",
+      padding: 10,
+      borderBottomWidth: 1, // Set the width of the bottom border
+      borderBottomColor: theme?.colors.border, // Set the color of the bottom border
+      borderBottomStyle: "solid", // Se
+    },
+    detailsWrapper: {
+      padding: 15,
+    },
+    table: {
+      borderRadius: 10,
+      marginTop: 10,
+      backgroundColor: theme?.colors.background,
+      borderColor: theme?.colors.border,
+    },
+    row: {
+      flexDirection: "row",
+      paddingVertical: 10,
+      paddingHorizontal: 10,
+    },
+    columnOne: {
+      flex: 1,
+    },
+    columnTwo: {
+      flex: 3,
+    },
+    descriptionWrapper: {
+      marginTop: 10,
+      height: 165,
+      justifyContent: "space-between",
+    },
+    mt5: {
+      marginTop: 15,
+    },
+  });

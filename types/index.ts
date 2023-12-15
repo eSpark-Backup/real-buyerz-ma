@@ -7,6 +7,10 @@ export type MyTheme = Theme & {
     popupbg: string;
     placeholderText: string;
     listText: string;
+    positive: string;
+    negative: string;
+    cardBorder: string;
+    cardBg: string;
   };
 };
 

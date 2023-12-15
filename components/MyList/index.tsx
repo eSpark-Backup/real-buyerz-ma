@@ -18,7 +18,6 @@ const MyListItem: React.FC<MyListItemProps> = ({ item, index, theme, fav }) => {
     <View style={styles(theme).searchItem}>
       <View>
         <Image source={{ uri: item.image }} style={styles(theme).image} />
-
         <TouchableOpacity style={styles(theme).likeBtn}>
           {fav ? <LikeActiveButton /> : <LikeButton />}
         </TouchableOpacity>
@@ -29,8 +28,7 @@ const MyListItem: React.FC<MyListItemProps> = ({ item, index, theme, fav }) => {
             text={item.title}
             textColor={theme.colors.listText}
             size={12}
-            style={{ width: "70%" }}
-            numberOfLines={2}
+            style={{ width: "59%" }}
           />
           <View style={styles(theme).row1_inner}>
             <MyText text="PKR " size={12} />
@@ -49,7 +47,7 @@ const MyListItem: React.FC<MyListItemProps> = ({ item, index, theme, fav }) => {
           numberOfLines={2}
         />
         <View style={styles(theme).row1}>
-          <View style={styles(theme).row1_inner}>
+          <View style={styles(theme).row3_inner}>
             <BedOutline />
             <MyText
               text={item.beds.toString().padStart(2, "0")}
@@ -58,7 +56,7 @@ const MyListItem: React.FC<MyListItemProps> = ({ item, index, theme, fav }) => {
               weight="300"
             />
           </View>
-          <View style={styles(theme).row1_inner}>
+          <View style={styles(theme).row3_inner}>
             <BathOutline />
             <MyText
               text={item.bathroom.toString().padStart(2, "0")}
@@ -67,7 +65,7 @@ const MyListItem: React.FC<MyListItemProps> = ({ item, index, theme, fav }) => {
               weight="300"
             />
           </View>
-          <View style={styles(theme).row1_inner}>
+          <View style={styles(theme).row3_inner}>
             <Parking />
             <MyText
               text={item.parking.toString().padStart(2, "0")}
@@ -94,12 +92,14 @@ const MyListItem: React.FC<MyListItemProps> = ({ item, index, theme, fav }) => {
               textColor="#ffffff"
               width="47%"
               weight="500"
+              paddingV={6}
               onPress={() => console.log("asd")}
             />
             <PrimaryBtn
               title="Agent"
               textColor="#ffffff"
               width="47%"
+              paddingV={6}
               onPress={() => console.log("asd")}
             />
           </View>
@@ -160,7 +160,7 @@ const styles = (theme?: MyTheme) =>
     likeBtn: {
       position: "absolute",
       alignSelf: "flex-end",
-      padding: 4,
+      padding: 1,
     },
     row1: {
       flexDirection: "row",
@@ -170,12 +170,18 @@ const styles = (theme?: MyTheme) =>
     row1_inner: {
       flexDirection: "row",
       alignItems: "center",
+      height: "100%",
+      paddingBottom: 13,
+    },
+    row3_inner: {
+      flexDirection: "row",
+      alignItems: "center",
     },
     miniText: { marginLeft: 5 },
     sqft: {
       flexDirection: "row",
       alignItems: "center",
-      marginRight: 10,
+      marginRight: 5,
     },
     prim_button: {
       height: 25,
@@ -184,7 +190,7 @@ const styles = (theme?: MyTheme) =>
       flexDirection: "row",
       alignItems: "center",
       justifyContent: "space-between",
-      width: "85%",
+      width: "88%",
     },
   });
 
