@@ -11,6 +11,9 @@ export type MyTheme = Theme & {
     negative: string;
     cardBorder: string;
     cardBg: string;
+    selected: string;
+    chat?: string;
+    dropdownBorder?: string;
   };
 };
 

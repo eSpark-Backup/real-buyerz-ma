@@ -360,13 +360,13 @@ export const PropertyListing = ({
             <MyText
               text="Contact for price"
               size={10}
-              textColor="#000000"
+              textColor={theme?.colors.text}
               style={{ fontWeight: "500", marginBottom: 10 }}
             />
             <MyText
               text={item.name}
               size={10}
-              textColor="#000000"
+              textColor={theme?.colors.text}
               style={{ fontWeight: "400", marginBottom: 10 }}
             />
             <MyText

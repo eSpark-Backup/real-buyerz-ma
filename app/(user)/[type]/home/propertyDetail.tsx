@@ -72,7 +72,7 @@ const PropertyDetail = () => {
 
   const colorDetector = (value: number) => {
     if (value % 2 === 0) {
-      return theme.colors.positive;
+      return theme.colors.background;
     } else {
       return theme.colors.popupbg;
     }
@@ -96,14 +96,14 @@ const PropertyDetail = () => {
               text="Moin khan"
               size={16}
               weight="600"
-              textColor="#696969"
+              textColor={theme.colors.listText}
             />
             <View style={styles(theme).dFlex}>
               <LocationIcon />
               <MyText
                 text="Lahore-Pakistan"
                 size={12}
-                textColor="#696969"
+                textColor={theme.colors.listText}
                 weight="600"
               />
             </View>
@@ -167,7 +167,7 @@ const PropertyDetail = () => {
                     text={item.title}
                     size={13}
                     weight="400"
-                    textColor="#696969"
+                    textColor={theme.colors.listText}
                     style={styles(theme).columnOne}
                   />
                   <MyText
@@ -216,7 +216,7 @@ const PropertyDetail = () => {
             </View>
           </View>
         </Card>
-        <PropertyList title="Similar Projects" />
+        <PropertyList title="Similar Projects" theme={theme} />
       </View>
     </ScrollView>
   );

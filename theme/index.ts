@@ -15,7 +15,9 @@ const colors = {
     positive: "#FFFFFF",
     negative: "#000000",
     cardBorder: "#E4E4E4",
-    cardBg: "#fff",
+    cardBg: "#ffffff",
+    selected: "#EDF7FF",
+    dropdownBorder: "#E7E7E7",
   },
   dark: {
     primary: "#FB631C",
@@ -31,7 +33,10 @@ const colors = {
     positive: "#000000",
     negative: "#FFFFFF",
     cardBorder: "#29292E",
-    cardBg: "#000",
+    cardBg: "#141414",
+    selected: "#EDF7FF", //to be updated
+    chat: "#333333",
+    dropdownBorder: "#29292E",
   },
 };
 

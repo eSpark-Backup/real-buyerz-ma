@@ -3,7 +3,8 @@ import { ScrollView, StyleSheet, TouchableOpacity, View } from "react-native";
 
 import Card from "../Card";
 import MyText from "../MyText";
-import { SearchDataProps } from "@types";
+import { MyTheme, SearchDataProps } from "@types";
+import { useTheme } from "@react-navigation/native";
 
 interface TabFilterProps {
   data: SearchDataProps[];
@@ -11,6 +12,7 @@ interface TabFilterProps {
 }
 
 export default function TabFilter({ data, onSelect }: TabFilterProps) {
+  const theme = useTheme() as MyTheme;
   const [list, setList] = useState<SearchDataProps[] | null>(data);
   const [selectedItem, setSelectedItem] = useState<SearchDataProps | null>(
     data[0]
@@ -82,7 +84,7 @@ export default function TabFilter({ data, onSelect }: TabFilterProps) {
           justifyContent: "space-around",
           alignItems: "center",
         }}
-        style={{ borderBottomWidth: 1, borderColor: "#E9E9E9" }}
+        style={{ borderBottomWidth: 1, borderColor: theme.colors.border }}
       >
         {memoizedList?.map((item, index) => (
           <TouchableOpacity
@@ -122,9 +124,11 @@ export default function TabFilter({ data, onSelect }: TabFilterProps) {
               style={{
                 padding: 8,
                 borderWidth: 1,
-                borderColor: "#e9e9e9",
+                borderColor: theme.colors.border,
                 borderRadius: 4,
-                backgroundColor: nestedItem.selected ? "#EDF7FF" : "#FFFFFF",
+                backgroundColor: nestedItem.selected
+                  ? theme.colors.selected
+                  : theme.colors.cardBg,
                 marginRight:
                   nestedIndex !== selectedItem?.list?.length! - 1 ? 10 : 0,
               }}

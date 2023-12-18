@@ -14,6 +14,7 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { Card, MyFab, MyInput, MyText } from "@components";
 import { MyTheme } from "@types";
 import { SendFlag } from "@assets/images";
+import { DarkTheme } from "@theme";
 
 interface Chat {
   message: string;
@@ -77,7 +78,7 @@ export default function ChatScreen() {
 
 const renderHeader = (theme?: MyTheme) => {
   return (
-    <View style={styles.header}>
+    <View style={styles(theme).header}>
       <View style={{ flexDirection: "row", alignItems: "center" }}>
         <Image
           source={{ uri: "https://i.pravatar.cc/300?img=47" }}
@@ -87,24 +88,35 @@ const renderHeader = (theme?: MyTheme) => {
           text="Jane Doe"
           size={18}
           weight="400"
-          textColor={theme?.dark ? "#ffffff" : "#000000"}
+          textColor={theme?.colors.negative}
         />
       </View>
-      <Entypo name="dots-three-vertical" size={18} color="black" />
+      <Entypo
+        name="dots-three-vertical"
+        size={18}
+        color={theme?.colors.negative}
+      />
     </View>
   );
 };
 
-const renderList = ({ item, index }: { item: Chat; index: number }) => {
+const renderList = ({
+  item,
+  index,
+  theme,
+}: {
+  item: Chat;
+  index: number;
+  theme?: MyTheme;
+}) => {
   console.log("tag", testData[index - 1]?.sender?.tag === item.sender.tag);
   const isPreviousMsgSame =
     testData[index - 1]?.sender?.tag === item.sender.tag;
-
   return (
     <>
       <View
         style={[
-          styles.content,
+          styles(theme).content,
           {
             paddingVertical: isPreviousMsgSame ? 0 : undefined,
           },
@@ -132,7 +144,9 @@ const renderList = ({ item, index }: { item: Chat; index: number }) => {
         >
           <View
             style={
-              item.sender.tag == "other" ? styles.incoming : styles.outgoing
+              item.sender.tag == "other"
+                ? styles(theme).incoming
+                : styles(theme).outgoing
             }
           >
             <MyText
@@ -142,6 +156,7 @@ const renderList = ({ item, index }: { item: Chat; index: number }) => {
               style={{
                 textAlign: item.sender.tag == "other" ? "left" : "right",
               }}
+              textColor={DarkTheme.colors.chat}
             />
           </View>
         </View>
@@ -170,7 +185,7 @@ const renderList = ({ item, index }: { item: Chat; index: number }) => {
 
 const renderFooter = (theme?: MyTheme) => {
   return (
-    <View style={styles.footer}>
+    <View style={styles(theme).footer}>
       <View
         style={{
           flex: 1,
@@ -196,8 +211,9 @@ const renderFooter = (theme?: MyTheme) => {
         />
         <MyInput
           placeholder="Write Message"
-          style={styles.inputContainer}
-          inputStyle={styles.inputStyle}
+          style={styles(theme).inputContainer}
+          inputStyle={styles(theme).inputStyle}
+          placeholderColor={theme?.colors.placeholderText}
         />
       </View>
       <TouchableOpacity
@@ -210,54 +226,56 @@ const renderFooter = (theme?: MyTheme) => {
   );
 };
 
-const styles = StyleSheet.create({
-  header: {
-    paddingVertical: 12,
-    paddingHorizontal: 20,
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    borderBottomWidth: 1,
-    borderBottomColor: "#e9e9e9",
-  },
-  content: {
-    width: "100%",
-    flexDirection: "row",
-    padding: 20,
-    // paddingBottom: 5,
-  },
-  incoming: {
-    padding: 10,
-    borderRadius: 10,
-    borderTopLeftRadius: 0,
-    backgroundColor: "#F1F1F1",
-  },
-  outgoing: {
-    padding: 10,
-    borderRadius: 10,
-    borderBottomRightRadius: 0,
-    backgroundColor: "#FFEEE7",
-  },
-  footer: {
-    flexDirection: "row",
-    alignItems: "center",
-    paddingHorizontal: 14,
-    height: 60,
-    // flex: 1,
-  },
-  inputContainer: {
-    flexDirection: "row",
-    backgroundColor: "transparent",
-    paddingHorizontal: 0,
-    borderRadius: 0,
-    alignItems: "flex-start",
-    elevation: 0,
-    flex: 1,
-  },
-  inputStyle: {
-    padding: 0,
-    fontSize: 14,
-    fontWeight: "300",
-    fontFamily: "Inter",
-  },
-});
+const styles = (theme?: MyTheme) =>
+  StyleSheet.create({
+    header: {
+      paddingVertical: 12,
+      paddingHorizontal: 20,
+      flexDirection: "row",
+      justifyContent: "space-between",
+      alignItems: "center",
+      borderBottomWidth: 1,
+      borderBottomColor: theme?.colors.border,
+    },
+    content: {
+      width: "100%",
+      flexDirection: "row",
+      padding: 20,
+      // paddingBottom: 5,
+    },
+    incoming: {
+      padding: 10,
+      borderRadius: 10,
+      borderTopLeftRadius: 0,
+      backgroundColor: "#F1F1F1",
+    },
+    outgoing: {
+      padding: 10,
+      borderRadius: 10,
+      borderBottomRightRadius: 0,
+      backgroundColor: "#FFEEE7",
+    },
+    footer: {
+      flexDirection: "row",
+      alignItems: "center",
+      paddingHorizontal: 14,
+      height: 60,
+      // flex: 1,
+    },
+    inputContainer: {
+      flexDirection: "row",
+      backgroundColor: "transparent",
+      paddingHorizontal: 0,
+      borderRadius: 0,
+      alignItems: "flex-start",
+      elevation: 0,
+      flex: 1,
+    },
+    inputStyle: {
+      color: theme?.colors.placeholderText,
+      padding: 0,
+      fontSize: 14,
+      fontWeight: "300",
+      fontFamily: "Inter",
+    },
+  });
