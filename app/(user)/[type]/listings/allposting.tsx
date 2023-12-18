@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   FlatList,
   ScrollView,
@@ -11,7 +11,7 @@ import { FontAwesome } from "@expo/vector-icons";
 import { useTheme } from "@react-navigation/native";
 
 import { MyTheme } from "@types";
-import { Card, GapView, MyButton, MyText } from "@components";
+import { Card, GapView, MyBottomSheet, MyButton, MyText } from "@components";
 
 interface FilterBtn {
   id: number;
@@ -83,6 +83,11 @@ const testContentData: ContentData[] = [
 
 export default function AllPosting() {
   const theme = useTheme() as MyTheme;
+  const [visible, setVisible] = useState(false);
+
+  const toggleModal = () => {
+    setVisible(!visible);
+  };
 
   return (
     <ScrollView
@@ -91,10 +96,11 @@ export default function AllPosting() {
       nestedScrollEnabled
       showsVerticalScrollIndicator={false}
     >
+      <MyBottomSheet isVisible={visible} onClose={toggleModal} />
       <View style={styles.top_filter}>
         <TouchableOpacity
           activeOpacity={1}
-          onPress={() => console.log("yes")}
+          onPress={() => setVisible(true)}
           style={{
             backgroundColor: theme.colors.secondary,
             padding: 10,
