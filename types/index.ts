@@ -14,6 +14,8 @@ export type MyTheme = Theme & {
     selected: string;
     chat?: string;
     dropdownBorder?: string;
+    TabBar: string;
+    TabBarText: string;
   };
 };
 

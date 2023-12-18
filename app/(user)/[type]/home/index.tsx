@@ -252,7 +252,7 @@ const ImageCard = () => {
           }}
           onPress={() => console.log("asd")}
         >
-          <MyText textColor="#ffffff" size={10} style={{ fontWeight: "600" }}>
+          <MyText textColor="#ffffff" size={10} weight="600">
             View Dashboard
           </MyText>
         </TouchableOpacity>

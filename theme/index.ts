@@ -18,6 +18,8 @@ const colors = {
     cardBg: "#ffffff",
     selected: "#EDF7FF",
     dropdownBorder: "#E7E7E7",
+    TabBar: "#136FA9",
+    TabBarText: "#FFFFFF",
   },
   dark: {
     primary: "#FB631C",
@@ -37,6 +39,8 @@ const colors = {
     selected: "#EDF7FF", //to be updated
     chat: "#333333",
     dropdownBorder: "#29292E",
+    TabBar: "#141414",
+    TabBarText: "#FFFFFF",
   },
 };
 
