@@ -1,16 +1,33 @@
 import React from "react";
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import {
+  FlatList,
+  ScrollView,
+  StyleSheet,
+  TextStyle,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import { FontAwesome } from "@expo/vector-icons";
 import { useTheme } from "@react-navigation/native";
 
 import { MyTheme } from "@types";
-import { MyButton, MyText } from "@components";
+import { Card, GapView, MyButton, MyText } from "@components";
 
 interface FilterBtn {
   id: number;
   label: string;
   count: number;
   selected: boolean;
+}
+
+interface ContentData {
+  title: string;
+  description: string;
+  purpose: "Buying" | "Selling";
+  type: "Commercial" | "Residential";
+  city: string;
+  location: string;
+  amount: string;
 }
 
 const filterBtns: FilterBtn[] = [
@@ -21,11 +38,59 @@ const filterBtns: FilterBtn[] = [
   { id: 5, label: "Trash", count: 0, selected: false },
 ];
 
+const testContentData: ContentData[] = [
+  {
+    title: "Need 4 Room Apartments",
+    description:
+      "Ad voluptate magna id officia deserunt amet aliquip excepteur officia Lorem. Mollit quis sint ut ut est officia.",
+    purpose: "Buying",
+    type: "Commercial",
+    city: "Karachi",
+    location: "Gulshan-e-Iqbal",
+    amount: "80M",
+  },
+  {
+    title: "Need 4 Room Apartments",
+    description:
+      "Ad voluptate magna id officia deserunt amet aliquip excepteur officia Lorem. Mollit quis sint ut ut est officia.",
+    purpose: "Buying",
+    type: "Commercial",
+    city: "Karachi",
+    location: "Gulshan-e-Iqbal",
+    amount: "80M",
+  },
+  {
+    title: "Need 4 Room Apartments",
+    description:
+      "Ad voluptate magna id officia deserunt amet aliquip excepteur officia Lorem. Mollit quis sint ut ut est officia.",
+    purpose: "Buying",
+    type: "Commercial",
+    city: "Karachi",
+    location: "Gulshan-e-Iqbal",
+    amount: "80M",
+  },
+  {
+    title: "Need 4 Room Apartments",
+    description:
+      "Ad voluptate magna id officia deserunt amet aliquip excepteur officia Lorem. Mollit quis sint ut ut est officia.",
+    purpose: "Buying",
+    type: "Commercial",
+    city: "Karachi",
+    location: "Gulshan-e-Iqbal",
+    amount: "80M",
+  },
+];
+
 export default function AllPosting() {
   const theme = useTheme() as MyTheme;
 
   return (
-    <View style={styles.container}>
+    <ScrollView
+      style={{ flex: 1 }}
+      contentContainerStyle={styles.container}
+      nestedScrollEnabled
+      showsVerticalScrollIndicator={false}
+    >
       <View style={styles.top_filter}>
         <TouchableOpacity
           activeOpacity={1}
@@ -55,9 +120,145 @@ export default function AllPosting() {
           />
         ))}
       </View>
-    </View>
+      <View style={styles.content}>
+        <Card style={styles.contentCard}>
+          <FlatList
+            data={testContentData}
+            showsVerticalScrollIndicator={false}
+            nestedScrollEnabled
+            renderItem={({ item, index }) => renderList({ item, index, theme })}
+            ItemSeparatorComponent={() => <GapView />}
+          />
+        </Card>
+      </View>
+    </ScrollView>
   );
 }
+
+const renderList = ({
+  item,
+  index,
+  theme,
+}: {
+  item?: ContentData;
+  index: number;
+  theme: MyTheme;
+}) => {
+  return (
+    <Card
+      style={{
+        paddingHorizontal: 15,
+        paddingVertical: 26,
+        backgroundColor: "#F5F6FA",
+      }}
+    >
+      <View
+        style={{
+          flexDirection: "row",
+          justifyContent: "space-between",
+          paddingBottom: 8,
+          borderBottomWidth: 1,
+          borderColor: theme.colors.border,
+        }}
+      >
+        <MyText text={item?.title} size={14} weight="500" />
+        <MyButton
+          label={`Trash`}
+          labelStyle={{
+            color: "#ffffff",
+            fontSize: 10,
+          }}
+          style={{
+            width: 58,
+            height: 20,
+            borderRadius: 2,
+            backgroundColor: theme.colors.primary,
+          }}
+        />
+      </View>
+      <MyText
+        style={{ marginVertical: 8 }}
+        size={12}
+        text={item?.description}
+      />
+      <View>
+        <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+          <LabelValue
+            label="Purpose"
+            value={item?.purpose!}
+            labelStyle={{ color: "#636363" }}
+            valueStyle={{ color: "#126FAA" }}
+          />
+          <LabelValue
+            label="Amount"
+            value={item?.amount!}
+            labelStyle={{ color: theme.colors.text }}
+            valueStyle={{ color: theme.colors.text }}
+            valueWeight="bold"
+          />
+        </View>
+        <LabelValue
+          label="Property Type"
+          value={item?.type!}
+          labelStyle={{ color: "#636363" }}
+          valueStyle={{ color: "#126FAA" }}
+        />
+        <LabelValue
+          label="City"
+          value={item?.city!}
+          labelStyle={{ color: "#636363" }}
+          valueStyle={{ color: "#126FAA" }}
+        />
+        <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+          <LabelValue
+            label="Location"
+            value={item?.location!}
+            labelStyle={{ color: "#636363" }}
+            valueStyle={{ color: "#126FAA" }}
+          />
+          <MyButton
+            label={`View`}
+            labelStyle={{
+              color: theme.colors.primary,
+              fontSize: 8,
+            }}
+            style={{
+              width: 58,
+              height: 20,
+              borderWidth: 1,
+              borderRadius: 20,
+              backgroundColor: theme.colors.background,
+              borderColor: theme.colors.primary,
+            }}
+          />
+        </View>
+      </View>
+    </Card>
+  );
+};
+
+const LabelValue = ({
+  label,
+  value,
+  labelStyle,
+  valueStyle,
+  labelWeight,
+  valueWeight,
+}: {
+  label: string;
+  value: string;
+  labelStyle?: TextStyle;
+  valueStyle?: TextStyle;
+  labelWeight?: TextStyle["fontWeight"];
+  valueWeight?: TextStyle["fontWeight"];
+}) => {
+  return (
+    <View style={{ flexDirection: "row" }}>
+      <MyText text={`${label}: `} style={labelStyle} weight={labelWeight} />
+      <MyText text={`${value}`} style={valueStyle} weight={valueWeight} />
+    </View>
+  );
+};
 
 const FilterBtnComp = ({
   item,
@@ -94,6 +295,7 @@ const styles = StyleSheet.create({
   container: {
     paddingHorizontal: 30,
     paddingTop: 26,
+    paddingBottom: 40,
   },
   top_filter: {
     flexDirection: "row",
@@ -106,5 +308,14 @@ const styles = StyleSheet.create({
     flexWrap: "wrap",
     alignItems: "center",
     justifyContent: "center",
+  },
+  content: {
+    flex: 1,
+    marginTop: 25,
+  },
+  contentCard: {
+    height: 553,
+    paddingHorizontal: 10,
+    paddingVertical: 18,
   },
 });
