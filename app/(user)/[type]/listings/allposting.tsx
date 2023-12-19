@@ -2,16 +2,25 @@ import React, { useState } from "react";
 import {
   FlatList,
   ScrollView,
+  StyleProp,
   StyleSheet,
   TextStyle,
   TouchableOpacity,
   View,
+  ViewStyle,
 } from "react-native";
 import { FontAwesome } from "@expo/vector-icons";
 import { useTheme } from "@react-navigation/native";
 
 import { MyTheme } from "@types";
-import { Card, GapView, MyBottomSheet, MyButton, MyText } from "@components";
+import {
+  Card,
+  GapView,
+  MyBottomSheet,
+  MyButton,
+  MyDropdown,
+  MyText,
+} from "@components";
 
 interface FilterBtn {
   id: number;
@@ -28,6 +37,16 @@ interface ContentData {
   city: string;
   location: string;
   amount: string;
+}
+
+interface DropDownList {
+  data: string[];
+  placeholder: string;
+  title: string;
+  height: number;
+  zIndex: number;
+  style?: StyleProp<ViewStyle>;
+  onSelect: (val: string) => void;
 }
 
 const filterBtns: FilterBtn[] = [
@@ -81,6 +100,61 @@ const testContentData: ContentData[] = [
   },
 ];
 
+const dropdownData: DropDownList[] = [
+  {
+    data: ["Selling", "Buying", "Rent"],
+    height: 40,
+    zIndex: 4,
+    onSelect: (val: string) => {},
+    placeholder: "Purpose",
+    title: "Purpose",
+    style: { width: "100%" },
+  },
+  {
+    data: [
+      "Karachi",
+      "Lahore",
+      "Islamabad",
+      "Faisalabad",
+      "Quetta",
+      "Peshawar",
+      "Sialkot",
+    ],
+    height: 40,
+    zIndex: 4,
+    onSelect: (val: string) => {},
+    placeholder: "City",
+    title: "City",
+    style: { width: "100%" },
+  },
+  {
+    data: [
+      "Gulshan-e-Iqbal",
+      "Gulistan-e-Johar",
+      "Liaquatabad",
+      "Gulberg",
+      "Malir",
+      "Shar-e-Faisal",
+      "Karimabad",
+    ],
+    height: 40,
+    zIndex: 4,
+    onSelect: (val: string) => {},
+    placeholder: "Location",
+    title: "Location",
+    style: { width: "100%" },
+  },
+  {
+    data: ["House", "Plot", "Commercial"],
+    height: 40,
+    zIndex: 4,
+    onSelect: (val: string) => {},
+    placeholder: "Purpose",
+    title: "Purpose",
+    style: { width: "100%" },
+  },
+];
+
 export default function AllPosting() {
   const theme = useTheme() as MyTheme;
   const [visible, setVisible] = useState(false);
@@ -96,7 +170,47 @@ export default function AllPosting() {
       nestedScrollEnabled
       showsVerticalScrollIndicator={false}
     >
-      <MyBottomSheet isVisible={visible} onClose={toggleModal} />
+      <MyBottomSheet
+        isVisible={visible}
+        onClose={toggleModal}
+        bottomSheetStyles={{
+          paddingHorizontal: 30,
+          paddingTop: 25,
+          paddingBottom: 102,
+          alignItems: "center",
+        }}
+      >
+        {dropdownData.map((item, index) => (
+          <>
+            <MyDropdown
+              key={index}
+              data={item.data}
+              placeholder={item.placeholder}
+              onSelect={(val) => console.log("val", val)}
+              style={{ width: "100%" }}
+              height={40}
+              zIndex={4 - index}
+              title={item.title}
+            />
+            {index < dropdownData.length - 1 && <GapView length={20} />}
+          </>
+        ))}
+        <GapView length={60} />
+        <MyButton
+          label={"Save"}
+          labelStyle={{
+            color: "#ffffff",
+            fontSize: 10,
+          }}
+          style={{
+            alignSelf: "flex-end",
+            width: 100,
+            height: 30,
+            borderRadius: 4,
+            backgroundColor: theme.colors.primary,
+          }}
+        />
+      </MyBottomSheet>
       <View style={styles.top_filter}>
         <TouchableOpacity
           activeOpacity={1}

@@ -4,7 +4,8 @@ import {
   StyleSheet,
   TouchableOpacity,
   Animated,
-  Text,
+  ViewStyle,
+  TouchableWithoutFeedback,
 } from "react-native";
 import { useTheme } from "@react-navigation/native";
 
@@ -13,9 +14,13 @@ import { MyTheme } from "@types";
 const BottomSheet = ({
   isVisible,
   onClose,
+  bottomSheetStyles,
+  children,
 }: {
   isVisible: boolean;
   onClose: () => void;
+  bottomSheetStyles?: ViewStyle;
+  children?: React.ReactNode;
 }) => {
   const fadeAnim = useRef(new Animated.Value(0));
   const slideAnim = useRef(new Animated.Value(1));
@@ -79,23 +84,26 @@ const BottomSheet = ({
             justifyContent: "flex-end",
           }}
         >
-          <Animated.View
-            style={[
-              styles({ theme }).modalContent,
-              {
-                transform: [
-                  {
-                    translateY: slideAnim.current.interpolate({
-                      inputRange: [0, 1],
-                      outputRange: [0, 300],
-                    }),
-                  },
-                ],
-              },
-            ]}
-          >
-            <Text>Bottom Sheet Content Goes Here</Text>
-          </Animated.View>
+          <TouchableWithoutFeedback>
+            <Animated.View
+              style={[
+                styles({ theme }).modalContent,
+                bottomSheetStyles,
+                {
+                  transform: [
+                    {
+                      translateY: slideAnim.current.interpolate({
+                        inputRange: [0, 1],
+                        outputRange: [0, 300],
+                      }),
+                    },
+                  ],
+                },
+              ]}
+            >
+              {children}
+            </Animated.View>
+          </TouchableWithoutFeedback>
         </TouchableOpacity>
       </Animated.View>
     </Modal>

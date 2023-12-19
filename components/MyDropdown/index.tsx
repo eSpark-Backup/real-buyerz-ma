@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import {
+  ScrollView,
   StyleProp,
   StyleSheet,
   Text,
@@ -12,6 +13,7 @@ import { useTheme } from "@react-navigation/native";
 
 import MyText from "../MyText";
 import { MyTheme } from "@types";
+import { FlatList } from "react-native-gesture-handler";
 
 interface DropdownProps {
   data: string[];
@@ -21,6 +23,9 @@ interface DropdownProps {
   onSelect: (value: string | string[]) => void;
   style?: StyleProp<ViewStyle>;
   placeholderColor?: string;
+  containerStyle?: ViewStyle;
+  height?: number;
+  title?: string;
 }
 
 export default function MyDropdown({
@@ -31,6 +36,9 @@ export default function MyDropdown({
   multiSelect = false,
   style,
   placeholderColor,
+  containerStyle,
+  height = 30,
+  title,
 }: DropdownProps) {
   const theme = useTheme() as MyTheme;
   const [show, setShow] = useState(false);
@@ -86,85 +94,128 @@ export default function MyDropdown({
   };
 
   return (
-    <View
-      style={[
-        styles(theme).container,
-        { zIndex: zIndex },
-        show ? { borderBottomRightRadius: 0, borderBottomLeftRadius: 0 } : {},
-        style,
-      ]}
-    >
-      <View
-        style={{
-          flexDirection: "row",
-          justifyContent: "space-between",
-          alignItems: "center",
-          width: "100%",
-          height: "100%",
-          paddingHorizontal: 15,
-          zIndex: zIndex - 2,
-        }}
-      >
+    <>
+      {title && (
         <MyText
-          text={label ? label : `Select ${placeholder}`}
-          textColor={placeholderColor ? placeholderColor : "#969696"}
+          text={title}
+          style={{ alignSelf: "flex-start", paddingBottom: 10 }}
+          size={15}
+          weight="400"
         />
-        <Entypo
-          name={!show ? "chevron-down" : "chevron-up"}
-          color={"#66666666"}
-          size={16}
-          onPress={() => {
-            setShow(!show);
-          }}
-        />
-      </View>
-      {show && (
+      )}
+      <View
+        style={[
+          styles(theme).container,
+          { zIndex: zIndex },
+          show ? { borderBottomRightRadius: 0, borderBottomLeftRadius: 0 } : {},
+          style,
+          { height },
+        ]}
+      >
         <View
           style={{
-            zIndex: zIndex + 2,
-            width: "101.5%",
-            position: "absolute",
-            overflow: "hidden",
-            top: 28,
+            flexDirection: "row",
             justifyContent: "space-between",
-            backgroundColor: "#ffffff",
-            borderColor: "#E7E7E7",
-            borderWidth: 1,
-            borderBottomRightRadius: 5,
-            borderBottomLeftRadius: 5,
+            alignItems: "center",
+            width: "100%",
+            height: "100%",
+            paddingHorizontal: 15,
+            zIndex: zIndex - 2,
+            ...containerStyle,
           }}
         >
-          {listData.map((item, index) => (
-            <TouchableOpacity
-              activeOpacity={1}
+          <MyText
+            text={label ? label : `Select ${placeholder}`}
+            textColor={placeholderColor ? placeholderColor : "#969696"}
+          />
+          <Entypo
+            name={!show ? "chevron-down" : "chevron-up"}
+            color={"#66666666"}
+            size={16}
+            onPress={() => {
+              setShow(!show);
+            }}
+          />
+        </View>
+        {show && (
+          <View style={{ position: "absolute", width: "100.5%" }}>
+            <ScrollView
               style={{
-                height: 30,
-                borderTopWidth: index > 0 ? 1 : 0,
-                justifyContent: "space-between",
-                borderColor: "#E7E7E7",
-                paddingHorizontal: 15,
-                flexDirection: "row",
-                alignItems: "center",
+                zIndex: zIndex + 2,
+                overflow: "hidden",
+                top: height - 2,
+                backgroundColor: theme.colors.background,
+                borderColor: theme.colors.border,
+                borderWidth: 1,
+                borderBottomRightRadius: 5,
+                borderBottomLeftRadius: 5,
+                height: listData.length > 3 ? 120 : "auto",
               }}
-              key={item}
-              onPress={() => {
-                if (!multiSelect) {
-                  setShow(false);
-                }
-                handleSelection(item);
+              contentContainerStyle={{
+                justifyContent: "space-between",
               }}
             >
-              <MyText text={item} />
-              {isSelected(item) && (
-                <Feather name="check" size={16} color="#34e145" />
+              {listData.map((item, index) =>
+                renderList({
+                  item,
+                  index,
+                  handleSelection,
+                  height,
+                  isSelected,
+                  multiSelect,
+                  setShow,
+                })
               )}
-            </TouchableOpacity>
-          ))}
-        </View>
-      )}
-    </View>
+            </ScrollView>
+          </View>
+        )}
+      </View>
+    </>
   );
 }
+
+const renderList = ({
+  item,
+  index,
+  multiSelect,
+  height,
+  handleSelection,
+  isSelected,
+  setShow,
+}: {
+  item: string;
+  index: number;
+  multiSelect: boolean;
+  height: number;
+  handleSelection: (val: string) => void;
+  isSelected: (val: string) => boolean;
+  setShow: (val: boolean) => void;
+}) => {
+  return (
+    <TouchableOpacity
+      activeOpacity={1}
+      style={{
+        height: height,
+        borderTopWidth: index > 0 ? 1 : 0,
+        justifyContent: "space-between",
+        borderColor: "#E7E7E7",
+        paddingHorizontal: 15,
+        flexDirection: "row",
+        alignItems: "center",
+      }}
+      // key={item}
+      onPress={() => {
+        if (!multiSelect) {
+          setShow(false);
+        }
+        handleSelection(item);
+      }}
+    >
+      <MyText text={item} />
+      {isSelected(item) && <Feather name="check" size={16} color="#34e145" />}
+    </TouchableOpacity>
+  );
+};
 
 const styles = (theme?: MyTheme) =>
   StyleSheet.create({
