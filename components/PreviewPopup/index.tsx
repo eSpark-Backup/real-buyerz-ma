@@ -20,7 +20,8 @@ interface Preview {
   installments: string;
   readyFor: string;
   map?: string;
-  image?: string;
+  imageMedia?: string[];
+  videoMedia?: string[];
 }
 
 export interface PreviewPopupProps {
@@ -42,7 +43,20 @@ function PreviewPopup({ visible, onClose }: PreviewPopupProps) {
       range: 1000000,
       installments: "Available",
       readyFor: "Possession",
-      image: "https://picsum.photos/id/151/130",
+      imageMedia: [
+        "https://picsum.photos/90/72",
+        "https://picsum.photos/90/72",
+        "https://picsum.photos/90/72",
+        "https://picsum.photos/90/72",
+        // Add more URLs as needed
+      ],
+      videoMedia: [
+        "https://picsum.photos/id/151/130",
+        "https://picsum.photos/id/151/130",
+        "https://picsum.photos/id/151/130",
+        "https://picsum.photos/id/151/130",
+        // Add more URLs as needed
+      ],
     },
   ];
 
@@ -138,35 +152,11 @@ function PreviewPopup({ visible, onClose }: PreviewPopupProps) {
         </View>
         <View style={styles(theme).part1}>
           <MyText text="Property Images" size={12} weight="500" />
-          <ScrollView
-            horizontal
-            style={styles(theme).temp}
-            showsHorizontalScrollIndicator={false}
-          >
-            <View style={styles(theme).tempImage} />
-            <GapView length={10} mode="horizontal" />
-            <View style={styles(theme).tempImage} />
-            <GapView length={10} mode="horizontal" />
-            <View style={styles(theme).tempImage} />
-            <GapView length={10} mode="horizontal" />
-            <View style={styles(theme).tempImage} />
-          </ScrollView>
+          <MediaGallery media={item.imageMedia || []} theme={theme} />
         </View>
         <View style={styles(theme).part1}>
           <MyText text="Property Videos" size={12} weight="500" />
-          <ScrollView
-            horizontal
-            style={styles(theme).temp}
-            showsHorizontalScrollIndicator={false}
-          >
-            <View style={styles(theme).tempImage} />
-            <GapView length={10} mode="horizontal" />
-            <View style={styles(theme).tempImage} />
-            <GapView length={10} mode="horizontal" />
-            <View style={styles(theme).tempImage} />
-            <GapView length={10} mode="horizontal" />
-            <View style={styles(theme).tempImage} />
-          </ScrollView>
+          <MediaGallery media={item.videoMedia || []} theme={theme} />
         </View>
       </ScrollView>
     );
@@ -201,6 +191,47 @@ function PreviewPopup({ visible, onClose }: PreviewPopupProps) {
     </Modal>
   );
 }
+
+interface MediaGalleryProps {
+  media: string[]; // Array of image or video URLs
+  theme?: MyTheme;
+}
+
+const MediaGallery: React.FC<MediaGalleryProps> = ({ media, theme }) => {
+  const isVideo = (url: string) => {
+    return url.toLowerCase().endsWith(".mp4");
+  };
+
+  return (
+    <ScrollView
+      horizontal
+      style={styles(theme).temp}
+      showsHorizontalScrollIndicator={false}
+    >
+      {media.map((url, index) => (
+        <View key={index} style={styles(theme).tempImage}>
+          {isVideo(url) ? (
+            <View style={{ flex: 1, width: "100%", height: "100%" }} />
+          ) : (
+            // to be done later
+            // <ExpoVideo
+            //   source={{ uri: url }}
+            //   style={{ flex: 1, width: "100%", height: "100%" }}
+
+            //   shouldPlay={false}
+            //   isLooping={false}
+            //   useNativeControls={false}
+            // />
+            <Image
+              source={{ uri: url }}
+              style={{ flex: 1, width: "100%", height: "100%" }}
+            />
+          )}
+        </View>
+      ))}
+    </ScrollView>
+  );
+};
 
 const styles = (theme?: MyTheme) =>
   StyleSheet.create({
@@ -247,7 +278,13 @@ const styles = (theme?: MyTheme) =>
       borderTopWidth: 1,
       borderColor: theme?.colors.border,
     },
+
     temp: { flexDirection: "row", rowGap: 10, columnGap: 10 },
-    tempImage: { width: 90, height: 72, backgroundColor: "#7e7575" },
+    tempImage: {
+      width: 90,
+      height: 72,
+      backgroundColor: "#7e7575",
+      marginRight: 10,
+    },
   });
 export default PreviewPopup;
