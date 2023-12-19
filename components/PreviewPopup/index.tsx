@@ -107,7 +107,7 @@ function PreviewPopup({ visible, onClose }: PreviewPopupProps) {
           </View>
           <View
             style={{
-              width: 230,
+              width: "100%",
               height: 116,
               backgroundColor: "#947971",
               alignSelf: "center",
@@ -240,7 +240,7 @@ const styles = (theme?: MyTheme) =>
       justifyContent: "center",
       alignItems: "center",
       alignSelf: "center",
-      width: "95%",
+      width: "80%",
     },
     popupStyle: {
       alignItems: "center",
@@ -258,7 +258,7 @@ const styles = (theme?: MyTheme) =>
     },
     flatlist: {
       justifyContent: "space-between",
-      paddingHorizontal: "12%",
+      paddingHorizontal: "10%",
       height: "100%",
       paddingVertical: "4%",
     },
@@ -268,7 +268,7 @@ const styles = (theme?: MyTheme) =>
       width: "100%",
       alignItems: "flex-end",
       paddingVertical: 10,
-      paddingHorizontal: 40,
+      paddingHorizontal: "9%",
     },
     row: { flexDirection: "row" },
     part1: {
