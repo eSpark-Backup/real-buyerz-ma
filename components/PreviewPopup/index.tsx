@@ -1,13 +1,12 @@
 import React from "react";
-import { View, StyleSheet, FlatList, Image } from "react-native";
-import { useTheme } from "@react-navigation/native";
+import { View, StyleSheet, FlatList, Image, ScrollView } from "react-native";
 import Modal from "react-native-modal";
+import { useTheme } from "@react-navigation/native";
 
 import MyText from "components/MyText";
 import PrimaryBtn from "components/MyButton/primaryBtn";
-import { MyTheme } from "@types";
-import { ScrollView } from "react-native-gesture-handler";
 import GapView from "components/GapView";
+import { MyTheme } from "@types";
 
 interface Preview {
   title: string;
@@ -47,6 +46,132 @@ function PreviewPopup({ visible, onClose }: PreviewPopupProps) {
     },
   ];
 
+  const renderPreviewList = ({ item }: { item: Preview }) => {
+    return (
+      <ScrollView showsVerticalScrollIndicator={false}>
+        <View style={{ rowGap: 10 }}>
+          <MyText text={item.title} size={14} weight="500" />
+          <MyText text={item.desc} size={10} style={{ textAlign: "justify" }} />
+        </View>
+        <View style={styles(theme).part1}>
+          <MyText text={"Location & Purpose"} size={14} weight="500" />
+          <View style={styles(theme).row}>
+            <MyText size={12} text="Purpose: " />
+            <MyText
+              text={item.purpose}
+              size={12}
+              weight="700"
+              textColor={theme?.colors.secondary}
+            />
+          </View>
+          <View style={styles(theme).row}>
+            <MyText size={12} text="Property Type: " />
+            <MyText
+              text={item.type}
+              size={12}
+              weight="700"
+              textColor={theme?.colors.secondary}
+            />
+          </View>
+          <View style={styles(theme).row}>
+            <MyText size={12} text="City: " />
+            <MyText
+              text={item.city}
+              size={12}
+              weight="700"
+              textColor={theme?.colors.secondary}
+            />
+          </View>
+          <View style={styles(theme).row}>
+            <MyText size={12} text="Location: " />
+            <MyText
+              text={item.location}
+              size={12}
+              weight="700"
+              textColor={theme?.colors.secondary}
+            />
+          </View>
+          <View
+            style={{
+              width: 230,
+              height: 116,
+              backgroundColor: "#947971",
+              alignSelf: "center",
+            }}
+          />
+        </View>
+        <View style={styles(theme).part1}>
+          <MyText text={"Area and Amount"} size={14} weight="500" />
+          <View style={styles(theme).row}>
+            <MyText size={12} text="Area Size: " />
+            <MyText
+              text={item.size}
+              size={12}
+              weight="700"
+              textColor={theme?.colors.secondary}
+            />
+          </View>
+          <View style={styles(theme).row}>
+            <MyText size={12} text="Range: " />
+            <MyText size={12} weight="700" textColor={theme?.colors.secondary}>
+              {item.range}
+            </MyText>
+          </View>
+          <View style={styles(theme).row}>
+            <MyText size={12} text="Instalment: " />
+            <MyText
+              text={item.installments}
+              size={12}
+              weight="700"
+              textColor={theme?.colors.secondary}
+            />
+          </View>
+          <View style={styles(theme).row}>
+            <MyText size={12} text="Ready for: " />
+            <MyText
+              text={item.readyFor}
+              size={12}
+              weight="700"
+              textColor={theme.colors.secondary}
+            />
+          </View>
+        </View>
+        <View style={styles(theme).part1}>
+          <MyText text="Property Images" size={12} weight="500" />
+          <ScrollView
+            horizontal
+            style={styles(theme).temp}
+            showsHorizontalScrollIndicator={false}
+          >
+            <View style={styles(theme).tempImage} />
+            <GapView length={10} mode="horizontal" />
+            <View style={styles(theme).tempImage} />
+            <GapView length={10} mode="horizontal" />
+            <View style={styles(theme).tempImage} />
+            <GapView length={10} mode="horizontal" />
+            <View style={styles(theme).tempImage} />
+          </ScrollView>
+        </View>
+        <View style={styles(theme).part1}>
+          <MyText text="Property Videos" size={12} weight="500" />
+          <ScrollView
+            horizontal
+            style={styles(theme).temp}
+            showsHorizontalScrollIndicator={false}
+          >
+            <View style={styles(theme).tempImage} />
+            <GapView length={10} mode="horizontal" />
+            <View style={styles(theme).tempImage} />
+            <GapView length={10} mode="horizontal" />
+            <View style={styles(theme).tempImage} />
+            <GapView length={10} mode="horizontal" />
+            <View style={styles(theme).tempImage} />
+          </ScrollView>
+        </View>
+      </ScrollView>
+    );
+  };
+
   return (
     <Modal
       isVisible={visible}
@@ -55,38 +180,16 @@ function PreviewPopup({ visible, onClose }: PreviewPopupProps) {
       style={styles(theme).modal}
     >
       <View style={[styles(theme).popupStyle]}>
-        <View
-          style={{
-            borderBottomWidth: 1,
-            borderColor: theme.colors.border,
-            width: "100%",
-            alignItems: "center",
-            paddingVertical: 10,
-          }}
-        >
+        <View style={styles(theme).header}>
           <MyText text="Preview" weight="600" size={16} />
         </View>
 
         <FlatList
           data={data}
           renderItem={renderPreviewList}
-          contentContainerStyle={{
-            justifyContent: "space-between",
-            paddingHorizontal: "12%",
-            height: "100%",
-            paddingVertical: "4%",
-          }}
+          contentContainerStyle={styles(theme).flatlist}
         />
-        <View
-          style={{
-            borderTopWidth: 1,
-            borderColor: theme.colors.border,
-            width: "100%",
-            alignItems: "flex-end",
-            paddingVertical: 10,
-            paddingHorizontal: 40,
-          }}
-        >
+        <View style={styles(theme).footer}>
           <PrimaryBtn
             title="Close"
             textColor="white"
@@ -97,146 +200,6 @@ function PreviewPopup({ visible, onClose }: PreviewPopupProps) {
       </View>
     </Modal>
   );
-}
-
-const renderPreviewList = ({
-  item,
-  theme,
-}: {
-  item: Preview;
-  theme?: MyTheme;
-}) => {
-  return (
-    <ScrollView showsVerticalScrollIndicator={false}>
-      <View style={{ rowGap: 10 }}>
-        <MyText text={item.title} size={14} weight="500" />
-        <MyText text={item.desc} size={10} style={{ textAlign: "justify" }} />
-      </View>
-      <View style={styles(theme).part1}>
-        <MyText text={"Location & Purpose"} size={14} weight="500" />
-        <View style={styles(theme).row}>
-          <MyText size={12} text="Purpose: " />
-          <MyText
-            text={item.purpose}
-            size={12}
-            weight="700"
-            textColor={theme?.colors.secondary}
-          />
-        </View>
-        <View style={styles(theme).row}>
-          <MyText size={12} text="Property Type: " />
-          <MyText
-            text={item.type}
-            size={12}
-            weight="700"
-            textColor={theme?.colors.secondary}
-          />
-        </View>
-        <View style={styles(theme).row}>
-          <MyText size={12} text="City: " />
-          <MyText
-            text={item.city}
-            size={12}
-            weight="700"
-            textColor={theme?.colors.secondary}
-          />
-        </View>
-        <View style={styles(theme).row}>
-          <MyText size={12} text="Location: " />
-          <MyText
-            text={item.location}
-            size={12}
-            weight="700"
-            textColor={theme?.colors.secondary}
-          />
-        </View>
-        <View
-          style={{
-            width: 230,
-            height: 116,
-            backgroundColor: "#947971",
-            alignSelf: "center",
-          }}
-        />
-      </View>
-      <View style={styles(theme).part1}>
-        <MyText text={"Area and Amount"} size={14} weight="500" />
-        <View style={styles(theme).row}>
-          <MyText size={12} text="Area Size: " />
-          <MyText
-            text={item.size}
-            size={12}
-            weight="700"
-            textColor={theme?.colors.secondary}
-          />
-        </View>
-        <View style={styles(theme).row}>
-          <MyText size={12} text="Range: " />
-          <MyText size={12} weight="700" textColor={theme?.colors.secondary}>
-            {item.range}
-          </MyText>
-        </View>
-        <View style={styles(theme).row}>
-          <MyText size={12} text="Instalment: " />
-          <MyText
-            text={item.installments}
-            size={12}
-            weight="700"
-            textColor={theme?.colors.secondary}
-          />
-        </View>
-        <View style={styles(theme).row}>
-          <MyText size={12} text="Ready for: " />
-          <MyText
-            text={item.readyFor}
-            size={12}
-            weight="700"
-            textColor={theme?.colors.secondary}
-          />
-        </View>
-      </View>
-      <View style={styles(theme).part1}>
-        <MyText text="Property Images" size={12} weight="500" />
-        <ScrollView
-          horizontal
-          style={{ flexDirection: "row", rowGap: 10, columnGap: 10 }}
-          showsHorizontalScrollIndicator={false}
-        >
-          <View style={{ width: 90, height: 72, backgroundColor: "#7e7575" }} />
-          <GapView length={10} mode="horizontal" />
-          <View style={{ width: 90, height: 72, backgroundColor: "#787e75" }} />
-          <GapView length={10} mode="horizontal" />
-          <View style={{ width: 90, height: 72, backgroundColor: "#757e7d" }} />
-          <GapView length={10} mode="horizontal" />
-          <View style={{ width: 90, height: 72, backgroundColor: "#77757e" }} />
-        </ScrollView>
-      </View>
-      <View style={styles(theme).part1}>
-        <MyText text="Property Videos" size={12} weight="500" />
-        <ScrollView
-          horizontal
-          style={{ flexDirection: "row", rowGap: 10, columnGap: 10 }}
-          showsHorizontalScrollIndicator={false}
-        >
-          <View style={{ width: 90, height: 72, backgroundColor: "#7e7575" }} />
-          <GapView length={10} mode="horizontal" />
-          <View style={{ width: 90, height: 72, backgroundColor: "#7d7e75" }} />
-          <GapView length={10} mode="horizontal" />
-          <View style={{ width: 90, height: 72, backgroundColor: "#757b7e" }} />
-          <GapView length={10} mode="horizontal" />
-          <View style={{ width: 90, height: 72, backgroundColor: "#7c757e" }} />
-        </ScrollView>
-      </View>
-    </ScrollView>
-  );
-};
-
-{
-  /* <Image
-          source={{ uri: item.image }}
-          style={{ height: 72, width: 90, marginRight: 5 }}
-          resizeMode="contain"
-        /> */
 }
 
 const styles = (theme?: MyTheme) =>
@@ -252,9 +215,29 @@ const styles = (theme?: MyTheme) =>
       alignItems: "center",
       backgroundColor: theme?.colors.background,
       height: "97%",
-      //   paddingHorizontal: "9%",
       borderRadius: 10,
       width: "100%",
+    },
+    header: {
+      borderBottomWidth: 1,
+      borderColor: theme?.colors.border,
+      width: "100%",
+      alignItems: "center",
+      paddingVertical: 10,
+    },
+    flatlist: {
+      justifyContent: "space-between",
+      paddingHorizontal: "12%",
+      height: "100%",
+      paddingVertical: "4%",
+    },
+    footer: {
+      borderTopWidth: 1,
+      borderColor: theme?.colors.border,
+      width: "100%",
+      alignItems: "flex-end",
+      paddingVertical: 10,
+      paddingHorizontal: 40,
     },
     row: { flexDirection: "row" },
     part1: {
@@ -262,7 +245,9 @@ const styles = (theme?: MyTheme) =>
       paddingVertical: "2%",
       rowGap: 6,
       borderTopWidth: 1,
-      borderBottomColor: theme?.colors.border,
+      borderColor: theme?.colors.border,
     },
+    temp: { flexDirection: "row", rowGap: 10, columnGap: 10 },
+    tempImage: { width: 90, height: 72, backgroundColor: "#7e7575" },
   });
 export default PreviewPopup;
