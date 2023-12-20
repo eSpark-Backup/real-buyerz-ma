@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import {
   FlatList,
   ScrollView,
@@ -21,6 +21,7 @@ import {
   MyDropdown,
   MyText,
 } from "@components";
+import { WINDOW_HEIGHT } from "@constants";
 
 interface FilterBtn {
   id: number;
@@ -164,20 +165,19 @@ export default function AllPosting() {
   };
 
   return (
-    <ScrollView
-      style={{ flex: 1 }}
-      contentContainerStyle={styles.container}
-      nestedScrollEnabled
-      showsVerticalScrollIndicator={false}
-    >
-      <MyBottomSheet
-        isVisible={visible}
-        onClose={toggleModal}
-        bottomSheetStyles={{
+    <>
+      <View
+        style={{
+          position: "absolute",
+          backgroundColor: "pink",
+          width: "100%",
+          height: "100%",
+          zIndex: 2147483647,
+          borderTopRightRadius: 10,
+          borderTopLeftRadius: 10,
           paddingHorizontal: 30,
           paddingTop: 25,
-          paddingBottom: 102,
-          alignItems: "center",
+          top: WINDOW_HEIGHT / 7,
         }}
       >
         {dropdownData.map((item, index) => (
@@ -210,48 +210,57 @@ export default function AllPosting() {
             backgroundColor: theme.colors.primary,
           }}
         />
-      </MyBottomSheet>
-      <View style={styles.top_filter}>
-        <TouchableOpacity
-          activeOpacity={1}
-          onPress={() => setVisible(true)}
-          style={{
-            backgroundColor: theme.colors.secondary,
-            padding: 10,
-            borderRadius: 5,
-          }}
-        >
-          <FontAwesome name="filter" size={15} color="#ffffff" />
-        </TouchableOpacity>
-        <MyText
-          text="Reset"
-          textColor={theme.colors.secondary}
-          size={14}
-          style={{ marginLeft: 10, textDecorationLine: "underline" }}
-        />
       </View>
-      <View style={styles.top_selection_btns}>
-        {filterBtns.map((item, index) => (
-          <FilterBtnComp
-            item={item}
-            index={index}
-            theme={theme}
-            key={item.id.toString()}
+      <ScrollView
+        style={{ flex: 1 }}
+        contentContainerStyle={styles.container}
+        nestedScrollEnabled
+        showsVerticalScrollIndicator={false}
+      >
+        <View style={styles.top_filter}>
+          <TouchableOpacity
+            activeOpacity={1}
+            onPress={() => setVisible(!visible)}
+            style={{
+              backgroundColor: theme.colors.secondary,
+              padding: 10,
+              borderRadius: 5,
+            }}
+          >
+            <FontAwesome name="filter" size={15} color="#ffffff" />
+          </TouchableOpacity>
+          <MyText
+            text="Reset"
+            textColor={theme.colors.secondary}
+            size={14}
+            style={{ marginLeft: 10, textDecorationLine: "underline" }}
           />
-        ))}
-      </View>
-      <View style={styles.content}>
-        <Card style={styles.contentCard}>
-          <FlatList
-            data={testContentData}
-            showsVerticalScrollIndicator={false}
-            nestedScrollEnabled
-            renderItem={({ item, index }) => renderList({ item, index, theme })}
-            ItemSeparatorComponent={() => <GapView />}
-          />
-        </Card>
-      </View>
-    </ScrollView>
+        </View>
+        <View style={styles.top_selection_btns}>
+          {filterBtns.map((item, index) => (
+            <FilterBtnComp
+              item={item}
+              index={index}
+              theme={theme}
+              key={item.id.toString()}
+            />
+          ))}
+        </View>
+        <View style={styles.content}>
+          <Card style={styles.contentCard}>
+            <FlatList
+              data={testContentData}
+              showsVerticalScrollIndicator={false}
+              nestedScrollEnabled
+              renderItem={({ item, index }) =>
+                renderList({ item, index, theme })
+              }
+              ItemSeparatorComponent={() => <GapView />}
+            />
+          </Card>
+        </View>
+      </ScrollView>
+    </>
   );
 }
 

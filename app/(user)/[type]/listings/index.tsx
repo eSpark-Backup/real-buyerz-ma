@@ -395,6 +395,7 @@ const renderProposalsList = ({
       <View style={styles.ap_bot}>
         <MyButton
           label="View"
+          onPress={() => router.push("(user)/anon/listings/proposalDetails")}
           labelStyle={{
             color: theme.colors.primary,
             fontSize: 10,

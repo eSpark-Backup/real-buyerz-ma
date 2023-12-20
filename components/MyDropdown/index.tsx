@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import {
-  ScrollView,
   StyleProp,
   StyleSheet,
   Text,
@@ -13,7 +12,7 @@ import { useTheme } from "@react-navigation/native";
 
 import MyText from "../MyText";
 import { MyTheme } from "@types";
-import { FlatList } from "react-native-gesture-handler";
+import { ScrollView } from "react-native-gesture-handler";
 
 interface DropdownProps {
   data: string[];
@@ -140,6 +139,9 @@ export default function MyDropdown({
         {show && (
           <View style={{ position: "absolute", width: "100.5%" }}>
             <ScrollView
+              nestedScrollEnabled
+              removeClippedSubviews
+              keyboardShouldPersistTaps="handled"
               style={{
                 zIndex: zIndex + 2,
                 overflow: "hidden",

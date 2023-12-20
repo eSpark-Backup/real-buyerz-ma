@@ -1,11 +1,13 @@
 import React, { useState, useEffect, useRef } from "react";
 import {
+  View,
   Modal,
   StyleSheet,
   TouchableOpacity,
   Animated,
   ViewStyle,
   TouchableWithoutFeedback,
+  ScrollView,
 } from "react-native";
 import { useTheme } from "@react-navigation/native";
 
@@ -85,7 +87,7 @@ const BottomSheet = ({
           }}
         >
           <TouchableWithoutFeedback>
-            <Animated.View
+            <View
               style={[
                 styles({ theme }).modalContent,
                 bottomSheetStyles,
@@ -102,7 +104,7 @@ const BottomSheet = ({
               ]}
             >
               {children}
-            </Animated.View>
+            </View>
           </TouchableWithoutFeedback>
         </TouchableOpacity>
       </Animated.View>
