@@ -14,7 +14,7 @@ import { CloseBtn, Confirmation } from "@assets/images";
 import { LinearGradient } from "expo-linear-gradient";
 import { MyTheme } from "@types";
 
-interface MyVerificationModalProps {
+interface MyPopupModalProps {
   successMessage?: boolean;
   verificationModal?: boolean;
   confirmation?: boolean;
@@ -27,7 +27,7 @@ interface MyVerificationModalProps {
   onPress: () => void;
 }
 
-const MyVerificationModal = ({
+const MyPopupModal = ({
   successMessage,
   verificationModal,
   confirmation,
@@ -38,7 +38,7 @@ const MyVerificationModal = ({
   visible,
   onClose,
   onPress,
-}: MyVerificationModalProps) => {
+}: MyPopupModalProps) => {
   const theme = useTheme() as MyTheme;
   return (
     <Modal visible={visible} transparent>
@@ -303,4 +303,4 @@ const styles = (theme?: MyTheme) =>
     },
   });
 
-export default MyVerificationModal;
+export default MyPopupModal;

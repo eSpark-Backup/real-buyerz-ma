@@ -22,7 +22,6 @@ import {
   MyHeader,
   HomeHeader,
   LoginModal,
-  MyVerificationModal,
 } from "@components";
 import { AgentHome } from "@assets/images";
 import { WINDOW_WIDTH } from "@constants";
