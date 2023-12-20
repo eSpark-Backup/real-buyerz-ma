@@ -7,11 +7,11 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { useTheme } from "@react-navigation/native";
+import { LinearGradient } from "expo-linear-gradient";
 
 import MyText from "../MyText";
 import MyButton from "../MyButton";
 import { CloseBtn, Confirmation } from "@assets/images";
-import { LinearGradient } from "expo-linear-gradient";
 import { MyTheme } from "@types";
 
 interface MyPopupModalProps {
