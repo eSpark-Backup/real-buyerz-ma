@@ -77,7 +77,11 @@ export default function Settings() {
         <View style={styles.dFlexJustify}>
           <View style={styles.cards}>
             <MyClickableCard
-              onPress={() => console.log("profile")}
+              onPress={() => {
+                router.push("(user)/anon/settings/profileSettings");
+
+                console.log("profile");
+              }}
               title="Profile Settings"
             >
               <ProfileIcon />
