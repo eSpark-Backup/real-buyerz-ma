@@ -1,4 +1,10 @@
-import { ImageStyle, StyleProp, TextStyle, ViewStyle } from "react-native";
+import {
+  ImageStyle,
+  StyleProp,
+  TextStyle,
+  View,
+  ViewStyle,
+} from "react-native";
 import { Theme } from "@react-navigation/native";
 
 export type MyTheme = Theme & {
@@ -16,6 +22,9 @@ export type MyTheme = Theme & {
     dropdownBorder?: string;
     TabBar: string;
     TabBarText: string;
+    verificationBg: string;
+    verificationText: string;
+    gradient: string;
   };
 };
 
@@ -73,7 +82,7 @@ export type MyButtonProps = {
   onPress?: () => void;
   textColor?: string;
   backgroundColor?: string;
-  style?: ViewStyle;
+  style?: ViewStyle | ViewStyle[];
   labelStyle?: TextStyle;
   leftIcon?: React.ReactNode;
   key?: string;
@@ -96,19 +105,6 @@ export type SearchListProps = {
   label: string;
   selected: boolean;
 };
-export interface MyVerificationModalProps {
-  type?: "email" | "phone number";
-  value?: string;
-  visible?: boolean;
-  onClose: () => void;
-  onPress: () => void;
-}
-
-export interface SuccessMessageModalProps {
-  message?: string;
-  visible?: boolean;
-  onPress: () => void;
-}
 
 export type MyListItemProps = {
   item: {

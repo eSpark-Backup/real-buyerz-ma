@@ -20,6 +20,9 @@ const colors = {
     dropdownBorder: "#E7E7E7",
     TabBar: "#136FA9",
     TabBarText: "#FFFFFF",
+    verificationBg: "#EBF7FF",
+    verificationText: "#666666",
+    gradient: "#38B2FF",
   },
   dark: {
     primary: "#FB631C",
@@ -41,6 +44,9 @@ const colors = {
     dropdownBorder: "#29292E",
     TabBar: "#141414",
     TabBarText: "#FFFFFF",
+    verificationBg: "#101010",
+    verificationText: "#E2E2E2",
+    gradient: "#101010",
   },
 };
 

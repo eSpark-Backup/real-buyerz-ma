@@ -35,6 +35,7 @@ export default function ForgotPassword() {
           needs to be edited
           temporarily adjusted by negative margin */}
       <MyVerificationModal
+        verificationModal
         visible={isModalVisible}
         onClose={toggleModal}
         type={emailIsOn ? "email" : "phone number"}

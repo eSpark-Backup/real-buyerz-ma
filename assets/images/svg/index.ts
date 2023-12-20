@@ -34,3 +34,4 @@ export { default as MiFilter } from "./mi-filter.svg";
 export { default as SendFlag } from "./send-flag.svg";
 export { default as LikeButton } from "./like-button.svg";
 export { default as LikeActiveButton } from "./like-active-button.svg";
+export { default as Confirmation } from "./confirmation.svg";

@@ -4,8 +4,12 @@ import { LinearGradient } from "expo-linear-gradient";
 
 import MyText from "../MyText";
 import MyButton from "../MyButton";
-import { SuccessMessageModalProps } from "@types";
 
+export interface SuccessMessageModalProps {
+  message?: string;
+  visible?: boolean;
+  onPress: () => void;
+}
 const SuccessMessageModal = ({
   message,
   visible,

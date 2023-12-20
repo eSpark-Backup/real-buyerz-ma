@@ -27,6 +27,7 @@ export {
   SendFlag,
   LikeButton,
   LikeActiveButton,
+  Confirmation,
 } from "./svg";
 
 //* pngs
