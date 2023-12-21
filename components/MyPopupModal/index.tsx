@@ -11,35 +11,52 @@ import { LinearGradient } from "expo-linear-gradient";
 
 import MyText from "../MyText";
 import MyButton from "../MyButton";
-import { CloseBtn, Confirmation } from "@assets/images";
+import {
+  CloseBtn,
+  Confirmation,
+  ConfirmationGrey,
+  StarDisabled,
+  StarEnabled,
+} from "@assets/images";
 import { MyTheme } from "@types";
+import MyAvatar from "components/MyAvatar";
+import MyInput from "components/MyInput";
 
 interface MyPopupModalProps {
   successMessage?: boolean;
   verificationModal?: boolean;
   confirmation?: boolean;
+  logout?: boolean;
   congratulations?: boolean;
+  feedback?: boolean;
   type?: "email" | "phone number";
   value?: string;
   visible?: boolean;
   message?: string;
+  avatarUrl?: string;
   onClose?: () => void;
-  onPress: () => void;
+  onPress?: () => void;
+  children?: React.ReactNode;
 }
 
 const MyPopupModal = ({
   successMessage,
   verificationModal,
   confirmation,
+  logout,
   congratulations,
+  feedback,
   type,
   message,
   value,
+  avatarUrl,
   visible,
   onClose,
   onPress,
+  children,
 }: MyPopupModalProps) => {
   const theme = useTheme() as MyTheme;
+
   return (
     <Modal visible={visible} transparent>
       <View style={styles(theme).popupStyle}>
@@ -131,29 +148,102 @@ const MyPopupModal = ({
           </LinearGradient>
         ) : confirmation ? (
           <View style={styles(theme).confirmationBox}>
-            <Confirmation />
+            {logout ? <ConfirmationGrey /> : <Confirmation />}
+
             <MyText text={message} style={{ textAlign: "center" }} />
             <View style={styles(theme).buttonContainer}>
               <MyButton
                 label="Cancel"
                 style={[
-                  styles(theme).actionButton1,
-                  { elevation: theme.dark ? 0 : 5 },
+                  styles(theme).actionButton,
+                  { elevation: theme.dark ? 0 : 5, backgroundColor: "white" },
                 ]}
                 onPress={onClose}
               />
               <MyButton
                 label="Delete"
                 style={[
-                  styles(theme).actionButton2,
-                  { elevation: theme.dark ? 0 : 5 },
+                  styles(theme).actionButton,
+                  {
+                    elevation: theme.dark ? 0 : 5,
+                    backgroundColor: logout ? "white" : "#FD0D1B",
+                  },
                 ]}
-                labelStyle={{ color: "white" }}
+                labelStyle={{ color: logout ? "#333333" : "white" }}
                 onPress={onPress}
               />
             </View>
           </View>
-        ) : null}
+        ) : feedback ? (
+          <View style={styles(theme).fbBox}>
+            <View
+              style={{
+                flexDirection: "row",
+                gap: 10,
+                width: 240,
+              }}
+            >
+              <View style={{ paddingTop: 3 }}>
+                <MyAvatar size={32} imageUrl={avatarUrl} />
+              </View>
+              <View>
+                <MyText text={message} size={12} weight="600" />
+                <MyText
+                  text="Your review will be posted publicly on the web."
+                  size={10}
+                  style={{ width: "90%" }}
+                />
+              </View>
+            </View>
+            <View
+              style={{
+                flexDirection: "row",
+                gap: 10,
+                alignSelf: "flex-start",
+                marginLeft: 40,
+                marginVertical: 15,
+              }}
+            >
+              <StarEnabled />
+              <StarDisabled />
+              <StarDisabled />
+              <StarDisabled />
+              <StarDisabled />
+            </View>
+            <MyText
+              text="Describe your experience."
+              size={10}
+              textColor={theme.dark ? theme.colors.listText : "#E7E7E7"}
+              style={{ alignSelf: "flex-start", marginLeft: 40 }}
+            />
+            <TextInput
+              style={{
+                width: 200,
+                alignSelf: "flex-start",
+                marginLeft: 40,
+                borderBottomColor: theme.colors.primary,
+                borderBottomWidth: 1,
+                marginTop: 25,
+              }}
+            />
+            <View style={{ flexDirection: "row", gap: 11, top: 16, left: 88 }}>
+              <MyText
+                text="Cancel"
+                size={10}
+                textColor={theme.colors.primary}
+                weight="500"
+              />
+              <MyText
+                text="Post"
+                size={10}
+                textColor={theme.colors.primary}
+                weight="500"
+              />
+            </View>
+          </View>
+        ) : (
+          <View style={styles(theme).fbBox}>{children}</View>
+        )}
       </View>
     </Modal>
   );
@@ -284,22 +374,29 @@ const styles = (theme?: MyTheme) =>
       marginTop: 10,
       gap: 10,
     },
-    actionButton1: {
+    actionButton: {
       width: 100,
       height: 28,
       borderRadius: 3,
-      backgroundColor: "white",
     },
-    actionButton2: {
-      width: 100,
-      height: 28,
-      borderRadius: 3,
-      backgroundColor: "#FD0D1B",
-    },
+
     cButton: {
       width: 110,
       height: 35,
       marginTop: 4,
+    },
+    fbBox: {
+      width: 285,
+      height: 227,
+      backgroundColor: theme?.colors.background,
+      borderRadius: 10,
+      borderWidth: 1,
+      borderColor: theme?.colors.border,
+      shadowColor: "#00000040",
+      elevation: 4,
+      shadowOffset: { width: 0, height: 4 },
+      alignItems: "center",
+      padding: 23,
     },
   });
 

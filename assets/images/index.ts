@@ -28,6 +28,11 @@ export {
   LikeButton,
   LikeActiveButton,
   Confirmation,
+  ConfirmationGrey,
+  StarEnabled,
+  StarDisabled,
+  HomeSmall,
+  MiniArrow,
 } from "./svg";
 
 //* pngs

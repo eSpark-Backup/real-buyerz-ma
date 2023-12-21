@@ -35,3 +35,8 @@ export { default as SendFlag } from "./send-flag.svg";
 export { default as LikeButton } from "./like-button.svg";
 export { default as LikeActiveButton } from "./like-active-button.svg";
 export { default as Confirmation } from "./confirmation.svg";
+export { default as ConfirmationGrey } from "./confirmation-grey.svg";
+export { default as StarEnabled } from "./star-enabled.svg";
+export { default as StarDisabled } from "./star-disabled.svg";
+export { default as HomeSmall } from "./home-small.svg";
+export { default as MiniArrow } from "./mini-arrow.svg";

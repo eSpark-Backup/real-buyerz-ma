@@ -13,6 +13,7 @@ import {
   PrimaryBtn,
 } from "@components";
 import { LocationIcon } from "@assets/images/svg";
+import { router } from "expo-router";
 
 const PropertyDetail = () => {
   const theme = useTheme() as MyTheme;
@@ -113,7 +114,7 @@ const PropertyDetail = () => {
                 weight="600"
                 textColor="#ffffff"
                 width={100}
-                onPress={() => console.log("asd")}
+                onPress={() => router.push("(user)/anon/home/AgentProfile")}
                 btnStyle={{
                   paddingVertical: 10,
                 }}
