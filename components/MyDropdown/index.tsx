@@ -13,6 +13,7 @@ import { useTheme } from "@react-navigation/native";
 import MyText from "../MyText";
 import { MyTheme } from "@types";
 import { ScrollView } from "react-native-gesture-handler";
+import { colors } from "@theme";
 
 interface DropdownProps {
   data: string[];
@@ -105,6 +106,7 @@ export default function MyDropdown({
       <View
         style={[
           styles(theme).container,
+
           { zIndex: zIndex },
           show ? { borderBottomRightRadius: 0, borderBottomLeftRadius: 0 } : {},
           style,
@@ -137,7 +139,12 @@ export default function MyDropdown({
           />
         </View>
         {show && (
-          <View style={{ position: "absolute", width: "100.5%" }}>
+          <View
+            style={{
+              position: "absolute",
+              width: "100.5%",
+            }}
+          >
             <ScrollView
               nestedScrollEnabled
               removeClippedSubviews
@@ -146,7 +153,9 @@ export default function MyDropdown({
                 zIndex: zIndex + 2,
                 overflow: "hidden",
                 top: height - 2,
-                backgroundColor: theme.colors.background,
+                backgroundColor: theme.dark
+                  ? colors.dark.background
+                  : colors.light.background,
                 borderColor: theme.colors.border,
                 borderWidth: 1,
                 borderBottomRightRadius: 5,
@@ -155,6 +164,7 @@ export default function MyDropdown({
               }}
               contentContainerStyle={{
                 justifyContent: "space-between",
+                overflow: "hidden",
               }}
             >
               {listData.map((item, index) =>
@@ -166,6 +176,7 @@ export default function MyDropdown({
                   isSelected,
                   multiSelect,
                   setShow,
+                  theme,
                 })
               )}
             </ScrollView>
@@ -184,6 +195,7 @@ const renderList = ({
   handleSelection,
   isSelected,
   setShow,
+  theme,
 }: {
   item: string;
   index: number;
@@ -192,11 +204,13 @@ const renderList = ({
   handleSelection: (val: string) => void;
   isSelected: (val: string) => boolean;
   setShow: (val: boolean) => void;
+  theme: MyTheme;
 }) => {
   return (
     <TouchableOpacity
       activeOpacity={1}
       style={{
+        overflow: "hidden",
         height: height,
         borderTopWidth: index > 0 ? 1 : 0,
         justifyContent: "space-between",
@@ -204,6 +218,7 @@ const renderList = ({
         paddingHorizontal: 15,
         flexDirection: "row",
         alignItems: "center",
+        // backgroundColor: "#ffffff",
       }}
       // key={item}
       onPress={() => {
@@ -223,7 +238,7 @@ const styles = (theme?: MyTheme) =>
   StyleSheet.create({
     container: {
       width: 150,
-      height: 30,
+      // height: 30,
       borderWidth: 1,
       borderRadius: 5,
       borderColor: theme?.colors.border,

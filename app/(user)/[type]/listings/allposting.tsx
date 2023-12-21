@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import {
   FlatList,
   ScrollView,
@@ -11,17 +11,10 @@ import {
 } from "react-native";
 import { FontAwesome } from "@expo/vector-icons";
 import { useTheme } from "@react-navigation/native";
+import { BottomSheetModal } from "@gorhom/bottom-sheet";
 
 import { MyTheme } from "@types";
-import {
-  Card,
-  GapView,
-  MyBottomSheet,
-  MyButton,
-  MyDropdown,
-  MyText,
-} from "@components";
-import { WINDOW_HEIGHT } from "@constants";
+import { Card, GapView, MyButton, MyDropdown, MyText } from "@components";
 
 interface FilterBtn {
   id: number;
@@ -159,110 +152,164 @@ const dropdownData: DropDownList[] = [
 export default function AllPosting() {
   const theme = useTheme() as MyTheme;
   const [visible, setVisible] = useState(false);
+  // ref
+  const bottomSheetModalRef = useRef<BottomSheetModal>(null);
 
-  const toggleModal = () => {
-    setVisible(!visible);
-  };
+  // callbacks
 
   return (
-    <>
-      <View
-        style={{
-          position: "absolute",
-          backgroundColor: "pink",
-          width: "100%",
-          height: "100%",
-          zIndex: 2147483647,
-          borderTopRightRadius: 10,
-          borderTopLeftRadius: 10,
-          paddingHorizontal: 30,
-          paddingTop: 25,
-          top: WINDOW_HEIGHT / 7,
-        }}
-      >
-        {dropdownData.map((item, index) => (
-          <>
-            <MyDropdown
-              key={index}
-              data={item.data}
-              placeholder={item.placeholder}
-              onSelect={(val) => console.log("val", val)}
-              style={{ width: "100%" }}
-              height={40}
-              zIndex={4 - index}
-              title={item.title}
-            />
-            {index < dropdownData.length - 1 && <GapView length={20} />}
-          </>
-        ))}
-        <GapView length={60} />
-        <MyButton
-          label={"Save"}
-          labelStyle={{
-            color: "#ffffff",
-            fontSize: 10,
-          }}
+    <ScrollView
+      style={{ flex: 1 }}
+      contentContainerStyle={styles.container}
+      nestedScrollEnabled
+      showsVerticalScrollIndicator={false}
+    >
+      <BSheetModal
+        visible={visible}
+        theme={theme}
+        onClose={(val) => setVisible(val)}
+      />
+      <View style={styles.top_filter}>
+        <TouchableOpacity
+          activeOpacity={1}
+          onPress={() => setVisible(!visible)}
           style={{
-            alignSelf: "flex-end",
-            width: 100,
-            height: 30,
-            borderRadius: 4,
-            backgroundColor: theme.colors.primary,
+            backgroundColor: theme.colors.secondary,
+            padding: 10,
+            borderRadius: 5,
           }}
+        >
+          <FontAwesome name="filter" size={15} color="#ffffff" />
+        </TouchableOpacity>
+        <MyText
+          text="Reset"
+          textColor={theme.colors.secondary}
+          size={14}
+          style={{ marginLeft: 10, textDecorationLine: "underline" }}
         />
       </View>
-      <ScrollView
-        style={{ flex: 1 }}
-        contentContainerStyle={styles.container}
-        nestedScrollEnabled
-        showsVerticalScrollIndicator={false}
-      >
-        <View style={styles.top_filter}>
-          <TouchableOpacity
-            activeOpacity={1}
-            onPress={() => setVisible(!visible)}
-            style={{
-              backgroundColor: theme.colors.secondary,
-              padding: 10,
-              borderRadius: 5,
-            }}
-          >
-            <FontAwesome name="filter" size={15} color="#ffffff" />
-          </TouchableOpacity>
-          <MyText
-            text="Reset"
-            textColor={theme.colors.secondary}
-            size={14}
-            style={{ marginLeft: 10, textDecorationLine: "underline" }}
+      <View style={styles.top_selection_btns}>
+        {filterBtns.map((item, index) => (
+          <FilterBtnComp
+            item={item}
+            index={index}
+            theme={theme}
+            key={item.id.toString()}
           />
-        </View>
-        <View style={styles.top_selection_btns}>
-          {filterBtns.map((item, index) => (
-            <FilterBtnComp
-              item={item}
-              index={index}
-              theme={theme}
-              key={item.id.toString()}
-            />
-          ))}
-        </View>
-        <View style={styles.content}>
-          <Card style={styles.contentCard}>
-            <FlatList
-              data={testContentData}
-              showsVerticalScrollIndicator={false}
-              nestedScrollEnabled
-              renderItem={({ item, index }) =>
-                renderList({ item, index, theme })
-              }
-              ItemSeparatorComponent={() => <GapView />}
-            />
-          </Card>
-        </View>
-      </ScrollView>
-    </>
+        ))}
+      </View>
+      <View style={styles.content}>
+        <Card style={styles.contentCard}>
+          <FlatList
+            data={testContentData}
+            showsVerticalScrollIndicator={false}
+            nestedScrollEnabled
+            renderItem={({ item, index }) => renderList({ item, index, theme })}
+            ItemSeparatorComponent={() => <GapView />}
+          />
+        </Card>
+      </View>
+    </ScrollView>
   );
 }
+
+const BSheetModal = ({
+  visible,
+  onClose,
+  theme,
+}: {
+  visible: boolean;
+  onClose: (val: boolean) => void;
+  theme: MyTheme;
+}) => {
+  const bottomSheetModalRef = useRef<BottomSheetModal>(null);
+
+  // callbacks
+
+  useEffect(() => {
+    if (visible == true) {
+      handlePresentModal();
+    } else {
+      handleHideModal();
+    }
+  }, [visible]);
+
+  const handlePresentModal = useCallback(() => {
+    bottomSheetModalRef.current?.present();
+  }, []);
+
+  const handleHideModal = useCallback(() => {
+    bottomSheetModalRef.current?.dismiss();
+  }, []);
+
+  const handleSheetChanges = useCallback((index: number) => {
+    console.log("handleSheetChanges", index);
+  }, []);
+
+  return (
+    <BottomSheetModal
+      ref={bottomSheetModalRef}
+      snapPoints={["75%"]}
+      style={{
+        paddingTop: 30,
+        paddingHorizontal: 25,
+      }}
+      backgroundStyle={{
+        backgroundColor: theme.colors.background,
+      }}
+      handleComponent={() => <GapView length={1} />}
+      backdropComponent={() => (
+        <View
+          style={{
+            position: "absolute",
+            height: "100%",
+            width: "100%",
+            backgroundColor: "#00000088",
+          }}
+        >
+          <TouchableOpacity
+            style={{ flex: 1 }}
+            onPress={() => onClose(false)}
+          />
+        </View>
+      )}
+      onDismiss={() => onClose(false)}
+      enableDismissOnClose
+      onChange={handleSheetChanges}
+    >
+      {dropdownData.map((item, index) => (
+        <>
+          <MyDropdown
+            key={index}
+            data={item.data}
+            placeholder={item.placeholder}
+            onSelect={(val) => console.log("val", val)}
+            style={{ width: "100%" }}
+            height={40}
+            zIndex={4 - index}
+            title={item.title}
+          />
+          {index < dropdownData.length - 1 && <GapView length={20} />}
+        </>
+      ))}
+      <GapView length={60} />
+      <MyButton
+        label={"Save"}
+        labelStyle={{
+          color: "#ffffff",
+          fontSize: 10,
+        }}
+        style={{
+          alignSelf: "flex-end",
+          width: 100,
+          height: 30,
+          borderRadius: 4,
+          backgroundColor: theme.colors.primary,
+        }}
+      />
+    </BottomSheetModal>
+  );
+};
 
 const renderList = ({
   item,
