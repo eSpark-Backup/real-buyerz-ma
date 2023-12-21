@@ -480,7 +480,6 @@ const styles = StyleSheet.create({
   },
   top_selection_btns: {
     marginTop: 25,
-    backgroundColor: "pink",
     flexDirection: "row",
     flexWrap: "wrap",
     alignItems: "center",
