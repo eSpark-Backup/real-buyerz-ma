@@ -457,7 +457,7 @@ const FilterBtnComp = ({
         width: 90,
         height: 30,
         marginVertical: 10,
-        marginHorizontal: 10,
+        marginHorizontal: 5,
         borderWidth: 1,
         borderRadius: 4,
         backgroundColor: item.selected ? theme.colors.primary : "transparent",
@@ -480,6 +480,7 @@ const styles = StyleSheet.create({
   },
   top_selection_btns: {
     marginTop: 25,
+    backgroundColor: "pink",
     flexDirection: "row",
     flexWrap: "wrap",
     alignItems: "center",
