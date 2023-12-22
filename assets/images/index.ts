@@ -27,6 +27,8 @@ export {
   SendFlag,
   LikeButton,
   LikeActiveButton,
+  IraqIcon,
+  PakIcon,
 } from "./svg";
 
 //* pngs

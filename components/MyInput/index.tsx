@@ -6,6 +6,7 @@ import { useTheme } from "@react-navigation/native";
 import { MyInputProps, MyTheme } from "@types";
 
 export default function MyInput({
+  multiline,
   placeholder,
   password = false,
   onChange,
@@ -23,6 +24,7 @@ export default function MyInput({
   return (
     <View style={[inputContainerStyle, style]}>
       <TextInput
+        multiline={multiline}
         secureTextEntry={password ? (showPassword ? false : true) : false}
         placeholder={placeholder}
         placeholderTextColor={placeholderColor}
