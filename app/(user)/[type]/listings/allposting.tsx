@@ -4,7 +4,6 @@ import {
   ScrollView,
   StyleProp,
   StyleSheet,
-  TextStyle,
   TouchableOpacity,
   View,
   ViewStyle,
@@ -14,7 +13,14 @@ import { useTheme } from "@react-navigation/native";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
 
 import { MyTheme } from "@types";
-import { Card, GapView, MyButton, MyDropdown, MyText } from "@components";
+import {
+  Card,
+  GapView,
+  LabelValue,
+  MyButton,
+  MyDropdown,
+  MyText,
+} from "@components";
 
 interface FilterBtn {
   id: number;
@@ -152,10 +158,6 @@ const dropdownData: DropDownList[] = [
 export default function AllPosting() {
   const theme = useTheme() as MyTheme;
   const [visible, setVisible] = useState(false);
-  // ref
-  const bottomSheetModalRef = useRef<BottomSheetModal>(null);
-
-  // callbacks
 
   return (
     <ScrollView
@@ -358,12 +360,7 @@ const renderList = ({
       />
       <View>
         <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
-          <LabelValue
-            label="Purpose"
-            value={item?.purpose!}
-            labelStyle={{ color: "#636363" }}
-            valueStyle={{ color: "#126FAA" }}
-          />
+          <LabelValue label="Purpose" value={item?.purpose!} />
           <LabelValue
             label="Amount"
             value={item?.amount!}
@@ -372,25 +369,10 @@ const renderList = ({
             valueWeight="bold"
           />
         </View>
-        <LabelValue
-          label="Property Type"
-          value={item?.type!}
-          labelStyle={{ color: "#636363" }}
-          valueStyle={{ color: "#126FAA" }}
-        />
-        <LabelValue
-          label="City"
-          value={item?.city!}
-          labelStyle={{ color: "#636363" }}
-          valueStyle={{ color: "#126FAA" }}
-        />
+        <LabelValue label="Property Type" value={item?.type!} />
+        <LabelValue label="City" value={item?.city!} />
         <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
-          <LabelValue
-            label="Location"
-            value={item?.location!}
-            labelStyle={{ color: "#636363" }}
-            valueStyle={{ color: "#126FAA" }}
-          />
+          <LabelValue label="Location" value={item?.location!} />
           <MyButton
             label={`View`}
             labelStyle={{
@@ -409,29 +391,6 @@ const renderList = ({
         </View>
       </View>
     </Card>
-  );
-};
-
-const LabelValue = ({
-  label,
-  value,
-  labelStyle,
-  valueStyle,
-  labelWeight,
-  valueWeight,
-}: {
-  label: string;
-  value: string;
-  labelStyle?: TextStyle;
-  valueStyle?: TextStyle;
-  labelWeight?: TextStyle["fontWeight"];
-  valueWeight?: TextStyle["fontWeight"];
-}) => {
-  return (
-    <View style={{ flexDirection: "row" }}>
-      <MyText text={`${label}: `} style={labelStyle} weight={labelWeight} />
-      <MyText text={`${value}`} style={valueStyle} weight={valueWeight} />
-    </View>
   );
 };
 

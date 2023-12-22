@@ -25,3 +25,4 @@ export { default as MyFab } from "./MyFab";
 export { default as PrefernceList } from "./PreferencesList";
 export { default as MyListItem } from "./MyList";
 export { default as MyBottomSheet } from "./MyBottomSheet";
+export { default as LabelValue } from "./LabelValue";

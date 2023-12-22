@@ -1,8 +1,15 @@
-import { StyleSheet, Text, View } from "react-native";
 import React from "react";
+import { ScrollView, StyleSheet, View } from "react-native";
 import { useTheme } from "@react-navigation/native";
 
-import { GapView, MyAvatar, MyButton, MyText } from "@components";
+import {
+  Card,
+  GapView,
+  LabelValue,
+  MyAvatar,
+  MyButton,
+  MyText,
+} from "@components";
 import { MyTheme } from "@types";
 import { LocationIcon } from "@assets/images";
 
@@ -10,7 +17,15 @@ export default function ProposalDetails() {
   const theme = useTheme() as MyTheme;
 
   return (
-    <View style={{ paddingHorizontal: 20, paddingTop: 26 }}>
+    <ScrollView
+      style={{
+        flex: 1,
+        flexGrow: 1,
+        paddingTop: 26,
+        paddingHorizontal: 20,
+      }}
+      contentContainerStyle={{ paddingBottom: 65 }}
+    >
       <MyText
         size={20}
         text="Proposal Details"
@@ -64,7 +79,7 @@ export default function ProposalDetails() {
             borderColor: theme.colors.primary,
             borderRadius: 4,
             paddingVertical: 8,
-            paddingHorizontal: 27,
+            width: 85,
           }}
         />
         <GapView mode="horizontal" />
@@ -75,11 +90,134 @@ export default function ProposalDetails() {
           style={{
             borderRadius: 4,
             paddingVertical: 8,
-            paddingHorizontal: 27,
+            width: 85,
           }}
         />
       </View>
-    </View>
+      <View style={{ marginTop: 7 }}>
+        <Card radius={10}>
+          <Card.Title
+            weight="500"
+            titleStyle={{
+              fontSize: 16,
+              color: theme.colors.text,
+            }}
+          >
+            Project Information
+          </Card.Title>
+          <Card.Divider />
+          <View style={{ paddingHorizontal: 15, paddingVertical: 12 }}>
+            <MyText
+              text="Applicant"
+              weight="500"
+              size={16}
+              style={{ marginBottom: 5 }}
+            />
+            <MyText
+              text="John has applied to or been invited to your or your company’s job need experience custom template designers for custom posts archive creation"
+              weight="400"
+              size={12}
+            />
+          </View>
+          <Card.Divider />
+          <View
+            style={{ paddingHorizontal: 15, paddingTop: 23, paddingBottom: 12 }}
+          >
+            <MyText
+              text="Proposal Detail"
+              weight="500"
+              size={16}
+              style={{ marginBottom: 10 }}
+            />
+            <MyText
+              text="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip.Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip."
+              weight="400"
+              size={12}
+            />
+          </View>
+          <Card.Divider />
+          <View
+            style={{
+              paddingTop: 10,
+              paddingHorizontal: 15,
+              paddingBottom: 21,
+            }}
+          >
+            <MyText
+              text="Location & Purpose"
+              weight="500"
+              size={16}
+              style={{ marginBottom: 10 }}
+            />
+            <LabelValue label="Purpose" value="Buying" />
+            <LabelValue label="Property Type" value="Apartment" />
+            <LabelValue label="City" value="Karachi" />
+            <LabelValue label="Location" value="Gulshen-e-Iqbal" />
+            <View
+              style={{
+                width: "100%",
+                height: 150,
+                backgroundColor: "pink",
+                marginTop: 25,
+              }}
+            >
+              {/** //FIXME: Insert Mapbox */}
+            </View>
+          </View>
+          <Card.Divider />
+          <View
+            style={{
+              paddingTop: 14,
+              paddingHorizontal: 15,
+              paddingBottom: 20,
+            }}
+          >
+            <MyText
+              text="Area & Amount"
+              weight="500"
+              size={16}
+              style={{ marginBottom: 10 }}
+            />
+            <LabelValue label="Area Size" value="Large" />
+            <LabelValue label="Range" value="1000000" />
+            <LabelValue label="Instalment" value="Available" />
+            <LabelValue label="Ready for" value="Possession" />
+          </View>
+          <Card.Divider />
+          <View
+            style={{
+              paddingTop: 10,
+              paddingHorizontal: 15,
+              paddingBottom: 20,
+            }}
+          >
+            <MyText
+              text="Project Images"
+              style={{ marginBottom: 15 }}
+              weight="500"
+              size={16}
+            />
+            <View></View>
+          </View>
+          <Card.Divider />
+          <View
+            style={{
+              paddingTop: 10,
+              paddingHorizontal: 15,
+              paddingBottom: 20,
+            }}
+          >
+            <MyText
+              text="Property Videos"
+              weight="500"
+              size={16}
+              style={{ marginBottom: 15 }}
+            />
+            <View></View>
+          </View>
+        </Card>
+      </View>
+    </ScrollView>
   );
 }
 

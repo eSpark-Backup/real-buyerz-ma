@@ -13,7 +13,6 @@ export default function UserTypeLayout() {
     <Tabs
       initialRouteName="home"
       backBehavior="initialRoute"
-      // sceneContainerStyle={{ paddingBottom: 35 }}
       screenOptions={{
         headerShown: false,
         headerStyle: styles(theme).headerStyle,

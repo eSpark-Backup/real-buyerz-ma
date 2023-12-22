@@ -26,14 +26,18 @@ function Title({
   children,
   style,
   titleStyle,
+  weight,
 }: {
   children: React.ReactNode;
   style?: ViewStyle;
   titleStyle?: TextStyle;
+  weight?: TextStyle["fontWeight"];
 }) {
   return (
     <View style={[{ paddingVertical: 15 }, style]}>
-      <MyText style={[styles({}).textStyle, titleStyle]}>{children}</MyText>
+      <MyText style={[styles({}).textStyle, titleStyle]} weight={weight}>
+        {children}
+      </MyText>
     </View>
   );
 }
