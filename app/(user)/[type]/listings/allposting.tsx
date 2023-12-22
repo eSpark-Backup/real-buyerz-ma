@@ -278,9 +278,8 @@ const BSheetModal = ({
       onChange={handleSheetChanges}
     >
       {dropdownData.map((item, index) => (
-        <>
+        <View key={index}>
           <MyDropdown
-            key={index}
             data={item.data}
             placeholder={item.placeholder}
             onSelect={(val) => console.log("val", val)}
@@ -290,7 +289,7 @@ const BSheetModal = ({
             title={item.title}
           />
           {index < dropdownData.length - 1 && <GapView length={20} />}
-        </>
+        </View>
       ))}
       <GapView length={60} />
       <MyButton
