@@ -21,7 +21,6 @@ import {
   HomeOutline,
   HomeSmall,
   KeySmallIcon,
-  LocationSmallIcon,
   MiniArrow,
 } from "@assets/images";
 import { MyTheme } from "@types";
