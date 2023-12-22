@@ -90,7 +90,7 @@ const styles = (theme?: MyTheme) =>
     dFlex: {
       flexDirection: "row",
       justifyContent: "space-between",
-      width: "85%",
+      width: "95%",
       margin: "auto",
     },
   });

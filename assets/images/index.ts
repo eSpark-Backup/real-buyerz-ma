@@ -29,6 +29,7 @@ export {
   LikeActiveButton,
   IraqIcon,
   PakIcon,
+  LocationIcon,
 } from "./svg";
 
 //* pngs
