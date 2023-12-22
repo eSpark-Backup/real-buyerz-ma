@@ -24,6 +24,13 @@ const data = {
   },
 };
 
+interface PropertriesCardProps {
+  sale?: boolean;
+  plots: number;
+  houses: number;
+  commercials: number;
+}
+
 const AgentProfile = () => {
   const theme = useTheme() as MyTheme;
   return (
@@ -52,6 +59,7 @@ const AgentProfile = () => {
         }}
         labelStyle={{ color: theme.colors.secondary }}
       />
+      <CustomCard />
       {/* custom cards */}
       <MyText size={16} weight="500" style={{ alignSelf: "flex-start" }}>
         Properties By {data.name}
@@ -85,13 +93,6 @@ const AgentProfile = () => {
     </ScrollView>
   );
 };
-
-interface PropertriesCardProps {
-  sale?: boolean;
-  plots: number;
-  houses: number;
-  commercials: number;
-}
 
 const PropertriesCard = ({
   plots,
@@ -135,6 +136,30 @@ const PropertriesCard = ({
         </Card>
       </View>
     </>
+  );
+};
+
+interface CustomCardProps {
+  location?: string;
+  forSale?: number;
+  forRent?: number;
+}
+
+const CustomCard = ({ location, forSale, forRent }: CustomCardProps) => {
+  const theme = useTheme() as MyTheme;
+
+  return (
+    <Card>
+      <View>
+        <MyText>{location}</MyText>
+      </View>
+      <View>
+        <MyText>{forSale} For Sale</MyText>
+      </View>
+      <View>
+        <MyText>{forRent} For Rent</MyText>
+      </View>
+    </Card>
   );
 };
 
