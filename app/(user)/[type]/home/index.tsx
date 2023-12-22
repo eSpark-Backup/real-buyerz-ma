@@ -434,7 +434,7 @@ const styles = (theme?: MyTheme) =>
       alignItems: "center",
       flexDirection: "row",
     },
-    container: { alignItems: "center", marginBottom: 35 },
+    container: { alignItems: "center" },
     cardConatainer: {
       width: "90%",
       marginTop: 30,

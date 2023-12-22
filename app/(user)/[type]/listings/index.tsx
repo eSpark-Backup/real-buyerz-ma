@@ -436,7 +436,6 @@ const renderProposalsList = ({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    marginBottom: 40,
     paddingTop: 26,
     paddingHorizontal: 22,
   },

@@ -101,7 +101,7 @@ const AgentProfile = () => {
       <View style={{ width: "100%" }}>
         <PropertyList theme={theme} title={title} />
       </View>
-      <GapView length={50} />
+      <GapView length={20} />
     </ScrollView>
   );
 };
@@ -207,7 +207,7 @@ const styles = (theme?: MyTheme) =>
       alignItems: "center",
       width: "90%",
       alignSelf: "center",
-      paddingVertical: "2%",
+      paddingTop: "2%",
     },
     cardContainer: {
       flexDirection: "row",

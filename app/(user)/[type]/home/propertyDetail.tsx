@@ -229,7 +229,9 @@ const styles = (theme?: MyTheme) =>
   StyleSheet.create({
     wrapper: {
       flex: 1,
-      padding: 25,
+      paddingHorizontal: 25,
+      paddingTop: 25,
+      paddingBottom: 20,
     },
     cardWrapper: {
       display: "flex",

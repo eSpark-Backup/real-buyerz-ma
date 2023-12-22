@@ -62,7 +62,7 @@ const testData: Chat[] = [
 export default function ChatScreen() {
   const theme = useTheme() as MyTheme;
   return (
-    <View style={{ paddingHorizontal: 10, marginBottom: 40 }}>
+    <View style={{ paddingHorizontal: 10 }}>
       <Card radius={9} style={{ height: "100%" }}>
         {renderHeader(theme)}
         <FlatList
