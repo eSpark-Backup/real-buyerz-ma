@@ -33,6 +33,8 @@ export {
   StarDisabled,
   HomeSmall,
   MiniArrow,
+  IraqIcon,
+  PakIcon,
 } from "./svg";
 
 //* pngs

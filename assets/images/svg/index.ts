@@ -40,3 +40,6 @@ export { default as StarEnabled } from "./star-enabled.svg";
 export { default as StarDisabled } from "./star-disabled.svg";
 export { default as HomeSmall } from "./home-small.svg";
 export { default as MiniArrow } from "./mini-arrow.svg";
+export { default as IraqIcon } from "./iraq_icon.svg";
+export { default as PakIcon } from "./pak_icon.svg";
+export { default as EditIcon } from "./edit-icon.svg";
