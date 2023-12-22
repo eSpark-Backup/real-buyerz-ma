@@ -34,3 +34,6 @@ export { default as MiFilter } from "./mi-filter.svg";
 export { default as SendFlag } from "./send-flag.svg";
 export { default as LikeButton } from "./like-button.svg";
 export { default as LikeActiveButton } from "./like-active-button.svg";
+export { default as IraqIcon } from "./iraq_icon.svg";
+export { default as PakIcon } from "./pak_icon.svg";
+export { default as EditIcon } from "./edit-icon.svg";
