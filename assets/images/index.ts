@@ -26,6 +26,7 @@ export {
   OffRadioBtn,
   SendFlag,
   LikeButton,
+  LikeButtonDark,
   LikeActiveButton,
   Confirmation,
   ConfirmationGrey,
@@ -35,6 +36,8 @@ export {
   MiniArrow,
   IraqIcon,
   PakIcon,
+  HomeOutline,
+  KeySmallIcon,
 } from "./svg";
 
 //* pngs
