@@ -4,6 +4,7 @@ import { MyTheme } from "@types";
 import Card from "../Card";
 import GapView from "../GapView";
 import MyText from "../MyText";
+import { useTheme } from "@react-navigation/native";
 
 const PropertyListing = ({
   title,
@@ -51,27 +52,29 @@ const PropertyListing = ({
           <View style={{ padding: 8 }}>
             <MyText
               text="Contact for price"
-              size={10}
-              textColor="#000000"
-              style={{ fontWeight: "500", marginBottom: 10 }}
+              size={12}
+              textColor={theme?.colors.text}
+              weight="500"
+              style={{ marginBottom: 8 }}
             />
             <MyText
               text={item.name}
               size={10}
-              textColor="#000000"
-              style={{ fontWeight: "400", marginBottom: 10 }}
+              textColor={theme?.colors.text}
+              style={{ marginBottom: 8 }}
             />
             <MyText
               text={item.location}
               size={10}
-              textColor="#898989"
-              style={{ fontWeight: "400", marginBottom: 10 }}
+              weight="500"
+              textColor={theme?.colors.listText}
+              style={{ marginBottom: 8 }}
             />
             <MyText
               text={item.size}
-              size={8}
-              textColor="#898989"
-              style={{ fontWeight: "400", marginBottom: 10 }}
+              size={10}
+              textColor={theme?.colors.listText}
+              style={{ marginBottom: 8 }}
             />
           </View>
         </Card>

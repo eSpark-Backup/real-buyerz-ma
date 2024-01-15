@@ -21,6 +21,7 @@ interface DropdownProps {
   onSelect: (value: string | string[]) => void;
   style?: StyleProp<ViewStyle>;
   placeholderColor?: string;
+  bgColor?: string;
 }
 
 export default function MyDropdown({
@@ -31,6 +32,7 @@ export default function MyDropdown({
   multiSelect = false,
   style,
   placeholderColor,
+  bgColor,
 }: DropdownProps) {
   const theme = useTheme() as MyTheme;
   const [show, setShow] = useState(false);
@@ -122,13 +124,13 @@ export default function MyDropdown({
         <View
           style={{
             zIndex: zIndex + 2,
-            width: "101.5%",
+            width: bgColor ? "100%" : "101.5%",
             position: "absolute",
             overflow: "hidden",
             top: 28,
             justifyContent: "space-between",
-            backgroundColor: "#ffffff",
-            borderColor: "#E7E7E7",
+            backgroundColor: bgColor ? bgColor : theme.colors.cardBg,
+            borderColor: theme.colors.dropdownBorder,
             borderWidth: 1,
             borderBottomRightRadius: 5,
             borderBottomLeftRadius: 5,
@@ -141,7 +143,7 @@ export default function MyDropdown({
                 height: 30,
                 borderTopWidth: index > 0 ? 1 : 0,
                 justifyContent: "space-between",
-                borderColor: "#E7E7E7",
+                borderColor: theme.colors.dropdownBorder,
                 paddingHorizontal: 15,
                 flexDirection: "row",
                 alignItems: "center",
@@ -154,7 +156,10 @@ export default function MyDropdown({
                 handleSelection(item);
               }}
             >
-              <MyText text={item} />
+              <MyText
+                text={item}
+                textColor={bgColor ? "#333333" : theme.colors.text}
+              />
               {isSelected(item) && (
                 <Feather name="check" size={16} color="#34e145" />
               )}

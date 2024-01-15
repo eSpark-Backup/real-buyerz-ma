@@ -22,6 +22,7 @@ import {
   MyHeader,
   HomeHeader,
   LoginModal,
+  MyPopupModal,
 } from "@components";
 import { AgentHome } from "@assets/images";
 import { WINDOW_WIDTH } from "@constants";
@@ -252,7 +253,7 @@ const ImageCard = () => {
           }}
           onPress={() => console.log("asd")}
         >
-          <MyText textColor="#ffffff" size={10} style={{ fontWeight: "600" }}>
+          <MyText textColor="#ffffff" size={10} weight="600">
             View Dashboard
           </MyText>
         </TouchableOpacity>
@@ -360,13 +361,13 @@ export const PropertyListing = ({
             <MyText
               text="Contact for price"
               size={10}
-              textColor="#000000"
+              textColor={theme?.colors.text}
               style={{ fontWeight: "500", marginBottom: 10 }}
             />
             <MyText
               text={item.name}
               size={10}
-              textColor="#000000"
+              textColor={theme?.colors.text}
               style={{ fontWeight: "400", marginBottom: 10 }}
             />
             <MyText
@@ -433,7 +434,7 @@ const styles = (theme?: MyTheme) =>
       alignItems: "center",
       flexDirection: "row",
     },
-    container: { alignItems: "center", marginBottom: 35 },
+    container: { alignItems: "center" },
     cardConatainer: {
       width: "90%",
       marginTop: 30,

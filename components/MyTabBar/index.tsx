@@ -72,11 +72,11 @@ function MyTabBar({
                 <View style={styles({ theme }).searchInnerStyle}>
                   <SearchTab
                     style={{
-                      color: theme.colors.background,
+                      color: theme.colors.TabBarText,
                     }}
                   />
                   <MyText
-                    style={{ color: theme.colors.background, marginTop: 4 }}
+                    style={{ color: theme.colors.TabBarText, marginTop: 4 }}
                     size={10}
                   >
                     {label as string}
@@ -89,7 +89,7 @@ function MyTabBar({
                     style={{
                       color: isFocused
                         ? theme.colors.primary
-                        : theme.colors.background,
+                        : theme.colors.TabBarText,
                       marginTop: 4,
                     }}
                     size={10}
@@ -116,7 +116,7 @@ const renderTabIcon = (
       return (
         <HomeTab
           style={{
-            color: isFocused ? theme.colors.primary : theme.colors.background,
+            color: isFocused ? theme.colors.primary : theme.colors.TabBarText,
           }}
         />
       );
@@ -124,7 +124,7 @@ const renderTabIcon = (
       return (
         <InboxTab
           style={{
-            color: isFocused ? theme.colors.primary : theme.colors.background,
+            color: isFocused ? theme.colors.primary : theme.colors.TabBarText,
           }}
         />
       );
@@ -132,7 +132,7 @@ const renderTabIcon = (
       return (
         <ListingTab
           style={{
-            color: isFocused ? theme.colors.primary : theme.colors.background,
+            color: isFocused ? theme.colors.primary : theme.colors.TabBarText,
           }}
         />
       );
@@ -140,7 +140,7 @@ const renderTabIcon = (
       return (
         <SettingsTab
           style={{
-            color: isFocused ? theme.colors.primary : theme.colors.background,
+            color: isFocused ? theme.colors.primary : theme.colors.TabBarText,
           }}
         />
       );
@@ -159,7 +159,7 @@ const styles = ({
   StyleSheet.create({
     container: {
       flexDirection: "row",
-      backgroundColor: theme?.colors.secondary,
+      backgroundColor: theme?.colors.TabBar,
       justifyContent: "center",
       alignItems: "center",
       height: 52,
@@ -179,10 +179,10 @@ const styles = ({
       bottom: 25,
       width: 72,
       height: 72,
-      backgroundColor: theme?.colors.background,
+      backgroundColor: theme?.colors.TabBarText,
     },
     searchInnerStyle: {
-      backgroundColor: theme?.colors.secondary,
+      backgroundColor: theme?.colors.TabBar,
       justifyContent: "center",
       alignItems: "center",
       borderRadius: 35,

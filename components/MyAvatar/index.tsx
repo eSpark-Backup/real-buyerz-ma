@@ -4,7 +4,7 @@ import { View, Image, StyleSheet } from "react-native";
 
 interface IMyAvatar {
   size: number;
-  imageUrl: string;
+  imageUrl?: string;
   edit?: boolean;
 }
 
