@@ -13,6 +13,7 @@ import {
   PrimaryBtn,
 } from "@components";
 import { LocationIcon } from "@assets/images/svg";
+import { router } from "expo-router";
 
 const PropertyDetail = () => {
   const theme = useTheme() as MyTheme;
@@ -72,7 +73,7 @@ const PropertyDetail = () => {
 
   const colorDetector = (value: number) => {
     if (value % 2 === 0) {
-      return theme.colors.positive;
+      return theme.colors.background;
     } else {
       return theme.colors.popupbg;
     }
@@ -96,14 +97,14 @@ const PropertyDetail = () => {
               text="Moin khan"
               size={16}
               weight="600"
-              textColor="#696969"
+              textColor={theme.colors.listText}
             />
             <View style={styles(theme).dFlex}>
               <LocationIcon />
               <MyText
                 text="Lahore-Pakistan"
                 size={12}
-                textColor="#696969"
+                textColor={theme.colors.listText}
                 weight="600"
               />
             </View>
@@ -113,7 +114,7 @@ const PropertyDetail = () => {
                 weight="600"
                 textColor="#ffffff"
                 width={100}
-                onPress={() => console.log("asd")}
+                onPress={() => router.push("(user)/anon/home/AgentProfile")}
                 btnStyle={{
                   paddingVertical: 10,
                 }}
@@ -167,7 +168,7 @@ const PropertyDetail = () => {
                     text={item.title}
                     size={13}
                     weight="400"
-                    textColor="#696969"
+                    textColor={theme.colors.listText}
                     style={styles(theme).columnOne}
                   />
                   <MyText
@@ -216,7 +217,7 @@ const PropertyDetail = () => {
             </View>
           </View>
         </Card>
-        <PropertyList title="Similar Projects" />
+        <PropertyList title="Similar Projects" theme={theme} />
       </View>
     </ScrollView>
   );
@@ -228,7 +229,9 @@ const styles = (theme?: MyTheme) =>
   StyleSheet.create({
     wrapper: {
       flex: 1,
-      padding: 25,
+      paddingHorizontal: 25,
+      paddingTop: 25,
+      paddingBottom: 20,
     },
     cardWrapper: {
       display: "flex",

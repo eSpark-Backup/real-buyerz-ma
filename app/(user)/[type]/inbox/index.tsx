@@ -145,7 +145,6 @@ const styles = (theme?: MyTheme) =>
   StyleSheet.create({
     wrapper: {
       flex: 1,
-      marginBottom: 45,
       paddingHorizontal: 20,
       paddingTop: 20,
       height: "100%",

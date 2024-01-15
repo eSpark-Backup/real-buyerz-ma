@@ -15,7 +15,14 @@ const colors = {
     positive: "#FFFFFF",
     negative: "#000000",
     cardBorder: "#E4E4E4",
-    cardBg: "#fff",
+    cardBg: "#ffffff",
+    selected: "#EDF7FF",
+    dropdownBorder: "#E7E7E7",
+    TabBar: "#136FA9",
+    TabBarText: "#FFFFFF",
+    verificationBg: "#EBF7FF",
+    verificationText: "#666666",
+    gradient: "#38B2FF",
   },
   dark: {
     primary: "#FB631C",
@@ -31,7 +38,15 @@ const colors = {
     positive: "#000000",
     negative: "#FFFFFF",
     cardBorder: "#29292E",
-    cardBg: "#000",
+    cardBg: "#141414",
+    selected: "#EDF7FF", //to be updated
+    chat: "#333333",
+    dropdownBorder: "#29292E",
+    TabBar: "#141414",
+    TabBarText: "#FFFFFF",
+    verificationBg: "#101010",
+    verificationText: "#E2E2E2",
+    gradient: "#101010",
   },
 };
 

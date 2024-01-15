@@ -114,7 +114,6 @@ const styles = (theme?: MyTheme) =>
       marginTop: 12,
       borderColor: theme?.colors.border,
       borderWidth: 1,
-      marginBottom: 50,
       borderRadius: 9,
     },
     innerContainer: {

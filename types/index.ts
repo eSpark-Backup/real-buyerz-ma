@@ -1,4 +1,10 @@
-import { ImageStyle, StyleProp, TextStyle, ViewStyle } from "react-native";
+import {
+  ImageStyle,
+  StyleProp,
+  TextStyle,
+  View,
+  ViewStyle,
+} from "react-native";
 import { Theme } from "@react-navigation/native";
 
 export type MyTheme = Theme & {
@@ -11,6 +17,14 @@ export type MyTheme = Theme & {
     negative: string;
     cardBorder: string;
     cardBg: string;
+    selected: string;
+    chat?: string;
+    dropdownBorder?: string;
+    TabBar: string;
+    TabBarText: string;
+    verificationBg: string;
+    verificationText: string;
+    gradient: string;
   };
 };
 
@@ -21,17 +35,17 @@ export type MyTextProps = {
   textColor?: string;
   style?: TextStyle;
   weight?:
-  | "normal"
-  | "bold"
-  | "100"
-  | "200"
-  | "300"
-  | "400"
-  | "500"
-  | "600"
-  | "700"
-  | "800"
-  | "900";
+    | "normal"
+    | "bold"
+    | "100"
+    | "200"
+    | "300"
+    | "400"
+    | "500"
+    | "600"
+    | "700"
+    | "800"
+    | "900";
   size?: number;
 };
 
@@ -69,7 +83,7 @@ export type MyButtonProps = {
   onPress?: () => void;
   textColor?: string;
   backgroundColor?: string;
-  style?: ViewStyle;
+  style?: ViewStyle | ViewStyle[];
   labelStyle?: TextStyle;
   leftIcon?: React.ReactNode;
   key?: string;
@@ -92,19 +106,6 @@ export type SearchListProps = {
   label: string;
   selected: boolean;
 };
-export interface MyVerificationModalProps {
-  type?: "email" | "phone number";
-  value?: string;
-  visible?: boolean;
-  onClose: () => void;
-  onPress: () => void;
-}
-
-export interface SuccessMessageModalProps {
-  message?: string;
-  visible?: boolean;
-  onPress: () => void;
-}
 
 export type MyListItemProps = {
   item: {

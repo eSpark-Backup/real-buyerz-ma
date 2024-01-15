@@ -8,6 +8,7 @@ import { router } from "expo-router";
 
 import { PLogo, ProfilePin, RText } from "@assets/images";
 import { MyTheme } from "@types";
+import { useTheme } from "@react-navigation/native";
 
 interface MyProps {
   showBackIcon?: boolean;
@@ -34,8 +35,8 @@ export default function MyHeader({
 }: HeaderProps & MyProps) {
   const headerStyle = options.headerStyle as ViewStyle;
   return (
-    <View style={{ ...styles.container, ...headerStyle }}>
-      <View style={styles.left}>
+    <View style={{ ...styles(theme).container, ...headerStyle }}>
+      <View style={styles(theme).left}>
         {showBackIcon && (
           <Feather
             name="arrow-left"
@@ -47,11 +48,11 @@ export default function MyHeader({
         {leftLogo && <PLogo />}
       </View>
       {!hideCenter && (
-        <View style={styles.middle}>
+        <View style={styles(theme).middle}>
           <RText />
         </View>
       )}
-      <View style={styles.right}>
+      <View style={styles(theme).right}>
         {showRight && (
           <>
             {showProfilePin && (
@@ -75,29 +76,30 @@ export default function MyHeader({
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flexDirection: "row",
-    paddingHorizontal: 20,
-    width: "100%",
-    justifyContent: "center",
-    height: 60,
-    borderBottomColor: "#E4E4E4",
-    borderBottomWidth: 1,
-  },
-  left: {
-    flex: 1,
-    alignItems: "flex-start",
-    justifyContent: "center",
-  },
-  middle: {
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  right: {
-    flex: 1,
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "flex-end",
-  },
-});
+const styles = (theme?: MyTheme) =>
+  StyleSheet.create({
+    container: {
+      flexDirection: "row",
+      paddingHorizontal: 20,
+      width: "100%",
+      justifyContent: "center",
+      height: 60,
+      borderBottomColor: theme?.colors.border,
+      borderBottomWidth: 1,
+    },
+    left: {
+      flex: 1,
+      alignItems: "flex-start",
+      justifyContent: "center",
+    },
+    middle: {
+      alignItems: "center",
+      justifyContent: "center",
+    },
+    right: {
+      flex: 1,
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "flex-end",
+    },
+  });

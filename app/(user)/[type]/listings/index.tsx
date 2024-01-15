@@ -1,10 +1,17 @@
-import React from "react";
+import React, { useState } from "react";
 import { StyleSheet, View, FlatList, ScrollView, Image } from "react-native";
 import { useTheme } from "@react-navigation/native";
 import { Feather } from "@expo/vector-icons";
 import { router } from "expo-router";
 
-import { Card, GapView, MyButton, MyText, SearchBar } from "@components";
+import {
+  Card,
+  GapView,
+  MyButton,
+  MyText,
+  PreviewPopup,
+  SearchBar,
+} from "@components";
 import { MyTheme } from "@types";
 import { MiFilter } from "@assets/images";
 import { TouchableOpacity } from "react-native-gesture-handler";
@@ -122,142 +129,154 @@ function timeAgo(date: Date, minutesAgo: number = 0): string {
 
 export default function Listings() {
   const theme = useTheme() as MyTheme;
+  const [visible, setVisible] = useState(false);
 
+  const handlepress = () => {
+    setVisible(true);
+  };
+
+  const onClose = () => {
+    setVisible(false);
+  };
   return (
-    <ScrollView
-      style={{ flex: 1 }}
-      nestedScrollEnabled
-      showsVerticalScrollIndicator={false}
-    >
-      <View style={styles.container}>
-        <View style={styles.top}>
-          <MyText text="Dashboard" size={20} weight="600" />
-          <MyButton
-            label="Post a Request"
-            backgroundColor={theme.colors.primary}
-            textColor="#ffffff"
-            labelStyle={{ fontSize: 10, fontWeight: "500" }}
-            style={{ borderRadius: 4, padding: 10 }}
-            leftIcon={
-              <Feather
-                name="plus"
-                size={14}
-                color="#ffffff"
-                style={{ marginRight: 5 }}
-              />
-            }
-          />
-        </View>
-        <View style={styles.content}>
-          <Card>
-            <View
-              style={{
-                flexDirection: "row",
-                justifyContent: "space-between",
-                padding: 12,
-                borderBottomWidth: 1,
-                borderColor: theme.colors.border,
-              }}
-            >
-              <MyText text="Your Posting" weight="600" size={16} />
-              <TouchableOpacity
-                activeOpacity={1}
-                onPress={() => router.push("(user)/anon/listings/allposting")}
-              >
-                <MyText
-                  text="see all postings"
-                  textColor={theme.colors.secondary}
-                  style={{ textDecorationLine: "underline" }}
+    <>
+      <PreviewPopup onClose={onClose} visible={visible} />
+      <ScrollView
+        style={{ flex: 1 }}
+        nestedScrollEnabled
+        showsVerticalScrollIndicator={false}
+      >
+        <View style={styles.container}>
+          <View style={styles.top}>
+            <MyText text="Dashboard" size={20} weight="600" />
+            <MyButton
+              label="Post a Request"
+              backgroundColor={theme.colors.primary}
+              textColor="#ffffff"
+              labelStyle={{ fontSize: 10, fontWeight: "500" }}
+              style={{ borderRadius: 4, padding: 10 }}
+              leftIcon={
+                <Feather
+                  name="plus"
+                  size={14}
+                  color="#ffffff"
+                  style={{ marginRight: 5 }}
                 />
-              </TouchableOpacity>
-            </View>
-            <View
-              style={{
-                paddingVertical: 17,
-                paddingHorizontal: 11,
-                height: 410,
-              }}
-            >
-              <FlatList
-                data={testPostingData}
-                nestedScrollEnabled
-                renderItem={({ item, index }) =>
-                  renderPostingList({ item, index, theme })
-                }
-                showsVerticalScrollIndicator={false}
-                ItemSeparatorComponent={() => <GapView length={20} />}
-                keyExtractor={(item) => item.id.toString()}
-              />
-            </View>
-          </Card>
-          <Card style={{ marginTop: 17 }}>
-            <View
-              style={{
-                flexDirection: "row",
-                justifyContent: "space-between",
-                padding: 12,
-                borderBottomWidth: 1,
-                borderColor: theme.colors.border,
-              }}
-            >
-              <MyText text="All Proposals (1)" weight="600" size={16} />
-            </View>
-            <View
-              style={{
-                paddingVertical: 17,
-                height: 410,
-              }}
-            >
-              <FlatList
-                data={testProposalsData}
-                nestedScrollEnabled
-                ListHeaderComponentStyle={{ paddingHorizontal: 11 }}
-                ListHeaderComponent={() => (
-                  <View>
-                    <View style={{ height: 35 }}>
-                      <SearchBar
-                        button
-                        placeholder="Search by name"
-                        searchBtnColor={theme.colors.secondary}
-                      />
+              }
+              onPress={handlepress}
+            />
+          </View>
+          <View style={styles.content}>
+            <Card>
+              <View
+                style={{
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                  padding: 12,
+                  borderBottomWidth: 1,
+                  borderColor: theme.colors.border,
+                }}
+              >
+                <MyText text="Your Posting" weight="600" size={16} />
+                <TouchableOpacity
+                  activeOpacity={1}
+                  onPress={() => router.push("(user)/anon/listings/allposting")}
+                >
+                  <MyText
+                    text="see all postings"
+                    textColor={theme.colors.secondary}
+                    style={{ textDecorationLine: "underline" }}
+                  />
+                </TouchableOpacity>
+              </View>
+              <View
+                style={{
+                  paddingVertical: 17,
+                  paddingHorizontal: 11,
+                  height: 410,
+                }}
+              >
+                <FlatList
+                  data={testPostingData}
+                  nestedScrollEnabled
+                  renderItem={({ item, index }) =>
+                    renderPostingList({ item, index, theme })
+                  }
+                  showsVerticalScrollIndicator={false}
+                  ItemSeparatorComponent={() => <GapView length={20} />}
+                  keyExtractor={(item) => item.id.toString()}
+                />
+              </View>
+            </Card>
+            <Card style={{ marginTop: 17 }}>
+              <View
+                style={{
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                  padding: 12,
+                  borderBottomWidth: 1,
+                  borderColor: theme.colors.border,
+                }}
+              >
+                <MyText text="All Proposals (1)" weight="600" size={16} />
+              </View>
+              <View
+                style={{
+                  paddingVertical: 17,
+                  height: 410,
+                }}
+              >
+                <FlatList
+                  data={testProposalsData}
+                  nestedScrollEnabled
+                  ListHeaderComponentStyle={{ paddingHorizontal: 11 }}
+                  ListHeaderComponent={() => (
+                    <View>
+                      <View style={{ height: 35 }}>
+                        <SearchBar
+                          button
+                          placeholder="Search by name"
+                          searchBtnColor={theme.colors.secondary}
+                        />
+                      </View>
+                      <View style={{ alignItems: "flex-end" }}>
+                        <MyButton
+                          label="Filter"
+                          labelStyle={{
+                            color: theme.colors.primary,
+                            marginLeft: 5,
+                          }}
+                          leftIcon={<MiFilter />}
+                          style={{
+                            paddingHorizontal: 15,
+                            paddingVertical: 5,
+                            backgroundColor: "transparent",
+                            borderWidth: 1,
+                            borderColor: theme.colors.primary,
+                            borderRadius: 4,
+                            marginVertical: 10,
+                          }}
+                        />
+                      </View>
                     </View>
-                    <View style={{ alignItems: "flex-end" }}>
-                      <MyButton
-                        label="Filter"
-                        labelStyle={{
-                          color: theme.colors.primary,
-                          marginLeft: 5,
-                        }}
-                        leftIcon={<MiFilter />}
-                        style={{
-                          paddingHorizontal: 15,
-                          paddingVertical: 5,
-                          backgroundColor: "transparent",
-                          borderWidth: 1,
-                          borderColor: theme.colors.primary,
-                          borderRadius: 4,
-                          marginVertical: 10,
-                        }}
-                      />
+                  )}
+                  renderItem={({ item, index }) =>
+                    renderProposalsList({ item, index, theme })
+                  }
+                  showsVerticalScrollIndicator={false}
+                  ItemSeparatorComponent={() => (
+                    <View style={{ marginVertical: 10 }}>
+                      <Card.Divider style={{ width: "100%" }} />
                     </View>
-                  </View>
-                )}
-                renderItem={({ item, index }) =>
-                  renderProposalsList({ item, index, theme })
-                }
-                showsVerticalScrollIndicator={false}
-                ItemSeparatorComponent={() => (
-                  <View style={{ marginVertical: 10 }}>
-                    <Card.Divider style={{ width: "100%" }} />
-                  </View>
-                )}
-                keyExtractor={(item) => item.id.toString()}
-              />
-            </View>
-          </Card>
+                  )}
+                  keyExtractor={(item) => item.id.toString()}
+                />
+              </View>
+            </Card>
+          </View>
         </View>
-      </View>
-    </ScrollView>
+      </ScrollView>
+    </>
   );
 }
 
@@ -418,7 +437,6 @@ const renderProposalsList = ({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    marginBottom: 40,
     paddingTop: 26,
     paddingHorizontal: 22,
   },

@@ -26,6 +26,7 @@ interface DropdownProps {
   containerStyle?: ViewStyle;
   height?: number;
   title?: string;
+  bgColor?: string;
 }
 
 export default function MyDropdown({
@@ -39,6 +40,7 @@ export default function MyDropdown({
   containerStyle,
   height = 30,
   title,
+  bgColor,
 }: DropdownProps) {
   const theme = useTheme() as MyTheme;
   const [show, setShow] = useState(false);
@@ -142,7 +144,7 @@ export default function MyDropdown({
           <View
             style={{
               position: "absolute",
-              width: "100.5%",
+              width: "100%",
             }}
           >
             <ScrollView

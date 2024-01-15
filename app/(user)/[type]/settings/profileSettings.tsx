@@ -282,7 +282,6 @@ const styles = (theme?: MyTheme) =>
 
       borderColor: theme?.colors.border,
       borderWidth: 1,
-      marginBottom: 50,
       borderRadius: 9,
     },
   });

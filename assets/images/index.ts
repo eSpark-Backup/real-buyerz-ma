@@ -26,10 +26,19 @@ export {
   OffRadioBtn,
   SendFlag,
   LikeButton,
+  LikeButtonDark,
   LikeActiveButton,
+  Confirmation,
+  ConfirmationGrey,
+  StarEnabled,
+  StarDisabled,
+  HomeSmall,
+  MiniArrow,
   IraqIcon,
   PakIcon,
   LocationIcon,
+  HomeOutline,
+  KeySmallIcon,
 } from "./svg";
 
 //* pngs

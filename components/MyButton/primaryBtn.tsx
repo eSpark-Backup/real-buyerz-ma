@@ -56,7 +56,7 @@ const PrimaryBtn = ({
         },
         btnStyle,
       ]}
-      onPress={() => console.log("asd")}
+      onPress={onPress}
     >
       <MyText
         textColor={textColor}

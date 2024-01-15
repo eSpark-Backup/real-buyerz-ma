@@ -166,7 +166,7 @@ const styles = StyleSheet.create({
   top: {
     position: "absolute",
     top: "3%",
-    right: "7%",
+    right: "8%",
     flexDirection: "row",
   },
   form: {

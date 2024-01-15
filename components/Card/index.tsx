@@ -33,9 +33,10 @@ function Title({
   titleStyle?: TextStyle;
   weight?: TextStyle["fontWeight"];
 }) {
+  const theme = useTheme() as MyTheme;
   return (
     <View style={[{ paddingVertical: 15 }, style]}>
-      <MyText style={[styles({}).textStyle, titleStyle]} weight={weight}>
+      <MyText style={[styles({ theme }).textStyle, titleStyle]}>
         {children}
       </MyText>
     </View>
@@ -44,17 +45,22 @@ function Title({
 
 function Divider({
   thickness = 1,
-  color = "rgba(233, 233, 233, 1)",
+  color,
   style,
 }: {
   thickness?: number;
   color?: string;
   style?: ViewStyle;
 }) {
+  const theme = useTheme() as MyTheme;
   return (
     <View
       style={[
-        { width: "100%", height: thickness, backgroundColor: color },
+        {
+          width: "100%",
+          height: thickness,
+          backgroundColor: color ? color : theme.colors.border,
+        },
         style,
       ]}
     />
@@ -87,6 +93,6 @@ const styles = ({ radius, theme }: { radius?: number; theme?: MyTheme }) =>
       fontWeight: "500",
       fontSize: 16,
       textAlign: "center",
-      color: "#000000",
+      color: theme?.colors.negative,
     },
   });

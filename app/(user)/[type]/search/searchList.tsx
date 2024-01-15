@@ -112,7 +112,6 @@ export default function SearchList() {
             <MyListItem item={item} index={index} theme={theme} />
           )}
           showsVerticalScrollIndicator={false}
-          ListFooterComponent={() => <GapView length={36} />}
           ItemSeparatorComponent={() => <GapView />}
           keyExtractor={(item) => item.id}
         />

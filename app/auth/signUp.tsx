@@ -132,6 +132,7 @@ export default function SignUp() {
                     zIndex={10}
                     style={styles.dropdown}
                     placeholderColor="#666666"
+                    bgColor="#f3f4f6"
                   />
                 ) : (
                   <MyInput
