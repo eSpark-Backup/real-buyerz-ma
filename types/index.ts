@@ -25,6 +25,7 @@ export type MyTheme = Theme & {
     verificationBg: string;
     verificationText: string;
     gradient: string;
+    inputBg: string;
   };
 };
 
@@ -89,6 +90,28 @@ export type MyButtonProps = {
   key?: string;
 };
 
+export interface IPropsBtn {
+  title: string;
+  onPress?: () => void;
+  textColor?: string;
+  width?: any;
+  btnStyle?: ViewStyle;
+  labelStyle?: TextStyle;
+  paddingV?: number;
+  weight?:
+    | "normal"
+    | "bold"
+    | "100"
+    | "200"
+    | "300"
+    | "400"
+    | "500"
+    | "600"
+    | "700"
+    | "800"
+    | "900";
+}
+
 export type LoginModalProps = {
   visible?: boolean;
   onClose: () => void;
@@ -122,3 +145,9 @@ export type MyListItemProps = {
   theme: MyTheme;
   fav?: boolean;
 };
+
+export interface IMyAvatar {
+  size: number;
+  imageUrl?: string;
+  edit?: boolean;
+}

@@ -438,7 +438,7 @@ const styles = (theme?: MyTheme) =>
     cardConatainer: {
       width: "90%",
       marginTop: 30,
-      backgroundColor: theme?.colors.card,
+      backgroundColor: theme?.colors.background,
       borderColor: theme?.colors.border,
     },
     row1: { paddingHorizontal: 20, paddingVertical: 12 },

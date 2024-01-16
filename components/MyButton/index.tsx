@@ -1,17 +1,9 @@
 import React from "react";
-import {
-  TouchableOpacity,
-  TextStyle,
-  ViewStyle,
-  Appearance,
-} from "react-native";
+import { TouchableOpacity, TextStyle, ViewStyle } from "react-native";
 
 import MyText from "../MyText";
 import { MyButtonProps, MyTheme } from "@types";
-import { DarkTheme, LightTheme } from "@theme";
-
-const colorScheme = Appearance.getColorScheme();
-const theme = colorScheme === "dark" ? DarkTheme : LightTheme;
+import { useTheme } from "@react-navigation/native";
 
 export default function MyButton({
   label,
@@ -22,6 +14,7 @@ export default function MyButton({
   labelStyle,
   leftIcon,
 }: MyButtonProps) {
+  const theme = useTheme() as MyTheme;
   const buttonStyle: ViewStyle = {
     backgroundColor: backgroundColor || theme.colors.secondary,
     flexDirection: "row",
