@@ -276,7 +276,7 @@ const styles = (theme?: MyTheme) =>
     box: {
       width: 296,
       height: 290,
-      backgroundColor: theme?.colors.verificationBg,
+      backgroundColor: theme?.colors.background,
       borderRadius: 15,
       borderWidth: 1,
       borderColor: theme?.colors.border,
@@ -314,7 +314,7 @@ const styles = (theme?: MyTheme) =>
       height: 45,
       alignItems: "center",
       justifyContent: "center",
-      backgroundColor: "#D1EDFF",
+      backgroundColor: theme?.dark ? "#D1EDFF" : "#fff",
       shadowColor: "#00000040",
       shadowOffset: { width: 1, height: 2 },
       elevation: 5,

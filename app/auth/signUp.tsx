@@ -5,7 +5,7 @@ import { MaterialIcons } from "@expo/vector-icons";
 import { Link } from "expo-router";
 import { Formik } from "formik";
 
-import { GLogo, SLogo } from "@assets/images/svg";
+import { Back, GLogo, SLogo } from "@assets/images/svg";
 import { DarkTheme, LightTheme } from "@theme";
 import { MyText, MyButton, MyCheckbox, MyInput, MyDropdown } from "@components";
 import { UserSignUpSchema } from "@validations/schema";
@@ -31,10 +31,6 @@ export default function SignUp() {
       name: "phone",
     },
     {
-      placeholder: "Applicant",
-      name: "applicant",
-    },
-    {
       placeholder: "Password",
       name: "password",
     },
@@ -52,7 +48,6 @@ export default function SignUp() {
         lastName: "",
         email: "",
         phone: "",
-        applicant: "",
         password: "",
         confirmPassword: "",
         agreeToTerms: false,
@@ -73,11 +68,7 @@ export default function SignUp() {
         <ScrollView contentContainerStyle={styles.mainContainer}>
           <View style={styles.back}>
             <Link href={"/auth/signIn"}>
-              <MaterialIcons
-                name="arrow-back"
-                size={20}
-                color={theme.colors.secondary}
-              />
+              <Back />
             </Link>
           </View>
           <View style={styles.header}>
@@ -122,30 +113,17 @@ export default function SignUp() {
                   placeholderColor="#666666"
                 />
               </View>
-              {inputFields.map((field, index) =>
-                field.name === "applicant" ? (
-                  <MyDropdown
-                    key={index}
-                    data={["user", "agent"]}
-                    onSelect={(value) => setFieldValue("applicant", value)}
-                    placeholder={field.placeholder}
-                    zIndex={10}
-                    style={styles.dropdown}
-                    placeholderColor="#666666"
-                    bgColor="#f3f4f6"
-                  />
-                ) : (
-                  <MyInput
-                    key={index}
-                    placeholder={field.placeholder}
-                    style={styles.input}
-                    rightIcon={field?.rightIcon}
-                    password={field?.password}
-                    onChange={handleChange(field.name)}
-                    placeholderColor="#666666"
-                  />
-                )
-              )}
+              {inputFields.map((field, index) => (
+                <MyInput
+                  key={index}
+                  placeholder={field.placeholder}
+                  style={styles.input}
+                  rightIcon={field?.rightIcon}
+                  password={field?.password}
+                  onChange={handleChange(field.name)}
+                  placeholderColor="#666666"
+                />
+              ))}
             </View>
           </View>
           <View style={styles.terms}>
@@ -216,6 +194,7 @@ const styles = StyleSheet.create({
   back: {
     position: "absolute",
     left: "7%",
+    top: "0.8%",
     flexDirection: "row",
   },
   header: {
@@ -261,11 +240,11 @@ const styles = StyleSheet.create({
   },
   input: {
     width: "100%",
-    height: "12%",
+    height: "14%",
     marginBottom: "4%",
   },
   terms: {
-    marginTop: "6%",
+    marginTop: "10%",
     flexDirection: "row",
     width: "80%",
     justifyContent: "center",
@@ -301,7 +280,7 @@ const styles = StyleSheet.create({
     height: 35,
     justifyContent: "center",
     alignContent: "center",
-    marginTop: "6%",
+    marginTop: "9%",
   },
   bottom: {
     width: "100%",

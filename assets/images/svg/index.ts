@@ -46,3 +46,4 @@ export { default as PakIcon } from "./pak_icon.svg";
 export { default as EditIcon } from "./edit-icon.svg";
 export { default as HomeOutline } from "./home-outline-small.svg";
 export { default as KeySmallIcon } from "./key-icon-small.svg";
+export { default as Back } from "./back.svg";
