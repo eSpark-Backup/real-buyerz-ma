@@ -25,6 +25,7 @@ export type MyTheme = Theme & {
     verificationBg: string;
     verificationText: string;
     gradient: string;
+    inputBg: string;
   };
 };
 
@@ -88,6 +89,28 @@ export type MyButtonProps = {
   leftIcon?: React.ReactNode;
   key?: string;
 };
+
+export interface IPropsBtn {
+  title: string;
+  onPress?: () => void;
+  textColor?: string;
+  width?: any;
+  btnStyle?: ViewStyle;
+  labelStyle?: TextStyle;
+  paddingV?: number;
+  weight?:
+    | "normal"
+    | "bold"
+    | "100"
+    | "200"
+    | "300"
+    | "400"
+    | "500"
+    | "600"
+    | "700"
+    | "800"
+    | "900";
+}
 
 export type LoginModalProps = {
   visible?: boolean;

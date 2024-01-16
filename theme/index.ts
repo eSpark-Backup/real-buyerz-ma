@@ -23,6 +23,7 @@ const colors = {
     verificationBg: "#EBF7FF",
     verificationText: "#666666",
     gradient: "#38B2FF",
+    inputBg: "#f3f4f6",
   },
   dark: {
     primary: "#FB631C",
@@ -47,6 +48,7 @@ const colors = {
     verificationBg: "#101010",
     verificationText: "#E2E2E2",
     gradient: "#101010",
+    inputBg: "#f3f4f6",
   },
 };
 

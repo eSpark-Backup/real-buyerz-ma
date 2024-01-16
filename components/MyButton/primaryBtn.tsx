@@ -1,36 +1,9 @@
-import {
-  StyleSheet,
-  Text,
-  TextStyle,
-  TouchableOpacity,
-  View,
-  ViewStyle,
-} from "react-native";
+import { StyleSheet, TouchableOpacity } from "react-native";
 import React from "react";
 
 import MyText from "../MyText";
-
-interface IPropsBtn {
-  title: string;
-  onPress?: () => void;
-  textColor?: string;
-  width?: any;
-  btnStyle?: ViewStyle;
-  labelStyle?: TextStyle;
-  paddingV?: number;
-  weight?:
-    | "normal"
-    | "bold"
-    | "100"
-    | "200"
-    | "300"
-    | "400"
-    | "500"
-    | "600"
-    | "700"
-    | "800"
-    | "900";
-}
+import { useTheme } from "@react-navigation/native";
+import { IPropsBtn, MyTheme } from "@types";
 
 const PrimaryBtn = ({
   title,
@@ -42,11 +15,12 @@ const PrimaryBtn = ({
   weight,
   paddingV,
 }: IPropsBtn) => {
+  const theme = useTheme() as MyTheme;
   return (
     <TouchableOpacity
       style={[
         {
-          backgroundColor: "#FF631C",
+          backgroundColor: theme.colors.primary,
           alignItems: "center",
           justifyContent: "center",
           paddingVertical: paddingV ? paddingV : 7,
@@ -71,5 +45,3 @@ const PrimaryBtn = ({
 };
 
 export default PrimaryBtn;
-
-const styles = StyleSheet.create({});
