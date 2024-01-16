@@ -2,17 +2,16 @@ import React, { useState } from "react";
 import {
   StyleProp,
   StyleSheet,
-  Text,
   TouchableOpacity,
   View,
   ViewStyle,
+  ScrollView
 } from "react-native";
 import { Entypo, Feather } from "@expo/vector-icons";
 import { useTheme } from "@react-navigation/native";
 
 import MyText from "../MyText";
 import { MyTheme } from "@types";
-import { ScrollView } from "react-native-gesture-handler";
 import { colors } from "@theme";
 
 interface DropdownProps {
@@ -211,6 +210,7 @@ const renderList = ({
   return (
     <TouchableOpacity
       activeOpacity={1}
+      key={index}
       style={{
         overflow: "hidden",
         height: height,
