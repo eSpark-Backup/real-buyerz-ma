@@ -1,15 +1,15 @@
 import React, { useState } from "react";
 import { ScrollView, View, StyleSheet, TouchableOpacity } from "react-native";
-import { MaterialIcons } from "@expo/vector-icons";
 import { Link } from "expo-router";
 import { Formik } from "formik";
 import { StatusBar } from "expo-status-bar";
 import { useTheme } from "@react-navigation/native";
 
-import { MyButton, MyInput, MyText, MyVerificationModal } from "@components";
+import { MyButton, MyInput, MyText, MyPopupModal } from "@components";
 import { OnRadioBtn, OffRadioBtn } from "@assets/images";
 import { ForgotPasswordSchema, ResetPasswordSchema } from "@validations/schema";
 import { MyTheme } from "@types";
+import { Back } from "@assets/images/svg";
 
 type InputType = "email" | "phone number";
 
@@ -37,7 +37,7 @@ export default function ForgotPassword() {
       {/* Todo: there is some space coming in between status bar and scroll view
           needs to be edited
           temporarily adjusted by negative margin */}
-      <MyVerificationModal
+      <MyPopupModal
         verificationModal
         visible={isModalVisible}
         onClose={toggleModal}
@@ -51,7 +51,7 @@ export default function ForgotPassword() {
         contentContainerStyle={{ flex: 1 }}
       >
         <Link href={"/auth/signIn"} style={styles.link}>
-          <MaterialIcons name="arrow-back" size={20} color="#136FA9" />
+          <Back />
         </Link>
 
         {formSubmitted ? (

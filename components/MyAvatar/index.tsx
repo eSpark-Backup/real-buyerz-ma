@@ -1,22 +1,16 @@
-import { EditIcon } from "@assets/images/svg";
-import { useTheme } from "@react-navigation/native";
-import { MyTheme } from "@types";
 import React from "react";
 import { View, Image, StyleSheet } from "react-native";
+import { useTheme } from "@react-navigation/native";
 
-interface IMyAvatar {
-  size: number;
-  imageUrl?: string;
-  edit?: boolean;
-  status?: "online" | "offline" | "invisible";
-}
+import { EditIcon } from "@assets/images/svg";
+import { IMyAvatar, MyTheme } from "@types";
 
 const MyAvatar = ({ size, imageUrl, edit, status }: IMyAvatar) => {
   const theme = useTheme() as MyTheme;
   return (
     <View style={[styles.container, { width: size, height: size }]}>
       {edit && (
-        <View style={{ zIndex: 4, position: "absolute" }}>
+        <View style={styles.edit}>
           <EditIcon />
         </View>
       )}
@@ -57,6 +51,7 @@ const styles = StyleSheet.create({
     marginTop: 5,
     fontWeight: "bold",
   },
+  edit: { zIndex: 4, position: "absolute" },
 });
 
 export default MyAvatar;

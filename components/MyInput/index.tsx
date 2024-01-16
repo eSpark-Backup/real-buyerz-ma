@@ -22,7 +22,13 @@ export default function MyInput({
   };
   const theme = useTheme() as MyTheme;
   return (
-    <View style={[inputContainerStyle, style]}>
+    <View
+      style={[
+        { backgroundColor: theme.colors.inputBg },
+        inputContainerStyle,
+        style,
+      ]}
+    >
       <TextInput
         multiline={multiline}
         secureTextEntry={password ? (showPassword ? false : true) : false}
@@ -53,7 +59,6 @@ export default function MyInput({
 
 const styles = StyleSheet.create({
   inputContainerStyle: {
-    backgroundColor: "#f3f4f6", //todo: theme edit
     flexDirection: "row",
     paddingHorizontal: 10,
     borderRadius: 5,
