@@ -145,3 +145,9 @@ export type MyListItemProps = {
   theme: MyTheme;
   fav?: boolean;
 };
+
+export interface IMyAvatar {
+  size: number;
+  imageUrl?: string;
+  edit?: boolean;
+}
