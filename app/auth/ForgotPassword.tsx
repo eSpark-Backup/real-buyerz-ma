@@ -2,16 +2,19 @@ import React, { useState } from "react";
 import { ScrollView, View, StyleSheet, TouchableOpacity } from "react-native";
 import { Link } from "expo-router";
 import { Formik } from "formik";
-import ExpoStatusBar from "expo-status-bar/build/ExpoStatusBar";
+import { StatusBar } from "expo-status-bar";
+import { useTheme } from "@react-navigation/native";
 
 import { MyButton, MyInput, MyText, MyPopupModal } from "@components";
 import { OnRadioBtn, OffRadioBtn } from "@assets/images";
 import { ForgotPasswordSchema, ResetPasswordSchema } from "@validations/schema";
+import { MyTheme } from "@types";
 import { Back } from "@assets/images/svg";
 
 type InputType = "email" | "phone number";
 
 export default function ForgotPassword() {
+  const { colors, dark } = useTheme() as MyTheme;
   const [formSubmitted, setFormSubmitted] = useState(false);
   const [inputValue, setInputValue] = useState("");
   const [inputType, setInputType] = useState<InputType>("email");
@@ -30,7 +33,7 @@ export default function ForgotPassword() {
   };
   return (
     <>
-      <ExpoStatusBar backgroundColor="white" />
+      <StatusBar backgroundColor={colors.secondary} style="light" />
       {/* Todo: there is some space coming in between status bar and scroll view
           needs to be edited
           temporarily adjusted by negative margin */}

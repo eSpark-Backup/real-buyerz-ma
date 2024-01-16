@@ -1,4 +1,4 @@
-import { SafeAreaView } from "react-native";
+import { SafeAreaView, LogBox } from "react-native";
 import { ThemeProvider } from "@react-navigation/native";
 import { Slot } from "expo-router";
 import { useSelector, Provider } from "react-redux";
@@ -7,11 +7,18 @@ import { StatusBar } from "expo-status-bar";
 import { RootState, store } from "@store";
 import { DarkTheme, LightTheme } from "@theme";
 import { ThemeTypes } from "@types";
+import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
+
+LogBox.ignoreLogs([
+  "VirtualizedLists should never be nested inside plain ScrollViews",
+]);
 
 export default function RootLayout() {
   return (
     <Provider store={store}>
-      <RootComponent />
+      <BottomSheetModalProvider>
+        <RootComponent />
+      </BottomSheetModalProvider>
     </Provider>
   );
 }

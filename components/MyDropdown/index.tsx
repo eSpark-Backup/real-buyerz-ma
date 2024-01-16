@@ -2,16 +2,17 @@ import React, { useState } from "react";
 import {
   StyleProp,
   StyleSheet,
-  Text,
   TouchableOpacity,
   View,
   ViewStyle,
+  ScrollView
 } from "react-native";
 import { Entypo, Feather } from "@expo/vector-icons";
 import { useTheme } from "@react-navigation/native";
 
 import MyText from "../MyText";
 import { MyTheme } from "@types";
+import { colors } from "@theme";
 
 interface DropdownProps {
   data: string[];
@@ -21,6 +22,9 @@ interface DropdownProps {
   onSelect: (value: string | string[]) => void;
   style?: StyleProp<ViewStyle>;
   placeholderColor?: string;
+  containerStyle?: ViewStyle;
+  height?: number;
+  title?: string;
   bgColor?: string;
 }
 
@@ -32,6 +36,9 @@ export default function MyDropdown({
   multiSelect = false,
   style,
   placeholderColor,
+  containerStyle,
+  height = 30,
+  title,
   bgColor,
 }: DropdownProps) {
   const theme = useTheme() as MyTheme;
@@ -88,94 +95,152 @@ export default function MyDropdown({
   };
 
   return (
-    <View
-      style={[
-        styles(theme).container,
-        { zIndex: zIndex },
-        show ? { borderBottomRightRadius: 0, borderBottomLeftRadius: 0 } : {},
-        style,
-      ]}
-    >
-      <View
-        style={{
-          flexDirection: "row",
-          justifyContent: "space-between",
-          alignItems: "center",
-          width: "100%",
-          height: "100%",
-          paddingHorizontal: 15,
-          zIndex: zIndex - 2,
-        }}
-      >
+    <>
+      {title && (
         <MyText
-          text={label ? label : `Select ${placeholder}`}
-          textColor={placeholderColor ? placeholderColor : "#969696"}
+          text={title}
+          style={{ alignSelf: "flex-start", paddingBottom: 10 }}
+          size={15}
+          weight="400"
         />
-        <Entypo
-          name={!show ? "chevron-down" : "chevron-up"}
-          color={"#66666666"}
-          size={16}
-          onPress={() => {
-            setShow(!show);
-          }}
-        />
-      </View>
-      {show && (
+      )}
+      <View
+        style={[
+          styles(theme).container,
+
+          { zIndex: zIndex },
+          show ? { borderBottomRightRadius: 0, borderBottomLeftRadius: 0 } : {},
+          style,
+          { height },
+        ]}
+      >
         <View
           style={{
-            zIndex: zIndex + 2,
-            width: bgColor ? "100%" : "101.5%",
-            position: "absolute",
-            overflow: "hidden",
-            top: 28,
+            flexDirection: "row",
             justifyContent: "space-between",
-            backgroundColor: bgColor ? bgColor : theme.colors.cardBg,
-            borderColor: theme.colors.dropdownBorder,
-            borderWidth: 1,
-            borderBottomRightRadius: 5,
-            borderBottomLeftRadius: 5,
+            alignItems: "center",
+            width: "100%",
+            height: "100%",
+            paddingHorizontal: 15,
+            zIndex: zIndex - 2,
+            ...containerStyle,
           }}
         >
-          {listData.map((item, index) => (
-            <TouchableOpacity
-              activeOpacity={1}
+          <MyText
+            text={label ? label : `Select ${placeholder}`}
+            textColor={placeholderColor ? placeholderColor : "#969696"}
+          />
+          <Entypo
+            name={!show ? "chevron-down" : "chevron-up"}
+            color={"#66666666"}
+            size={16}
+            onPress={() => {
+              setShow(!show);
+            }}
+          />
+        </View>
+        {show && (
+          <View
+            style={{
+              position: "absolute",
+              width: "100%",
+            }}
+          >
+            <ScrollView
+              nestedScrollEnabled
+              removeClippedSubviews
+              keyboardShouldPersistTaps="handled"
               style={{
-                height: 30,
-                borderTopWidth: index > 0 ? 1 : 0,
-                justifyContent: "space-between",
-                borderColor: theme.colors.dropdownBorder,
-                paddingHorizontal: 15,
-                flexDirection: "row",
-                alignItems: "center",
+                zIndex: zIndex + 2,
+                overflow: "hidden",
+                top: height - 2,
+                backgroundColor: theme.dark
+                  ? colors.dark.background
+                  : colors.light.background,
+                borderColor: theme.colors.border,
+                borderWidth: 1,
+                borderBottomRightRadius: 5,
+                borderBottomLeftRadius: 5,
+                height: listData.length > 3 ? 120 : "auto",
               }}
-              key={item}
-              onPress={() => {
-                if (!multiSelect) {
-                  setShow(false);
-                }
-                handleSelection(item);
+              contentContainerStyle={{
+                justifyContent: "space-between",
+                overflow: "hidden",
               }}
             >
-              <MyText
-                text={item}
-                textColor={bgColor ? "#333333" : theme.colors.text}
-              />
-              {isSelected(item) && (
-                <Feather name="check" size={16} color="#34e145" />
+              {listData.map((item, index) =>
+                renderList({
+                  item,
+                  index,
+                  handleSelection,
+                  height,
+                  isSelected,
+                  multiSelect,
+                  setShow,
+                  theme,
+                })
               )}
-            </TouchableOpacity>
-          ))}
-        </View>
-      )}
-    </View>
+            </ScrollView>
+          </View>
+        )}
+      </View>
+    </>
   );
 }
+
+const renderList = ({
+  item,
+  index,
+  multiSelect,
+  height,
+  handleSelection,
+  isSelected,
+  setShow,
+  theme,
+}: {
+  item: string;
+  index: number;
+  multiSelect: boolean;
+  height: number;
+  handleSelection: (val: string) => void;
+  isSelected: (val: string) => boolean;
+  setShow: (val: boolean) => void;
+  theme: MyTheme;
+}) => {
+  return (
+    <TouchableOpacity
+      activeOpacity={1}
+      key={index}
+      style={{
+        overflow: "hidden",
+        height: height,
+        borderTopWidth: index > 0 ? 1 : 0,
+        justifyContent: "space-between",
+        borderColor: "#E7E7E7",
+        paddingHorizontal: 15,
+        flexDirection: "row",
+        alignItems: "center",
+        // backgroundColor: "#ffffff",
+      }}
+      // key={item}
+      onPress={() => {
+        if (!multiSelect) {
+          setShow(false);
+        }
+        handleSelection(item);
+      }}
+    >
+      <MyText text={item} />
+      {isSelected(item) && <Feather name="check" size={16} color="#34e145" />}
+    </TouchableOpacity>
+  );
+};
 
 const styles = (theme?: MyTheme) =>
   StyleSheet.create({
     container: {
       width: 150,
-      height: 30,
+      // height: 30,
       borderWidth: 1,
       borderRadius: 5,
       borderColor: theme?.colors.border,

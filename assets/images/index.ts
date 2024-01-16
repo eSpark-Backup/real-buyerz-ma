@@ -36,6 +36,7 @@ export {
   MiniArrow,
   IraqIcon,
   PakIcon,
+  LocationIcon,
   HomeOutline,
   KeySmallIcon,
 } from "./svg";

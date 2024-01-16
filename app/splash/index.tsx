@@ -15,27 +15,27 @@ import { WINDOW_HEIGHT, WINDOW_WIDTH } from "@constants";
 import { customFonts } from "utils/customFonts";
 import { customImages } from "utils/customImages";
 
-SplashScreen.preventAutoHideAsync();
+SplashScreen.preventAutoHideAsync(); //? Disable Auto Hide
+
+const cacheImages = (images: any[]) => {
+  return images.map((image) => {
+    if (typeof image === "string") {
+      return Image.prefetch(image);
+    } else {
+      return Asset.fromModule(image).downloadAsync();
+    }
+  });
+};
+
+const cacheFonts = (fonts: any[]) => {
+  return fonts.map((font) => Font.loadAsync(font));
+};
 
 export default function App() {
   const [appIsReady, setAppIsReady] = useState(false);
   const translateY = useRef(new Animated.Value(WINDOW_HEIGHT * 1.5)).current;
   const scale = useRef(new Animated.Value(1)).current;
   const rotate = useRef(new Animated.Value(0)).current;
-
-  const cacheImages = (images: any[]) => {
-    return images.map((image) => {
-      if (typeof image === "string") {
-        return Image.prefetch(image);
-      } else {
-        return Asset.fromModule(image).downloadAsync();
-      }
-    });
-  };
-
-  const cacheFonts = (fonts: any[]) => {
-    return fonts.map((font) => Font.loadAsync(font));
-  };
 
   const loadResourcesAsync = async () => {
     try {

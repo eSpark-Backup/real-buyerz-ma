@@ -1,6 +1,7 @@
 import React from "react";
 import { StyleSheet } from "react-native";
 import { Tabs } from "expo-router/tabs";
+import { useLocalSearchParams } from "expo-router";
 import { useTheme, useNavigation } from "@react-navigation/native";
 
 import { MyTabBar, MyHeader } from "@components";
@@ -8,6 +9,7 @@ import { MyTheme } from "@types";
 
 export default function UserTypeLayout() {
   const theme = useTheme() as MyTheme;
+  const para = useLocalSearchParams();
 
   return (
     <Tabs

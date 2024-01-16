@@ -26,10 +26,12 @@ function Title({
   children,
   style,
   titleStyle,
+  weight,
 }: {
   children: React.ReactNode;
   style?: ViewStyle;
   titleStyle?: TextStyle;
+  weight?: TextStyle["fontWeight"];
 }) {
   const theme = useTheme() as MyTheme;
   return (

@@ -1,16 +1,52 @@
-import React from "react";
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import React, { useCallback, useEffect, useRef, useState } from "react";
+import {
+  FlatList,
+  ScrollView,
+  StyleProp,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+  ViewStyle,
+} from "react-native";
 import { FontAwesome } from "@expo/vector-icons";
 import { useTheme } from "@react-navigation/native";
+import { BottomSheetModal } from "@gorhom/bottom-sheet";
 
 import { MyTheme } from "@types";
-import { MyButton, MyText } from "@components";
+import {
+  Card,
+  GapView,
+  LabelValue,
+  MyButton,
+  MyDropdown,
+  MyText,
+} from "@components";
 
 interface FilterBtn {
   id: number;
   label: string;
   count: number;
   selected: boolean;
+}
+
+interface ContentData {
+  title: string;
+  description: string;
+  purpose: "Buying" | "Selling";
+  type: "Commercial" | "Residential";
+  city: string;
+  location: string;
+  amount: string;
+}
+
+interface DropDownList {
+  data: string[];
+  placeholder: string;
+  title: string;
+  height: number;
+  zIndex: number;
+  style?: StyleProp<ViewStyle>;
+  onSelect: (val: string) => void;
 }
 
 const filterBtns: FilterBtn[] = [
@@ -21,15 +57,124 @@ const filterBtns: FilterBtn[] = [
   { id: 5, label: "Trash", count: 0, selected: false },
 ];
 
+const testContentData: ContentData[] = [
+  {
+    title: "Need 4 Room Apartments",
+    description:
+      "Ad voluptate magna id officia deserunt amet aliquip excepteur officia Lorem. Mollit quis sint ut ut est officia.",
+    purpose: "Buying",
+    type: "Commercial",
+    city: "Karachi",
+    location: "Gulshan-e-Iqbal",
+    amount: "80M",
+  },
+  {
+    title: "Need 4 Room Apartments",
+    description:
+      "Ad voluptate magna id officia deserunt amet aliquip excepteur officia Lorem. Mollit quis sint ut ut est officia.",
+    purpose: "Buying",
+    type: "Commercial",
+    city: "Karachi",
+    location: "Gulshan-e-Iqbal",
+    amount: "80M",
+  },
+  {
+    title: "Need 4 Room Apartments",
+    description:
+      "Ad voluptate magna id officia deserunt amet aliquip excepteur officia Lorem. Mollit quis sint ut ut est officia.",
+    purpose: "Buying",
+    type: "Commercial",
+    city: "Karachi",
+    location: "Gulshan-e-Iqbal",
+    amount: "80M",
+  },
+  {
+    title: "Need 4 Room Apartments",
+    description:
+      "Ad voluptate magna id officia deserunt amet aliquip excepteur officia Lorem. Mollit quis sint ut ut est officia.",
+    purpose: "Buying",
+    type: "Commercial",
+    city: "Karachi",
+    location: "Gulshan-e-Iqbal",
+    amount: "80M",
+  },
+];
+
+const dropdownData: DropDownList[] = [
+  {
+    data: ["Selling", "Buying", "Rent"],
+    height: 40,
+    zIndex: 4,
+    onSelect: (val: string) => {},
+    placeholder: "Purpose",
+    title: "Purpose",
+    style: { width: "100%" },
+  },
+  {
+    data: [
+      "Karachi",
+      "Lahore",
+      "Islamabad",
+      "Faisalabad",
+      "Quetta",
+      "Peshawar",
+      "Sialkot",
+    ],
+    height: 40,
+    zIndex: 4,
+    onSelect: (val: string) => {},
+    placeholder: "City",
+    title: "City",
+    style: { width: "100%" },
+  },
+  {
+    data: [
+      "Gulshan-e-Iqbal",
+      "Gulistan-e-Johar",
+      "Liaquatabad",
+      "Gulberg",
+      "Malir",
+      "Shar-e-Faisal",
+      "Karimabad",
+    ],
+    height: 40,
+    zIndex: 4,
+    onSelect: (val: string) => {},
+    placeholder: "Location",
+    title: "Location",
+    style: { width: "100%" },
+  },
+  {
+    data: ["House", "Plot", "Commercial"],
+    height: 40,
+    zIndex: 4,
+    onSelect: (val: string) => {},
+    placeholder: "Purpose",
+    title: "Purpose",
+    style: { width: "100%" },
+  },
+];
+
 export default function AllPosting() {
   const theme = useTheme() as MyTheme;
+  const [visible, setVisible] = useState(false);
 
   return (
-    <View style={styles.container}>
+    <ScrollView
+      style={{ flex: 1 }}
+      contentContainerStyle={styles.container}
+      nestedScrollEnabled
+      showsVerticalScrollIndicator={false}
+    >
+      <BSheetModal
+        visible={visible}
+        theme={theme}
+        onClose={(val) => setVisible(val)}
+      />
       <View style={styles.top_filter}>
         <TouchableOpacity
           activeOpacity={1}
-          onPress={() => console.log("yes")}
+          onPress={() => setVisible(!visible)}
           style={{
             backgroundColor: theme.colors.secondary,
             padding: 10,
@@ -55,9 +200,199 @@ export default function AllPosting() {
           />
         ))}
       </View>
-    </View>
+      <View style={styles.content}>
+        <Card style={styles.contentCard}>
+          <FlatList
+            data={testContentData}
+            showsVerticalScrollIndicator={false}
+            nestedScrollEnabled
+            renderItem={({ item, index }) => renderList({ item, index, theme })}
+            ItemSeparatorComponent={() => <GapView />}
+          />
+        </Card>
+      </View>
+    </ScrollView>
   );
 }
+
+const BSheetModal = ({
+  visible,
+  onClose,
+  theme,
+}: {
+  visible: boolean;
+  onClose: (val: boolean) => void;
+  theme: MyTheme;
+}) => {
+  const bottomSheetModalRef = useRef<BottomSheetModal>(null);
+
+  // callbacks
+
+  useEffect(() => {
+    if (visible == true) {
+      handlePresentModal();
+    } else {
+      handleHideModal();
+    }
+  }, [visible]);
+
+  const handlePresentModal = useCallback(() => {
+    bottomSheetModalRef.current?.present();
+  }, []);
+
+  const handleHideModal = useCallback(() => {
+    bottomSheetModalRef.current?.dismiss();
+  }, []);
+
+  const handleSheetChanges = useCallback((index: number) => {
+    console.log("handleSheetChanges", index);
+  }, []);
+
+  return (
+    <BottomSheetModal
+      ref={bottomSheetModalRef}
+      snapPoints={["75%"]}
+      style={{
+        paddingTop: 30,
+        paddingHorizontal: 25,
+      }}
+      backgroundStyle={{
+        backgroundColor: theme.colors.background,
+      }}
+      handleComponent={() => <GapView length={1} />}
+      backdropComponent={() => (
+        <View
+          style={{
+            position: "absolute",
+            height: "100%",
+            width: "100%",
+            backgroundColor: "#00000088",
+          }}
+        >
+          <TouchableOpacity
+            style={{ flex: 1 }}
+            onPress={() => onClose(false)}
+          />
+        </View>
+      )}
+      onDismiss={() => onClose(false)}
+      enableDismissOnClose
+      onChange={handleSheetChanges}
+    >
+      {dropdownData.map((item, index) => (
+        <View key={index}>
+          <MyDropdown
+            data={item.data}
+            placeholder={item.placeholder}
+            onSelect={(val) => console.log("val", val)}
+            style={{ width: "100%" }}
+            height={40}
+            zIndex={4 - index}
+            title={item.title}
+          />
+          {index < dropdownData.length - 1 && <GapView length={20} />}
+        </View>
+      ))}
+      <GapView length={60} />
+      <MyButton
+        label={"Save"}
+        labelStyle={{
+          color: "#ffffff",
+          fontSize: 10,
+        }}
+        style={{
+          alignSelf: "flex-end",
+          width: 100,
+          height: 30,
+          borderRadius: 4,
+          backgroundColor: theme.colors.primary,
+        }}
+      />
+    </BottomSheetModal>
+  );
+};
+
+const renderList = ({
+  item,
+  index,
+  theme,
+}: {
+  item?: ContentData;
+  index: number;
+  theme: MyTheme;
+}) => {
+  return (
+    <Card
+      style={{
+        paddingHorizontal: 15,
+        paddingVertical: 26,
+        backgroundColor: "#F5F6FA",
+      }}
+    >
+      <View
+        style={{
+          flexDirection: "row",
+          justifyContent: "space-between",
+          paddingBottom: 8,
+          borderBottomWidth: 1,
+          borderColor: theme.colors.border,
+        }}
+      >
+        <MyText text={item?.title} size={14} weight="500" />
+        <MyButton
+          label={`Trash`}
+          labelStyle={{
+            color: "#ffffff",
+            fontSize: 10,
+          }}
+          style={{
+            width: 58,
+            height: 20,
+            borderRadius: 2,
+            backgroundColor: theme.colors.primary,
+          }}
+        />
+      </View>
+      <MyText
+        style={{ marginVertical: 8 }}
+        size={12}
+        text={item?.description}
+      />
+      <View>
+        <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+          <LabelValue label="Purpose" value={item?.purpose!} />
+          <LabelValue
+            label="Amount"
+            value={item?.amount!}
+            labelStyle={{ color: theme.colors.text }}
+            valueStyle={{ color: theme.colors.text }}
+            valueWeight="bold"
+          />
+        </View>
+        <LabelValue label="Property Type" value={item?.type!} />
+        <LabelValue label="City" value={item?.city!} />
+        <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+          <LabelValue label="Location" value={item?.location!} />
+          <MyButton
+            label={`View`}
+            labelStyle={{
+              color: theme.colors.primary,
+              fontSize: 8,
+            }}
+            style={{
+              width: 58,
+              height: 20,
+              borderWidth: 1,
+              borderRadius: 20,
+              backgroundColor: theme.colors.background,
+              borderColor: theme.colors.primary,
+            }}
+          />
+        </View>
+      </View>
+    </Card>
+  );
+};
 
 const FilterBtnComp = ({
   item,
@@ -80,7 +415,7 @@ const FilterBtnComp = ({
         width: 90,
         height: 30,
         marginVertical: 10,
-        marginHorizontal: 10,
+        marginHorizontal: 5,
         borderWidth: 1,
         borderRadius: 4,
         backgroundColor: item.selected ? theme.colors.primary : "transparent",
@@ -94,6 +429,7 @@ const styles = StyleSheet.create({
   container: {
     paddingHorizontal: 30,
     paddingTop: 26,
+    paddingBottom: 40,
   },
   top_filter: {
     flexDirection: "row",
@@ -106,5 +442,14 @@ const styles = StyleSheet.create({
     flexWrap: "wrap",
     alignItems: "center",
     justifyContent: "center",
+  },
+  content: {
+    flex: 1,
+    marginTop: 25,
+  },
+  contentCard: {
+    height: 553,
+    paddingHorizontal: 10,
+    paddingVertical: 18,
   },
 });

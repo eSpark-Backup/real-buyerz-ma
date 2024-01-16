@@ -150,4 +150,5 @@ export interface IMyAvatar {
   size: number;
   imageUrl?: string;
   edit?: boolean;
+  status?: "online" | "offline" | "invisible";
 }
