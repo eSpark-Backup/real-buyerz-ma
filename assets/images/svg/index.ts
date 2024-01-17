@@ -48,3 +48,5 @@ export { default as EditIcon } from "./edit-icon.svg";
 export { default as HomeOutline } from "./home-outline-small.svg";
 export { default as KeySmallIcon } from "./key-icon-small.svg";
 export { default as Back } from "./back.svg";
+export { default as Tab_Projects } from "./tab-projects.svg";
+export { default as Tab_Dashbaord } from "./tab-dashboard.svg";

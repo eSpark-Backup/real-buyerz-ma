@@ -9,7 +9,7 @@ import { MyTheme } from "@types";
 
 export default function UserTypeLayout() {
   const theme = useTheme() as MyTheme;
-  const para = useLocalSearchParams();
+  const params = useLocalSearchParams();
 
   return (
     <Tabs
@@ -42,11 +42,26 @@ export default function UserTypeLayout() {
         }}
       />
       <Tabs.Screen
-        name="inbox"
+        name="projects"
         options={{
           headerShown: true,
+          title: "Projects",
+          href: "(user)/anon/projects",
+        }}
+      />
+      <Tabs.Screen
+        name="inbox"
+        options={{
           title: "Inbox",
           href: "(user)/anon/inbox",
+        }}
+      />
+      <Tabs.Screen
+        name="dashboard"
+        options={{
+          headerShown: true,
+          title: "Dashboard",
+          href: "(user)/anon/dashboard",
         }}
       />
       <Tabs.Screen

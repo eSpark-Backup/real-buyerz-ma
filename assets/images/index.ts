@@ -39,6 +39,8 @@ export {
   LocationIcon,
   HomeOutline,
   KeySmallIcon,
+  Tab_Projects,
+  Tab_Dashbaord
 } from "./svg";
 
 //* pngs
