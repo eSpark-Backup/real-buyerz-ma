@@ -122,6 +122,8 @@ export default function Home() {
           <MarqueeScrollView />
         </View>
       </ScrollView>
+
+      <LoginModal onClose={() => {}} visible={true} />
     </>
   );
 }

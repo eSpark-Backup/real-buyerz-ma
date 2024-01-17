@@ -48,7 +48,7 @@ const colors = {
     verificationBg: "#101010",
     verificationText: "#E2E2E2",
     gradient: "#101010",
-    inputBg: "#f3f4f6",
+    inputBg: "#29292E",
   },
 };
 
