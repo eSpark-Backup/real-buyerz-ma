@@ -10,6 +10,8 @@ import {
   ListingTab,
   SearchTab,
   SettingsTab,
+  Tab_Dashbaord,
+  Tab_Projects,
 } from "@assets/images";
 
 function MyTabBar({
@@ -21,7 +23,11 @@ function MyTabBar({
   return (
     <View style={styles({ theme }).container}>
       {state.routes.map((route, index) => {
-        if (route.name !== "index") {
+        if (
+          route.name !== "index" &&
+          route.name !== "inbox" &&
+          route.name !== "search"
+        ) {
           const { options } = descriptors[route.key];
           const label =
             options.tabBarLabel !== undefined
@@ -52,8 +58,8 @@ function MyTabBar({
           };
 
           const btnStyle =
-            route.name == "search"
-              ? styles({ isFocused, theme }).searchStyle
+            route.name == "dashboard"
+              ? styles({ isFocused, theme }).dashboardStyles
               : styles({ isFocused, theme }).normalStyle;
 
           return (
@@ -68,16 +74,17 @@ function MyTabBar({
               onLongPress={onLongPress}
               style={btnStyle}
             >
-              {route.name == "search" ? (
-                <View style={styles({ theme }).searchInnerStyle}>
-                  <SearchTab
+              {route.name == "dashboard" ? (
+                <View style={styles({ theme, isFocused }).dashboardInnerStyles}>
+                  <Tab_Dashbaord
                     style={{
                       color: theme.colors.TabBarText,
                     }}
                   />
                   <MyText
                     style={{ color: theme.colors.TabBarText, marginTop: 4 }}
-                    size={10}
+                    weight="700"
+                    size={9}
                   >
                     {label as string}
                   </MyText>
@@ -87,12 +94,11 @@ function MyTabBar({
                   {renderTabIcon(route.name, theme, isFocused)}
                   <MyText
                     style={{
-                      color: isFocused
-                        ? theme.colors.primary
-                        : theme.colors.TabBarText,
+                      color: theme.colors.TabBarText,
                       marginTop: 4,
                     }}
-                    size={10}
+                    weight="600"
+                    size={9}
                   >
                     {label as string}
                   </MyText>
@@ -116,15 +122,15 @@ const renderTabIcon = (
       return (
         <HomeTab
           style={{
-            color: isFocused ? theme.colors.primary : theme.colors.TabBarText,
+            color: theme.colors.TabBarText,
           }}
         />
       );
-    case "inbox":
+    case "projects":
       return (
-        <InboxTab
+        <Tab_Projects
           style={{
-            color: isFocused ? theme.colors.primary : theme.colors.TabBarText,
+            color: theme.colors.TabBarText,
           }}
         />
       );
@@ -132,7 +138,7 @@ const renderTabIcon = (
       return (
         <ListingTab
           style={{
-            color: isFocused ? theme.colors.primary : theme.colors.TabBarText,
+            color: theme.colors.TabBarText,
           }}
         />
       );
@@ -140,7 +146,7 @@ const renderTabIcon = (
       return (
         <SettingsTab
           style={{
-            color: isFocused ? theme.colors.primary : theme.colors.TabBarText,
+            color: theme.colors.TabBarText,
           }}
         />
       );
@@ -169,10 +175,9 @@ const styles = ({
       alignItems: "center",
       width: "21%",
       height: "100%",
-      borderTopWidth: isFocused ? 3 : 0,
-      borderColor: isFocused ? theme?.colors.primary : "transparent",
+      backgroundColor: isFocused ? theme?.colors.primary : "transparent",
     },
-    searchStyle: {
+    dashboardStyles: {
       justifyContent: "center",
       alignItems: "center",
       borderRadius: 35,
@@ -181,8 +186,10 @@ const styles = ({
       height: 72,
       backgroundColor: theme?.colors.TabBarText,
     },
-    searchInnerStyle: {
-      backgroundColor: theme?.colors.TabBar,
+    dashboardInnerStyles: {
+      backgroundColor: isFocused
+        ? theme?.colors.primary
+        : theme?.colors.secondary,
       justifyContent: "center",
       alignItems: "center",
       borderRadius: 35,
