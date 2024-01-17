@@ -314,7 +314,7 @@ const styles = (theme?: MyTheme) =>
       height: 45,
       alignItems: "center",
       justifyContent: "center",
-      backgroundColor: theme?.dark ? "#D1EDFF" : "#fff",
+      backgroundColor: "#fff",
       shadowColor: "#00000040",
       shadowOffset: { width: 1, height: 2 },
       elevation: 5,
