@@ -6,9 +6,7 @@ import MyText from "../MyText";
 import { MyTheme } from "@types";
 import {
   HomeTab,
-  InboxTab,
   ListingTab,
-  SearchTab,
   SettingsTab,
   Tab_Dashbaord,
   Tab_Projects,
