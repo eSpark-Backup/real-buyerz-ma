@@ -14,10 +14,16 @@ import { Feather } from "@expo/vector-icons";
 import { useTheme } from "@react-navigation/native";
 import { router } from "expo-router";
 
-import { Card, MyText, MyAppBar, GapView, HomeHeader } from "@components";
+import {
+  Card,
+  MyText,
+  MyAppBar,
+  GapView,
+  HomeHeader,
+  AdCard,
+} from "@components";
 import { WINDOW_WIDTH } from "@constants";
 import { MyTheme } from "@types";
-import AdCard from "@components/MyCard/AdCard";
 
 export default function Home() {
   const theme = useTheme() as MyTheme;

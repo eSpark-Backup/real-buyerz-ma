@@ -6,12 +6,15 @@ import {
   MyText,
   MyAvatar,
   MyClickableCard,
-  AddCard,
   SettingList,
+  AdCard,
 } from "@components";
 import { HeartIcon, ProfileIcon } from "@assets/images";
+import { useTheme } from "@react-navigation/native";
+import { MyTheme } from "@types";
 
 export default function Settings() {
+  const theme = useTheme() as MyTheme;
   const handlePrefernecesPress = () => {
     console.log("Preferences");
     router.push("(user)/anon/settings/preferences");
@@ -99,9 +102,10 @@ export default function Settings() {
             </MyClickableCard>
           </View>
         </View>
-        <AddCard
+        <AdCard
           label="Looking to sell or rent out your property?"
           btnLabel="Post an Ad"
+          theme={theme}
         />
         <View style={styles.ListItemWrapper}>
           {listData.map((item, index) => (

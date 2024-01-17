@@ -8,7 +8,7 @@ import { AgentHome } from "@assets/images";
 import { AgentHomeDark } from "@assets/images/svg";
 import { MyTheme } from "@types";
 
-export const AdCard = ({
+const AdCard = ({
   label,
   btnLabel,
   theme,
