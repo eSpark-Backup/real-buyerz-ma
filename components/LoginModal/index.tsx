@@ -1,7 +1,7 @@
 import React from "react";
 import Modal from "react-native-modal";
 import { Link } from "expo-router";
-import { View, StyleSheet, Appearance, ViewStyle } from "react-native";
+import { View, StyleSheet } from "react-native";
 import { useTheme } from "@react-navigation/native";
 
 import MyText from "../MyText";
@@ -24,7 +24,14 @@ function LoginModal({ visible, onClose }: LoginModalProps) {
       style={styles.modal}
     >
       <View
-        style={[styles.popupStyle, { backgroundColor: theme.colors.popupbg }]}
+        style={[
+          styles.popupStyle,
+          {
+            backgroundColor: theme.dark
+              ? theme.colors.verificationBg
+              : theme.colors.popupbg,
+          },
+        ]}
       >
         <PLogo />
         <MyText
@@ -36,7 +43,10 @@ function LoginModal({ visible, onClose }: LoginModalProps) {
         />
         <MyInput
           placeholder="Email Address"
-          style={{ marginVertical: "8%", backgroundColor: "#29292E" }}
+          style={{
+            marginVertical: "8%",
+            backgroundColor: theme.colors.inputBg,
+          }}
           placeholderColor={theme.colors.placeholderText}
         />
 
@@ -44,7 +54,7 @@ function LoginModal({ visible, onClose }: LoginModalProps) {
           placeholder="Password"
           password
           style={{
-            backgroundColor: "#29292E",
+            backgroundColor: theme.colors.inputBg,
           }}
           placeholderColor={theme.colors.placeholderText}
         />
@@ -61,7 +71,7 @@ function LoginModal({ visible, onClose }: LoginModalProps) {
           />
           <MyText
             text="Forgot Password?"
-            textColor="#2e6fac"
+            textColor={theme.colors.secondary}
             size={14}
             style={styles.forgotPass}
           />

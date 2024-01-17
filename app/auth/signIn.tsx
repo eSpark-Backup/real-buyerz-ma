@@ -7,14 +7,7 @@ import { Formik } from "formik";
 
 import { GLogo, RLogo } from "@assets/images";
 import { DarkTheme, LightTheme } from "@theme";
-import {
-  MyText,
-  MyButton,
-  MyCheckbox,
-  MyInput,
-  LoginModal,
-  GapView,
-} from "@components";
+import { MyText, MyButton, MyCheckbox, MyInput, GapView } from "@components";
 import { UserSignInSchema } from "@validations/schema";
 
 export default function signIn() {
