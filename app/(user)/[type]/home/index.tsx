@@ -14,19 +14,10 @@ import { Feather } from "@expo/vector-icons";
 import { useTheme } from "@react-navigation/native";
 import { router } from "expo-router";
 
-import {
-  Card,
-  MyText,
-  MyAppBar,
-  GapView,
-  MyHeader,
-  HomeHeader,
-  LoginModal,
-  MyPopupModal,
-} from "@components";
-import { AgentHome } from "@assets/images";
+import { Card, MyText, MyAppBar, GapView, HomeHeader } from "@components";
 import { WINDOW_WIDTH } from "@constants";
 import { MyTheme } from "@types";
+import AdCard from "@components/MyCard/AdCard";
 
 export default function Home() {
   const theme = useTheme() as MyTheme;
@@ -122,8 +113,6 @@ export default function Home() {
           <MarqueeScrollView />
         </View>
       </ScrollView>
-
-      <LoginModal onClose={() => {}} visible={true} />
     </>
   );
 }
@@ -261,32 +250,6 @@ const ImageCard = () => {
         </TouchableOpacity>
       </View>
     </ImageBackground>
-  );
-};
-
-const AdCard = ({
-  label,
-  btnLabel,
-  theme,
-}: {
-  label?: string;
-  btnLabel?: string;
-  theme?: MyTheme;
-}) => {
-  return (
-    <Card style={styles(theme).cardConatainer}>
-      <View style={styles(theme).row1}>
-        <View style={styles(theme).wrap}>
-          {/* todo: svgs color update on theme change */}
-          <AgentHome />
-          <MyText style={styles(theme).label}>{label}</MyText>
-        </View>
-        <GapView length={15} />
-        <View style={styles(theme).btn}>
-          <MyText textColor={theme?.colors.primary}>{btnLabel}</MyText>
-        </View>
-      </View>
-    </Card>
   );
 };
 
@@ -437,26 +400,7 @@ const styles = (theme?: MyTheme) =>
       flexDirection: "row",
     },
     container: { alignItems: "center" },
-    cardConatainer: {
-      width: "90%",
-      marginTop: 30,
-      backgroundColor: theme?.colors.background,
-      borderColor: theme?.colors.border,
-    },
-    row1: { paddingHorizontal: 20, paddingVertical: 12 },
-    wrap: {
-      flexDirection: "row",
-      alignItems: "center",
-      justifyContent: "space-around",
-    },
-    label: { width: "70%" },
-    btn: {
-      backgroundColor: theme?.colors.primary + "33",
-      alignItems: "center",
-      justifyContent: "center",
-      paddingVertical: 7,
-      borderRadius: 2,
-    },
+
     bCard: {
       height: 90,
       width: WINDOW_WIDTH / 3.9,
