@@ -1,21 +1,10 @@
 import React, { useState } from "react";
-import {
-  StyleProp,
-  StyleSheet,
-  TouchableOpacity,
-  View,
-  ViewStyle,
-} from "react-native";
+import { StyleSheet, TouchableOpacity, View } from "react-native";
 import { Entypo } from "@expo/vector-icons";
 import { useTheme } from "@react-navigation/native";
-import { MyTheme } from "@types";
-import { PakIcon, IraqIcon } from "@assets/images/svg";
 
-interface DropdownProps {
-  zIndex?: number;
-  onSelect: (value: string | string[]) => void;
-  style?: StyleProp<ViewStyle>;
-}
+import { PakIcon, IraqIcon } from "@assets/images/svg";
+import { DropdownProps, MyTheme } from "@types";
 
 export default function FlagDropDown({
   zIndex = 10,
@@ -59,17 +48,7 @@ export default function FlagDropDown({
         style,
       ]}
     >
-      <View
-        style={{
-          flexDirection: "row",
-          justifyContent: "space-evenly",
-          alignItems: "center",
-          width: "100%",
-          height: "100%",
-
-          zIndex: zIndex - 2,
-        }}
-      >
+      <View style={[styles(theme).innerContainer, { zIndex: zIndex - 2 }]}>
         <View style={{ height: 25, width: 25 }}>{country.icon}</View>
         <Entypo
           name={!show ? "chevron-down" : "chevron-up"}
@@ -82,31 +61,22 @@ export default function FlagDropDown({
       </View>
       {show && (
         <View
-          style={{
-            zIndex: zIndex + 2,
-            width: "101.5%",
-            position: "absolute",
-            overflow: "hidden",
-            top: 28,
-            justifyContent: "space-between",
-            backgroundColor: theme?.colors.background,
-            borderColor: theme?.colors.border,
-            borderWidth: 1,
-            borderBottomRightRadius: 5,
-            borderBottomLeftRadius: 5,
-          }}
+          style={[
+            styles(theme).dropdown,
+            {
+              zIndex: zIndex + 2,
+            },
+          ]}
         >
           {countries.map((item, index) => (
             <TouchableOpacity
               activeOpacity={1}
-              style={{
-                height: 30,
-                borderTopWidth: index > 0 ? 1 : 0,
-                borderColor: theme?.colors.border,
-                flexDirection: "row",
-                alignItems: "center",
-                justifyContent: "center",
-              }}
+              style={[
+                styles(theme).item,
+                {
+                  borderTopWidth: index > 0 ? 1 : 0,
+                },
+              ]}
               key={index}
               onPress={() => {
                 setShow(false);
@@ -132,5 +102,31 @@ const styles = (theme?: MyTheme) =>
       borderColor: theme?.colors.border,
       alignItems: "center",
       zIndex: 10,
+    },
+    innerContainer: {
+      flexDirection: "row",
+      justifyContent: "space-evenly",
+      alignItems: "center",
+      width: "100%",
+      height: "100%",
+    },
+    dropdown: {
+      width: "101.5%",
+      position: "absolute",
+      overflow: "hidden",
+      top: 28,
+      justifyContent: "space-between",
+      backgroundColor: theme?.colors.background,
+      borderColor: theme?.colors.border,
+      borderWidth: 1,
+      borderBottomRightRadius: 5,
+      borderBottomLeftRadius: 5,
+    },
+    item: {
+      height: 30,
+      borderColor: theme?.colors.border,
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "center",
     },
   });
