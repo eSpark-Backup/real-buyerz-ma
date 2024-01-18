@@ -320,7 +320,7 @@ export const PropertyListing = ({
       <TouchableOpacity
         onPress={() => {
           console.log("Hello world");
-          router.push("(user)/anon/home/propertyDetail");
+          router.push("(user)/anon/(tabs)/home/propertyDetail");
         }}
       >
         <Card radius={2} style={{ height: 180, width: 130 }}>

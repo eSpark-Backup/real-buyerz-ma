@@ -1,116 +1,80 @@
-import React from "react";
-import { StyleSheet } from "react-native";
-import { Tabs } from "expo-router/tabs";
-import { useLocalSearchParams } from "expo-router";
-import { useTheme, useNavigation } from "@react-navigation/native";
+import { Drawer } from "expo-router/drawer";
 
-import { MyTabBar, MyHeader } from "@components";
-import { MyTheme } from "@types";
-
-export default function UserTypeLayout() {
-  const theme = useTheme() as MyTheme;
-  const params = useLocalSearchParams();
-
+export default function Layout() {
   return (
-    <Tabs
-      initialRouteName="home"
-      backBehavior="initialRoute"
-      sceneContainerStyle={{ paddingBottom: 35 }}
-      screenOptions={{
-        headerShown: false,
-        headerStyle: styles(theme).headerStyle,
-        header: (props) => {
-          return <MyHeader {...props} showRight showBackIcon theme={theme} />;
-        },
-      }}
-      tabBar={(props) => {
-        return <MyTabBar {...props} theme={theme} />;
-      }}
-    >
-      <Tabs.Screen
-        name="index"
+    <Drawer screenOptions={{ headerShown: false }}>
+      <Drawer.Screen
+        name="index" // This is the name of the page and must match the url from root
         options={{
-          href: null,
+          drawerItemStyle: { display: "none" },
         }}
       />
-      <Tabs.Screen
-        name="home"
+      <Drawer.Screen
+        name="(tabs)" // This is the name of the page and must match the url from root
         options={{
-          headerShown: false,
-          title: "Home",
-          href: "(user)/anon/home",
+          drawerItemStyle: { display: "none" },
         }}
       />
-      <Tabs.Screen
-        name="projects"
+      <Drawer.Screen
+        name="inbox" // This is the name of the page and must match the url from root
         options={{
-          headerShown: true,
-          title: "Projects",
-          href: "(user)/anon/projects",
+          drawerLabel: "Inbox",
         }}
       />
-      <Tabs.Screen
-        name="inbox"
+      <Drawer.Screen
+        name="myProposals" // This is the name of the page and must match the url from root
         options={{
-          title: "Inbox",
-          href: "(user)/anon/inbox",
+          drawerLabel: "My Proposals",
         }}
       />
-      <Tabs.Screen
-        name="dashboard"
+      <Drawer.Screen
+        name="myProperties" // This is the name of the page and must match the url from root
         options={{
-          headerShown: true,
-          title: "Dashboard",
-          href: "(user)/anon/dashboard",
+          drawerLabel: "My Properties",
         }}
       />
-      <Tabs.Screen
-        name="search"
+      <Drawer.Screen
+        name="favorites" // This is the name of the page and must match the url from root
         options={{
-          headerShown: true,
-          header: (props) => {
-            const searchRoute = props.navigation
-              .getState()
-              .routes.find((item) => item.name === "search");
-            const isSearchList = searchRoute?.state?.index !== 1;
-            return (
-              <MyHeader
-                {...props}
-                hideCenter={isSearchList}
-                showBackIcon
-                theme={theme}
-              />
-            );
-          },
-          title: "Search",
-          href: "(user)/anon/search",
+          drawerLabel: "Favorites",
         }}
       />
-      <Tabs.Screen
-        name="listings"
+      <Drawer.Screen
+        name="shop" // This is the name of the page and must match the url from root
         options={{
-          headerShown: true,
-          title: "Listings",
-          href: "(user)/anon/listings",
+          drawerLabel: "Shop",
         }}
       />
-      <Tabs.Screen
-        name="settings"
+      <Drawer.Screen
+        name="orderHistory" // This is the name of the page and must match the url from root
         options={{
-          headerShown: true,
-          title: "Settings",
-          href: "(user)/anon/settings",
+          drawerLabel: "Order History",
         }}
       />
-    </Tabs>
+      <Drawer.Screen
+        name="preferences" // This is the name of the page and must match the url from root
+        options={{
+          drawerLabel: "Preferences",
+        }}
+      />
+      <Drawer.Screen
+        name="privacyPolicy" // This is the name of the page and must match the url from root
+        options={{
+          drawerLabel: "Privacy Policy",
+        }}
+      />
+      <Drawer.Screen
+        name="termsAndConditions" // This is the name of the page and must match the url from root
+        options={{
+          drawerLabel: "Terms and conditions",
+        }}
+      />
+      {/* <Drawer.Screen
+        name="listings" // This is the name of the page and must match the url from root
+        options={{
+          drawerLabel: "My Listings",
+        }}
+      /> */}
+    </Drawer>
   );
 }
-
-const styles = (theme: MyTheme) =>
-  StyleSheet.create({
-    headerStyle: {
-      height: 60,
-      borderBottomColor: theme.colors.border,
-      borderBottomWidth: 1,
-    },
-  });

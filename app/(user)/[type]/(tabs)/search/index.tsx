@@ -78,7 +78,7 @@ export default function Search() {
           label="Search"
           textColor={"#ffffff"}
           backgroundColor={theme.colors.primary}
-          onPress={() => router.push("(user)/anon/search/searchList")}
+          onPress={() => router.push("(user)/anon/(tabs)/search/searchList")}
           style={{ borderRadius: 4, padding: 8, paddingHorizontal: 20 }}
           labelStyle={{ fontSize: 15 }}
         />

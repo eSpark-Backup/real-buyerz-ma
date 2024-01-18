@@ -180,7 +180,9 @@ export default function Listings() {
                 <MyText text="Your Posting" weight="600" size={16} />
                 <TouchableOpacity
                   activeOpacity={1}
-                  onPress={() => router.push("(user)/anon/listings/allposting")}
+                  onPress={() =>
+                    router.push("(user)/anon/(tabs)/listings/allposting")
+                  }
                 >
                   <MyText
                     text="see all postings"
@@ -414,7 +416,9 @@ const renderProposalsList = ({
       <View style={styles.ap_bot}>
         <MyButton
           label="View"
-          onPress={() => router.push("(user)/anon/listings/proposalDetails")}
+          onPress={() =>
+            router.push("(user)/anon/(tabs)/listings/proposalDetails")
+          }
           labelStyle={{
             color: theme.colors.primary,
             fontSize: 10,
