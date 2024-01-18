@@ -152,3 +152,9 @@ export interface IMyAvatar {
   edit?: boolean;
   status?: "online" | "offline" | "invisible";
 }
+
+export interface DropdownProps {
+  zIndex?: number;
+  onSelect: (value: string | string[]) => void;
+  style?: StyleProp<ViewStyle>;
+}
