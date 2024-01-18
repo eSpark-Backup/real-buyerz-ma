@@ -5,6 +5,8 @@ import MyText from "components/MyText";
 import FlagDropDown from "components/MyDropdown/flagDropDown";
 import PrimaryBtn from "components/MyButton/primaryBtn";
 import MyCheckbox from "components/MyCheckbox";
+import { MyTheme } from "@types";
+import { useTheme } from "@react-navigation/native";
 
 export enum Variants {
   SINGLE = "single",
@@ -29,6 +31,7 @@ interface IMyField {
 }
 
 const MyField = ({ variant, list, onPress, title }: IMyField) => {
+  const theme = useTheme() as MyTheme;
   return (
     <>
       {variant === "dual" && (
@@ -36,21 +39,22 @@ const MyField = ({ variant, list, onPress, title }: IMyField) => {
           <MyText
             size={14}
             text={list?.title}
-            style={styles.titleStyle}
+            style={styles(theme).titleStyle}
             weight="400"
           />
-          <View style={styles.dflex}>
+          <View style={styles(theme).dflex}>
             {list?.inputs.map((input, index) => (
               <View key={index}>
                 <MyInput
                   placeholder={input.placeholder}
-                  style={styles.dualInputStyle}
-                  inputStyle={styles.inputInnerStyle}
+                  style={styles(theme).dualInputStyle}
+                  inputStyle={styles(theme).inputInnerStyle}
+                  placeholderColor={theme.colors.placeholderText}
                 />
                 <MyText
                   size={10}
                   text={input.label}
-                  style={styles.labelStyle}
+                  style={styles(theme).labelStyle}
                 />
               </View>
             ))}
@@ -59,20 +63,25 @@ const MyField = ({ variant, list, onPress, title }: IMyField) => {
       )}
       {variant === "single" && (
         <View>
-          <MyText size={14} text={list?.title} style={styles.titleStyle} />
+          <MyText
+            size={14}
+            text={list?.title}
+            style={styles(theme).titleStyle}
+          />
 
           {list?.inputs.map((input, index) => (
             <View key={index}>
               <MyInput
                 placeholder={input.placeholder}
-                style={styles.singleInputStyle}
-                inputStyle={styles.inputInnerStyle}
+                style={styles(theme).singleInputStyle}
+                inputStyle={styles(theme).inputInnerStyle}
+                placeholderColor={theme.colors.placeholderText}
               />
               {input.label && (
                 <MyText
                   size={10}
                   text={input.label}
-                  style={styles.labelStyle}
+                  style={styles(theme).labelStyle}
                 />
               )}
             </View>
@@ -83,9 +92,13 @@ const MyField = ({ variant, list, onPress, title }: IMyField) => {
       {variant === "select" && (
         <View>
           {list?.title && (
-            <MyText size={13} text={list?.title} style={styles.titleStyle} />
+            <MyText
+              size={13}
+              text={list?.title}
+              style={styles(theme).titleStyle}
+            />
           )}
-          <View style={styles.dflex}>
+          <View style={styles(theme).dflex}>
             <FlagDropDown
               zIndex={8}
               onSelect={(value) => {
@@ -97,8 +110,9 @@ const MyField = ({ variant, list, onPress, title }: IMyField) => {
                 <View key={index}>
                   <MyInput
                     placeholder={input.placeholder}
-                    style={styles.selectInput}
-                    inputStyle={styles.inputInnerStyle}
+                    style={styles(theme).selectInput}
+                    inputStyle={styles(theme).inputInnerStyle}
+                    placeholderColor={theme.colors.placeholderText}
                   />
                 </View>
               ))}
@@ -109,20 +123,25 @@ const MyField = ({ variant, list, onPress, title }: IMyField) => {
 
       {variant === "multiLine" && (
         <View>
-          <MyText size={14} text={list?.title} style={styles.titleStyle} />
+          <MyText
+            size={14}
+            text={list?.title}
+            style={styles(theme).titleStyle}
+          />
           {list?.inputs.map((input, index) => (
             <View key={index}>
               <MyInput
                 multiline={true}
                 placeholder={input.placeholder}
-                style={styles.multiLineStyle}
-                inputStyle={styles.inputInnerStyle}
+                style={styles(theme).multiLineStyle}
+                inputStyle={styles(theme).inputInnerStyle}
+                placeholderColor={theme.colors.placeholderText}
               />
               {input?.label && (
                 <MyText
                   size={10}
                   text={input.label}
-                  style={styles.labelStyle}
+                  style={styles(theme).labelStyle}
                 />
               )}
             </View>
@@ -135,7 +154,6 @@ const MyField = ({ variant, list, onPress, title }: IMyField) => {
             width={100}
             weight="600"
             title={title ? title : ""}
-            textColor="#ffffff"
             onPress={onPress}
             btnStyle={{
               paddingVertical: 10,
@@ -163,7 +181,7 @@ const MyField = ({ variant, list, onPress, title }: IMyField) => {
               height: 20,
               borderWidth: 1,
               borderColor: "#b5b7b9",
-              backgroundColor: "white",
+              backgroundColor: theme?.colors.background,
               borderRadius: 4,
               marginRight: 5,
             }}
@@ -177,51 +195,53 @@ const MyField = ({ variant, list, onPress, title }: IMyField) => {
 
 export default MyField;
 
-const styles = StyleSheet.create({
-  inputInnerStyle: {
-    height: 45,
-    padding: 0,
-  },
-  dualInputStyle: {
-    backgroundColor: "#ffffff",
-    width: 160,
-    height: 35,
-    borderColor: "#E7E7E7",
-    borderWidth: 1,
-    elevation: 0,
-    padding: 5,
-  },
-  singleInputStyle: {
-    backgroundColor: "#ffffff",
-    height: 38,
-    borderColor: "#E7E7E7",
-    borderWidth: 1,
-    elevation: 0,
-  },
-  multiLineStyle: {
-    backgroundColor: "#ffffff",
-    height: 55,
-    borderColor: "#E7E7E7",
-    borderWidth: 1,
-    elevation: 0,
-  },
-  titleStyle: {
-    marginVertical: 4,
-  },
-  dflex: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-  },
-  labelStyle: {
-    marginTop: 5,
-    marginStart: 5,
-  },
-  selectInput: {
-    backgroundColor: "#ffffff",
-    width: 250,
-    height: 38,
-    borderColor: "#E7E7E7",
-    borderWidth: 1,
-    elevation: 0,
-  },
-});
+const styles = (theme?: MyTheme) =>
+  StyleSheet.create({
+    inputInnerStyle: {
+      height: 45,
+      padding: 0,
+      color: theme?.colors.text,
+    },
+    dualInputStyle: {
+      backgroundColor: theme?.colors.background,
+      width: 160,
+      height: 35,
+      borderColor: theme?.colors.dropdownBorder,
+      borderWidth: 1,
+      elevation: 0,
+      padding: 5,
+    },
+    singleInputStyle: {
+      backgroundColor: theme?.colors.background,
+      height: 38,
+      borderColor: theme?.colors.dropdownBorder,
+      borderWidth: 1,
+      elevation: 0,
+    },
+    multiLineStyle: {
+      backgroundColor: theme?.colors.background,
+      height: 55,
+      borderColor: theme?.colors.dropdownBorder,
+      borderWidth: 1,
+      elevation: 0,
+    },
+    titleStyle: {
+      marginVertical: 4,
+    },
+    dflex: {
+      flexDirection: "row",
+      justifyContent: "space-between",
+    },
+    labelStyle: {
+      marginTop: 5,
+      marginStart: 5,
+    },
+    selectInput: {
+      backgroundColor: theme?.colors.background,
+      width: 250,
+      height: 38,
+      borderColor: theme?.colors.dropdownBorder,
+      borderWidth: 1,
+      elevation: 0,
+    },
+  });

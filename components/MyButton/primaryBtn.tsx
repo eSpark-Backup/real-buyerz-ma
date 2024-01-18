@@ -33,7 +33,7 @@ const PrimaryBtn = ({
       onPress={onPress}
     >
       <MyText
-        textColor={textColor}
+        textColor={textColor ? textColor : "#ffffff"}
         size={10}
         weight={weight}
         style={labelStyle}

@@ -187,6 +187,8 @@ const styles = ({
     dashboardInnerStyles: {
       backgroundColor: isFocused
         ? theme?.colors.primary
+        : theme?.dark
+        ? theme?.colors.background
         : theme?.colors.secondary,
       justifyContent: "center",
       alignItems: "center",
