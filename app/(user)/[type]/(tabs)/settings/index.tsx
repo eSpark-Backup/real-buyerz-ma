@@ -17,7 +17,7 @@ export default function Settings() {
   const theme = useTheme() as MyTheme;
   const handlePrefernecesPress = () => {
     console.log("Preferences");
-    router.push("(user)/anon/settings/preferences");
+    router.push("(user)/anon/(tabs)/settings/preferences");
   };
 
   const handleAnyPress = () => {
@@ -81,7 +81,7 @@ export default function Settings() {
           <View style={styles.cards}>
             <MyClickableCard
               onPress={() => {
-                router.push("(user)/anon/settings/profileSettings");
+                router.push("(user)/anon/(tabs)/settings/profileSettings");
 
                 console.log("profile");
               }}
@@ -94,7 +94,7 @@ export default function Settings() {
             <MyClickableCard
               onPress={() => {
                 console.log("Favourites");
-                router.push("(user)/anon/settings/favoritesList");
+                router.push("(user)/anon/(tabs)/settings/favoritesList");
               }}
               title="Favourites"
             >

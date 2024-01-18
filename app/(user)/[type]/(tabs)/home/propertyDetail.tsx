@@ -114,7 +114,9 @@ const PropertyDetail = () => {
                 weight="600"
                 textColor="#ffffff"
                 width={100}
-                onPress={() => router.push("(user)/anon/home/AgentProfile")}
+                onPress={() =>
+                  router.push("(user)/anon/(tabs)/home/AgentProfile")
+                }
                 btnStyle={{
                   paddingVertical: 10,
                 }}
