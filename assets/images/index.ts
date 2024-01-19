@@ -40,7 +40,17 @@ export {
   HomeOutline,
   KeySmallIcon,
   Tab_Projects,
-  Tab_Dashbaord
+  Tab_Dashbaord,
+  Draw_Inbox,
+  Draw_Favorites,
+  Draw_OrderHistory,
+  Draw_Policy,
+  Draw_Preferences,
+  Draw_Properties,
+  Draw_Proposals,
+  Draw_Shop,
+  Draw_Logout,
+  Draw_Settings
 } from "./svg";
 
 //* pngs
