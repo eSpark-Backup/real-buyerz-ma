@@ -120,10 +120,7 @@ export default function Home() {
           <MarqueeScrollView />
         </View>
       </ScrollView>
-      <MyPopupModal
-        successMessage
-        message="Your Ad is submitted successfully"
-      />
+      <MyPopupModal feedback message="Arman Khan" />
     </>
   );
 }

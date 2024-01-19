@@ -21,6 +21,7 @@ import {
 import { MyTheme } from "@types";
 import MyAvatar from "components/MyAvatar";
 import MyInput from "components/MyInput";
+import { AddImage } from "@assets/images/svg";
 
 interface MyPopupModalProps {
   successMessage?: boolean;
@@ -182,7 +183,12 @@ const MyPopupModal = ({
                 <MyAvatar size={32} imageUrl={avatarUrl} />
               </View>
               <View>
-                <MyText text={message} size={12} weight="600" />
+                <MyText
+                  text={message}
+                  size={12}
+                  weight="600"
+                  textColor={theme.colors.negative}
+                />
                 <MyText
                   text="Your review will be posted publicly on the web."
                   size={10}
@@ -205,23 +211,16 @@ const MyPopupModal = ({
               <StarDisabled />
               <StarDisabled />
             </View>
-            <MyText
-              text="Describe your experience."
-              size={10}
-              textColor={theme.dark ? theme.colors.listText : "#E7E7E7"}
-              style={{ alignSelf: "flex-start", marginLeft: 40 }}
+            <MyInput
+              style={styles(theme).fbInput}
+              inputStyle={styles(theme).fbInputText}
+              placeholder="Describe your experience."
+              placeholderColor={theme.dark ? theme.colors.listText : "#E7E7E7"}
             />
-            <TextInput
-              style={{
-                width: 200,
-                alignSelf: "flex-start",
-                marginLeft: 40,
-                borderBottomColor: theme.colors.primary,
-                borderBottomWidth: 1,
-                marginTop: 25,
-              }}
-            />
-            <View style={{ flexDirection: "row", gap: 11, top: 16, left: 88 }}>
+            <TouchableOpacity style={styles(theme).cameraIcon}>
+              <AddImage />
+            </TouchableOpacity>
+            <View style={{ flexDirection: "row", gap: 11, top: 5, left: 88 }}>
               <MyText
                 text="Cancel"
                 size={10}
@@ -392,7 +391,36 @@ const styles = (theme?: MyTheme) =>
       elevation: 4,
       shadowOffset: { width: 0, height: 4 },
       alignItems: "center",
-      padding: 23,
+      paddingVertical: 20,
+      paddingHorizontal: 23,
+    },
+    fbInput: {
+      width: 200,
+      alignSelf: "flex-start",
+      marginLeft: 40,
+      borderBottomColor: theme?.colors.primary,
+      borderBottomWidth: 1,
+      backgroundColor: "transparent",
+      elevation: 0,
+    },
+    fbInputText: {
+      fontSize: 10,
+      textAlign: "left",
+      padding: 0,
+      marginLeft: -6,
+    },
+    cameraIcon: {
+      width: 47,
+      height: 38,
+      backgroundColor: theme?.dark ? theme.colors.background : "#F9F9F9",
+      alignItems: "center",
+      justifyContent: "center",
+      borderWidth: 1,
+      borderColor: theme?.dark ? theme.colors.border : "#EDECED",
+      borderRadius: 2,
+      alignSelf: "flex-start",
+      marginLeft: 42,
+      marginTop: 15,
     },
   });
 
