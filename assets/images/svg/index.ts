@@ -60,3 +60,4 @@ export { default as Draw_Preferences } from "./draw-preferences.svg";
 export { default as Draw_Policy } from "./draw-policy.svg";
 export { default as Draw_Settings } from "./draw-settings.svg";
 export { default as Draw_Logout } from "./draw-logout.svg";
+export { default as AddImage } from "./add-image.svg";
