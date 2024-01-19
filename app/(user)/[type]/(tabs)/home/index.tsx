@@ -120,7 +120,6 @@ export default function Home() {
           <MarqueeScrollView />
         </View>
       </ScrollView>
-      <MyPopupModal feedback message="Arman Khan" />
     </>
   );
 }

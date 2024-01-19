@@ -154,18 +154,19 @@ const MyPopupModal = ({
                   styles(theme).actionButton,
                   { elevation: theme.dark ? 0 : 5, backgroundColor: "white" },
                 ]}
+                textColor="#000000"
                 onPress={onClose}
               />
               <MyButton
-                label="Delete"
+                label={logout ? "Logout" : "Delete"}
                 style={[
                   styles(theme).actionButton,
                   {
                     elevation: theme.dark ? 0 : 5,
-                    backgroundColor: logout ? "white" : "#FD0D1B",
+                    backgroundColor: "#FD0D1B",
                   },
                 ]}
-                labelStyle={{ color: logout ? "#333333" : "white" }}
+                labelStyle={{ color: "white" }}
                 onPress={onPress}
               />
             </View>
