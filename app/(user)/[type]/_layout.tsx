@@ -1,15 +1,28 @@
-import { GapView, MyText } from "@components";
+import { Platform, StyleSheet, View } from "react-native";
+import { useTheme } from "@react-navigation/native";
 import {
   DrawerContentComponentProps,
   DrawerContentScrollView,
   DrawerItem,
   DrawerItemList,
 } from "@react-navigation/drawer";
-import { useTheme } from "@react-navigation/native";
+import { Drawer } from "expo-router/drawer";
+
 import { colors } from "@theme";
 import { MyTheme } from "@types";
-import { Drawer } from "expo-router/drawer";
-import { Platform, StyleSheet, View } from "react-native";
+import {
+  Draw_Favorites,
+  Draw_Inbox,
+  Draw_Logout,
+  Draw_OrderHistory,
+  Draw_Policy,
+  Draw_Preferences,
+  Draw_Properties,
+  Draw_Proposals,
+  Draw_Settings,
+  Draw_Shop,
+} from "@assets/images";
+import { BubbleIcon, GapView, MyAvatar, MyText } from "@components";
 
 const DrawerContent = (props: DrawerContentComponentProps) => {
   const { index } = props.state;
@@ -17,20 +30,58 @@ const DrawerContent = (props: DrawerContentComponentProps) => {
 
   return (
     <View style={{ ...styles.container }}>
-      <View style={styles.header}></View>
-      <DrawerContentScrollView style={styles.content}>
+      <View style={styles.header}>
+        <View style={{ flexDirection: "row" }}>
+          <MyAvatar size={40} imageUrl="https://i.pravatar.cc/300?img=68" />
+          <View style={{ marginLeft: 10 }}>
+            <MyText
+              text="Arman Khan"
+              size={16}
+              weight="600"
+              textColor="#ffffff"
+            />
+            <MyText
+              text="Email123@gmail.com"
+              size={12}
+              textColor="#ffffff"
+              style={{ marginVertical: 5 }}
+            />
+            <View style={{ flexDirection: "row", alignItems: "center" }}>
+              <MyText
+                text="Available connects: "
+                size={12}
+                textColor="#ffffff"
+              />
+              <MyText text="50" size={12} weight="600" textColor="#ffffff" />
+            </View>
+          </View>
+        </View>
+        <BubbleIcon size={40}>
+          <Draw_Settings />
+        </BubbleIcon>
+      </View>
+      <DrawerContentScrollView
+        style={styles.content}
+        contentContainerStyle={{ flexGrow: 1 }}
+        showsVerticalScrollIndicator={false}
+      >
         <DrawerItemList {...props} />
       </DrawerContentScrollView>
       <View style={[styles.footer, { borderColor: theme.colors.border }]}>
         <DrawerItem
           label={() => (
-            <MyText text="Logout" size={16} weight="400" textColor="#424242" />
+            <DrawerLabel label="Logout" theme={theme} focused={false} />
           )}
           pressColor="transparent"
           activeBackgroundColor={"#ffffff1a"}
-          // icon={({color, size, focused}) => (
-          // )}
-          onPress={() => props.navigation.navigate("SignIn")}
+          icon={({ color, size, focused }) => (
+            <Draw_Logout
+              style={{
+                color: focused ? theme.colors.secondary : theme.colors.text,
+              }}
+            />
+          )}
+          onPress={() => console.log("Logout")}
         />
       </View>
       {Platform.OS == "ios" && <GapView />}
@@ -46,6 +97,7 @@ export default function MainLayout() {
       backBehavior="history"
       screenOptions={({ route }) => ({
         headerShown: false,
+        drawerStyle: { width: "80%" },
       })}
     >
       <Drawer.Screen
@@ -64,6 +116,13 @@ export default function MainLayout() {
         name="inbox" // This is the name of the page and must match the url from root
         options={{
           drawerActiveBackgroundColor: "#DCEAF2",
+          drawerIcon: ({ focused }) => (
+            <Draw_Inbox
+              style={{
+                color: focused ? theme.colors.secondary : theme.colors.text,
+              }}
+            />
+          ),
           drawerLabel: ({ focused }) => (
             <DrawerLabel label="Inbox" theme={theme} focused={focused} />
           ),
@@ -73,6 +132,13 @@ export default function MainLayout() {
         name="myProposals" // This is the name of the page and must match the url from root
         options={{
           drawerActiveBackgroundColor: "#DCEAF2",
+          drawerIcon: ({ focused }) => (
+            <Draw_Proposals
+              style={{
+                color: focused ? theme.colors.secondary : theme.colors.text,
+              }}
+            />
+          ),
           drawerLabel: ({ focused }) => (
             <DrawerLabel label="My Proposals" theme={theme} focused={focused} />
           ),
@@ -82,6 +148,13 @@ export default function MainLayout() {
         name="myProperties" // This is the name of the page and must match the url from root
         options={{
           drawerActiveBackgroundColor: "#DCEAF2",
+          drawerIcon: ({ focused }) => (
+            <Draw_Properties
+              style={{
+                color: focused ? theme.colors.secondary : theme.colors.text,
+              }}
+            />
+          ),
           drawerLabel: ({ focused }) => (
             <DrawerLabel
               label="My Properties"
@@ -95,6 +168,13 @@ export default function MainLayout() {
         name="favorites" // This is the name of the page and must match the url from root
         options={{
           drawerActiveBackgroundColor: "#DCEAF2",
+          drawerIcon: ({ focused }) => (
+            <Draw_Favorites
+              style={{
+                color: focused ? theme.colors.secondary : theme.colors.text,
+              }}
+            />
+          ),
           drawerLabel: ({ focused }) => (
             <DrawerLabel label="Favorites" theme={theme} focused={focused} />
           ),
@@ -104,6 +184,13 @@ export default function MainLayout() {
         name="shop" // This is the name of the page and must match the url from root
         options={{
           drawerActiveBackgroundColor: "#DCEAF2",
+          drawerIcon: ({ focused }) => (
+            <Draw_Shop
+              style={{
+                color: focused ? theme.colors.secondary : theme.colors.text,
+              }}
+            />
+          ),
           drawerLabel: ({ focused }) => (
             <DrawerLabel label="Shop" theme={theme} focused={focused} />
           ),
@@ -113,6 +200,13 @@ export default function MainLayout() {
         name="orderHistory" // This is the name of the page and must match the url from root
         options={{
           drawerActiveBackgroundColor: "#DCEAF2",
+          drawerIcon: ({ focused }) => (
+            <Draw_OrderHistory
+              style={{
+                color: focused ? theme.colors.secondary : theme.colors.text,
+              }}
+            />
+          ),
           drawerLabel: ({ focused }) => (
             <DrawerLabel
               label="Order History"
@@ -126,6 +220,13 @@ export default function MainLayout() {
         name="preferences" // This is the name of the page and must match the url from root
         options={{
           drawerActiveBackgroundColor: "#DCEAF2",
+          drawerIcon: ({ focused }) => (
+            <Draw_Preferences
+              style={{
+                color: focused ? theme.colors.secondary : theme.colors.text,
+              }}
+            />
+          ),
           drawerLabel: ({ focused }) => (
             <DrawerLabel label="Preferences" theme={theme} focused={focused} />
           ),
@@ -135,6 +236,13 @@ export default function MainLayout() {
         name="privacyPolicy" // This is the name of the page and must match the url from root
         options={{
           drawerActiveBackgroundColor: "#DCEAF2",
+          drawerIcon: ({ focused }) => (
+            <Draw_Policy
+              style={{
+                color: focused ? theme.colors.secondary : theme.colors.text,
+              }}
+            />
+          ),
           drawerLabel: ({ focused }) => (
             <DrawerLabel
               label="Privacy and Policy"
@@ -148,6 +256,13 @@ export default function MainLayout() {
         name="termsAndConditions" // This is the name of the page and must match the url from root
         options={{
           drawerActiveBackgroundColor: "#DCEAF2",
+          drawerIcon: ({ focused }) => (
+            <Draw_Policy
+              style={{
+                color: focused ? theme.colors.secondary : theme.colors.text,
+              }}
+            />
+          ),
           drawerLabel: ({ focused }) => (
             <DrawerLabel
               label="Terms and conditions"
@@ -181,7 +296,7 @@ const DrawerLabel = ({
       text={label}
       size={16}
       weight="400"
-      textColor={focused ? theme.colors.secondary : "#424242"}
+      textColor={focused ? theme.colors.secondary : theme.colors.text}
     />
   );
 };
@@ -194,10 +309,9 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     height: 100,
     padding: 10,
-    alignItems: "center",
-    justifyContent: "center",
+    alignItems: "flex-start",
+    justifyContent: "space-between",
     backgroundColor: colors.light.secondary,
-    marginBottom: 20,
   },
   content: {
     flex: 1,

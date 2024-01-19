@@ -28,3 +28,4 @@ export { default as PreviewPopup } from "./PreviewPopup";
 export { default as MyListItem } from "./MyList";
 export { default as MyBottomSheet } from "./MyBottomSheet";
 export { default as LabelValue } from "./LabelValue";
+export { default as BubbleIcon } from "./BubbleIcon";
