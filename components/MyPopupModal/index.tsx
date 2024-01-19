@@ -125,27 +125,22 @@ const MyPopupModal = ({
             </View>
           )
         ) : successMessage ? (
-          <LinearGradient
-            start={{ x: 0.5, y: -0.9 }}
-            end={{ x: 0.5, y: 0.9 }}
-            colors={[theme.colors.gradient, theme.colors.positive]}
-            style={styles(theme).box2}
-          >
+          <View style={styles(theme).box2}>
+            <View style={{ width: 40, height: 40, backgroundColor: "grey" }} />
             <MyText
               style={styles(theme).message}
               textColor={theme.colors.negative}
-              size={20}
-              weight="500"
+              size={12}
             >
               {message}
             </MyText>
             <MyButton
-              label="OK"
+              label="Continue"
               labelStyle={styles(theme).sLabel}
               style={styles(theme).sButton}
               onPress={onClose}
             />
-          </LinearGradient>
+          </View>
         ) : confirmation ? (
           <View style={styles(theme).confirmationBox}>
             {logout ? <ConfirmationGrey /> : <Confirmation />}
@@ -305,7 +300,7 @@ const styles = (theme?: MyTheme) =>
       paddingVertical: 10,
     },
     label: { color: "white" },
-    sLabel: { color: "white", fontSize: 20 },
+    sLabel: { color: "white", fontSize: 12 },
     container: {
       borderWidth: 1,
       borderColor: "#126FAA",
@@ -326,19 +321,19 @@ const styles = (theme?: MyTheme) =>
     },
     message: { textAlign: "center" },
     box2: {
-      width: 296,
-      height: 250,
+      width: 256,
+      height: 149,
       alignItems: "center",
-      backgroundColor: theme?.colors.verificationBg,
-      borderRadius: 5,
+      backgroundColor: theme?.colors.background,
+      borderRadius: 10,
       borderWidth: 1,
       borderColor: theme?.colors.border,
       shadowColor: "#00000040",
       elevation: 4,
       shadowOffset: { width: 0, height: 4 },
-      paddingHorizontal: 20,
-      paddingTop: 70,
-      paddingBottom: 30,
+      marginTop: 30,
+      paddingVertical: 18,
+      paddingHorizontal: 32,
       justifyContent: "space-around",
     },
     button2: {
@@ -350,12 +345,13 @@ const styles = (theme?: MyTheme) =>
       borderWidth: 2,
     },
     sButton: {
-      width: 105,
-      height: 43,
+      width: 100,
+      height: 28,
       alignSelf: "center",
-      borderRadius: 10,
+      borderRadius: 3.13,
       borderColor: "#1176AD",
       borderWidth: 2,
+      marginTop: 10,
     },
     label2: { color: "white", fontSize: 20 },
     confirmationBox: {

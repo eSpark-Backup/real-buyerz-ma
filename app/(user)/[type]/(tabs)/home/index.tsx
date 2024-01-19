@@ -21,6 +21,7 @@ import {
   GapView,
   HomeHeader,
   AdCard,
+  MyPopupModal,
 } from "@components";
 import { WINDOW_WIDTH } from "@constants";
 import { MyTheme } from "@types";
@@ -119,6 +120,10 @@ export default function Home() {
           <MarqueeScrollView />
         </View>
       </ScrollView>
+      <MyPopupModal
+        successMessage
+        message="Your Ad is submitted successfully"
+      />
     </>
   );
 }
