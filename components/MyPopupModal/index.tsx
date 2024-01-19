@@ -21,6 +21,7 @@ import {
 import { MyTheme } from "@types";
 import MyAvatar from "components/MyAvatar";
 import MyInput from "components/MyInput";
+import { AddImage } from "@assets/images/svg";
 
 interface MyPopupModalProps {
   successMessage?: boolean;
@@ -125,27 +126,22 @@ const MyPopupModal = ({
             </View>
           )
         ) : successMessage ? (
-          <LinearGradient
-            start={{ x: 0.5, y: -0.9 }}
-            end={{ x: 0.5, y: 0.9 }}
-            colors={[theme.colors.gradient, theme.colors.positive]}
-            style={styles(theme).box2}
-          >
+          <View style={styles(theme).box2}>
+            <View style={{ width: 40, height: 40, backgroundColor: "grey" }} />
             <MyText
               style={styles(theme).message}
               textColor={theme.colors.negative}
-              size={20}
-              weight="500"
+              size={12}
             >
               {message}
             </MyText>
             <MyButton
-              label="OK"
+              label="Continue"
               labelStyle={styles(theme).sLabel}
               style={styles(theme).sButton}
               onPress={onClose}
             />
-          </LinearGradient>
+          </View>
         ) : confirmation ? (
           <View style={styles(theme).confirmationBox}>
             {logout ? <ConfirmationGrey /> : <Confirmation />}
@@ -158,18 +154,19 @@ const MyPopupModal = ({
                   styles(theme).actionButton,
                   { elevation: theme.dark ? 0 : 5, backgroundColor: "white" },
                 ]}
+                textColor="#000000"
                 onPress={onClose}
               />
               <MyButton
-                label="Delete"
+                label={logout ? "Logout" : "Delete"}
                 style={[
                   styles(theme).actionButton,
                   {
                     elevation: theme.dark ? 0 : 5,
-                    backgroundColor: logout ? "white" : "#FD0D1B",
+                    backgroundColor: "#FD0D1B",
                   },
                 ]}
-                labelStyle={{ color: logout ? "#333333" : "white" }}
+                labelStyle={{ color: "white" }}
                 onPress={onPress}
               />
             </View>
@@ -187,7 +184,12 @@ const MyPopupModal = ({
                 <MyAvatar size={32} imageUrl={avatarUrl} />
               </View>
               <View>
-                <MyText text={message} size={12} weight="600" />
+                <MyText
+                  text={message}
+                  size={12}
+                  weight="600"
+                  textColor={theme.colors.negative}
+                />
                 <MyText
                   text="Your review will be posted publicly on the web."
                   size={10}
@@ -210,23 +212,16 @@ const MyPopupModal = ({
               <StarDisabled />
               <StarDisabled />
             </View>
-            <MyText
-              text="Describe your experience."
-              size={10}
-              textColor={theme.dark ? theme.colors.listText : "#E7E7E7"}
-              style={{ alignSelf: "flex-start", marginLeft: 40 }}
+            <MyInput
+              style={styles(theme).fbInput}
+              inputStyle={styles(theme).fbInputText}
+              placeholder="Describe your experience."
+              placeholderColor={theme.dark ? theme.colors.listText : "#E7E7E7"}
             />
-            <TextInput
-              style={{
-                width: 200,
-                alignSelf: "flex-start",
-                marginLeft: 40,
-                borderBottomColor: theme.colors.primary,
-                borderBottomWidth: 1,
-                marginTop: 25,
-              }}
-            />
-            <View style={{ flexDirection: "row", gap: 11, top: 16, left: 88 }}>
+            <TouchableOpacity style={styles(theme).cameraIcon}>
+              <AddImage />
+            </TouchableOpacity>
+            <View style={{ flexDirection: "row", gap: 11, top: 5, left: 88 }}>
               <MyText
                 text="Cancel"
                 size={10}
@@ -305,7 +300,7 @@ const styles = (theme?: MyTheme) =>
       paddingVertical: 10,
     },
     label: { color: "white" },
-    sLabel: { color: "white", fontSize: 20 },
+    sLabel: { color: "white", fontSize: 12 },
     container: {
       borderWidth: 1,
       borderColor: "#126FAA",
@@ -326,19 +321,19 @@ const styles = (theme?: MyTheme) =>
     },
     message: { textAlign: "center" },
     box2: {
-      width: 296,
-      height: 250,
+      width: 256,
+      height: 149,
       alignItems: "center",
-      backgroundColor: theme?.colors.verificationBg,
-      borderRadius: 5,
+      backgroundColor: theme?.colors.background,
+      borderRadius: 10,
       borderWidth: 1,
       borderColor: theme?.colors.border,
       shadowColor: "#00000040",
       elevation: 4,
       shadowOffset: { width: 0, height: 4 },
-      paddingHorizontal: 20,
-      paddingTop: 70,
-      paddingBottom: 30,
+      marginTop: 30,
+      paddingVertical: 18,
+      paddingHorizontal: 32,
       justifyContent: "space-around",
     },
     button2: {
@@ -350,12 +345,13 @@ const styles = (theme?: MyTheme) =>
       borderWidth: 2,
     },
     sButton: {
-      width: 105,
-      height: 43,
+      width: 100,
+      height: 28,
       alignSelf: "center",
-      borderRadius: 10,
+      borderRadius: 3.13,
       borderColor: "#1176AD",
       borderWidth: 2,
+      marginTop: 10,
     },
     label2: { color: "white", fontSize: 20 },
     confirmationBox: {
@@ -396,7 +392,36 @@ const styles = (theme?: MyTheme) =>
       elevation: 4,
       shadowOffset: { width: 0, height: 4 },
       alignItems: "center",
-      padding: 23,
+      paddingVertical: 20,
+      paddingHorizontal: 23,
+    },
+    fbInput: {
+      width: 200,
+      alignSelf: "flex-start",
+      marginLeft: 40,
+      borderBottomColor: theme?.colors.primary,
+      borderBottomWidth: 1,
+      backgroundColor: "transparent",
+      elevation: 0,
+    },
+    fbInputText: {
+      fontSize: 10,
+      textAlign: "left",
+      padding: 0,
+      marginLeft: -6,
+    },
+    cameraIcon: {
+      width: 47,
+      height: 38,
+      backgroundColor: theme?.dark ? theme.colors.background : "#F9F9F9",
+      alignItems: "center",
+      justifyContent: "center",
+      borderWidth: 1,
+      borderColor: theme?.dark ? theme.colors.border : "#EDECED",
+      borderRadius: 2,
+      alignSelf: "flex-start",
+      marginLeft: 42,
+      marginTop: 15,
     },
   });
 

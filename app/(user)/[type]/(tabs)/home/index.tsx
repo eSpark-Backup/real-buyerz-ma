@@ -21,6 +21,7 @@ import {
   GapView,
   HomeHeader,
   AdCard,
+  MyPopupModal,
 } from "@components";
 import { WINDOW_WIDTH } from "@constants";
 import { MyTheme } from "@types";
