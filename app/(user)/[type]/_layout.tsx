@@ -22,7 +22,7 @@ import {
   Draw_Settings,
   Draw_Shop,
 } from "@assets/images";
-import { BubbleIcon, GapView, MyAvatar, MyText } from "@components";
+import { BubbleIcon, GapView, MyAvatar, MyHeader, MyText } from "@components";
 
 const DrawerContent = (props: DrawerContentComponentProps) => {
   const { index } = props.state;
@@ -96,7 +96,10 @@ export default function MainLayout() {
       drawerContent={(props) => <DrawerContent {...props} />}
       backBehavior="history"
       screenOptions={({ route }) => ({
-        headerShown: false,
+        // headerShown: false,
+        header: (props) => {
+          return <MyHeader {...props} showBackIcon showRight theme={theme} />;
+        },
         drawerStyle: { width: "80%" },
       })}
     >
@@ -109,6 +112,18 @@ export default function MainLayout() {
       <Drawer.Screen
         name="(tabs)" // This is the name of the page and must match the url from root
         options={{
+          drawerItemStyle: { display: "none" },
+          headerShown: false,
+        }}
+      />
+      <Drawer.Screen
+        name="search" // This is the name of the page and must match the url from root
+        options={{
+          header: (props) => {
+            return (
+              <MyHeader {...props} showBackIcon hideCenter theme={theme} />
+            );
+          },
           drawerItemStyle: { display: "none" },
         }}
       />

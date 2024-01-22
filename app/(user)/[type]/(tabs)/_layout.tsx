@@ -18,9 +18,9 @@ function UserTabLayout() {
       sceneContainerStyle={{ paddingBottom: 35 }}
       screenOptions={{
         headerShown: false,
-        headerStyle: styles(theme).headerStyle,
+        // headerStyle: styles(theme).headerStyle,
         header: (props) => {
-          return <MyHeader {...props} showRight showBackIcon theme={theme} />;
+          return <MyHeader {...props} showRight theme={theme} />;
         },
       }}
       tabBar={(props) => {
@@ -36,7 +36,7 @@ function UserTabLayout() {
       <Tabs.Screen
         name="home"
         options={{
-          headerShown: false,
+          headerShown: true,
           title: "Home",
           href: "(user)/anon/(tabs)/home",
         }}
@@ -57,28 +57,7 @@ function UserTabLayout() {
           href: "(user)/anon/(tabs)/dashboard",
         }}
       />
-      <Tabs.Screen
-        name="search"
-        options={{
-          headerShown: true,
-          header: (props) => {
-            const searchRoute = props.navigation
-              .getState()
-              .routes.find((item) => item.name === "search");
-            const isSearchList = searchRoute?.state?.index !== 1;
-            return (
-              <MyHeader
-                {...props}
-                hideCenter={isSearchList}
-                showBackIcon
-                theme={theme}
-              />
-            );
-          },
-          title: "Search",
-          href: "(user)/anon/(tabs)/search",
-        }}
-      />
+
       <Tabs.Screen
         name="listings"
         options={{

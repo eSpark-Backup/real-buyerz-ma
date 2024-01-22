@@ -73,16 +73,16 @@ export default function Home() {
 
   return (
     <>
-      <View style={styles(theme).HomeHeader}>
+      {/* <View style={styles(theme).HomeHeader}>
         <DynamicHomeHeader />
-      </View>
+      </View> */}
 
       <ScrollView
         style={[styles(theme).wrapper]}
-        onScroll={handleScroll}
-        scrollEventThrottle={16}
+        // onScroll={handleScroll}
+        // scrollEventThrottle={16}
       >
-        <DynamicAppBar value={scrollOffsetY} />
+        {/* <DynamicAppBar value={scrollOffsetY} /> */}
         <View style={styles(theme).container}>
           <AdCard
             label="View Your listings or post your ad to rent or sell your house"
@@ -115,9 +115,9 @@ export default function Home() {
             theme={theme}
           />
           <PropertyListing title="Newly Listed Properties" theme={theme} />
-          <GapView length={30} />
+          {/* <GapView length={30} />
           <Title text="Our Home Partners" theme={theme} />
-          <MarqueeScrollView />
+          <MarqueeScrollView /> */}
         </View>
       </ScrollView>
     </>
