@@ -1,10 +1,10 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { ScrollView, StyleSheet, TouchableOpacity, View } from "react-native";
+import { useTheme } from "@react-navigation/native";
 
 import Card from "../Card";
 import MyText from "../MyText";
 import { MyTheme, SearchDataProps } from "@types";
-import { useTheme } from "@react-navigation/native";
 
 interface TabFilterProps {
   data: SearchDataProps[];

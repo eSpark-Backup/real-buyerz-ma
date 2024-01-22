@@ -20,6 +20,7 @@ import {
   MyButton,
   MyDropdown,
   MyText,
+  MyTopFilter,
 } from "@components";
 
 interface FilterBtn {
@@ -171,25 +172,7 @@ export default function AllPosting() {
         theme={theme}
         onClose={(val) => setVisible(val)}
       />
-      <View style={styles.top_filter}>
-        <TouchableOpacity
-          activeOpacity={1}
-          onPress={() => setVisible(!visible)}
-          style={{
-            backgroundColor: theme.colors.secondary,
-            padding: 10,
-            borderRadius: 5,
-          }}
-        >
-          <FontAwesome name="filter" size={15} color="#ffffff" />
-        </TouchableOpacity>
-        <MyText
-          text="Reset"
-          textColor={theme.colors.secondary}
-          size={14}
-          style={{ marginLeft: 10, textDecorationLine: "underline" }}
-        />
-      </View>
+      <MyTopFilter theme={theme} onPressFilter={() => setVisible(!visible)} />
       <View style={styles.top_selection_btns}>
         {filterBtns.map((item, index) => (
           <FilterBtnComp
