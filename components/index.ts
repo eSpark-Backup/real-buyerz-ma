@@ -30,3 +30,4 @@ export { default as MyBottomSheet } from "./MyBottomSheet";
 export { default as LabelValue } from "./LabelValue";
 export { default as BubbleIcon } from "./BubbleIcon";
 export { default as MyTopFilter } from "./MyTopFilter";
+export { default as MyTopTabs } from "./MyTopTabs";
