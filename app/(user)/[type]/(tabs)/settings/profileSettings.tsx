@@ -2,9 +2,8 @@ import React from "react";
 import { StyleSheet, View, ScrollView } from "react-native";
 import { useTheme } from "@react-navigation/native";
 
-import { MyText, MyAvatar } from "@components";
+import { MyText, MyAvatar, MyField, Variants } from "@components";
 import { MyTheme } from "@types";
-import MyField, { Variants } from "components/MyField";
 
 export default function ProfileSettings() {
   const infoList = [
