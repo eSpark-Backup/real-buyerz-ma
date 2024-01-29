@@ -20,11 +20,9 @@ export default function ProposalDetails() {
     <ScrollView
       style={{
         flex: 1,
-        flexGrow: 1,
-        paddingTop: 26,
         paddingHorizontal: 20,
       }}
-      contentContainerStyle={{ paddingBottom: 65 }}
+      // contentContainerStyle={{ flexGrow: 1 }}
     >
       <MyText
         size={20}

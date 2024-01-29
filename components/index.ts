@@ -10,8 +10,9 @@ export { default as MyDropdown } from "./MyDropdown";
 export { default as MyAvatar } from "./MyAvatar";
 export { default as BubbleIcon } from "./BubbleIcon";
 export { default as LabelValue } from "./LabelValue";
-export {AdCard, MyClickableCard} from "./MyCard";
-export {default as MyField, Variants} from './MyField';
+export { AdCard, MyClickableCard } from "./MyCard";
+export { default as MyField, Variants } from "./MyField";
+
 //* Header and Bottom tab (Custom) //note: only used in navigation layouts
 export { default as MyHeader } from "./MyHeader";
 export { default as MyTabBar } from "./MyTabBar";
@@ -19,7 +20,6 @@ export { default as MyTabBar } from "./MyTabBar";
 //* Popups and Modals Custom
 export { default as LoginModal } from "./LoginModal";
 export { default as MyPopupModal } from "./MyPopupModal";
-export { default as PreviewPopup } from "./PreviewPopup";
 export { default as MyBottomSheet } from "./MyBottomSheet";
 
 //* Search Tools (mainly used in Search Screen)
@@ -40,4 +40,3 @@ export { default as MyTopTabs } from "./MyTopTabs";
 
 //! only used in Chat Screen
 export { default as MyFab } from "./MyFab";
-
