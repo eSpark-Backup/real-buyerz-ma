@@ -66,7 +66,6 @@ const styles = (theme: MyTheme) =>
       borderColor: theme.colors.border,
     },
     scrollContainer: {
-      flex: 1,
       paddingHorizontal: 20,
       borderBottomWidth: 1,
       borderColor: theme.colors.border,

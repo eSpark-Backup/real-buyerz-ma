@@ -22,7 +22,7 @@ export default function ProposalDetails() {
         flex: 1,
         paddingHorizontal: 20,
       }}
-      // contentContainerStyle={{ flexGrow: 1 }}
+      contentContainerStyle={{ paddingTop: 20 }}
     >
       <MyText
         size={20}

@@ -21,7 +21,7 @@ export default function MyTopFilter({
         onPress={onPressFilter}
         style={{
           backgroundColor: theme.colors.secondary,
-          padding: 7,
+          padding: 6,
           paddingHorizontal: 8,
           borderRadius: 5,
         }}

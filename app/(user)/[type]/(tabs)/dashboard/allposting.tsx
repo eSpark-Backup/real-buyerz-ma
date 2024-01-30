@@ -168,12 +168,7 @@ export default function AllPosting() {
   const [visible, setVisible] = useState(false);
 
   return (
-    <ScrollView
-      style={{ flex: 1 }}
-      contentContainerStyle={styles.container}
-      nestedScrollEnabled
-      showsVerticalScrollIndicator={false}
-    >
+    <View style={{ flex: 1, ...styles.container }}>
       <MyBottomSheet.Modal
         visible={visible}
         theme={theme}
@@ -219,16 +214,18 @@ export default function AllPosting() {
         }}
       />
       <MyTopTabs data={topTabsData} list />
-      <View style={styles.content}>
-        <FlatList
-          data={testContentData}
-          showsVerticalScrollIndicator={false}
-          nestedScrollEnabled
-          renderItem={({ item, index }) => renderList({ item, index, theme })}
-          ItemSeparatorComponent={() => <GapView />}
-        />
-      </View>
-    </ScrollView>
+      <ScrollView nestedScrollEnabled showsVerticalScrollIndicator={false}>
+        <View style={styles.content}>
+          <FlatList
+            data={testContentData}
+            showsVerticalScrollIndicator={false}
+            nestedScrollEnabled
+            renderItem={({ item, index }) => renderList({ item, index, theme })}
+            ItemSeparatorComponent={() => <GapView />}
+          />
+        </View>
+      </ScrollView>
+    </View>
   );
 }
 
@@ -254,7 +251,7 @@ const renderList = ({
           weight="300"
           text={item?.description}
         />
-        <LabelValue label="Amount" value={item?.amount!} />
+        <LabelValue label="Est. Range" value={item?.amount!} />
         <LabelValue label="Purpose" value={item?.purpose!} />
         <LabelValue label="Property Type" value={item?.type!} />
         <LabelValue label="City" value={item?.city!} />
@@ -280,7 +277,7 @@ const renderList = ({
           <MyButton
             label={`View`}
             onPress={() =>
-              router.push("(user)/anon/(tabs)/dashboard/proposalDetails")
+              router.push("(user)/anon/(tabs)/dashboard/proposalPreview")
             }
             labelStyle={{
               color: "#ffffff",
@@ -333,7 +330,6 @@ const FilterBtnComp = ({
 const styles = StyleSheet.create({
   container: {
     paddingTop: 26,
-    paddingBottom: 40,
   },
   top_filter: {
     flexDirection: "row",

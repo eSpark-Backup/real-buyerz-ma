@@ -328,6 +328,9 @@ const renderPostingList = ({
       <MyButton
         label="View Proposals"
         textColor="#ffffff"
+        onPress={() =>
+          router.push("(user)/anon/(tabs)/dashboard/proposalDetails")
+        }
         labelStyle={{ fontSize: 12 }}
         style={{
           marginTop: 20,
