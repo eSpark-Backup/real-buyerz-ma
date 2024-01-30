@@ -1,15 +1,8 @@
 import React from "react";
-import { View, StyleSheet, FlatList, Image, ScrollView } from "react-native";
+import { View, StyleSheet, ScrollView } from "react-native";
 import { useTheme } from "@react-navigation/native";
 
-import {
-  Card,
-  GapView,
-  LabelValue,
-  MyAvatar,
-  MyText,
-  PrimaryBtn,
-} from "@components";
+import { Card, GapView, LabelValue, MyAvatar, MyText } from "@components";
 import { MyTheme } from "@types";
 import { LocationIcon } from "@assets/images";
 
@@ -28,43 +21,6 @@ interface Preview {
   imageMedia?: string[];
   videoMedia?: string[];
 }
-
-export interface PreviewPopupProps {
-  visible?: boolean;
-  onClose: () => void;
-}
-
-interface MediaGalleryProps {
-  media: string[]; // Array of image or video URLs
-  theme?: MyTheme;
-}
-
-const MediaGallery: React.FC<MediaGalleryProps> = ({ media, theme }) => {
-  const isVideo = (url: string) => {
-    return url.toLowerCase().endsWith(".mp4");
-  };
-
-  return (
-    <ScrollView
-      horizontal
-      style={styles(theme).temp}
-      showsHorizontalScrollIndicator={false}
-    >
-      {media.map((url, index) => (
-        <View key={index} style={styles(theme).tempImage}>
-          {isVideo(url) ? (
-            <View style={{ flex: 1, width: "100%", height: "100%" }} />
-          ) : (
-            <Image
-              source={{ uri: url }}
-              style={{ flex: 1, width: "100%", height: "100%" }}
-            />
-          )}
-        </View>
-      ))}
-    </ScrollView>
-  );
-};
 
 const AvatarContainer = () => {
   const theme = useTheme() as MyTheme;
@@ -103,7 +59,7 @@ const AvatarContainer = () => {
   );
 };
 
-function ProposalPreview({ visible, onClose }: PreviewPopupProps) {
+function ProposalPreview() {
   const theme = useTheme() as MyTheme;
   const data: Preview[] = [
     {
@@ -117,20 +73,6 @@ function ProposalPreview({ visible, onClose }: PreviewPopupProps) {
       range: 1000000,
       installments: "Available",
       readyFor: "Possession",
-      imageMedia: [
-        "https://picsum.photos/90/72",
-        "https://picsum.photos/90/72",
-        "https://picsum.photos/90/72",
-        "https://picsum.photos/90/72",
-        // Add more URLs as needed
-      ],
-      videoMedia: [
-        "https://picsum.photos/id/151/130",
-        "https://picsum.photos/id/151/130",
-        "https://picsum.photos/id/151/130",
-        "https://picsum.photos/id/151/130",
-        // Add more URLs as needed
-      ],
     },
   ];
 
@@ -206,12 +148,5 @@ const styles = (theme?: MyTheme) =>
       rowGap: 6,
       borderTopWidth: 1,
       borderColor: theme?.colors.border,
-    },
-    temp: { flexDirection: "row", rowGap: 10, columnGap: 10 },
-    tempImage: {
-      width: 90,
-      height: 72,
-      backgroundColor: "#7e7575",
-      marginRight: 10,
     },
   });

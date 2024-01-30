@@ -1,20 +1,16 @@
-import React, { useState } from "react";
-import { StyleSheet, View, FlatList, ScrollView, Image } from "react-native";
+import React from "react";
+import {
+  StyleSheet,
+  View,
+  FlatList,
+  ScrollView,
+  TouchableOpacity,
+} from "react-native";
 import { useTheme } from "@react-navigation/native";
-import { Feather } from "@expo/vector-icons";
 import { router } from "expo-router";
 
-import {
-  Card,
-  GapView,
-  LabelValue,
-  MyButton,
-  MyText,
-  SearchBar,
-} from "@components";
+import { Card, LabelValue, MyButton, MyText } from "@components";
 import { MyTheme } from "@types";
-import { MiFilter } from "@assets/images";
-import { TouchableOpacity } from "react-native-gesture-handler";
 
 interface Posting {
   id: number;
@@ -26,15 +22,6 @@ interface Posting {
   city: string;
   area: string;
   proposal: number;
-}
-
-interface Proposals {
-  id: number;
-  name: string;
-  region: string;
-  price: number; // 0.00 decimals
-  image: string;
-  description: string;
 }
 
 const minutesAgo: number = 30;
@@ -91,43 +78,13 @@ const testPostingData: Posting[] = [
   },
 ];
 
-const testProposalsData: Proposals[] = [
-  {
-    id: 1,
-    name: "John Doe",
-    image: "https://picsum.photos/id/212/200",
-    region: "Pakistan",
-    description:
-      "Enim eiusmod nisi commodo sunt officia dolore officia ut veniam elit reprehe. Exercitation quis id aliqua ullamco aute laborum cupidatat excepteur elit id",
-    price: 100.0,
-  },
-  {
-    id: 2,
-    name: "John Depp",
-    image: "https://picsum.photos/id/312/200",
-    region: "Pakistan",
-    description:
-      "Enim eiusmod nisi commodo sunt officia dolore officia ut veniam elit reprehe. Exercitation quis id aliqua ullamco aute laborum cupidatat excepteur elit id",
-    price: 100.0,
-  },
-  {
-    id: 3,
-    name: "John Bravo",
-    image: "https://picsum.photos/id/315/200",
-    region: "Pakistan",
-    description:
-      "Enim eiusmod nisi commodo sunt officia dolore officia ut veniam elit reprehe. Exercitation quis id aliqua ullamco aute laborum cupidatat excepteur elit id",
-    price: 100.0,
-  },
-];
-
 function timeAgo(date: Date, minutesAgo: number = 0): string {
   const diff: number =
     Math.floor((new Date().getTime() - date.getTime()) / 60000) - minutesAgo;
   return `${diff} mins ago`;
 }
 
-export default function Listings() {
+export default function Dashboard() {
   const theme = useTheme() as MyTheme;
 
   return (
@@ -145,22 +102,6 @@ export default function Listings() {
               weight="600"
               textColor={theme.colors.negative}
             />
-            {/* <MyButton
-              label="Post a Request"
-              backgroundColor={theme.colors.primary}
-              textColor="#ffffff"
-              labelStyle={{ fontSize: 10, fontWeight: "500" }}
-              style={{ borderRadius: 4, padding: 10 }}
-              leftIcon={
-                <Feather
-                  name="plus"
-                  size={14}
-                  color="#ffffff"
-                  style={{ marginRight: 5 }}
-                />
-              }
-              onPress={handlepress}
-            /> */}
           </View>
           <View style={styles.content}>
             <Card style={{ flex: 1 }}>
@@ -203,71 +144,6 @@ export default function Listings() {
                 keyExtractor={(item) => item.id.toString()}
               />
             </Card>
-            {/* <Card style={{ marginTop: 17 }}>
-              <View
-                style={{
-                  flexDirection: "row",
-                  justifyContent: "space-between",
-                  padding: 12,
-                  borderBottomWidth: 1,
-                  borderColor: theme.colors.border,
-                }}
-              >
-                <MyText text="All Proposals (1)" weight="600" size={16} />
-              </View>
-              <View
-                style={{
-                  paddingVertical: 17,
-                  height: 410,
-                }}
-              >
-                <FlatList
-                  data={testProposalsData}
-                  nestedScrollEnabled
-                  ListHeaderComponentStyle={{ paddingHorizontal: 11 }}
-                  ListHeaderComponent={() => (
-                    <View>
-                      <View style={{ height: 35 }}>
-                        <SearchBar
-                          button
-                          placeholder="Search by name"
-                          searchBtnColor={theme.colors.secondary}
-                        />
-                      </View>
-                      <View style={{ alignItems: "flex-end" }}>
-                        <MyButton
-                          label="Filter"
-                          labelStyle={{
-                            color: theme.colors.primary,
-                            marginLeft: 5,
-                          }}
-                          leftIcon={<MiFilter />}
-                          style={{
-                            paddingHorizontal: 15,
-                            paddingVertical: 5,
-                            backgroundColor: "transparent",
-                            borderWidth: 1,
-                            borderColor: theme.colors.primary,
-                            borderRadius: 4,
-                            marginVertical: 10,
-                          }}
-                        />
-                      </View>
-                    </View>
-                  )}
-                  renderItem={({ item, index }) =>
-                    renderProposalsList({ item, index, theme })
-                  }
-                  showsVerticalScrollIndicator={false}
-                  ItemSeparatorComponent={() => (
-                    <View style={{ marginVertical: 10 }}>
-                      <Card.Divider style={{ width: "100%" }} />
-                    </View>
-                  )}
-                  keyExtractor={(item) => item.id.toString()}
-                />
-              </View>
-            </Card> */}
           </View>
         </View>
       </ScrollView>
@@ -328,9 +204,7 @@ const renderPostingList = ({
       <MyButton
         label="View Proposals"
         textColor="#ffffff"
-        onPress={() =>
-          router.push("(user)/anon/(tabs)/dashboard/proposalDetails")
-        }
+        onPress={() => router.push("(user)/anon/(tabs)/dashboard/proposalList")}
         labelStyle={{ fontSize: 12 }}
         style={{
           marginTop: 20,
@@ -341,80 +215,6 @@ const renderPostingList = ({
         }}
         backgroundColor={theme.colors.primary}
       />
-    </View>
-  );
-};
-
-const renderProposalsList = ({
-  item,
-  index,
-  theme,
-}: {
-  item: Proposals;
-  index: number;
-  theme: MyTheme;
-}) => {
-  return (
-    <View style={{ paddingHorizontal: 11 }}>
-      <View style={styles.ap_top}>
-        <View style={styles.ap_top1}>
-          <Image
-            source={{ uri: item.image }}
-            style={{ height: 40, borderRadius: 40, width: 40, marginRight: 5 }}
-            resizeMode="contain"
-          />
-          <View>
-            <MyText
-              text={item.name}
-              size={12}
-              weight="600"
-              textColor={theme.colors.secondary}
-            />
-            <MyText
-              text={item.region}
-              size={10}
-              weight="400"
-              textColor={theme.colors.text + "77"}
-            />
-          </View>
-        </View>
-        <MyText
-          text={"$" + item.price.toFixed(2).toString()}
-          size={12}
-          weight="500"
-          textColor={theme.dark ? "#ffffff" : "#000000"}
-        />
-      </View>
-      <View style={styles.ap_mid}>
-        <MyText
-          text={item.description}
-          numberOfLines={3}
-          weight="300"
-          size={12}
-          textColor={theme.dark ? "#ffffff" : "#000000"}
-        />
-      </View>
-      <View style={styles.ap_bot}>
-        <MyButton
-          label="View"
-          onPress={() =>
-            router.push("(user)/anon/(tabs)/listings/proposalDetails")
-          }
-          labelStyle={{
-            color: theme.colors.primary,
-            fontSize: 10,
-          }}
-          style={{
-            paddingHorizontal: 19,
-            paddingVertical: 3,
-            backgroundColor: "transparent",
-            borderWidth: 1,
-            borderColor: theme.colors.primary,
-            borderRadius: 100,
-            marginTop: 10,
-          }}
-        />
-      </View>
     </View>
   );
 };
