@@ -14,15 +14,7 @@ import { Feather } from "@expo/vector-icons";
 import { useTheme } from "@react-navigation/native";
 import { router } from "expo-router";
 
-import {
-  Card,
-  MyText,
-  MyAppBar,
-  GapView,
-  HomeHeader,
-  AdCard,
-  MyPopupModal,
-} from "@components";
+import { Card, MyText, GapView, AdCard } from "@components";
 import { WINDOW_WIDTH } from "@constants";
 import { MyTheme } from "@types";
 
@@ -30,59 +22,59 @@ export default function Home() {
   const theme = useTheme() as MyTheme;
   const scrollOffsetY = useRef(new Animated.Value(0)).current;
 
-  const handleScroll = Animated.event(
-    [{ nativeEvent: { contentOffset: { y: scrollOffsetY } } }],
-    { useNativeDriver: false }
-  );
+  // const handleScroll = Animated.event(
+  //   [{ nativeEvent: { contentOffset: { y: scrollOffsetY } } }],
+  //   { useNativeDriver: false }
+  // );
 
-  const DynamicAppBar = ({ value }: any) => {
-    const headerOpacity = scrollOffsetY.interpolate({
-      inputRange: [0, 80],
-      outputRange: [1, 0],
-      extrapolate: "clamp",
-    });
+  // const DynamicAppBar = ({ value }: any) => {
+  //   const headerOpacity = scrollOffsetY.interpolate({
+  //     inputRange: [0, 80],
+  //     outputRange: [1, 0],
+  //     extrapolate: "clamp",
+  //   });
 
-    return (
-      <Animated.View
-        style={[styles(theme).header, { opacity: headerOpacity, zIndex: 5 }]}
-      >
-        <MyAppBar />
-      </Animated.View>
-    );
-  };
+  //   return (
+  //     <Animated.View
+  //       style={[styles(theme).header, { opacity: headerOpacity, zIndex: 5 }]}
+  //     >
+  //       <MyAppBar />
+  //     </Animated.View>
+  //   );
+  // };
 
-  const DynamicHomeHeader = () => {
-    const homeHeaderOpacity = scrollOffsetY.interpolate({
-      inputRange: [0, 80],
-      outputRange: [0, 1],
-      extrapolate: "clamp",
-    });
+  // const DynamicHomeHeader = () => {
+  //   const homeHeaderOpacity = scrollOffsetY.interpolate({
+  //     inputRange: [0, 80],
+  //     outputRange: [0, 1],
+  //     extrapolate: "clamp",
+  //   });
 
-    return (
-      <Animated.View
-        style={{
-          opacity: homeHeaderOpacity,
-          position: "absolute",
-          width: "100%",
-        }}
-      >
-        <HomeHeader />
-      </Animated.View>
-    );
-  };
+  //   return (
+  //     <Animated.View
+  //       style={{
+  //         opacity: homeHeaderOpacity,
+  //         position: "absolute",
+  //         width: "100%",
+  //       }}
+  //     >
+  //       <HomeHeader />
+  //     </Animated.View>
+  //   );
+  // };
 
   return (
     <>
-      <View style={styles(theme).HomeHeader}>
+      {/* <View style={styles(theme).HomeHeader}>
         <DynamicHomeHeader />
-      </View>
+      </View> */}
 
       <ScrollView
         style={[styles(theme).wrapper]}
-        onScroll={handleScroll}
-        scrollEventThrottle={16}
+        // onScroll={handleScroll}
+        // scrollEventThrottle={16}
       >
-        <DynamicAppBar value={scrollOffsetY} />
+        {/* <DynamicAppBar value={scrollOffsetY} /> */}
         <View style={styles(theme).container}>
           <AdCard
             label="View Your listings or post your ad to rent or sell your house"
@@ -115,9 +107,9 @@ export default function Home() {
             theme={theme}
           />
           <PropertyListing title="Newly Listed Properties" theme={theme} />
-          <GapView length={30} />
+          {/* <GapView length={30} />
           <Title text="Our Home Partners" theme={theme} />
-          <MarqueeScrollView />
+          <MarqueeScrollView /> */}
         </View>
       </ScrollView>
     </>

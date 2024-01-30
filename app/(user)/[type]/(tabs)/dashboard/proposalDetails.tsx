@@ -1,5 +1,5 @@
 import React from "react";
-import { ScrollView, StyleSheet, View } from "react-native";
+import { Image, ScrollView, StyleSheet, View } from "react-native";
 import { useTheme } from "@react-navigation/native";
 
 import {
@@ -13,6 +13,55 @@ import {
 import { MyTheme } from "@types";
 import { LocationIcon } from "@assets/images";
 
+interface MediaGalleryProps {
+  media: string[]; // Array of image or video URLs
+  theme?: MyTheme;
+}
+
+const MediaGallery: React.FC<MediaGalleryProps> = ({ media, theme }) => {
+  const isVideo = (url: string) => {
+    return url.toLowerCase().endsWith(".mp4");
+  };
+
+  return (
+    <ScrollView
+      horizontal
+      style={styles.temp}
+      showsHorizontalScrollIndicator={false}
+    >
+      {media.map((url, index) => (
+        <View key={index} style={styles.tempImage}>
+          {isVideo(url) ? (
+            <View style={{ flex: 1, width: "100%", height: "100%" }} />
+          ) : (
+            <Image
+              source={{ uri: url }}
+              style={{ flex: 1, width: "100%", height: "100%" }}
+            />
+          )}
+        </View>
+      ))}
+    </ScrollView>
+  );
+};
+
+const data = {
+  imageMedia: [
+    "https://picsum.photos/90/72",
+    "https://picsum.photos/90/72",
+    "https://picsum.photos/90/72",
+    "https://picsum.photos/90/72",
+    // Add more URLs as needed
+  ],
+  videoMedia: [
+    "https://picsum.photos/id/151/130",
+    "https://picsum.photos/id/151/130",
+    "https://picsum.photos/id/151/130",
+    "https://picsum.photos/id/151/130",
+    // Add more URLs as needed
+  ],
+};
+
 export default function ProposalDetails() {
   const theme = useTheme() as MyTheme;
 
@@ -20,11 +69,9 @@ export default function ProposalDetails() {
     <ScrollView
       style={{
         flex: 1,
-        flexGrow: 1,
-        paddingTop: 26,
         paddingHorizontal: 20,
       }}
-      contentContainerStyle={{ paddingBottom: 65 }}
+      contentContainerStyle={{ paddingTop: 20 }}
     >
       <MyText
         size={20}
@@ -197,7 +244,9 @@ export default function ProposalDetails() {
               weight="500"
               size={16}
             />
-            <View></View>
+            <View>
+              <MediaGallery media={data.imageMedia} theme={theme} />
+            </View>
           </View>
           <Card.Divider />
           <View
@@ -213,7 +262,9 @@ export default function ProposalDetails() {
               size={16}
               style={{ marginBottom: 15 }}
             />
-            <View></View>
+            <View>
+              <MediaGallery media={data.videoMedia} theme={theme} />
+            </View>
           </View>
         </Card>
       </View>
@@ -221,4 +272,12 @@ export default function ProposalDetails() {
   );
 }
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  temp: { flexDirection: "row", rowGap: 10, columnGap: 10 },
+  tempImage: {
+    width: 90,
+    height: 72,
+    backgroundColor: "#7e7575",
+    marginRight: 10,
+  },
+});

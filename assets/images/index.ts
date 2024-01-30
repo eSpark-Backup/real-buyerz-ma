@@ -50,7 +50,11 @@ export {
   Draw_Proposals,
   Draw_Shop,
   Draw_Logout,
-  Draw_Settings
+  Draw_Settings,
+  Head_Logo,
+  Head_Menu,
+  Head_Search,
+  Head_Back
 } from "./svg";
 
 //* pngs

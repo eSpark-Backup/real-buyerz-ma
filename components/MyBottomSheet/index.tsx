@@ -12,6 +12,7 @@ import {
 import { useTheme } from "@react-navigation/native";
 
 import { MyTheme } from "@types";
+import BModal from "@components/MyBottomSheet/Modal";
 
 const BottomSheet = ({
   isVisible,
@@ -113,6 +114,7 @@ const BottomSheet = ({
 };
 
 export default BottomSheet;
+BottomSheet.Modal = BModal;
 
 const styles = ({ theme }: { theme?: MyTheme }) =>
   StyleSheet.create({

@@ -3,7 +3,7 @@ import { ScrollView, StyleSheet, View } from "react-native";
 import { useTheme } from "@react-navigation/native";
 
 import { MyTheme } from "@types";
-import { MyInput, MyText, PrefernceList, PrimaryBtn } from "@components";
+import { MyInput, MyText, PreferencesList, PrimaryBtn } from "@components";
 
 export default function Preferences() {
   const theme = useTheme() as MyTheme;
@@ -45,7 +45,7 @@ export default function Preferences() {
         />
         <View style={styles(theme).ListItemWrapper}>
           {listData.map((item, index) => (
-            <PrefernceList
+            <PreferencesList
               title={item.title}
               value={item.value}
               index={index}

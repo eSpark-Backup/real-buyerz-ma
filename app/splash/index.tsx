@@ -15,7 +15,7 @@ import { WINDOW_HEIGHT, WINDOW_WIDTH } from "@constants";
 import { customFonts } from "utils/customFonts";
 import { customImages } from "utils/customImages";
 
-SplashScreen.preventAutoHideAsync(); //? Disable Auto Hide
+// SplashScreen.preventAutoHideAsync(); //? Disable Auto Hide
 
 const cacheImages = (images: any[]) => {
   return images.map((image) => {

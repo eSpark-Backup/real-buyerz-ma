@@ -8,7 +8,6 @@ export default function ListingLayout() {
       initialRouteName="listing/index"
       screenOptions={{
         headerShown: false,
-        // contentStyle: { paddingTop: 14 },
       }}
     />
   );

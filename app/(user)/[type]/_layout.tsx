@@ -22,7 +22,8 @@ import {
   Draw_Settings,
   Draw_Shop,
 } from "@assets/images";
-import { BubbleIcon, GapView, MyAvatar, MyText } from "@components";
+import { BubbleIcon, GapView, MyAvatar, MyHeader, MyText } from "@components";
+import { StatusBar } from "expo-status-bar";
 
 const DrawerContent = (props: DrawerContentComponentProps) => {
   const { index } = props.state;
@@ -92,193 +93,220 @@ const DrawerContent = (props: DrawerContentComponentProps) => {
 export default function MainLayout() {
   const theme = useTheme() as MyTheme;
   return (
-    <Drawer
-      drawerContent={(props) => <DrawerContent {...props} />}
-      backBehavior="history"
-      screenOptions={({ route }) => ({
-        headerShown: false,
-        drawerStyle: { width: "80%" },
-      })}
-    >
-      <Drawer.Screen
-        name="index" // This is the name of the page and must match the url from root
-        options={{
-          drawerItemStyle: { display: "none" },
-        }}
-      />
-      <Drawer.Screen
-        name="(tabs)" // This is the name of the page and must match the url from root
-        options={{
-          drawerItemStyle: { display: "none" },
-        }}
-      />
-      <Drawer.Screen
-        name="inbox" // This is the name of the page and must match the url from root
-        options={{
-          drawerActiveBackgroundColor: "#DCEAF2",
-          drawerIcon: ({ focused }) => (
-            <Draw_Inbox
-              style={{
-                color: focused ? theme.colors.secondary : theme.colors.text,
-              }}
-            />
-          ),
-          drawerLabel: ({ focused }) => (
-            <DrawerLabel label="Inbox" theme={theme} focused={focused} />
-          ),
-        }}
-      />
-      <Drawer.Screen
-        name="myProposals" // This is the name of the page and must match the url from root
-        options={{
-          drawerActiveBackgroundColor: "#DCEAF2",
-          drawerIcon: ({ focused }) => (
-            <Draw_Proposals
-              style={{
-                color: focused ? theme.colors.secondary : theme.colors.text,
-              }}
-            />
-          ),
-          drawerLabel: ({ focused }) => (
-            <DrawerLabel label="My Proposals" theme={theme} focused={focused} />
-          ),
-        }}
-      />
-      <Drawer.Screen
-        name="myProperties" // This is the name of the page and must match the url from root
-        options={{
-          drawerActiveBackgroundColor: "#DCEAF2",
-          drawerIcon: ({ focused }) => (
-            <Draw_Properties
-              style={{
-                color: focused ? theme.colors.secondary : theme.colors.text,
-              }}
-            />
-          ),
-          drawerLabel: ({ focused }) => (
-            <DrawerLabel
-              label="My Properties"
-              theme={theme}
-              focused={focused}
-            />
-          ),
-        }}
-      />
-      <Drawer.Screen
-        name="favorites" // This is the name of the page and must match the url from root
-        options={{
-          drawerActiveBackgroundColor: "#DCEAF2",
-          drawerIcon: ({ focused }) => (
-            <Draw_Favorites
-              style={{
-                color: focused ? theme.colors.secondary : theme.colors.text,
-              }}
-            />
-          ),
-          drawerLabel: ({ focused }) => (
-            <DrawerLabel label="Favorites" theme={theme} focused={focused} />
-          ),
-        }}
-      />
-      <Drawer.Screen
-        name="shop" // This is the name of the page and must match the url from root
-        options={{
-          drawerActiveBackgroundColor: "#DCEAF2",
-          drawerIcon: ({ focused }) => (
-            <Draw_Shop
-              style={{
-                color: focused ? theme.colors.secondary : theme.colors.text,
-              }}
-            />
-          ),
-          drawerLabel: ({ focused }) => (
-            <DrawerLabel label="Shop" theme={theme} focused={focused} />
-          ),
-        }}
-      />
-      <Drawer.Screen
-        name="orderHistory" // This is the name of the page and must match the url from root
-        options={{
-          drawerActiveBackgroundColor: "#DCEAF2",
-          drawerIcon: ({ focused }) => (
-            <Draw_OrderHistory
-              style={{
-                color: focused ? theme.colors.secondary : theme.colors.text,
-              }}
-            />
-          ),
-          drawerLabel: ({ focused }) => (
-            <DrawerLabel
-              label="Order History"
-              theme={theme}
-              focused={focused}
-            />
-          ),
-        }}
-      />
-      <Drawer.Screen
-        name="preferences" // This is the name of the page and must match the url from root
-        options={{
-          drawerActiveBackgroundColor: "#DCEAF2",
-          drawerIcon: ({ focused }) => (
-            <Draw_Preferences
-              style={{
-                color: focused ? theme.colors.secondary : theme.colors.text,
-              }}
-            />
-          ),
-          drawerLabel: ({ focused }) => (
-            <DrawerLabel label="Preferences" theme={theme} focused={focused} />
-          ),
-        }}
-      />
-      <Drawer.Screen
-        name="privacyPolicy" // This is the name of the page and must match the url from root
-        options={{
-          drawerActiveBackgroundColor: "#DCEAF2",
-          drawerIcon: ({ focused }) => (
-            <Draw_Policy
-              style={{
-                color: focused ? theme.colors.secondary : theme.colors.text,
-              }}
-            />
-          ),
-          drawerLabel: ({ focused }) => (
-            <DrawerLabel
-              label="Privacy and Policy"
-              theme={theme}
-              focused={focused}
-            />
-          ),
-        }}
-      />
-      <Drawer.Screen
-        name="termsAndConditions" // This is the name of the page and must match the url from root
-        options={{
-          drawerActiveBackgroundColor: "#DCEAF2",
-          drawerIcon: ({ focused }) => (
-            <Draw_Policy
-              style={{
-                color: focused ? theme.colors.secondary : theme.colors.text,
-              }}
-            />
-          ),
-          drawerLabel: ({ focused }) => (
-            <DrawerLabel
-              label="Terms and conditions"
-              theme={theme}
-              focused={focused}
-            />
-          ),
-        }}
-      />
-      {/* <Drawer.Screen
+    <>
+      <StatusBar backgroundColor={theme.colors.secondary} style="light" />
+
+      <Drawer
+        drawerContent={(props) => <DrawerContent {...props} />}
+        backBehavior="history"
+        screenOptions={({ route }) => ({
+          // headerShown: false,
+          header: (props) => {
+            return <MyHeader {...props} showBackIcon showRight theme={theme} />;
+          },
+          drawerStyle: { width: "80%" },
+        })}
+      >
+        <Drawer.Screen
+          name="index" // This is the name of the page and must match the url from root
+          options={{
+            drawerItemStyle: { display: "none" },
+          }}
+        />
+        <Drawer.Screen
+          name="(tabs)" // This is the name of the page and must match the url from root
+          options={{
+            drawerItemStyle: { display: "none" },
+            headerShown: false,
+          }}
+        />
+        <Drawer.Screen
+          name="search" // This is the name of the page and must match the url from root
+          options={{
+            header: (props) => {
+              return (
+                <MyHeader {...props} showBackIcon hideCenter theme={theme} />
+              );
+            },
+            drawerItemStyle: { display: "none" },
+          }}
+        />
+        <Drawer.Screen
+          name="inbox" // This is the name of the page and must match the url from root
+          options={{
+            drawerActiveBackgroundColor: "#DCEAF2",
+            drawerIcon: ({ focused }) => (
+              <Draw_Inbox
+                style={{
+                  color: focused ? theme.colors.secondary : theme.colors.text,
+                }}
+              />
+            ),
+            drawerLabel: ({ focused }) => (
+              <DrawerLabel label="Inbox" theme={theme} focused={focused} />
+            ),
+          }}
+        />
+        <Drawer.Screen
+          name="myProposals" // This is the name of the page and must match the url from root
+          options={{
+            drawerActiveBackgroundColor: "#DCEAF2",
+            drawerIcon: ({ focused }) => (
+              <Draw_Proposals
+                style={{
+                  color: focused ? theme.colors.secondary : theme.colors.text,
+                }}
+              />
+            ),
+            drawerLabel: ({ focused }) => (
+              <DrawerLabel
+                label="My Proposals"
+                theme={theme}
+                focused={focused}
+              />
+            ),
+          }}
+        />
+        <Drawer.Screen
+          name="myProperties" // This is the name of the page and must match the url from root
+          options={{
+            drawerActiveBackgroundColor: "#DCEAF2",
+            drawerIcon: ({ focused }) => (
+              <Draw_Properties
+                style={{
+                  color: focused ? theme.colors.secondary : theme.colors.text,
+                }}
+              />
+            ),
+            drawerLabel: ({ focused }) => (
+              <DrawerLabel
+                label="My Properties"
+                theme={theme}
+                focused={focused}
+              />
+            ),
+          }}
+        />
+        <Drawer.Screen
+          name="favorites" // This is the name of the page and must match the url from root
+          options={{
+            drawerActiveBackgroundColor: "#DCEAF2",
+            drawerIcon: ({ focused }) => (
+              <Draw_Favorites
+                style={{
+                  color: focused ? theme.colors.secondary : theme.colors.text,
+                }}
+              />
+            ),
+            drawerLabel: ({ focused }) => (
+              <DrawerLabel label="Favorites" theme={theme} focused={focused} />
+            ),
+          }}
+        />
+        <Drawer.Screen
+          name="shop" // This is the name of the page and must match the url from root
+          options={{
+            drawerActiveBackgroundColor: "#DCEAF2",
+            drawerIcon: ({ focused }) => (
+              <Draw_Shop
+                style={{
+                  color: focused ? theme.colors.secondary : theme.colors.text,
+                }}
+              />
+            ),
+            drawerLabel: ({ focused }) => (
+              <DrawerLabel label="Shop" theme={theme} focused={focused} />
+            ),
+          }}
+        />
+        <Drawer.Screen
+          name="orderHistory" // This is the name of the page and must match the url from root
+          options={{
+            drawerActiveBackgroundColor: "#DCEAF2",
+            drawerIcon: ({ focused }) => (
+              <Draw_OrderHistory
+                style={{
+                  color: focused ? theme.colors.secondary : theme.colors.text,
+                }}
+              />
+            ),
+            drawerLabel: ({ focused }) => (
+              <DrawerLabel
+                label="Order History"
+                theme={theme}
+                focused={focused}
+              />
+            ),
+          }}
+        />
+        <Drawer.Screen
+          name="preferences" // This is the name of the page and must match the url from root
+          options={{
+            drawerActiveBackgroundColor: "#DCEAF2",
+            drawerIcon: ({ focused }) => (
+              <Draw_Preferences
+                style={{
+                  color: focused ? theme.colors.secondary : theme.colors.text,
+                }}
+              />
+            ),
+            drawerLabel: ({ focused }) => (
+              <DrawerLabel
+                label="Preferences"
+                theme={theme}
+                focused={focused}
+              />
+            ),
+          }}
+        />
+        <Drawer.Screen
+          name="privacyPolicy" // This is the name of the page and must match the url from root
+          options={{
+            drawerActiveBackgroundColor: "#DCEAF2",
+            drawerIcon: ({ focused }) => (
+              <Draw_Policy
+                style={{
+                  color: focused ? theme.colors.secondary : theme.colors.text,
+                }}
+              />
+            ),
+            drawerLabel: ({ focused }) => (
+              <DrawerLabel
+                label="Privacy and Policy"
+                theme={theme}
+                focused={focused}
+              />
+            ),
+          }}
+        />
+        <Drawer.Screen
+          name="termsAndConditions" // This is the name of the page and must match the url from root
+          options={{
+            drawerActiveBackgroundColor: "#DCEAF2",
+            drawerIcon: ({ focused }) => (
+              <Draw_Policy
+                style={{
+                  color: focused ? theme.colors.secondary : theme.colors.text,
+                }}
+              />
+            ),
+            drawerLabel: ({ focused }) => (
+              <DrawerLabel
+                label="Terms and conditions"
+                theme={theme}
+                focused={focused}
+              />
+            ),
+          }}
+        />
+        {/* <Drawer.Screen
         name="listings" // This is the name of the page and must match the url from root
         options={{
           drawerLabel: "My Listings",
         }}
       /> */}
-    </Drawer>
+      </Drawer>
+    </>
   );
 }
 

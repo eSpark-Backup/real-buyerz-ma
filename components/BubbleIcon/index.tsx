@@ -2,19 +2,15 @@ import React, { memo } from "react";
 import { StyleSheet, TouchableOpacity, ViewStyle } from "react-native";
 import { useTheme } from "@react-navigation/native";
 
-function BubbleIcon({
-  size = 30,
-  children,
-  style,
-  plain,
-  onPress,
-}: {
+interface Props {
   size?: number;
   children: React.ReactNode;
   style?: ViewStyle;
   plain?: boolean;
   onPress?: () => void;
-}) {
+}
+
+function BubbleIcon({ size = 30, children, style, plain, onPress }: Props) {
   const theme = useTheme();
   return (
     <TouchableOpacity

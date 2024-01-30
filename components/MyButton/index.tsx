@@ -1,9 +1,10 @@
 import React from "react";
 import { TouchableOpacity, TextStyle, ViewStyle } from "react-native";
+import { useTheme } from "@react-navigation/native";
 
 import MyText from "../MyText";
 import { MyButtonProps, MyTheme } from "@types";
-import { useTheme } from "@react-navigation/native";
+import PrimaryBtn from "./primaryBtn";
 
 export default function MyButton({
   label,
@@ -39,3 +40,5 @@ export default function MyButton({
     </TouchableOpacity>
   );
 }
+
+export { PrimaryBtn };

@@ -61,3 +61,9 @@ export { default as Draw_Policy } from "./draw-policy.svg";
 export { default as Draw_Settings } from "./draw-settings.svg";
 export { default as Draw_Logout } from "./draw-logout.svg";
 export { default as AddImage } from "./add-image.svg";
+
+export { default as Head_Logo } from "./head-logo.svg";
+export { default as Head_Menu } from "./head-menu.svg";
+export { default as Head_Search } from "./head-search.svg";
+export { default as Head_Back } from "./head-back.svg";
+

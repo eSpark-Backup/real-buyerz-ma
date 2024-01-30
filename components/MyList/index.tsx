@@ -1,5 +1,6 @@
 import React from "react";
 import { View, Image, TouchableOpacity, StyleSheet } from "react-native";
+import { useTheme } from "@react-navigation/native";
 
 import {
   BathOutline,
@@ -8,12 +9,10 @@ import {
   Parking,
   LikeActiveButton,
   LikeButton,
-  LikeButtonDark,
 } from "@assets/images";
 import MyText from "../MyText";
 import PrimaryBtn from "../MyButton/primaryBtn";
 import { MyListItemProps, MyTheme } from "@types";
-import { useTheme } from "@react-navigation/native";
 
 const MyListItem: React.FC<MyListItemProps> = ({ item, index, theme, fav }) => {
   return (
