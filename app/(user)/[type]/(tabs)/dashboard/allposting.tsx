@@ -12,6 +12,7 @@ import { router } from "expo-router";
 
 import { MyTheme } from "@types";
 import {
+  AdBox,
   Card,
   GapView,
   LabelValue,
@@ -220,7 +221,20 @@ export default function AllPosting() {
             data={testContentData}
             showsVerticalScrollIndicator={false}
             nestedScrollEnabled
-            renderItem={({ item, index }) => renderList({ item, index, theme })}
+            renderItem={({ item, index }) => (
+              <AdBox
+                title={item.title}
+                description={item.description}
+                btns={btnsData}
+                points={[
+                  { label: "Est. Range", value: item?.amount },
+                  { label: "Purpose", value: item?.purpose },
+                  { label: "Property Type", value: item?.type },
+                  { label: "City", value: item?.city },
+                  { label: "Location", value: item?.location },
+                ]}
+              />
+            )}
             ItemSeparatorComponent={() => <GapView />}
           />
         </View>
@@ -229,72 +243,10 @@ export default function AllPosting() {
   );
 }
 
-const renderList = ({
-  item,
-  index,
-  theme,
-}: {
-  item?: ContentData;
-  index: number;
-  theme: MyTheme;
-}) => {
-  return (
-    <Card>
-      <Card.Title>
-        <MyText text={item?.title} size={14} weight="500" />
-      </Card.Title>
-      <Card.Divider />
-      <View style={{ paddingHorizontal: 30, marginTop: 10, marginBottom: 23 }}>
-        <MyText
-          style={{ marginVertical: 8 }}
-          size={12}
-          weight="300"
-          text={item?.description}
-        />
-        <LabelValue label="Est. Range" value={item?.amount!} />
-        <LabelValue label="Purpose" value={item?.purpose!} />
-        <LabelValue label="Property Type" value={item?.type!} />
-        <LabelValue label="City" value={item?.city!} />
-        <LabelValue label="Location" value={item?.location!} />
-        <View style={{ flexDirection: "row", marginTop: 10 }}>
-          <MyButton
-            label={`Trash`}
-            labelStyle={{
-              color: theme.colors.primary,
-              fontSize: 12,
-              fontWeight: "500",
-            }}
-            style={{
-              width: 85,
-              height: 30,
-              borderWidth: 1,
-              borderRadius: 4,
-              borderColor: theme.colors.primary,
-              backgroundColor: "#ffffff",
-            }}
-          />
-          <GapView mode="horizontal" />
-          <MyButton
-            label={`View`}
-            onPress={() =>
-              router.push("(user)/anon/(tabs)/dashboard/proposalPreview")
-            }
-            labelStyle={{
-              color: "#ffffff",
-              fontSize: 12,
-            }}
-            style={{
-              width: 85,
-              height: 30,
-              borderRadius: 4,
-              backgroundColor: theme.colors.primary,
-            }}
-          />
-        </View>
-      </View>
-    </Card>
-  );
-};
+const btnsData = [
+  { label: "Trash", onPress: () => console.log("trash"), outline: true },
+  { label: "View", onPress: () => console.log("view") },
+];
 
 const FilterBtnComp = ({
   item,

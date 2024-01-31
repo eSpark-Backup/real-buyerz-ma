@@ -12,6 +12,7 @@ export { default as BubbleIcon } from "./BubbleIcon";
 export { default as LabelValue } from "./LabelValue";
 export { AdCard, MyClickableCard } from "./MyCard";
 export { default as MyField, Variants } from "./MyField";
+export { default as AdBox } from "./AdBox";
 
 //* Header and Bottom tab (Custom) //note: only used in navigation layouts
 export { default as MyHeader } from "./MyHeader";

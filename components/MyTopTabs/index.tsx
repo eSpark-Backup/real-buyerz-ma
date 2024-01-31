@@ -61,7 +61,7 @@ const styles = (theme: MyTheme) =>
     container: {
       flexDirection: "row",
       width: "100%",
-      justifyContent: "space-between",
+      justifyContent: "center",
       borderBottomWidth: 1,
       borderColor: theme.colors.border,
     },
