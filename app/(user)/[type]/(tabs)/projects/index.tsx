@@ -1,9 +1,19 @@
-import { FlatList, StyleSheet, Text, View } from "react-native";
-import React from "react";
+import React, { useState } from "react";
+import { FlatList, StyleProp, StyleSheet, View, ViewStyle } from "react-native";
 import { useTheme } from "@react-navigation/native";
 
-import { GapView, MyListItem, MyTopFilter, MyTopTabs } from "@components";
+import {
+  GapView,
+  MyBottomSheet,
+  MyButton,
+  MyDropdown,
+  MyListItem,
+  MyTopFilter,
+  MyTopTabs,
+  RangeSlider,
+} from "@components";
 import { MyTheme } from "@types";
+
 interface SearchList {
   id: string;
   title: string;
@@ -14,6 +24,15 @@ interface SearchList {
   parking: number;
   sqft: number;
   image: string;
+}
+interface DropDownList {
+  data: string[];
+  placeholder: string;
+  title: string;
+  height: number;
+  zIndex: number;
+  style?: StyleProp<ViewStyle>;
+  onSelect: (val: string) => void;
 }
 
 const topTabsData = [
@@ -80,13 +99,77 @@ const testData: SearchList[] = [
   },
 ];
 
+const dropdownData: DropDownList[] = [
+  {
+    data: ["Sell", "Buy", "Rent"],
+    height: 40,
+    zIndex: 4,
+    onSelect: (val: string) => {},
+    placeholder: "Purpose",
+    title: "Purpose",
+    style: { width: "100%" },
+  },
+  {
+    data: ["House", "Plot", "Commercial"],
+    height: 40,
+    zIndex: 4,
+    onSelect: (val: string) => {},
+    placeholder: "Type",
+    title: "Property Type",
+    style: { width: "100%" },
+  },
+];
+
 export default function Projects() {
   const theme = useTheme() as MyTheme;
+  const [visible, setVisible] = useState(false);
+
   return (
     <View style={{ flex: 1 }}>
+      <MyBottomSheet.Modal
+        visible={visible}
+        theme={theme}
+        onClose={(val) => setVisible(val)}
+      >
+        {dropdownData.map((item, index) => (
+          <View key={index}>
+            <MyDropdown
+              data={item.data}
+              placeholder={item.placeholder}
+              onSelect={(val) => console.log("val", val)}
+              style={{ width: "100%" }}
+              height={40}
+              zIndex={4 - index}
+              title={item.title}
+            />
+            {dropdownData.length - 1 && <GapView length={20} />}
+          </View>
+        ))}
+        {["Price Range", "Area"].map((item, index) => (
+          <View key={index}>
+            <RangeSlider title={item} />
+            {index === 1 && <GapView length={20} />}
+          </View>
+        ))}
+        <GapView length={40} />
+        <MyButton
+          label={"Apply"}
+          labelStyle={{
+            color: "#ffffff",
+            fontSize: 10,
+          }}
+          style={{
+            alignSelf: "flex-end",
+            width: 100,
+            height: 30,
+            borderRadius: 4,
+            backgroundColor: theme.colors.primary,
+          }}
+        />
+      </MyBottomSheet.Modal>
       <MyTopFilter
         theme={theme}
-        onPressFilter={() => console.log("e")}
+        onPressFilter={() => setVisible(true)}
         style={styles.topFilter}
       />
       <MyTopTabs data={topTabsData} />

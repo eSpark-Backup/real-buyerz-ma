@@ -55,7 +55,7 @@ export default function ProfileSettings() {
     {
       variant: Variants.SINGLE,
       list: {
-        title: "Langing",
+        title: "Landline",
         inputs: [
           {
             placeholder: "moin@eSpark.com",
@@ -211,7 +211,7 @@ export default function ProfileSettings() {
           </View>
         </View>
 
-        <View style={styles(theme).passListWrapper}>
+        {/* <View style={styles(theme).passListWrapper}>
           <View>
             <View style={styles(theme).headingStyle}>
               <MyText
@@ -234,7 +234,7 @@ export default function ProfileSettings() {
               ))}
             </View>
           </View>
-        </View>
+        </View> */}
       </View>
     </ScrollView>
   );

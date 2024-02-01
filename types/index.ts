@@ -12,6 +12,7 @@ export type MyTheme = Theme & {
     secondary: string;
     popupbg: string;
     placeholderText: string;
+    dimText: string;
     listText: string;
     positive: string;
     negative: string;

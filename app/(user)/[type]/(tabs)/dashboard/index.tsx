@@ -9,8 +9,10 @@ import {
 import { useTheme } from "@react-navigation/native";
 import { router } from "expo-router";
 
-import { Card, LabelValue, MyButton, MyText } from "@components";
+import { Card, GapView, LabelValue, MyButton, MyText } from "@components";
 import { MyTheme } from "@types";
+import { Feather, Ionicons } from "@expo/vector-icons";
+import Bidding from "./bidding";
 
 interface Posting {
   id: number;
@@ -84,7 +86,7 @@ function timeAgo(date: Date, minutesAgo: number = 0): string {
   return `${diff} mins ago`;
 }
 
-export default function Dashboard() {
+function Dashboard() {
   const theme = useTheme() as MyTheme;
 
   return (
@@ -109,6 +111,7 @@ export default function Dashboard() {
                 style={{
                   flexDirection: "row",
                   justifyContent: "space-between",
+                  alignItems: "center",
                   padding: 12,
                   borderBottomWidth: 1,
                   borderColor: theme.colors.border,
@@ -122,15 +125,20 @@ export default function Dashboard() {
                 />
                 <TouchableOpacity
                   activeOpacity={1}
-                  onPress={() =>
-                    router.push("(user)/anon/(tabs)/dashboard/allposting")
-                  }
+                  onPress={() => router.push("(user)/anon/myListings")}
                 >
-                  <MyText
-                    text="See all postings"
-                    textColor={theme.colors.secondary}
-                    style={{ textDecorationLine: "underline" }}
-                  />
+                  <View style={{ flexDirection: "row", alignItems: "center" }}>
+                    <MyText
+                      text="See all postings"
+                      textColor={theme.colors.secondary}
+                    />
+                    <Ionicons
+                      name="chevron-forward"
+                      color={theme.colors.secondary}
+                      style={{ paddingLeft: 10, top: 1 }}
+                      size={16}
+                    />
+                  </View>
                 </TouchableOpacity>
               </View>
               <FlatList
@@ -150,6 +158,10 @@ export default function Dashboard() {
     </>
   );
 }
+
+export default Dashboard;
+
+// export default Bidding;
 
 const renderPostingList = ({
   item,
