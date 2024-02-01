@@ -54,7 +54,15 @@ export {
   Head_Logo,
   Head_Menu,
   Head_Search,
-  Head_Back
+  Head_Back,
+  AdInfo,
+  Title,
+  Description,
+  SelectPurpose,
+  SelectProperty,
+  SelectCity,
+  SelectLocation,
+  SizeAndPricing,
 } from "./svg";
 
 //* pngs

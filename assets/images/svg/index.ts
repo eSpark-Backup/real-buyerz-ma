@@ -61,9 +61,19 @@ export { default as Draw_Policy } from "./draw-policy.svg";
 export { default as Draw_Settings } from "./draw-settings.svg";
 export { default as Draw_Logout } from "./draw-logout.svg";
 export { default as AddImage } from "./add-image.svg";
+export { default as AdInfo } from "./AdInfoIcon.svg";
+export { default as Title } from "./TitleIcon.svg";
+export { default as Description } from "./DescriptionIcon.svg";
+export { default as Lpurpose } from "./LpurposeIcon.svg";
+export { default as SelectPurpose } from "./select-purpose-icon.svg";
+export { default as SelectProperty } from "./select-property-icon.svg";
+export { default as SelectCity } from "./select-city-icon.svg";
+export { default as SelectLocation } from "./select-location-icon.svg";
+export { default as SizeAndPricing } from "./size-and-pricing-icon.svg";
+export { default as InstalmentAvailable1 } from "./instalments-1-icon.svg";
+export { default as InstalmentAvailable2 } from "./instalments-2-icon.svg";
 
 export { default as Head_Logo } from "./head-logo.svg";
 export { default as Head_Menu } from "./head-menu.svg";
 export { default as Head_Search } from "./head-search.svg";
 export { default as Head_Back } from "./head-back.svg";
-
