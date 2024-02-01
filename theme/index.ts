@@ -11,6 +11,7 @@ const colors = {
     notification: "#FFFFFF", //todo: set later
     popupbg: "#F4F4F4",
     placeholderText: "#969696",
+    dimText: "#666666",
     listText: "#696969",
     positive: "#FFFFFF",
     negative: "#000000",
@@ -35,6 +36,7 @@ const colors = {
     notification: "#FFFFFF", //todo: set later
     popupbg: "#29292E",
     placeholderText: "#FFFFFF",
+    dimText: "#666666",
     listText: "#696969", //to be updated
     positive: "#000000",
     negative: "#FFFFFF",

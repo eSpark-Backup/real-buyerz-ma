@@ -7,7 +7,6 @@ export {
   RLogo,
   RText,
   SLogo,
-  ProfilePin,
   BathOutline,
   Parking,
   BedOutline,
@@ -15,8 +14,9 @@ export {
   HomeTab,
   InboxTab,
   SearchTab,
-  ListingTab,
-  SettingsTab,
+  Tab_Listing,
+  Tab_Settings,
+  Tab_Profile,
   ReloadIcon,
   HeartIcon,
   ProfileIcon,
@@ -54,7 +54,7 @@ export {
   Head_Logo,
   Head_Menu,
   Head_Search,
-  Head_Back
+  Head_Back,
 } from "./svg";
 
 //* pngs

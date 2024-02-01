@@ -67,11 +67,11 @@ function UserTabLayout() {
         }}
       />
       <Tabs.Screen
-        name="settings"
+        name="profile"
         options={{
           headerShown: true,
-          title: "Settings",
-          href: "(user)/anon/(tabs)/settings",
+          title: "Profile",
+          href: "(user)/anon/(tabs)/profile",
         }}
       />
     </Tabs>
