@@ -148,6 +148,26 @@ export default function MainLayout() {
           }}
         />
         <Drawer.Screen
+          name="myListings" // This is the name of the page and must match the url from root
+          options={{
+            drawerActiveBackgroundColor: "#DCEAF2",
+            drawerIcon: ({ focused }) => (
+              <Draw_Proposals
+                style={{
+                  color: focused ? theme.colors.secondary : theme.colors.text,
+                }}
+              />
+            ),
+            drawerLabel: ({ focused }) => (
+              <DrawerLabel
+                label="My Listings"
+                theme={theme}
+                focused={focused}
+              />
+            ),
+          }}
+        />
+        <Drawer.Screen
           name="myProposals" // This is the name of the page and must match the url from root
           options={{
             drawerActiveBackgroundColor: "#DCEAF2",

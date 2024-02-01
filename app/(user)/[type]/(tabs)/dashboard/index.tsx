@@ -125,9 +125,7 @@ function Dashboard() {
                 />
                 <TouchableOpacity
                   activeOpacity={1}
-                  onPress={() =>
-                    router.push("(user)/anon/(tabs)/dashboard/allposting")
-                  }
+                  onPress={() => router.push("(user)/anon/myListings")}
                 >
                   <View style={{ flexDirection: "row", alignItems: "center" }}>
                     <MyText
