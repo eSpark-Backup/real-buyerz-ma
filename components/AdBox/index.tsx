@@ -70,6 +70,7 @@ export default function AdBox({
             <View style={{ flexDirection: "row" }}>
               {btns.map((bitem, bindex) => (
                 <NormalBtn
+                  key={bindex}
                   label={bitem.label}
                   theme={theme}
                   outline={bitem.outline}

@@ -101,6 +101,7 @@ export default function MainLayout() {
         backBehavior="history"
         screenOptions={({ route }) => ({
           // headerShown: false,
+          sceneContainerStyle: { marginBottom: 10 },
           header: (props) => {
             return <MyHeader {...props} showBackIcon showRight theme={theme} />;
           },
@@ -118,6 +119,7 @@ export default function MainLayout() {
           options={{
             drawerItemStyle: { display: "none" },
             headerShown: false,
+            sceneContainerStyle: { marginBottom: 0 },
           }}
         />
         <Drawer.Screen
