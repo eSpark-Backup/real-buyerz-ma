@@ -63,6 +63,20 @@ export {
   SelectCity,
   SelectLocation,
   SizeAndPricing,
+  AmenitiesBed,
+  AmenitiesTub,
+  AmenitiesParking,
+  FilmIcon,
+  EyePrimary,
+  HomeFeature,
+  HomeAmenities,
+  AddIcon,
+  TickPrimary,
+  Map,
+  RentTab,
+  SellTab,
+  Minus,
+  Plus,
 } from "./svg";
 
 //* pngs

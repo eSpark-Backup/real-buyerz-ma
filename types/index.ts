@@ -48,6 +48,7 @@ export type MyTextProps = {
     | "800"
     | "900";
   size?: number;
+  onPress?: () => void;
 };
 
 export type MyInputProps = {
@@ -91,7 +92,7 @@ export type MyButtonProps = {
 };
 
 export interface IPropsBtn {
-  title: string;
+  title?: string;
   onPress?: () => void;
   textColor?: string;
   width?: any;
@@ -110,6 +111,7 @@ export interface IPropsBtn {
     | "700"
     | "800"
     | "900";
+  children?: React.ReactNode;
 }
 
 export type LoginModalProps = {

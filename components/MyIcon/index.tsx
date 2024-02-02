@@ -1,5 +1,13 @@
 import { AdInfo, Description, Title } from "@assets/images";
 import {
+  AddIcon,
+  AmenitiesBed,
+  AmenitiesParking,
+  AmenitiesTub,
+  EyePrimary,
+  FilmIcon,
+  HomeAmenities,
+  HomeFeature,
   InstalmentAvailable1,
   InstalmentAvailable2,
   Lpurpose,
@@ -8,6 +16,7 @@ import {
   SelectProperty,
   SelectPurpose,
   SizeAndPricing,
+  TickPrimary,
 } from "@assets/images/svg";
 import { useTheme } from "@react-navigation/native";
 import { MyTheme } from "@types";
@@ -30,6 +39,12 @@ const svgIcons: SvgIcon = {
   8: <SizeAndPricing />,
   9: <InstalmentAvailable1 />,
   10: <InstalmentAvailable2 />,
+  11: <HomeFeature />,
+  12: <HomeAmenities />,
+  13: <AmenitiesBed />,
+  14: <AmenitiesTub />,
+  15: <AmenitiesParking />,
+  16: <FilmIcon />,
 };
 
 interface MyIconProps {

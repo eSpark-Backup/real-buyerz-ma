@@ -5,13 +5,15 @@ import { useTheme } from "@react-navigation/native";
 import Card from "../Card";
 import MyText from "../MyText";
 import { MyTheme, SearchDataProps } from "@types";
+import { RentTab, SellTab } from "@assets/images";
 
 interface TabFilterProps {
   data: SearchDataProps[];
   onSelect: (value: object) => void;
+  wrap?: boolean;
 }
 
-export default function TabFilter({ data, onSelect }: TabFilterProps) {
+export default function TabFilter({ data, onSelect, wrap }: TabFilterProps) {
   const theme = useTheme() as MyTheme;
   const [list, setList] = useState<SearchDataProps[] | null>(data);
   const [selectedItem, setSelectedItem] = useState<SearchDataProps | null>(
@@ -102,7 +104,13 @@ export default function TabFilter({ data, onSelect }: TabFilterProps) {
                   : { padding: 15 }
               }
             >
-              <MyText text={item.title} size={16} />
+              <MyText
+                text={item.title}
+                size={16}
+                textColor={
+                  item.selected ? theme.colors.primary : theme.colors.text
+                }
+              />
             </View>
           </TouchableOpacity>
         ))}
@@ -110,11 +118,14 @@ export default function TabFilter({ data, onSelect }: TabFilterProps) {
       {memoizedSelectedItem && (
         <ScrollView
           ref={scrollViewRef}
-          horizontal
+          horizontal={!wrap}
           showsHorizontalScrollIndicator={false}
           contentContainerStyle={{
             flexGrow: 1,
+            flexDirection: "row",
+            rowGap: 10,
             padding: 10,
+            flexWrap: "wrap",
           }}
         >
           {memoizedSelectedItem.list.map((nestedItem, nestedIndex) => (
@@ -126,14 +137,24 @@ export default function TabFilter({ data, onSelect }: TabFilterProps) {
                 borderWidth: 1,
                 borderColor: theme.colors.border,
                 borderRadius: 4,
+
                 backgroundColor: nestedItem.selected
                   ? theme.colors.selected
                   : theme.colors.cardBg,
                 marginRight:
                   nestedIndex !== selectedItem?.list?.length! - 1 ? 10 : 0,
+                flexDirection: "row",
+                gap: 5,
               }}
             >
-              <MyText text={nestedItem.label} size={12} />
+              {nestedItem.selected ? <SellTab /> : <RentTab />}
+              <MyText
+                text={nestedItem.label}
+                size={12}
+                textColor={
+                  nestedItem.selected ? theme.colors.primary : theme.colors.text
+                }
+              />
             </TouchableOpacity>
           ))}
         </ScrollView>
