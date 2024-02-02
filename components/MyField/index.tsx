@@ -1,5 +1,5 @@
 import { StyleProp, StyleSheet, Text, View, ViewStyle } from "react-native";
-import React from "react";
+import React, { memo } from "react";
 import MyInput from "components/MyInput";
 import MyText from "components/MyText";
 import FlagDropDown from "components/MyDropdown/flagDropDown";
@@ -68,7 +68,6 @@ const MyField = ({ variant, list, onPress, title }: IMyField) => {
             text={list?.title}
             style={styles(theme).titleStyle}
           />
-
           {list?.inputs.map((input, index) => (
             <View key={index}>
               <MyInput
@@ -88,7 +87,6 @@ const MyField = ({ variant, list, onPress, title }: IMyField) => {
           ))}
         </View>
       )}
-
       {variant === "select" && (
         <View>
           {list?.title && (
@@ -120,7 +118,6 @@ const MyField = ({ variant, list, onPress, title }: IMyField) => {
           </View>
         </View>
       )}
-
       {variant === "multiLine" && (
         <View>
           <MyText
@@ -193,13 +190,11 @@ const MyField = ({ variant, list, onPress, title }: IMyField) => {
   );
 };
 
-export default MyField;
+export default memo(MyField);
 
 const styles = (theme?: MyTheme) =>
   StyleSheet.create({
     inputInnerStyle: {
-      height: 45,
-      padding: 0,
       color: theme?.colors.text,
     },
     dualInputStyle: {
@@ -229,6 +224,7 @@ const styles = (theme?: MyTheme) =>
       marginVertical: 4,
     },
     dflex: {
+      zIndex: 8,
       flexDirection: "row",
       justifyContent: "space-between",
     },

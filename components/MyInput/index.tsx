@@ -60,13 +60,13 @@ export default function MyInput({
 const styles = StyleSheet.create({
   inputContainerStyle: {
     flexDirection: "row",
-    paddingHorizontal: 10,
+    paddingHorizontal: 8,
+    paddingVertical: 6,
     borderRadius: 5,
-    alignItems: "center",
     elevation: 3,
   },
   inputStyle: {
-    flex: 1,
-    padding: 10,
+    width: "100%",
+    alignSelf: "flex-start",
   },
 });
