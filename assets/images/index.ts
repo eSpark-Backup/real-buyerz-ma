@@ -55,6 +55,8 @@ export {
   Head_Menu,
   Head_Search,
   Head_Back,
+
+  // used only in Listing Screen
   AdInfo,
   Title,
   Description,

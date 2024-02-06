@@ -61,6 +61,8 @@ export { default as Draw_Policy } from "./draw-policy.svg";
 export { default as Draw_Settings } from "./draw-settings.svg";
 export { default as Draw_Logout } from "./draw-logout.svg";
 export { default as AddImage } from "./add-image.svg";
+
+// *(Used in listing screen)
 export { default as AdInfo } from "./AdInfoIcon.svg";
 export { default as Title } from "./TitleIcon.svg";
 export { default as Description } from "./DescriptionIcon.svg";
