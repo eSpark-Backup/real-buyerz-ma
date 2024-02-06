@@ -47,18 +47,18 @@ const svgIcons: SvgIcon = {
   16: <FilmIcon />,
 };
 
-interface MyIconProps {
+interface ListingIconProps {
   square?: boolean;
   iconIndex: number;
   width?: DimensionValue;
   height?: DimensionValue;
 }
-export default function MyIcon({
+export default function ListingIcon({
   iconIndex,
   square,
   height,
   width,
-}: MyIconProps) {
+}: ListingIconProps) {
   const theme = useTheme() as MyTheme;
   return (
     <View

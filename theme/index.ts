@@ -13,7 +13,7 @@ const colors = {
     placeholderText: "#969696",
     listText: "#696969",
     positive: "#FFFFFF",
-    negative: "#181717",
+    negative: "#000000",
     cardBorder: "#E4E4E4",
     cardBg: "#ffffff",
     selected: "#EDF7FF",

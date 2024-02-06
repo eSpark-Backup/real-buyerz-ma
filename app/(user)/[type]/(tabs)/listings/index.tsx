@@ -14,7 +14,7 @@ import {
   GapView,
   MyCheckbox,
   MyDropdown,
-  MyIcon,
+  ListingIcon,
   MyInput,
   MyText,
   PrimaryBtn,
@@ -106,7 +106,7 @@ function CustomTable({ title, indexIcon, children }: CustomTableProps) {
       <View>
         <View style={styles(theme).headingStyle}>
           <View style={styles(theme).titleContainer}>
-            <MyIcon iconIndex={indexIcon} square width={33} height={33} />
+            <ListingIcon iconIndex={indexIcon} square width={33} height={33} />
             <MyText
               text={title}
               size={16}
@@ -126,7 +126,7 @@ function AdInformation() {
   return (
     <CustomTable title="Ad Information" indexIcon={0}>
       <View style={styles().AdInfo}>
-        <MyIcon iconIndex={1} />
+        <ListingIcon iconIndex={1} />
         <View style={styles().AdField}>
           <RequiredText text="Title" />
           <MyInput
@@ -142,7 +142,7 @@ function AdInformation() {
       </View>
       <GapView length={10} />
       <View style={styles().AdInfo}>
-        <MyIcon iconIndex={2} />
+        <ListingIcon iconIndex={2} />
         <View style={styles().AdField}>
           <RequiredText text="Description" />
           <MyInput
@@ -169,7 +169,7 @@ function LocationAndPrurpose() {
   return (
     <CustomTable title="Location & Purpose" indexIcon={3}>
       <View style={styles().AdInfo}>
-        <MyIcon iconIndex={4} />
+        <ListingIcon iconIndex={4} />
         <View style={styles().AdField}>
           <MyText textColor={theme.colors.negative}>Select Purpose</MyText>
           <View style={styles().titleContainer}>
@@ -224,7 +224,7 @@ function LocationAndPrurpose() {
       </View>
       <View style={styles().AdField}>
         <View style={styles().titleContainer}>
-          <MyIcon iconIndex={5} />
+          <ListingIcon iconIndex={5} />
           <MyText textColor={theme.colors.negative}>
             Select Property Type
           </MyText>
@@ -233,7 +233,7 @@ function LocationAndPrurpose() {
       </View>
       <GapView length={10} />
       <View style={styles().AdInfo}>
-        <MyIcon iconIndex={6} />
+        <ListingIcon iconIndex={6} />
         <View style={{ flex: 1, paddingTop: 10, gap: 15 }}>
           <MyText textColor={theme.colors.negative}>Select City</MyText>
           <MyDropdown
@@ -247,7 +247,7 @@ function LocationAndPrurpose() {
       </View>
       <GapView length={10} />
       <View style={styles().AdInfo}>
-        <MyIcon iconIndex={7} />
+        <ListingIcon iconIndex={7} />
         <View style={styles().AdField}>
           <RequiredText text="Select Location" />
           <Map />
@@ -264,7 +264,7 @@ function PropertySizeandPricing() {
   return (
     <CustomTable title="Property Size and Pricing" indexIcon={8}>
       <View style={styles().AdInfo}>
-        <MyIcon iconIndex={1} />
+        <ListingIcon iconIndex={1} />
         <View style={styles().AdField}>
           <RequiredText text="Select Purpose" />
           <MyInput
@@ -277,7 +277,7 @@ function PropertySizeandPricing() {
         </View>
       </View>
       <View style={styles().AdInfo}>
-        <MyIcon iconIndex={2} />
+        <ListingIcon iconIndex={2} />
         <View style={styles().AdField}>
           <RequiredText text="Amount" />
           <MyInput
@@ -290,7 +290,7 @@ function PropertySizeandPricing() {
         </View>
       </View>
       <View style={styles().AdInfo}>
-        <MyIcon iconIndex={9} />
+        <ListingIcon iconIndex={9} />
         <View style={styles().AdField}>
           <View style={styles().align}>
             <MyText textColor={theme.colors.negative}>
@@ -311,7 +311,7 @@ function PropertySizeandPricing() {
         </View>
       </View>
       <View style={styles().AdInfo}>
-        <MyIcon iconIndex={10} />
+        <ListingIcon iconIndex={10} />
         <View style={styles().AdField}>
           <View style={styles().align}>
             <MyText textColor={theme.colors.negative}>
@@ -341,7 +341,7 @@ function FeaturesAndAmenities() {
   return (
     <CustomTable title="Features and Amenities" indexIcon={11}>
       <View style={styles().AdInfo}>
-        <MyIcon iconIndex={12} />
+        <ListingIcon iconIndex={12} />
         <View style={styles().AdField}>
           <MyText textColor={theme.colors.negative}>Feature & Amenities</MyText>
           <Counter type="bed" />
@@ -477,7 +477,7 @@ function PropertyImagesAndVideo() {
   return (
     <CustomTable title="Property Images and Video" indexIcon={16}>
       <View style={styles().AdInfo}>
-        <MyIcon iconIndex={4} />
+        <ListingIcon iconIndex={4} />
         <View style={styles().AdField}>
           <RequiredText text="Upload Images of your Property" />
         </View>
