@@ -13,6 +13,8 @@ export { default as LabelValue } from "./LabelValue";
 export { AdCard, MyClickableCard } from "./MyCard";
 export { default as MyField, Variants } from "./MyField";
 export { default as MyIcon } from "./MyIcon";
+export { default as AdBox } from "./AdBox";
+
 
 //* Header and Bottom tab (Custom) //note: only used in navigation layouts
 export { default as MyHeader } from "./MyHeader";
@@ -38,6 +40,7 @@ export { default as PreferencesList } from "./PreferencesList";
 export { default as CustomSlider } from "./Slider";
 export { default as MyTopFilter } from "./MyTopFilter";
 export { default as MyTopTabs } from "./MyTopTabs";
+export { default as RangeSlider } from "./RangeSlider";
 
 //! only used in Chat Screen
 export { default as MyFab } from "./MyFab";

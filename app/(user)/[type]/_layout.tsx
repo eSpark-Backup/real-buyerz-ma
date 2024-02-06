@@ -101,6 +101,7 @@ export default function MainLayout() {
         backBehavior="history"
         screenOptions={({ route }) => ({
           // headerShown: false,
+          sceneContainerStyle: { marginBottom: 10 },
           header: (props) => {
             return <MyHeader {...props} showBackIcon showRight theme={theme} />;
           },
@@ -118,6 +119,7 @@ export default function MainLayout() {
           options={{
             drawerItemStyle: { display: "none" },
             headerShown: false,
+            sceneContainerStyle: { marginBottom: 0 },
           }}
         />
         <Drawer.Screen
@@ -144,6 +146,26 @@ export default function MainLayout() {
             ),
             drawerLabel: ({ focused }) => (
               <DrawerLabel label="Inbox" theme={theme} focused={focused} />
+            ),
+          }}
+        />
+        <Drawer.Screen
+          name="myListings" // This is the name of the page and must match the url from root
+          options={{
+            drawerActiveBackgroundColor: "#DCEAF2",
+            drawerIcon: ({ focused }) => (
+              <Draw_Proposals
+                style={{
+                  color: focused ? theme.colors.secondary : theme.colors.text,
+                }}
+              />
+            ),
+            drawerLabel: ({ focused }) => (
+              <DrawerLabel
+                label="My Listings"
+                theme={theme}
+                focused={focused}
+              />
             ),
           }}
         />
