@@ -28,17 +28,24 @@ export default function MyTopFilter({
       >
         <FontAwesome
           name="filter"
-          size={18}
+          size={20}
           color="#ffffff"
           style={{ transform: [{ rotateY: "180deg" }] }}
         />
       </TouchableOpacity>
-      <MyText
-        text="Reset"
-        textColor={theme.colors.secondary}
-        size={14}
-        style={{ marginLeft: 10, textDecorationLine: "underline" }}
-      />
+      <TouchableOpacity
+        activeOpacity={1}
+        style={{
+          paddingHorizontal: 13,
+          paddingVertical: 6,
+          borderWidth: 1,
+          borderRadius: 4,
+          marginLeft: 5,
+          borderColor: theme.colors.secondary,
+        }}
+      >
+        <MyText text="Reset" textColor={theme.colors.secondary} size={14} />
+      </TouchableOpacity>
     </View>
   );
 }

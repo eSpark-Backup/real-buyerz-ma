@@ -2,10 +2,10 @@ import React from "react";
 import { StyleSheet, View, FlatList } from "react-native";
 import { useTheme } from "@react-navigation/native";
 
-import { MyListItem, GapView, MyText } from "@components";
+import { MyListItem, GapView, MyText, Card } from "@components";
 import { MyTheme } from "@types";
 
-interface FavoritesList {
+interface FavouritesList {
   id: string;
   title: string;
   cost: string;
@@ -17,7 +17,7 @@ interface FavoritesList {
   image: string;
 }
 
-const testData: FavoritesList[] = [
+const testData: FavouritesList[] = [
   {
     id: "1",
     title: "Residential Plot for Sale",
@@ -75,50 +75,50 @@ const testData: FavoritesList[] = [
   },
 ];
 
-export default function FavoritesList() {
+export default function Favourite() {
   const theme = useTheme() as MyTheme;
 
   return (
     <View style={styles(theme).container}>
-      <View style={styles(theme).innerContainer}>
-        <View style={styles(theme).singleTab}>
-          <MyText
-            text="Favorites"
-            size={16}
-            textColor={theme.colors.primary}
-            weight="600"
+      <Card style={styles(theme).cardContainer}>
+        <View style={styles(theme).innerContainer}>
+          <View style={styles(theme).singleTab}>
+            <MyText
+              text="Favourites"
+              size={16}
+              textColor={theme.colors.primary}
+              weight="700"
+            />
+          </View>
+        </View>
+        <View style={styles(theme).searchList}>
+          <FlatList
+            data={testData}
+            renderItem={({ index, item }) => (
+              <MyListItem item={item} index={index} theme={theme} fav />
+            )}
+            showsVerticalScrollIndicator={false}
+            ListFooterComponent={() => <GapView length={36} />}
+            ItemSeparatorComponent={() => <GapView />}
+            keyExtractor={(item) => item.id}
           />
         </View>
-      </View>
-      <View style={styles(theme).searchList}>
-        <FlatList
-          data={testData}
-          renderItem={({ index, item }) => (
-            <MyListItem item={item} index={index} theme={theme} fav />
-          )}
-          showsVerticalScrollIndicator={false}
-          ListFooterComponent={() => <GapView length={36} />}
-          ItemSeparatorComponent={() => <GapView />}
-          keyExtractor={(item) => item.id}
-        />
-      </View>
+      </Card>
     </View>
   );
 }
 
 const styles = (theme?: MyTheme) =>
   StyleSheet.create({
-    container: {
+    container: { flex: 1, paddingHorizontal: 10 },
+    cardContainer: {
       flex: 1,
-      marginHorizontal: 10,
+      alignSelf: "center",
       marginTop: 12,
       borderColor: theme?.colors.border,
-      borderWidth: 1,
-      borderRadius: 9,
     },
     innerContainer: {
       borderBottomWidth: 1,
-      marginHorizontal: 5,
       marginTop: 8,
       marginBottom: 4,
       borderColor: theme?.colors.border,
@@ -126,13 +126,14 @@ const styles = (theme?: MyTheme) =>
     singleTab: {
       height: 40,
       justifyContent: "center",
+      alignItems: "center",
       borderBottomColor: theme?.colors.primary,
       borderBottomWidth: 2,
       marginLeft: "3%",
       width: "24%",
     },
     searchList: {
-      flex: 1,
+      // flex: 1,
       padding: 11,
     },
   });

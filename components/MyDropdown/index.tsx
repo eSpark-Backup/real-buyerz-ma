@@ -5,10 +5,10 @@ import {
   TouchableOpacity,
   View,
   ViewStyle,
-  ScrollView
 } from "react-native";
 import { Entypo, Feather } from "@expo/vector-icons";
 import { useTheme } from "@react-navigation/native";
+import { ScrollView } from "react-native-gesture-handler"; //? for scrolling inside a absolute view
 
 import MyText from "../MyText";
 import { MyTheme } from "@types";
@@ -107,7 +107,6 @@ export default function MyDropdown({
       <View
         style={[
           styles(theme).container,
-
           { zIndex: zIndex },
           show ? { borderBottomRightRadius: 0, borderBottomLeftRadius: 0 } : {},
           style,
@@ -147,7 +146,6 @@ export default function MyDropdown({
             }}
           >
             <ScrollView
-              nestedScrollEnabled
               removeClippedSubviews
               keyboardShouldPersistTaps="handled"
               style={{
@@ -164,6 +162,7 @@ export default function MyDropdown({
                 height: listData.length > 3 ? 120 : "auto",
               }}
               contentContainerStyle={{
+                flexGrow: 1,
                 justifyContent: "space-between",
                 overflow: "hidden",
               }}

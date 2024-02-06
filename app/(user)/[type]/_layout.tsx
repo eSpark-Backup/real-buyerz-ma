@@ -24,6 +24,7 @@ import {
 } from "@assets/images";
 import { BubbleIcon, GapView, MyAvatar, MyHeader, MyText } from "@components";
 import { StatusBar } from "expo-status-bar";
+import { router } from "expo-router";
 
 const DrawerContent = (props: DrawerContentComponentProps) => {
   const { index } = props.state;
@@ -57,7 +58,10 @@ const DrawerContent = (props: DrawerContentComponentProps) => {
             </View>
           </View>
         </View>
-        <BubbleIcon size={40}>
+        <BubbleIcon
+          size={40}
+          onPress={() => router.push("(user)/anon/(tabs)/profile")}
+        >
           <Draw_Settings />
         </BubbleIcon>
       </View>
@@ -210,7 +214,7 @@ export default function MainLayout() {
           }}
         />
         <Drawer.Screen
-          name="favorites" // This is the name of the page and must match the url from root
+          name="favourites" // This is the name of the page and must match the url from root
           options={{
             drawerActiveBackgroundColor: "#DCEAF2",
             drawerIcon: ({ focused }) => (
@@ -221,7 +225,7 @@ export default function MainLayout() {
               />
             ),
             drawerLabel: ({ focused }) => (
-              <DrawerLabel label="Favorites" theme={theme} focused={focused} />
+              <DrawerLabel label="Favourites" theme={theme} focused={focused} />
             ),
           }}
         />
@@ -285,6 +289,17 @@ export default function MainLayout() {
           name="privacyPolicy" // This is the name of the page and must match the url from root
           options={{
             drawerActiveBackgroundColor: "#DCEAF2",
+            header: (props) => {
+              return (
+                <MyHeader
+                  {...props}
+                  showBackIcon
+                  title="Privacy Policy"
+                  hideCenter
+                  theme={theme}
+                />
+              );
+            },
             drawerIcon: ({ focused }) => (
               <Draw_Policy
                 style={{
@@ -305,6 +320,17 @@ export default function MainLayout() {
           name="termsAndConditions" // This is the name of the page and must match the url from root
           options={{
             drawerActiveBackgroundColor: "#DCEAF2",
+            header: (props) => {
+              return (
+                <MyHeader
+                  {...props}
+                  showBackIcon
+                  title="Terms & Conditions"
+                  hideCenter
+                  theme={theme}
+                />
+              );
+            },
             drawerIcon: ({ focused }) => (
               <Draw_Policy
                 style={{

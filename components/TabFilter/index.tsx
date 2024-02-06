@@ -2,8 +2,8 @@ import React, { useEffect, useMemo, useRef, useState } from "react";
 import { ScrollView, StyleSheet, TouchableOpacity, View } from "react-native";
 import { useTheme } from "@react-navigation/native";
 
-import Card from "../Card";
-import MyText from "../MyText";
+import Card from "@components/Card";
+import MyText from "@components/MyText";
 import { MyTheme, SearchDataProps } from "@types";
 
 interface TabFilterProps {
@@ -133,7 +133,15 @@ export default function TabFilter({ data, onSelect }: TabFilterProps) {
                   nestedIndex !== selectedItem?.list?.length! - 1 ? 10 : 0,
               }}
             >
-              <MyText text={nestedItem.label} size={12} />
+              <MyText
+                text={nestedItem.label}
+                size={12}
+                textColor={
+                  nestedItem?.selected
+                    ? theme.colors.primary
+                    : theme.colors.text
+                }
+              />
             </TouchableOpacity>
           ))}
         </ScrollView>
