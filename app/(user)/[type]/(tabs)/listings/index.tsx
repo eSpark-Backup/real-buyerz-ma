@@ -29,6 +29,7 @@ import {
   Plus,
   RentTab,
   SellTab,
+  TickPrimary,
 } from "@assets/images";
 import { testData } from "@constants";
 import { MyTheme } from "@types";
@@ -369,7 +370,7 @@ function FeaturesAndAmenities() {
       <GapView length={10} />
       <PrimaryBtn
         btnStyle={{
-          width: 80,
+          width: 85,
           gap: 2,
           backgroundColor: "transparent",
           borderColor: theme.colors.primary,
@@ -439,7 +440,61 @@ function PropertyImagesAndVideo() {
           <RequiredText text="Upload Images of your Property" />
         </View>
       </View>
+      <GapView length={15} />
+      <View
+        style={{
+          borderWidth: 1,
+          borderStyle: "dashed",
+          borderColor: theme.colors.primary,
+          paddingVertical: 20,
+          paddingHorizontal: 10,
+          flexDirection: "row",
+          alignItems: "center",
+          justifyContent: "space-around",
+        }}
+      >
+        <View
+          style={{
+            gap: 10,
+            alignItems: "center",
+            justifyContent: "center",
+            width: "35%",
+          }}
+        >
+          <PrimaryBtn title="Upload Images" width="100%" />
+          <PrimaryBtn
+            title="Add Video"
+            btnStyle={{
+              backgroundColor: "transparent",
+              borderColor: theme.colors.primary,
+              borderWidth: 1,
+            }}
+            textColor={theme.colors.primary}
+            width="100%"
+          />
+        </View>
+        <GapView length={10} mode="horizontal" />
+        <View style={{ width: "60%", paddingHorizontal: 15, gap: 5 }}>
+          <Ticktext text="Cover all areas of your property" />
+          <Ticktext text="Maximum 5 Pictures and 5 Videos can be uploaded" />
+          <Ticktext text="Ads with picture got 5x more views and leads" />
+          <Ticktext text="Upload good quality pictures with proper lighting" />
+          <Ticktext text="The video upload feature is optional; you can choose to upload photos without including a video." />
+        </View>
+      </View>
     </CustomTable>
+  );
+}
+
+function Ticktext({ text }: { text: string }) {
+  const theme = useTheme() as MyTheme;
+  return (
+    <View style={{ flexDirection: "row", gap: 5, alignItems: "center" }}>
+      <TickPrimary />
+      <MyText size={10} textColor={theme.colors.listText}>
+        {text}
+      </MyText>
+    </View>
   );
 }
 
