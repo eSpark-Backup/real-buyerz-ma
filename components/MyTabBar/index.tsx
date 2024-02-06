@@ -6,10 +6,10 @@ import MyText from "../MyText";
 import { MyTheme } from "@types";
 import {
   HomeTab,
-  ListingTab,
-  SettingsTab,
+  Tab_Listing,
   Tab_Dashbaord,
   Tab_Projects,
+  Tab_Profile,
 } from "@assets/images";
 
 function MyTabBar({
@@ -134,15 +134,15 @@ const renderTabIcon = (
       );
     case "listings":
       return (
-        <ListingTab
+        <Tab_Listing
           style={{
             color: theme.colors.TabBarText,
           }}
         />
       );
-    case "settings":
+    case "profile":
       return (
-        <SettingsTab
+        <Tab_Profile
           style={{
             color: theme.colors.TabBarText,
           }}

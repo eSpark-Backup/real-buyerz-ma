@@ -96,7 +96,6 @@ const styles = (theme?: MyTheme) =>
   StyleSheet.create({
     container: {
       width: 64,
-      height: 35,
       borderWidth: 1,
       borderRadius: 5,
       borderColor: theme?.colors.border,
@@ -104,11 +103,11 @@ const styles = (theme?: MyTheme) =>
       zIndex: 10,
     },
     innerContainer: {
+      flex: 1,
       flexDirection: "row",
       justifyContent: "space-evenly",
       alignItems: "center",
       width: "100%",
-      height: "100%",
     },
     dropdown: {
       width: "101.5%",
