@@ -76,7 +76,7 @@ export default function Listing() {
       <GapView length={20} />
       <AdInformation />
       <GapView length={20} />
-      <LocationAndPrurpose />
+      <LocationAndPurpose />
       <GapView length={20} />
       <PropertySizeandPricing />
       <GapView length={20} />
@@ -162,7 +162,7 @@ function AdInformation() {
     </CustomTable>
   );
 }
-function LocationAndPrurpose() {
+function LocationAndPurpose() {
   const theme = useTheme() as MyTheme;
   const [selected, setSelected] = useState("");
 
