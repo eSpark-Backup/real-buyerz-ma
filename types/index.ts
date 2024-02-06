@@ -96,7 +96,7 @@ export interface IPropsBtn {
   onPress?: () => void;
   textColor?: string;
   width?: any;
-  btnStyle?: ViewStyle;
+  btnStyle?: ViewStyle | ViewStyle[];
   labelStyle?: TextStyle;
   paddingV?: number;
   weight?:

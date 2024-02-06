@@ -38,7 +38,7 @@ export default function Listing() {
   const theme = useTheme() as MyTheme;
   return (
     <ScrollView
-      style={{ marginTop: 27, marginBottom: 10, paddingHorizontal: 20 }}
+      style={styles(theme).conatiner}
       contentContainerStyle={{ alignItems: "center" }}
       showsVerticalScrollIndicator={false}
     >
@@ -63,33 +63,13 @@ export default function Listing() {
       <FeaturesAndAmenities />
       <GapView length={20} />
       <PropertyImagesAndVideo />
-      <View
-        style={{
-          flexDirection: "row",
-          gap: 5,
-          marginTop: 40,
-          alignSelf: "flex-end",
-        }}
-      >
-        <PrimaryBtn
-          btnStyle={{
-            backgroundColor: "transparent",
-            borderColor: theme.colors.primary,
-            borderWidth: 1,
-            width: 30,
-            height: 30,
-            paddingTop: 14,
-          }}
-        >
+      <View style={styles(theme).footerButtons}>
+        <PrimaryBtn btnStyle={styles(theme).eye}>
           <EyePrimary />
         </PrimaryBtn>
         <PrimaryBtn
           title="Save as draft"
-          btnStyle={{
-            backgroundColor: "transparent",
-            borderColor: theme.colors.primary,
-            borderWidth: 1,
-          }}
+          btnStyle={styles(theme).draft}
           textColor={theme.colors.primary}
           weight="500"
         />
@@ -98,7 +78,7 @@ export default function Listing() {
     </ScrollView>
   );
 }
-//todo: make comp for required, optimize this code
+
 interface CustomTableProps {
   children?: React.ReactNode;
   title?: string;
@@ -125,9 +105,7 @@ function CustomTable({ title, indexIcon, children }: CustomTableProps) {
             />
           </View>
         </View>
-        <View style={{ paddingHorizontal: 15, paddingVertical: 20 }}>
-          {children}
-        </View>
+        <View style={styles().children}>{children}</View>
       </View>
     </View>
   );
@@ -137,9 +115,9 @@ function AdInformation() {
   const theme = useTheme() as MyTheme;
   return (
     <CustomTable title="Ad Information" indexIcon={0}>
-      <View style={{ flexDirection: "row", flex: 1, gap: 10 }}>
+      <View style={styles().AdInfo}>
         <MyIcon iconIndex={1} />
-        <View style={{ flex: 1, paddingTop: 10, gap: 10 }}>
+        <View style={styles().AdField}>
           <RequiredText text="Title" />
           <MyInput
             placeholder={
@@ -152,9 +130,10 @@ function AdInformation() {
           />
         </View>
       </View>
-      <View style={{ flexDirection: "row", flex: 1, gap: 10, marginTop: 10 }}>
+      <GapView length={10} />
+      <View style={styles().AdInfo}>
         <MyIcon iconIndex={2} />
-        <View style={{ flex: 1, paddingTop: 10, gap: 10 }}>
+        <View style={styles().AdField}>
           <RequiredText text="Description" />
           <MyInput
             placeholder={
@@ -179,11 +158,11 @@ function LocationAndPrurpose() {
 
   return (
     <CustomTable title="Location & Purpose" indexIcon={3}>
-      <View style={{ flexDirection: "row", flex: 1, gap: 10 }}>
+      <View style={styles().AdInfo}>
         <MyIcon iconIndex={4} />
-        <View style={{ flex: 1, paddingTop: 10, gap: 10 }}>
+        <View style={styles().AdField}>
           <MyText textColor={theme.colors.negative}>Select Purpose</MyText>
-          <View style={{ flexDirection: "row", gap: 10 }}>
+          <View style={styles().titleContainer}>
             <TouchableOpacity
               onPress={() => {
                 setSelected("sell");
@@ -233,8 +212,8 @@ function LocationAndPrurpose() {
           </View>
         </View>
       </View>
-      <View style={{ flex: 1, marginTop: 10, gap: 10 }}>
-        <View style={{ flexDirection: "row", alignItems: "center", gap: 10 }}>
+      <View style={styles().AdField}>
+        <View style={styles().titleContainer}>
           <MyIcon iconIndex={5} />
           <MyText textColor={theme.colors.negative}>
             Select Property Type
@@ -242,7 +221,8 @@ function LocationAndPrurpose() {
         </View>
         <TabFilter data={testData} onSelect={() => {}} wrap />
       </View>
-      <View style={{ flexDirection: "row", flex: 1, gap: 10, marginTop: 10 }}>
+      <GapView length={10} />
+      <View style={styles().AdInfo}>
         <MyIcon iconIndex={6} />
         <View style={{ flex: 1, paddingTop: 10, gap: 15 }}>
           <MyText textColor={theme.colors.negative}>Select City</MyText>
@@ -255,9 +235,10 @@ function LocationAndPrurpose() {
           />
         </View>
       </View>
-      <View style={{ flexDirection: "row", flex: 1, gap: 10, marginTop: 10 }}>
+      <GapView length={10} />
+      <View style={styles().AdInfo}>
         <MyIcon iconIndex={7} />
-        <View style={{ flex: 1, paddingTop: 10, gap: 15 }}>
+        <View style={styles().AdField}>
           <RequiredText text="Select Location" />
           <Map />
         </View>
@@ -272,9 +253,9 @@ function PropertySizeandPricing() {
 
   return (
     <CustomTable title="Property Size and Pricing" indexIcon={8}>
-      <View style={{ flexDirection: "row", flex: 1, gap: 10 }}>
+      <View style={styles().AdInfo}>
         <MyIcon iconIndex={1} />
-        <View style={{ flex: 1, paddingTop: 10, gap: 10 }}>
+        <View style={styles().AdField}>
           <RequiredText text="Select Purpose" />
           <MyInput
             placeholder={"Enter Unit"}
@@ -285,9 +266,9 @@ function PropertySizeandPricing() {
           <MyDropdown data={[]} placeholder="Unit" onSelect={() => {}} />
         </View>
       </View>
-      <View style={{ flexDirection: "row", flex: 1, gap: 10, marginTop: 10 }}>
+      <View style={styles().AdInfo}>
         <MyIcon iconIndex={2} />
-        <View style={{ flex: 1, paddingTop: 10, gap: 10 }}>
+        <View style={styles().AdField}>
           <RequiredText text="Amount" />
           <MyInput
             placeholder={"Enter Amount"}
@@ -298,12 +279,10 @@ function PropertySizeandPricing() {
           <MyDropdown data={[]} placeholder="PKR" onSelect={() => {}} />
         </View>
       </View>
-      <View style={{ flexDirection: "row", flex: 1, gap: 10, marginTop: 10 }}>
+      <View style={styles().AdInfo}>
         <MyIcon iconIndex={9} />
-        <View style={{ flex: 1, paddingTop: 10, gap: 10 }}>
-          <View
-            style={{ flexDirection: "row", justifyContent: "space-between" }}
-          >
+        <View style={styles().AdField}>
+          <View style={styles().align}>
             <MyText textColor={theme.colors.negative}>
               Instalment available
             </MyText>
@@ -321,12 +300,10 @@ function PropertySizeandPricing() {
           />
         </View>
       </View>
-      <View style={{ flexDirection: "row", flex: 1, gap: 10, marginTop: 10 }}>
+      <View style={styles().AdInfo}>
         <MyIcon iconIndex={10} />
-        <View style={{ flex: 1, paddingTop: 10, gap: 10 }}>
-          <View
-            style={{ flexDirection: "row", justifyContent: "space-between" }}
-          >
+        <View style={styles().AdField}>
+          <View style={styles().align}>
             <MyText textColor={theme.colors.negative}>
               Ready For Possession
             </MyText>
@@ -352,9 +329,9 @@ function FeaturesAndAmenities() {
   const theme = useTheme() as MyTheme;
   return (
     <CustomTable title="Features and Amenities" indexIcon={11}>
-      <View style={{ flexDirection: "row", flex: 1, gap: 10 }}>
+      <View style={styles().AdInfo}>
         <MyIcon iconIndex={12} />
-        <View style={{ flex: 1, paddingTop: 10, gap: 10 }}>
+        <View style={styles().AdField}>
           <MyText textColor={theme.colors.negative}>Feature & Amenities</MyText>
           <Counter type="bed" />
           <Counter type="tub" />
@@ -369,16 +346,7 @@ function FeaturesAndAmenities() {
       />
       <GapView length={10} />
       <PrimaryBtn
-        btnStyle={{
-          width: 85,
-          gap: 2,
-          backgroundColor: "transparent",
-          borderColor: theme.colors.primary,
-          borderWidth: 1,
-          flexDirection: "row",
-          alignItems: "center",
-          justifyContent: "center",
-        }}
+        btnStyle={[styles().addAmenity, { borderColor: theme.colors.primary }]}
       >
         <AddIcon />
         <MyText text="Add amenity" size={10} textColor={theme.colors.primary} />
@@ -391,26 +359,11 @@ function Counter({ type }: { type: "bed" | "tub" | "park" }) {
   const theme = useTheme() as MyTheme;
   const [value, setValue] = useState(1);
   return (
-    <View
-      style={{
-        flexDirection: "row",
-        gap: 10,
-      }}
-    >
+    <View style={styles().counter}>
       {type == "bed" && <AmenitiesBed />}
       {type == "tub" && <AmenitiesTub />}
       {type == "park" && <AmenitiesParking />}
-      <View
-        style={{
-          width: 60,
-          height: 25,
-          backgroundColor: theme.dark ? theme.colors.cardBg : "#F4F5F7",
-          flexDirection: "row",
-          alignItems: "center",
-          justifyContent: "space-between",
-          paddingHorizontal: 5,
-        }}
-      >
+      <View style={styles().innerCounter}>
         <Pressable
           onPress={() => {
             value != 1 ? setValue(value - 1) : console.log("abcd");
@@ -434,47 +387,25 @@ function PropertyImagesAndVideo() {
   const theme = useTheme() as MyTheme;
   return (
     <CustomTable title="Property Images and Video" indexIcon={16}>
-      <View style={{ flexDirection: "row", flex: 1, gap: 10 }}>
+      <View style={styles().AdInfo}>
         <MyIcon iconIndex={4} />
-        <View style={{ flex: 1, paddingTop: 10, gap: 10 }}>
+        <View style={styles().AdField}>
           <RequiredText text="Upload Images of your Property" />
         </View>
       </View>
       <GapView length={15} />
-      <View
-        style={{
-          borderWidth: 1,
-          borderStyle: "dashed",
-          borderColor: theme.colors.primary,
-          paddingVertical: 20,
-          paddingHorizontal: 10,
-          flexDirection: "row",
-          alignItems: "center",
-          justifyContent: "space-around",
-        }}
-      >
-        <View
-          style={{
-            gap: 10,
-            alignItems: "center",
-            justifyContent: "center",
-            width: "35%",
-          }}
-        >
+      <View style={styles().dashed}>
+        <View style={styles().buttonContainer}>
           <PrimaryBtn title="Upload Images" width="100%" />
           <PrimaryBtn
             title="Add Video"
-            btnStyle={{
-              backgroundColor: "transparent",
-              borderColor: theme.colors.primary,
-              borderWidth: 1,
-            }}
+            btnStyle={[styles().draft, { borderColor: theme.colors.primary }]}
             textColor={theme.colors.primary}
             width="100%"
           />
         </View>
         <GapView length={10} mode="horizontal" />
-        <View style={{ width: "60%", paddingHorizontal: 15, gap: 5 }}>
+        <View style={styles().list}>
           <Ticktext text="Cover all areas of your property" />
           <Ticktext text="Maximum 5 Pictures and 5 Videos can be uploaded" />
           <Ticktext text="Ads with picture got 5x more views and leads" />
@@ -513,6 +444,25 @@ function RequiredText({ text }: RequiredTextProps) {
 
 const styles = (theme?: MyTheme) =>
   StyleSheet.create({
+    conatiner: { marginTop: 27, marginBottom: 10, paddingHorizontal: 20 },
+    footerButtons: {
+      flexDirection: "row",
+      gap: 5,
+      marginTop: 40,
+      alignSelf: "flex-end",
+    },
+    eye: {
+      backgroundColor: "transparent",
+      borderColor: theme?.colors.primary,
+      borderWidth: 1,
+      width: 30,
+      height: 30,
+      paddingTop: 14,
+    },
+    draft: {
+      backgroundColor: "transparent",
+      borderWidth: 1,
+    },
     headingStyle: {
       justifyContent: "center",
       alignContent: "center",
@@ -537,6 +487,11 @@ const styles = (theme?: MyTheme) =>
       alignItems: "center",
       gap: 10,
     },
+    align: { flexDirection: "row", justifyContent: "space-between" },
+    AdInfo: { flexDirection: "row", flex: 1, gap: 10 },
+
+    AdField: { flex: 1, paddingTop: 10, gap: 10 },
+    children: { paddingHorizontal: 15, paddingVertical: 20 },
     inputInnerStyle: {
       height: 45,
       padding: 0,
@@ -569,4 +524,43 @@ const styles = (theme?: MyTheme) =>
       flexDirection: "row",
       gap: 5,
     },
+    addAmenity: {
+      width: 85,
+      gap: 2,
+      backgroundColor: "transparent",
+      borderWidth: 1,
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "center",
+    },
+    counter: {
+      flexDirection: "row",
+      gap: 10,
+    },
+    innerCounter: {
+      width: 60,
+      height: 25,
+      backgroundColor: theme?.dark ? theme.colors.cardBg : "#F4F5F7",
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "space-between",
+      paddingHorizontal: 5,
+    },
+    dashed: {
+      borderWidth: 1,
+      borderStyle: "dashed",
+      borderColor: theme?.colors.primary,
+      paddingVertical: 20,
+      paddingHorizontal: 10,
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "space-around",
+    },
+    buttonContainer: {
+      gap: 10,
+      alignItems: "center",
+      justifyContent: "center",
+      width: "35%",
+    },
+    list: { width: "60%", paddingHorizontal: 15, gap: 5 },
   });
