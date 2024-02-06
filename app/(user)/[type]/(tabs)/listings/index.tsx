@@ -5,11 +5,14 @@ import {
   View,
   TouchableOpacity,
   Pressable,
+  FlatList,
 } from "react-native";
+import Modal from "react-native-modal";
 import { useTheme } from "@react-navigation/native";
 
 import {
   GapView,
+  MyCheckbox,
   MyDropdown,
   MyIcon,
   MyInput,
@@ -31,8 +34,25 @@ import {
   SellTab,
   TickPrimary,
 } from "@assets/images";
-import { testData } from "@constants";
+import { data, testData } from "@constants";
 import { MyTheme } from "@types";
+
+interface CustomTableProps {
+  children?: React.ReactNode;
+  title?: string;
+  indexIcon: number;
+}
+interface SvgIcon {
+  [key: number]: any;
+}
+interface RequiredTextProps {
+  text: string;
+}
+interface AmenitiesPopupProps {
+  isVisible: boolean;
+  onCancel: () => void;
+  onSave: () => void;
+}
 
 export default function Listing() {
   const theme = useTheme() as MyTheme;
@@ -79,18 +99,8 @@ export default function Listing() {
   );
 }
 
-interface CustomTableProps {
-  children?: React.ReactNode;
-  title?: string;
-  indexIcon: number;
-}
-interface SvgIcon {
-  [key: number]: any;
-}
-
 function CustomTable({ title, indexIcon, children }: CustomTableProps) {
   const theme = useTheme() as MyTheme;
-
   return (
     <View style={styles(theme).passListWrapper}>
       <View>
@@ -327,6 +337,7 @@ function PropertySizeandPricing() {
 
 function FeaturesAndAmenities() {
   const theme = useTheme() as MyTheme;
+  const [visible, setVisible] = useState(false);
   return (
     <CustomTable title="Features and Amenities" indexIcon={11}>
       <View style={styles().AdInfo}>
@@ -347,13 +358,91 @@ function FeaturesAndAmenities() {
       <GapView length={10} />
       <PrimaryBtn
         btnStyle={[styles().addAmenity, { borderColor: theme.colors.primary }]}
+        onPress={() => setVisible(true)}
       >
         <AddIcon />
         <MyText text="Add amenity" size={10} textColor={theme.colors.primary} />
       </PrimaryBtn>
+      <AmenitiesPopup
+        isVisible={visible}
+        onCancel={() => {
+          setVisible(false);
+        }}
+        onSave={() => {
+          setVisible(false);
+        }}
+      />
     </CustomTable>
   );
 }
+
+function AmenitiesPopup({ isVisible, onCancel, onSave }: AmenitiesPopupProps) {
+  const theme = useTheme() as MyTheme;
+
+  return (
+    <Modal isVisible={isVisible} style={styles().modal}>
+      <View style={styles().contentContainer}>
+        <FlatList
+          data={data}
+          renderItem={({ item }) => renderListItem({ item, theme })}
+          keyExtractor={(item, index) => index.toString()}
+          contentContainerStyle={styles().flatListContent}
+          ItemSeparatorComponent={() => <GapView length={20} />}
+          showsVerticalScrollIndicator={false}
+        />
+      </View>
+      <View
+        style={{
+          flexDirection: "row",
+          padding: 12,
+          width: "100%",
+          gap: 10,
+          justifyContent: "flex-end",
+          borderTopWidth: 1,
+          borderColor: theme.colors.secondary,
+          backgroundColor: theme.colors.background,
+        }}
+      >
+        <PrimaryBtn
+          title="Cancel"
+          btnStyle={styles(theme).draft}
+          textColor={theme.colors.primary}
+          width={80}
+          onPress={onCancel}
+        />
+        <PrimaryBtn title="Save" width={80} onPress={onSave} />
+      </View>
+    </Modal>
+  );
+}
+
+const renderListItem = ({
+  item,
+  theme,
+}: {
+  theme: MyTheme;
+  item: { iconIndex: number; title: string };
+}) => {
+  const svgIcons: SvgIcon = {
+    0: <AmenitiesBed />,
+    1: <AmenitiesParking />,
+  };
+  return (
+    <View style={{ flexDirection: "row", gap: 15, alignItems: "center" }}>
+      <View style={{ flexDirection: "row", gap: 15, alignItems: "center" }}>
+        <MyCheckbox
+          checkboxStyle={{
+            width: 16,
+            height: 16,
+            borderColor: theme.colors.secondary,
+          }}
+        />
+        {svgIcons[item.iconIndex]}
+      </View>
+      <MyText text={item.title} textColor={theme.colors.negative} />
+    </View>
+  );
+};
 
 function Counter({ type }: { type: "bed" | "tub" | "park" }) {
   const theme = useTheme() as MyTheme;
@@ -394,7 +483,14 @@ function PropertyImagesAndVideo() {
         </View>
       </View>
       <GapView length={15} />
-      <View style={styles().dashed}>
+      <View
+        style={[
+          styles().dashed,
+          {
+            borderColor: theme.colors.primary,
+          },
+        ]}
+      >
         <View style={styles().buttonContainer}>
           <PrimaryBtn title="Upload Images" width="100%" />
           <PrimaryBtn
@@ -429,9 +525,6 @@ function Ticktext({ text }: { text: string }) {
   );
 }
 
-interface RequiredTextProps {
-  text: string;
-}
 function RequiredText({ text }: RequiredTextProps) {
   const theme = useTheme() as MyTheme;
   return (
@@ -461,6 +554,7 @@ const styles = (theme?: MyTheme) =>
     },
     draft: {
       backgroundColor: "transparent",
+      borderColor: theme?.colors.primary,
       borderWidth: 1,
     },
     headingStyle: {
@@ -468,8 +562,8 @@ const styles = (theme?: MyTheme) =>
       alignContent: "center",
       alignItems: "center",
       padding: 10,
-      borderBottomWidth: 1, // Set the width of the bottom border
-      borderBottomColor: theme?.colors.border, // Set the color of the bottom border
+      borderBottomWidth: 1,
+      borderBottomColor: theme?.colors.border,
     },
     formWrapper: {
       paddingHorizontal: 12,
@@ -549,7 +643,6 @@ const styles = (theme?: MyTheme) =>
     dashed: {
       borderWidth: 1,
       borderStyle: "dashed",
-      borderColor: theme?.colors.primary,
       paddingVertical: 20,
       paddingHorizontal: 10,
       flexDirection: "row",
@@ -563,4 +656,20 @@ const styles = (theme?: MyTheme) =>
       width: "35%",
     },
     list: { width: "60%", paddingHorizontal: 15, gap: 5 },
+    modal: {
+      justifyContent: "flex-end",
+      margin: 0,
+    },
+    contentContainer: {
+      backgroundColor: "white",
+      borderTopLeftRadius: 20,
+      borderTopRightRadius: 20,
+      paddingHorizontal: 20,
+      paddingTop: 20,
+      height: "70%",
+    },
+    flatListContent: {
+      paddingTop: 2,
+      paddingBottom: 20,
+    },
   });
