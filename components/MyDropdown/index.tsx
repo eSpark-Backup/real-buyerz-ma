@@ -126,7 +126,7 @@ export default function MyDropdown({
           }}
         >
           <MyText
-            text={label ? label : `Select ${placeholder}`}
+            text={label ? label : `${placeholder}`}
             textColor={placeholderColor ? placeholderColor : "#969696"}
           />
           <Entypo

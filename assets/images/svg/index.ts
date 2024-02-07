@@ -90,6 +90,11 @@ export { default as SellTab } from "./sell-tab.svg";
 export { default as Minus } from "./counter-minus.svg";
 export { default as Plus } from "./counter-plus.svg";
 
+// *(Used in shop screen)
+export { default as PFire_Red } from "./p-fire-red.svg";
+export { default as PFire_Orange } from "./p-fire-orange.svg";
+export { default as PDollar_Green } from "./p-dollar-green.svg";
+
 export { default as Head_Logo } from "./head-logo.svg";
 export { default as Head_Menu } from "./head-menu.svg";
 export { default as Head_Search } from "./head-search.svg";
