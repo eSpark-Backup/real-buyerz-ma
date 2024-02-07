@@ -62,6 +62,33 @@ export { default as Draw_Settings } from "./draw-settings.svg";
 export { default as Draw_Logout } from "./draw-logout.svg";
 export { default as AddImage } from "./add-image.svg";
 
+// *(Used in listing screen)
+export { default as AdInfo } from "./AdInfoIcon.svg";
+export { default as Title } from "./TitleIcon.svg";
+export { default as Description } from "./DescriptionIcon.svg";
+export { default as Lpurpose } from "./LpurposeIcon.svg";
+export { default as SelectPurpose } from "./select-purpose-icon.svg";
+export { default as SelectProperty } from "./select-property-icon.svg";
+export { default as SelectCity } from "./select-city-icon.svg";
+export { default as SelectLocation } from "./select-location-icon.svg";
+export { default as SizeAndPricing } from "./size-and-pricing-icon.svg";
+export { default as InstalmentAvailable1 } from "./instalments-1-icon.svg";
+export { default as InstalmentAvailable2 } from "./instalments-2-icon.svg";
+export { default as AmenitiesBed } from "./ameneties-bed-icon.svg";
+export { default as AmenitiesTub } from "./ameneties-tub-icon.svg";
+export { default as AmenitiesParking } from "./ameneties-park-icon.svg";
+export { default as FilmIcon } from "./film-icon.svg";
+export { default as EyePrimary } from "./eye-primary--icon.svg";
+export { default as HomeFeature } from "./home-feature-icon.svg";
+export { default as HomeAmenities } from "./home-feature-amenities-icon.svg";
+export { default as AddIcon } from "./add-plus-icon.svg";
+export { default as TickPrimary } from "./tick-primary.svg";
+export { default as Map } from "./map.svg";
+export { default as RentTab } from "./rent-tab-icon.svg";
+export { default as SellTab } from "./sell-tab.svg";
+export { default as Minus } from "./counter-minus.svg";
+export { default as Plus } from "./counter-plus.svg";
+
 export { default as Head_Logo } from "./head-logo.svg";
 export { default as Head_Menu } from "./head-menu.svg";
 export { default as Head_Search } from "./head-search.svg";

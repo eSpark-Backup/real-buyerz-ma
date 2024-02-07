@@ -14,6 +14,7 @@ const PrimaryBtn = ({
   labelStyle,
   weight,
   paddingV,
+  children,
 }: IPropsBtn) => {
   const theme = useTheme() as MyTheme;
   return (
@@ -32,6 +33,7 @@ const PrimaryBtn = ({
       ]}
       onPress={onPress}
     >
+      {children && children}
       <MyText
         textColor={textColor ? textColor : "#ffffff"}
         size={10}

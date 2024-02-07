@@ -48,3 +48,100 @@ export const testData: SearchDataProps[] = [
     ],
   },
 ];
+
+interface ListData {
+  iconIndex: number;
+  title: string;
+}
+
+export const data: ListData[] = [
+  { iconIndex: 0, title: "Swimming pool" },
+  {
+    iconIndex: 1,
+    title: "Fitness center",
+  },
+  {
+    iconIndex: 2,
+    title: "Clubhouse",
+  },
+  {
+    iconIndex: 3,
+    title: "Playground",
+  },
+  {
+    iconIndex: 4,
+    title: "Basketball courts",
+  },
+  {
+    iconIndex: 5,
+    title: "Walking trails",
+  },
+  {
+    iconIndex: 6,
+    title: "Pet-friendly facilities",
+  },
+  {
+    iconIndex: 7,
+    title: "24/7 security",
+  },
+  {
+    iconIndex: 8,
+    title: "Concierge services",
+  },
+  {
+    iconIndex: 9,
+    title: "Business centre",
+  },
+  {
+    iconIndex: 10,
+    title: "Rooftop terrace",
+  },
+  {
+    iconIndex: 11,
+    title: " On-site maintenance",
+  },
+  {
+    iconIndex: 12,
+    title: "Washing area",
+  },
+  {
+    iconIndex: 13,
+    title: "Hour Electricity",
+  },
+  {
+    iconIndex: 14,
+    title: "Auto Generator",
+  },
+  {
+    iconIndex: 15,
+    title: "Complete Boundary Wall",
+  },
+  {
+    iconIndex: 16,
+    title: "Huge Park",
+  },
+  {
+    iconIndex: 17,
+    title: "Masjid",
+  },
+  {
+    iconIndex: 18,
+    title: "Corridor",
+  },
+  {
+    iconIndex: 19,
+    title: "R.O Plant",
+  },
+  {
+    iconIndex: 20,
+    title: "Servant Area",
+  },
+  {
+    iconIndex: 21,
+    title: "Senior citizen area",
+  },
+  {
+    iconIndex: 22,
+    title: "Utility Store",
+  },
+];
