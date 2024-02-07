@@ -23,13 +23,13 @@ export default function Search() {
       <View style={styles.searchBar}>
         <SearchBar leftIcon clearIcon />
       </View>
-      <TouchableOpacity style={styles.filterCont}>
+      {/* <TouchableOpacity style={styles.filterCont}>
         <MyText
           size={10}
           text="Clear Filter"
           style={[styles.filter, { color: theme.colors.secondary }]}
         />
-      </TouchableOpacity>
+      </TouchableOpacity> */}
       <GapView length={25} />
       <View style={styles.purpose}>
         <MyText text="Purpose" size={14} />
@@ -75,11 +75,26 @@ export default function Search() {
       </View>
       <View style={styles.button}>
         <MyButton
+          label="Clear Filter"
+          textColor={theme.colors.primary}
+          backgroundColor={"transparent"}
+          onPress={() => {}}
+          style={{
+            borderRadius: 4,
+            paddingHorizontal: 10,
+            paddingVertical: 6,
+            borderWidth: 1,
+            borderColor: theme.colors.primary,
+          }}
+          labelStyle={{ fontSize: 15 }}
+        />
+        <GapView mode="horizontal" length={5} />
+        <MyButton
           label="Search"
           textColor={"#ffffff"}
           backgroundColor={theme.colors.primary}
           onPress={() => router.push("(user)/anon/search/searchList")}
-          style={{ borderRadius: 4, padding: 8, paddingHorizontal: 20 }}
+          style={{ borderRadius: 4, paddingHorizontal: 21, paddingVertical: 6 }}
           labelStyle={{ fontSize: 15 }}
         />
       </View>
@@ -113,6 +128,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   button: {
+    flexDirection: "row",
     marginTop: 50,
   },
   filter: {

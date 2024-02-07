@@ -99,6 +99,7 @@ const styles = (theme?: MyTheme) =>
     },
     inputStyle: {
       flex: 1,
+      height: "100%",
       padding: 0,
       fontSize: 14,
       fontWeight: "300",

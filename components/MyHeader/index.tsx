@@ -9,6 +9,7 @@ import { MyTheme } from "@types";
 import BubbleIcon from "@components/BubbleIcon";
 import { DrawerActions } from "@react-navigation/native";
 import { DrawerHeaderProps } from "@react-navigation/drawer";
+import MyText from "@components/MyText";
 
 interface MyProps {
   showBackIcon?: boolean;
@@ -18,6 +19,7 @@ interface MyProps {
   hideCenter?: boolean;
   type?: string;
   theme?: MyTheme;
+  title?: string;
 }
 
 type HeaderProps = (
@@ -31,6 +33,7 @@ export default function MyHeader({
   options,
   navigation,
   route,
+  title,
   showBackIcon,
   showRight,
   hideCenter,
@@ -52,6 +55,16 @@ export default function MyHeader({
           {showBackIcon ? <Head_Back /> : <Head_Menu />}
         </BubbleIcon>
       </View>
+      {title && (
+        <View style={styles(theme).middle}>
+          <MyText
+            text={title}
+            weight="700"
+            size={22}
+            textColor={theme?.colors.secondary}
+          />
+        </View>
+      )}
       {!hideCenter && (
         <View style={styles(theme).middle}>
           <Head_Logo />

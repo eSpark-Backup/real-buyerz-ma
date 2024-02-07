@@ -180,7 +180,7 @@ export default function ProfileSettings() {
       <View style={styles(theme).container}>
         <View style={styles(theme).avatarWrapper}>
           <MyAvatar
-            imageUrl="https://i.pravatar.cc/300"
+            imageUrl="https://i.pravatar.cc/300?img=68"
             size={85}
             edit={true}
           />

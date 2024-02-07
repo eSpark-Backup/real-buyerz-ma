@@ -215,30 +215,28 @@ export default function MyListings() {
         }}
       />
       <MyTopTabs data={topTabsData} list />
-      <ScrollView nestedScrollEnabled showsVerticalScrollIndicator={false}>
-        <View style={styles.content}>
-          <FlatList
-            data={testContentData}
-            showsVerticalScrollIndicator={false}
-            nestedScrollEnabled
-            renderItem={({ item, index }) => (
-              <AdBox
-                title={item.title}
-                description={item.description}
-                btns={btnsData}
-                points={[
-                  { label: "Est. Range", value: item?.amount },
-                  { label: "Purpose", value: item?.purpose },
-                  { label: "Property Type", value: item?.type },
-                  { label: "City", value: item?.city },
-                  { label: "Location", value: item?.location },
-                ]}
-              />
-            )}
-            ItemSeparatorComponent={() => <GapView />}
-          />
-        </View>
-      </ScrollView>
+      <View style={styles.content}>
+        <FlatList
+          data={testContentData}
+          showsVerticalScrollIndicator={false}
+          nestedScrollEnabled
+          renderItem={({ item, index }) => (
+            <AdBox
+              title={item.title}
+              description={item.description}
+              btns={btnsData}
+              points={[
+                { label: "Est. Range", value: item?.amount },
+                { label: "Purpose", value: item?.purpose },
+                { label: "Property Type", value: item?.type },
+                { label: "City", value: item?.city },
+                { label: "Location", value: item?.location },
+              ]}
+            />
+          )}
+          ItemSeparatorComponent={() => <GapView />}
+        />
+      </View>
     </View>
   );
 }
