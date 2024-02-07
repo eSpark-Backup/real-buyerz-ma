@@ -333,7 +333,7 @@ const styles = (theme?: MyTheme) =>
       shadowOffset: { width: 0, height: 4 },
       marginTop: 30,
       paddingVertical: 18,
-      paddingHorizontal: 32,
+      paddingHorizontal: 10,
       justifyContent: "space-around",
     },
     button2: {

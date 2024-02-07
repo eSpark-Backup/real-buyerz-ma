@@ -20,6 +20,7 @@ import {
   PrimaryBtn,
   TabFilter,
   ToggleSwitch,
+  MyPopupModal,
 } from "@components";
 import {
   AddIcon,
@@ -56,6 +57,8 @@ interface AmenitiesPopupProps {
 
 export default function Listing() {
   const theme = useTheme() as MyTheme;
+  const [visible, setVisible] = useState(false);
+
   return (
     <ScrollView
       style={styles(theme).conatiner}
@@ -93,8 +96,21 @@ export default function Listing() {
           textColor={theme.colors.primary}
           weight="500"
         />
-        <PrimaryBtn title="SubmitAd" weight="500" width={100} />
+        <PrimaryBtn
+          title="Submit Ad"
+          weight="500"
+          width={100}
+          onPress={() => setVisible(true)}
+        />
       </View>
+      <MyPopupModal
+        successMessage
+        visible={visible}
+        message="Your Ad is submitted successfully"
+        onClose={() => {
+          setVisible(false);
+        }}
+      />
     </ScrollView>
   );
 }
