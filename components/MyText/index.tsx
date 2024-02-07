@@ -12,6 +12,7 @@ export default function MyText({
   size,
   style,
   numberOfLines,
+  onPress,
 }: MyTextProps & TextProps) {
   const theme = useTheme();
   const getFontFamily = (weight: string) => {
@@ -38,7 +39,11 @@ export default function MyText({
   };
 
   return (
-    <Text style={[textStyle, style]} numberOfLines={numberOfLines}>
+    <Text
+      style={[textStyle, style]}
+      numberOfLines={numberOfLines}
+      onPress={onPress}
+    >
       {children || text}
     </Text>
   );

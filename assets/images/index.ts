@@ -55,6 +55,30 @@ export {
   Head_Menu,
   Head_Search,
   Head_Back,
+
+  // used only in Listing Screen
+  AdInfo,
+  Title,
+  Description,
+  SelectPurpose,
+  SelectProperty,
+  SelectCity,
+  SelectLocation,
+  SizeAndPricing,
+  AmenitiesBed,
+  AmenitiesTub,
+  AmenitiesParking,
+  FilmIcon,
+  EyePrimary,
+  HomeFeature,
+  HomeAmenities,
+  AddIcon,
+  TickPrimary,
+  Map,
+  RentTab,
+  SellTab,
+  Minus,
+  Plus,
 } from "./svg";
 
 //* pngs
