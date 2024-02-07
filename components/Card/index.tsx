@@ -9,14 +9,16 @@ export default function Card({
   style,
   radius = 5,
   children,
+  plain,
 }: {
   style?: ViewStyle;
   radius?: number;
   children?: React.ReactNode;
+  plain?: boolean;
 }) {
   const theme = useTheme() as MyTheme;
   return (
-    <View style={[styles({ radius, theme }).cardStyle, { ...style }]}>
+    <View style={[styles({ radius, theme, plain }).cardStyle, { ...style }]}>
       {children}
     </View>
   );
@@ -70,8 +72,28 @@ function Divider({
 Card.Title = Title;
 Card.Divider = Divider;
 
-const styles = ({ radius, theme }: { radius?: number; theme?: MyTheme }) =>
-  StyleSheet.create({
+const styles = ({
+  radius,
+  theme,
+  plain,
+}: {
+  radius?: number;
+  theme?: MyTheme;
+  plain?: boolean;
+}) => {
+  const shadow = !plain
+    ? {
+        shadowColor: "#000",
+        shadowOffset: {
+          width: 0,
+          height: 1,
+        },
+        shadowOpacity: 0.18,
+        shadowRadius: 1.0,
+        elevation: 1,
+      }
+    : {};
+  return StyleSheet.create({
     cardStyle: {
       minHeight: 10,
       width: "100%",
@@ -79,15 +101,7 @@ const styles = ({ radius, theme }: { radius?: number; theme?: MyTheme }) =>
       borderRadius: radius,
       borderWidth: 1,
       borderColor: theme?.colors.cardBorder,
-      shadowColor: "#000",
-      shadowOffset: {
-        width: 0,
-        height: 1,
-      },
-      shadowOpacity: 0.18,
-      shadowRadius: 1.0,
-
-      elevation: 1,
+      ...shadow,
     },
     textStyle: {
       fontWeight: "500",
@@ -96,3 +110,4 @@ const styles = ({ radius, theme }: { radius?: number; theme?: MyTheme }) =>
       color: theme?.colors.negative,
     },
   });
+};

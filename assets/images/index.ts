@@ -56,6 +56,11 @@ export {
   Head_Search,
   Head_Back,
 
+  //used only in shop Screen
+  PFire_Orange,
+  PFire_Red,
+  PDollar_Green,
+
   // used only in Listing Screen
   AdInfo,
   Title,
