@@ -33,7 +33,7 @@ const AvatarContainer = () => {
       }}
     >
       <MyAvatar
-        imageUrl="https://i.pravatar.cc/150?img=68"
+        imageUrl={{ uri: "https://i.pravatar.cc/150?img=68" }}
         size={45}
         status="online"
       />

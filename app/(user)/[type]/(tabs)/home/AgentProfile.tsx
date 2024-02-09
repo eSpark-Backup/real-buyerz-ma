@@ -57,7 +57,7 @@ const AgentProfile = () => {
   useEffect(() => setTitle("Recent Properties By " + data.name), []);
   return (
     <ScrollView contentContainerStyle={styles(theme).main}>
-      <MyAvatar imageUrl={data.avatarURL} size={100} />
+      <MyAvatar imageUrl={{ uri: data.avatarURL }} size={100} />
       <MyText
         size={16}
         weight="500"

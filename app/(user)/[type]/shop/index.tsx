@@ -1,12 +1,20 @@
-import React from "react";
+import React, { useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { useTheme } from "@react-navigation/native";
 import { ScrollView } from "react-native-gesture-handler";
 
 import { MyTheme } from "@types";
-import { Card, GapView, MyButton, MyDropdown, MyText } from "@components";
+import {
+  Card,
+  GapView,
+  MyButton,
+  MyDropdown,
+  MyPopupModal,
+  MyText,
+} from "@components";
 import { WINDOW_WIDTH } from "@constants";
 import { PDollar_Green, PFire_Orange, PFire_Red } from "@assets/images";
+import { router } from "expo-router";
 
 interface ConnectsData {
   label: string;
@@ -40,9 +48,20 @@ const connectsData: ConnectsData[] = [
 ];
 
 export default function Shop() {
+  const [visible, setVisible] = useState(false);
   const theme = useTheme() as MyTheme;
   return (
     <View style={styles.container}>
+      <MyPopupModal visible={visible} bgDim>
+        <MyPopupModal.OrderSummary
+          total="2500"
+          onPress={() => {
+            router.push("(user)/anon/shop/orderSummary");
+            setVisible(false);
+          }}
+          items={[{ amount: "2500", name: "Refresh Credits", qty: "1" }]}
+        />
+      </MyPopupModal>
       <ScrollView
         style={{ flex: 1 }}
         showsVerticalScrollIndicator={false}
@@ -152,7 +171,9 @@ export default function Shop() {
           label="Buy"
           textColor={"#ffffff"}
           backgroundColor={theme.colors.primary}
-          onPress={() => {}}
+          onPress={() => {
+            setVisible(true);
+          }}
           style={{ borderRadius: 5.73, paddingVertical: 10 }}
           labelStyle={{ fontSize: 15, fontWeight: "700" }}
         />
@@ -181,7 +202,7 @@ function Package({
         justifyContent: "space-between",
       }}
     >
-      <View style={{ flexDirection: "row", flexShrink: 1 }}>
+      <View style={{ flexDirection: "row", width: "60%" }}>
         {icon}
         <View style={{ marginLeft: 10 }}>
           <MyText
@@ -225,7 +246,10 @@ function Package({
 
 function renderItem(item: ConnectsData, index: number, theme: MyTheme) {
   return (
-    <View style={{ marginBottom: index < connectsData.length - 1 ? 10 : 0 }}>
+    <View
+      key={index}
+      style={{ marginBottom: index < connectsData.length - 1 ? 10 : 0 }}
+    >
       <MyText text={item.label} />
       <GapView length={12} />
       {item.type === "input" && (

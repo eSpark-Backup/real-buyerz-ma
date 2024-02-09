@@ -195,7 +195,7 @@ const renderProposalsList = ({
       <View style={styles.ap_top}>
         <View style={styles.ap_top1}>
           <MyAvatar
-            imageUrl="https://i.pravatar.cc/150?img=68"
+            imageUrl={{ uri: "https://i.pravatar.cc/150?img=68" }}
             size={40}
             status="online"
           />

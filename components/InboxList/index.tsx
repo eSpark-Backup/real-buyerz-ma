@@ -8,8 +8,8 @@ import {
 } from "react-native";
 import { useTheme } from "@react-navigation/native";
 
-import MyText from "../MyText";
-import MyAvatar from "../MyAvatar";
+import MyText from "@components/MyText";
+import MyAvatar from "@components/MyAvatar";
 import { MyTheme } from "@types";
 
 export interface IList {
@@ -36,7 +36,7 @@ export default function InboxList({
     <TouchableOpacity style={styles.wrapper} onPress={onPress}>
       <View style={[styles.dflex, count ? styles.countStyle : null]}>
         <View style={styles.avatarStyle}>
-          <MyAvatar size={50} imageUrl={avatarUrl} />
+          <MyAvatar size={50} imageUrl={{ uri: avatarUrl }} />
         </View>
         <View style={styles.textStyle}>
           <MyText

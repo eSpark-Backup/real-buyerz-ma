@@ -34,7 +34,10 @@ const DrawerContent = (props: DrawerContentComponentProps) => {
     <View style={{ ...styles.container }}>
       <View style={styles.header}>
         <View style={{ flexDirection: "row" }}>
-          <MyAvatar size={40} imageUrl="https://i.pravatar.cc/300?img=68" />
+          <MyAvatar
+            size={40}
+            imageUrl={{ uri: "https://i.pravatar.cc/300?img=68" }}
+          />
           <View style={{ marginLeft: 10 }}>
             <MyText
               text="Arman Khan"

@@ -1,5 +1,7 @@
 import {
+  ImageSourcePropType,
   ImageStyle,
+  ImageURISource,
   StyleProp,
   TextStyle,
   View,
@@ -62,7 +64,7 @@ export type MyInputProps = {
   onChangeText?: (value: string) => void;
   value?: string;
   width?: number | string;
-  style?: any;
+  style?: ViewStyle;
   placeholderColor?: string;
   inputStyle?: StyleProp<TextStyle>;
   rightIcon?: {
@@ -151,7 +153,7 @@ export type MyListItemProps = {
 
 export interface IMyAvatar {
   size: number;
-  imageUrl?: string;
+  imageUrl?: ImageSourcePropType;
   edit?: boolean;
   status?: "online" | "offline" | "invisible";
 }

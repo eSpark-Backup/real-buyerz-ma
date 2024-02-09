@@ -14,7 +14,7 @@ const MyAvatar = ({ size, imageUrl, edit, status }: IMyAvatar) => {
           <EditIcon />
         </View>
       )}
-      <Image source={{ uri: imageUrl }} style={styles.image} />
+      <Image source={imageUrl!} style={styles.image} />
       {status && (
         <View
           style={{
