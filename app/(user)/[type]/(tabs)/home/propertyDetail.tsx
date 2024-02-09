@@ -90,7 +90,10 @@ const PropertyDetail = () => {
         <CustomSlider images={images} title={"4 BEDROOMS APARTMENT"} />
         <Card style={styles(theme).cardWrapper}>
           <View>
-            <MyAvatar size={70} imageUrl="https://picsum.photos/id/151/130" />
+            <MyAvatar
+              size={70}
+              imageUrl={{ uri: "https://picsum.photos/id/151/130" }}
+            />
           </View>
           <View style={styles(theme).textWrapper}>
             <MyText
