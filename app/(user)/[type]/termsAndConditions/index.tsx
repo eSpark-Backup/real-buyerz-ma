@@ -10,7 +10,10 @@ export default function TermsAndConditions() {
 
   return (
     <ScrollView style={{ flex: 1 }} contentContainerStyle={styles.container}>
-      <BgCard bgColor={"#F2F2F2"} style={{ paddingRight: 53 }}>
+      <BgCard
+        bgColor={theme.dark ? theme.colors.inputBg : "#F2F2F2"}
+        style={{ paddingRight: 53 }}
+      >
         <MyText
           text="11th January | the “ Effective Date”"
           size={12}
@@ -25,7 +28,7 @@ export default function TermsAndConditions() {
       </BgCard>
       <GapView length={26} />
       <BgCard
-        bgColor={"#DCE9F2"}
+        bgColor={theme.dark ? theme.colors.inputBg : "#DCE9F2"}
         style={{
           padding: 20,
           flexDirection: "row",
