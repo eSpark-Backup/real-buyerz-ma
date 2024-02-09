@@ -420,7 +420,7 @@ function AmenitiesPopup({ isVisible, onCancel, onSave }: AmenitiesPopupProps) {
 
   return (
     <Modal isVisible={isVisible} style={styles().modal}>
-      <View style={styles().contentContainer}>
+      <View style={styles(theme).contentContainer}>
         <FlatList
           data={data}
           renderItem={({ item }) => renderListItem({ item, theme })}
@@ -721,7 +721,9 @@ const styles = (theme?: MyTheme) =>
       margin: 0,
     },
     contentContainer: {
-      backgroundColor: "white",
+      backgroundColor: theme?.dark
+        ? theme.colors.verificationBg
+        : theme?.colors.positive,
       borderTopLeftRadius: 20,
       borderTopRightRadius: 20,
       paddingHorizontal: 20,

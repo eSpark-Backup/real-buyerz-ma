@@ -3,7 +3,8 @@ import { View, StyleSheet, TouchableOpacity, Appearance } from "react-native";
 import { Feather } from "@expo/vector-icons";
 
 import MyText from "../MyText";
-import { MyCheckboxProps } from "@types";
+import { MyCheckboxProps, MyTheme } from "@types";
+import { useTheme } from "@react-navigation/native";
 
 const MyCheckbox = ({
   label,
@@ -12,6 +13,7 @@ const MyCheckbox = ({
   checkboxStyle,
   ...restProps
 }: MyCheckboxProps) => {
+  const theme = useTheme() as MyTheme;
   const [checked, setChecked] = useState(false);
 
   const handlePress = () => {
@@ -26,7 +28,18 @@ const MyCheckbox = ({
       onPress={handlePress}
       style={[styles.checkboxContainer, style]}
     >
-      <View style={[styles.checkbox, checkboxStyle, checked && styles.checked]}>
+      <View
+        style={[
+          styles.checkbox,
+          checkboxStyle,
+          checked && styles.checked,
+          {
+            backgroundColor: theme.dark
+              ? theme.colors.verificationBg
+              : theme.colors.positive,
+          },
+        ]}
+      >
         {checked && <Feather name="check" size={12} color="#ffffff" />}
       </View>
       <View>
@@ -47,7 +60,6 @@ const styles = StyleSheet.create({
     height: 15,
     borderWidth: 1,
     borderColor: "#b5b7b9",
-    backgroundColor: "white",
     borderRadius: 4,
     marginRight: 5,
     justifyContent: "center",
