@@ -85,6 +85,31 @@ export {
   SellTab,
   Minus,
   Plus,
+
+  //used only in amenities popup
+  Swimming,
+  Fitness,
+  Clubhouse,
+  Playground,
+  Basketball,
+  Rails,
+  Pet,
+  SecurityCam,
+  Concierge,
+  BusinessCentre,
+  RooftopTerrace,
+  Maintenance,
+  Washing,
+  Electricity,
+  Generator,
+  Wall,
+  Park,
+  Masjid,
+  Corridor,
+  Well,
+  ServantArea,
+  SeniorCitizenArea,
+  UtilityStore,
 } from "./svg";
 
 //* pngs

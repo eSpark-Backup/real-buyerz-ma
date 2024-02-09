@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { View, StyleSheet, TouchableOpacity, Appearance } from "react-native";
+import { Feather } from "@expo/vector-icons";
 
 import MyText from "../MyText";
 import { MyCheckboxProps } from "@types";
@@ -25,9 +26,9 @@ const MyCheckbox = ({
       onPress={handlePress}
       style={[styles.checkboxContainer, style]}
     >
-      <View
-        style={[styles.checkbox, checkboxStyle, checked && styles.checked]}
-      />
+      <View style={[styles.checkbox, checkboxStyle, checked && styles.checked]}>
+        {checked && <Feather name="check" size={12} color="#ffffff" />}
+      </View>
       <View>
         <MyText text={label} style={restProps.labelStyle} weight="300" />
       </View>
@@ -49,6 +50,8 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     borderRadius: 4,
     marginRight: 5,
+    justifyContent: "center",
+    alignItems: "center",
   },
   checked: {
     backgroundColor: "#136FA9",
