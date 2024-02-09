@@ -56,6 +56,8 @@ export {
   Head_Search,
   Head_Back,
   DownArrow,
+  AddImage,
+  CardPayment,
 
   //used only in shop Screen
   PFire_Orange,
