@@ -27,13 +27,36 @@ import {
   AmenitiesBed,
   AmenitiesParking,
   AmenitiesTub,
+  Basketball,
+  BusinessCentre,
+  Clubhouse,
+  Concierge,
+  Corridor,
+  Electricity,
   EyePrimary,
+  Fitness,
+  Generator,
+  Maintenance,
   Map,
+  Masjid,
   Minus,
+  Park,
+  Pet,
+  Playground,
   Plus,
+  Rails,
   RentTab,
+  RooftopTerrace,
+  SecurityCam,
   SellTab,
+  SeniorCitizenArea,
+  ServantArea,
+  Swimming,
   TickPrimary,
+  UtilityStore,
+  Wall,
+  Washing,
+  Well,
 } from "@assets/images";
 import { data, testData } from "@constants";
 import { MyTheme } from "@types";
@@ -397,7 +420,7 @@ function AmenitiesPopup({ isVisible, onCancel, onSave }: AmenitiesPopupProps) {
 
   return (
     <Modal isVisible={isVisible} style={styles().modal}>
-      <View style={styles().contentContainer}>
+      <View style={styles(theme).contentContainer}>
         <FlatList
           data={data}
           renderItem={({ item }) => renderListItem({ item, theme })}
@@ -440,8 +463,29 @@ const renderListItem = ({
   item: { iconIndex: number; title: string };
 }) => {
   const svgIcons: SvgIcon = {
-    0: <AmenitiesBed />,
-    1: <AmenitiesParking />,
+    0: <Swimming />,
+    1: <Fitness />,
+    2: <Clubhouse />,
+    3: <Playground />,
+    4: <Basketball />,
+    5: <Rails />,
+    6: <Pet />,
+    7: <SecurityCam />,
+    8: <Concierge />,
+    9: <BusinessCentre />,
+    10: <RooftopTerrace />,
+    11: <Maintenance />,
+    12: <Washing />,
+    13: <Electricity />,
+    14: <Generator />,
+    15: <Wall />,
+    16: <Park />,
+    17: <Masjid />,
+    18: <Corridor />,
+    19: <Well />,
+    20: <ServantArea />,
+    21: <SeniorCitizenArea />,
+    22: <UtilityStore />,
   };
   return (
     <View style={{ flexDirection: "row", gap: 15, alignItems: "center" }}>
@@ -677,7 +721,9 @@ const styles = (theme?: MyTheme) =>
       margin: 0,
     },
     contentContainer: {
-      backgroundColor: "white",
+      backgroundColor: theme?.dark
+        ? theme.colors.verificationBg
+        : theme?.colors.positive,
       borderTopLeftRadius: 20,
       borderTopRightRadius: 20,
       paddingHorizontal: 20,

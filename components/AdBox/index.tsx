@@ -118,7 +118,11 @@ const NormalBtn = ({
       }
       style={
         outline
-          ? { borderColor: theme.colors.primary, ...styles.outlineBtn }
+          ? {
+              borderColor: theme.colors.primary,
+              ...styles.outlineBtn,
+              backgroundColor: "transparent",
+            }
           : {
               backgroundColor: theme.colors.primary,
               ...styles.normalBtn,

@@ -182,7 +182,7 @@ function OrderRow({
       {expanded && (
         <View
           style={{
-            backgroundColor: "#f5f5f5",
+            backgroundColor: theme.dark ? theme.colors.inputBg : "#f5f5f5",
             paddingHorizontal: 20,
             paddingVertical: 10,
             gap: 5,
@@ -205,7 +205,9 @@ function OrderRow({
             style={{
               borderTopWidth: 1,
               borderStyle: "dashed",
-              borderColor: theme.colors.border,
+              borderColor: theme?.dark
+                ? theme.colors.dimText
+                : theme.colors.border,
             }}
           >
             {basicPackagePrice && (

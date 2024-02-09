@@ -91,6 +91,31 @@ export { default as SellTab } from "./sell-tab.svg";
 export { default as Minus } from "./counter-minus.svg";
 export { default as Plus } from "./counter-plus.svg";
 
+// *(Used in amenities popup; listing screen)
+export { default as Swimming } from "./Swimming.svg";
+export { default as Fitness } from "./fitness.svg";
+export { default as Clubhouse } from "./clubhouse.svg";
+export { default as Playground } from "./playground.svg";
+export { default as Basketball } from "./basketball-court.svg";
+export { default as Rails } from "./walking-rails.svg";
+export { default as Pet } from "./pet.svg";
+export { default as SecurityCam } from "./security-camera.svg";
+export { default as Concierge } from "./concierge.svg";
+export { default as BusinessCentre } from "./business-centre.svg";
+export { default as RooftopTerrace } from "./rooftop-terrace.svg";
+export { default as Maintenance } from "./maintenance.svg";
+export { default as Washing } from "./washing-machine.svg";
+export { default as Electricity } from "./hour-electricity.svg";
+export { default as Generator } from "./generator.svg";
+export { default as Wall } from "./boundary-wall.svg";
+export { default as Park } from "./park.svg";
+export { default as Masjid } from "./masjid.svg";
+export { default as Corridor } from "./corridor.svg";
+export { default as Well } from "./well.svg";
+export { default as ServantArea } from "./servant-area.svg";
+export { default as SeniorCitizenArea } from "./senior-citizen.svg";
+export { default as UtilityStore } from "./utility-store.svg";
+
 // *(Used in shop screen)
 export { default as PFire_Red } from "./p-fire-red.svg";
 export { default as PFire_Orange } from "./p-fire-orange.svg";
