@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import {
   Image,
   ScrollView,
@@ -17,6 +17,7 @@ import {
   MyAvatar,
   MyButton,
   MyText,
+  VideoView,
 } from "@components";
 import { MyTheme } from "@types";
 import { LocationIcon } from "@assets/images";
@@ -79,6 +80,7 @@ const data = {
 
 export default function ProposalDetails() {
   const theme = useTheme() as MyTheme;
+
   const [visibleImg, setVisibleImg] = useState(false);
   const [visibleVid, setVisibleVid] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(0);
@@ -91,6 +93,11 @@ export default function ProposalDetails() {
       }}
       contentContainerStyle={{ paddingTop: 20 }}
     >
+      <VideoView
+        url={"https://d23dyxeqlo5psv.cloudfront.net/big_buck_bunny.mp4"}
+        visible={visibleVid}
+        onRequestClose={() => setVisibleVid(false)}
+      />
       <ImageView
         images={data.imageMedia.map((item) => {
           return { uri: item };
@@ -296,7 +303,11 @@ export default function ProposalDetails() {
               style={{ marginBottom: 15 }}
             />
             <View>
-              <MediaGallery media={data.videoMedia} theme={theme} />
+              <MediaGallery
+                media={data.videoMedia}
+                theme={theme}
+                onSelect={(index) => setVisibleVid(true)}
+              />
             </View>
           </View>
         </Card>
