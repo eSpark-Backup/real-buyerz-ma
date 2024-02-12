@@ -233,6 +233,7 @@ const ImageCard = () => {
         </MyText>
         <GapView length={5} />
         <TouchableOpacity
+          activeOpacity={1}
           style={{
             backgroundColor: "#FF631C",
             alignItems: "center",
@@ -311,6 +312,7 @@ export const PropertyListing = ({
   function renderList({ item, index }: { item: any; index: number }) {
     return (
       <TouchableOpacity
+        activeOpacity={1}
         onPress={() => {
           console.log("Hello world");
           router.push("(user)/anon/(tabs)/home/propertyDetail");

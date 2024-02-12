@@ -62,6 +62,7 @@ const BSheetModal = ({
           }}
         >
           <TouchableOpacity
+            activeOpacity={1}
             style={{ flex: 1 }}
             onPress={() => onClose(false)}
           />

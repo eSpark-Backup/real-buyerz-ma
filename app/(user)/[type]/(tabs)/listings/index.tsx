@@ -126,14 +126,14 @@ export default function Listing() {
           onPress={() => setVisible(true)}
         />
       </View>
-      <MyPopupModal
-        successMessage
-        visible={visible}
-        message="Your Ad is submitted successfully"
-        onClose={() => {
-          setVisible(false);
-        }}
-      />
+      <MyPopupModal visible={visible} bgDim>
+        <MyPopupModal.Success
+          message="Your Ad is submitted successfully"
+          onPress={() => {
+            setVisible(false);
+          }}
+        />
+      </MyPopupModal>
     </ScrollView>
   );
 }
@@ -213,6 +213,7 @@ function LocationAndPurpose() {
           <MyText textColor={theme.colors.negative}>Select Purpose</MyText>
           <View style={styles().titleContainer}>
             <TouchableOpacity
+              activeOpacity={1}
               onPress={() => {
                 setSelected("sell");
               }}
@@ -236,6 +237,7 @@ function LocationAndPurpose() {
               />
             </TouchableOpacity>
             <TouchableOpacity
+              activeOpacity={1}
               onPress={() => {
                 setSelected("rent");
               }}

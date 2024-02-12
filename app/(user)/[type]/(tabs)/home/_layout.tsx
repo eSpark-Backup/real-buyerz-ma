@@ -11,11 +11,18 @@ export default function HomeLayout() {
 
   return (
     <Stack
-      initialRouteName="home/propertyDetail"
+      initialRouteName="index"
       screenOptions={({ navigation, route }) => ({
-        headerShown: route.name == "index" ? false : true,
+        headerShown: true,
         header: (props) => {
-          return <MyHeader {...props} showRight showBackIcon theme={theme} />;
+          return (
+            <MyHeader
+              {...props}
+              showRight
+              showBackIcon={route.name == "index" ? false : true}
+              theme={theme}
+            />
+          );
         },
       })}
     />

@@ -33,7 +33,11 @@ export default function InboxList({
   const colorScheme = Appearance.getColorScheme();
 
   return (
-    <TouchableOpacity style={styles.wrapper} onPress={onPress}>
+    <TouchableOpacity
+      activeOpacity={1}
+      style={styles.wrapper}
+      onPress={onPress}
+    >
       <View style={[styles.dflex, count ? styles.countStyle : null]}>
         <View style={styles.avatarStyle}>
           <MyAvatar size={50} imageUrl={{ uri: avatarUrl }} />

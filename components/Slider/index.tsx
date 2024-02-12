@@ -34,10 +34,10 @@ const CustomSlider = ({ images, title }: ICustomSlider) => {
           style={styles(theme).sliderTrack}
         >
           <View style={styles(theme).dFlex}>
-            <TouchableOpacity onPress={handleNext}>
+            <TouchableOpacity activeOpacity={1} onPress={handleNext}>
               <LeftIconCarousel />
             </TouchableOpacity>
-            <TouchableOpacity onPress={handleNext}>
+            <TouchableOpacity activeOpacity={1} onPress={handleNext}>
               <RightIconCarousel />
             </TouchableOpacity>
           </View>

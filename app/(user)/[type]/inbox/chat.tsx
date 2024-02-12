@@ -217,6 +217,7 @@ const renderFooter = (theme?: MyTheme) => {
         />
       </View>
       <TouchableOpacity
+        activeOpacity={1}
         onPress={() => console.log("send message")}
         style={{ flex: 0.1, marginLeft: 12 }}
       >

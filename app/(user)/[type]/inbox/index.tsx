@@ -77,11 +77,12 @@ const Inbox: React.FC = () => {
       <View style={styles(theme).card}>
         <View style={styles(theme).tabRow}>
           <View style={styles(theme).tabsStyle}>
-            <TouchableOpacity>
+            <TouchableOpacity activeOpacity={1}>
               <ReloadIcon />
             </TouchableOpacity>
             <View>
               <TouchableOpacity
+                activeOpacity={1}
                 style={[
                   styles(theme).singleTab,
                   tab === "inbox" ? styles(theme).selectedTab : null,
@@ -98,6 +99,7 @@ const Inbox: React.FC = () => {
               </TouchableOpacity>
             </View>
             <TouchableOpacity
+              activeOpacity={1}
               onPress={() => handleTab("archieve")}
               style={[
                 styles(theme).singleTab,

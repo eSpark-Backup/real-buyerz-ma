@@ -40,6 +40,7 @@ export default function MyHeader({
   theme,
 }: HeaderProps & MyProps) {
   const headerStyle = options.headerStyle as ViewStyle;
+
   return (
     <View style={{ ...styles(theme).container, ...headerStyle }}>
       <View style={styles(theme).left}>

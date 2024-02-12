@@ -38,6 +38,7 @@ const TabSwitch = ({
   return (
     <View style={[styles(theme).switchWrapper, { backgroundColor: bgColor }]}>
       <TouchableOpacity
+        activeOpacity={1}
         style={[styles(theme).buttonStyle]}
         onPress={() => {
           handleButtonPress(titleSwitchOne);
@@ -54,6 +55,7 @@ const TabSwitch = ({
         />
       </TouchableOpacity>
       <TouchableOpacity
+        activeOpacity={1}
         style={[styles(theme).buttonStyle]}
         onPress={() => {
           handleButtonPress(titleSwitchTwo);

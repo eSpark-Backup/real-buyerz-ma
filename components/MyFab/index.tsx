@@ -64,6 +64,7 @@ const MyFab = ({
         {items.map((item) => (
           <View key={item.key} style={{ bottom: 10, marginBottom: 10 }}>
             <TouchableOpacity
+              activeOpacity={1}
               onPress={item.onPress}
               disabled={!isExpanded}
               style={{
@@ -97,6 +98,7 @@ const MyFab = ({
     >
       {renderStackItems()}
       <TouchableOpacity
+        activeOpacity={1}
         onPress={animateAndToggle}
         style={{
           backgroundColor: "#9B9B9B",

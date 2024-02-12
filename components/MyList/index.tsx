@@ -19,7 +19,7 @@ const MyListItem: React.FC<MyListItemProps> = ({ item, index, theme, fav }) => {
     <View style={styles(theme).searchItem}>
       <View>
         <Image source={{ uri: item.image }} style={styles(theme).image} />
-        <TouchableOpacity style={styles(theme).likeBtn}>
+        <TouchableOpacity activeOpacity={1} style={styles(theme).likeBtn}>
           {fav ? <LikeActiveButton /> : <LikeButton />}
         </TouchableOpacity>
       </View>

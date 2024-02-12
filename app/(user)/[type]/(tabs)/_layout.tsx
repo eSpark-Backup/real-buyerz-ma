@@ -17,7 +17,7 @@ function UserTabLayout() {
       backBehavior="initialRoute"
       sceneContainerStyle={{ paddingBottom: 35 }}
       screenOptions={{
-        headerShown: false,
+        // headerShown: false,
         // headerStyle: styles(theme).headerStyle,
         header: (props) => {
           return <MyHeader {...props} showRight theme={theme} />;
@@ -36,7 +36,7 @@ function UserTabLayout() {
       <Tabs.Screen
         name="home"
         options={{
-          headerShown: true,
+          headerShown: false,
           title: "Home",
           href: "(user)/anon/(tabs)/home",
         }}
@@ -44,7 +44,7 @@ function UserTabLayout() {
       <Tabs.Screen
         name="projects"
         options={{
-          headerShown: true,
+          // headerShown: true,
           title: "Projects",
           href: "(user)/anon/(tabs)/projects",
         }}
@@ -52,7 +52,7 @@ function UserTabLayout() {
       <Tabs.Screen
         name="dashboard"
         options={{
-          headerShown: true,
+          headerShown: false,
           title: "Dashboard",
           href: "(user)/anon/(tabs)/dashboard",
         }}
@@ -61,7 +61,7 @@ function UserTabLayout() {
       <Tabs.Screen
         name="listings"
         options={{
-          headerShown: true,
+          // headerShown: true,
           title: "Listings",
           href: "(user)/anon/(tabs)/listings",
         }}
@@ -69,7 +69,7 @@ function UserTabLayout() {
       <Tabs.Screen
         name="profile"
         options={{
-          headerShown: true,
+          // headerShown: true,
           title: "Profile",
           href: "(user)/anon/(tabs)/profile",
         }}

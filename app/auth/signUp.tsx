@@ -72,7 +72,7 @@ export default function SignUp() {
             </Link>
           </View>
           <View style={styles.header}>
-            <TouchableOpacity>
+            <TouchableOpacity activeOpacity={1}>
               <MyText
                 text="Skip"
                 style={{ textDecorationLine: "underline" }}

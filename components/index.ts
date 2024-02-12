@@ -13,6 +13,7 @@ export { default as LabelValue } from "./LabelValue";
 export { AdCard, MyClickableCard } from "./MyCard";
 export { default as MyField, Variants } from "./MyField";
 export { default as AdBox } from "./AdBox";
+export { default as VideoView } from "./VideoView";
 
 //* (Used Only In Listing Screen)
 export { default as ListingIcon } from "./ListingIcon";
