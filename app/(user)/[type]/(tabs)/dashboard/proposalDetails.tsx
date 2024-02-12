@@ -1,6 +1,14 @@
-import React from "react";
-import { Image, ScrollView, StyleSheet, View } from "react-native";
+import React, { useState } from "react";
+import {
+  Image,
+  ScrollView,
+  StyleSheet,
+  TouchableOpacity,
+  TouchableWithoutFeedback,
+  View,
+} from "react-native";
 import { useTheme } from "@react-navigation/native";
+import ImageView from "react-native-image-viewing";
 
 import {
   Card,
@@ -16,9 +24,14 @@ import { LocationIcon } from "@assets/images";
 interface MediaGalleryProps {
   media: string[]; // Array of image or video URLs
   theme?: MyTheme;
+  onSelect?(index: number): void;
 }
 
-const MediaGallery: React.FC<MediaGalleryProps> = ({ media, theme }) => {
+const MediaGallery: React.FC<MediaGalleryProps> = ({
+  media,
+  theme,
+  onSelect,
+}) => {
   const isVideo = (url: string) => {
     return url.toLowerCase().endsWith(".mp4");
   };
@@ -34,10 +47,12 @@ const MediaGallery: React.FC<MediaGalleryProps> = ({ media, theme }) => {
           {isVideo(url) ? (
             <View style={{ flex: 1, width: "100%", height: "100%" }} />
           ) : (
-            <Image
-              source={{ uri: url }}
-              style={{ flex: 1, width: "100%", height: "100%" }}
-            />
+            <TouchableWithoutFeedback onPress={() => onSelect?.(index)}>
+              <Image
+                source={{ uri: url }}
+                style={{ flex: 1, width: "100%", height: "100%" }}
+              />
+            </TouchableWithoutFeedback>
           )}
         </View>
       ))}
@@ -47,10 +62,10 @@ const MediaGallery: React.FC<MediaGalleryProps> = ({ media, theme }) => {
 
 const data = {
   imageMedia: [
-    "https://picsum.photos/90/72",
-    "https://picsum.photos/90/72",
-    "https://picsum.photos/90/72",
-    "https://picsum.photos/90/72",
+    "https://picsum.photos/91/130",
+    "https://picsum.photos/90/130",
+    "https://picsum.photos/89/130",
+    "https://picsum.photos/77/130",
     // Add more URLs as needed
   ],
   videoMedia: [
@@ -64,6 +79,9 @@ const data = {
 
 export default function ProposalDetails() {
   const theme = useTheme() as MyTheme;
+  const [visibleImg, setVisibleImg] = useState(false);
+  const [visibleVid, setVisibleVid] = useState(false);
+  const [selectedIndex, setSelectedIndex] = useState(0);
 
   return (
     <ScrollView
@@ -73,6 +91,14 @@ export default function ProposalDetails() {
       }}
       contentContainerStyle={{ paddingTop: 20 }}
     >
+      <ImageView
+        images={data.imageMedia.map((item) => {
+          return { uri: item };
+        })}
+        imageIndex={selectedIndex}
+        visible={visibleImg}
+        onRequestClose={() => setVisibleImg(false)}
+      />
       <MyText
         size={20}
         text="Proposal Details"
@@ -245,7 +271,14 @@ export default function ProposalDetails() {
               size={16}
             />
             <View>
-              <MediaGallery media={data.imageMedia} theme={theme} />
+              <MediaGallery
+                media={data.imageMedia}
+                theme={theme}
+                onSelect={(index: number) => {
+                  setVisibleImg(true);
+                  setSelectedIndex(index);
+                }}
+              />
             </View>
           </View>
           <Card.Divider />
