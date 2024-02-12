@@ -123,7 +123,7 @@ const PropertriesCard = ({
         <MyText size={12} style={{ width: "80%" }}>
           {plots + houses + commercials} Properties for {sale ? "sale" : "rent"}
         </MyText>
-        <TouchableOpacity style={styles(theme).viewAll}>
+        <TouchableOpacity activeOpacity={1} style={styles(theme).viewAll}>
           <MyText size={12} textColor={theme.colors.primary} text="View All" />
           <MiniArrow />
         </TouchableOpacity>

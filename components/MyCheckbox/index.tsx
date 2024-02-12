@@ -25,6 +25,7 @@ const MyCheckbox = ({
 
   return (
     <TouchableOpacity
+      activeOpacity={1}
       onPress={handlePress}
       style={[styles.checkboxContainer, style]}
     >

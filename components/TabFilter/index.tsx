@@ -90,6 +90,7 @@ export default function TabFilter({ data, onSelect, wrap }: TabFilterProps) {
       >
         {memoizedList?.map((item, index) => (
           <TouchableOpacity
+            activeOpacity={1}
             key={index.toString()}
             onPress={() => handleSelect(index)}
           >
@@ -130,6 +131,7 @@ export default function TabFilter({ data, onSelect, wrap }: TabFilterProps) {
         >
           {memoizedSelectedItem.list.map((nestedItem, nestedIndex) => (
             <TouchableOpacity
+              activeOpacity={1}
               key={nestedIndex.toString()}
               onPress={() => handleItemSelect(nestedIndex)}
               style={{

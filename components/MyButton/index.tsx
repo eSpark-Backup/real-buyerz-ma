@@ -34,7 +34,11 @@ export default function MyButton({
   };
 
   return (
-    <TouchableOpacity onPress={onPress} style={[buttonStyle, style]}>
+    <TouchableOpacity
+      activeOpacity={1}
+      onPress={onPress}
+      style={[buttonStyle, style]}
+    >
       {leftIcon && leftIcon}
       <MyText text={label} style={buttonTextStyle} />
     </TouchableOpacity>

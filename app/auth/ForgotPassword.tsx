@@ -37,14 +37,14 @@ export default function ForgotPassword() {
       {/* Todo: there is some space coming in between status bar and scroll view
           needs to be edited
           temporarily adjusted by negative margin */}
-      <MyPopupModal
-        verificationModal
-        visible={isModalVisible}
-        onClose={toggleModal}
-        type={emailIsOn ? "email" : "phone number"}
-        value={inputValue}
-        onPress={handleConfirm}
-      />
+      <MyPopupModal visible={isModalVisible}>
+        <MyPopupModal.Verify
+          onClose={toggleModal}
+          onPress={handleConfirm}
+          type={emailIsOn ? "email" : "phone number"}
+        />
+      </MyPopupModal>
+
       <ScrollView
         showsVerticalScrollIndicator={false}
         style={styles.wrapper}
@@ -129,6 +129,7 @@ export default function ForgotPassword() {
               <>
                 <View style={styles.row}>
                   <TouchableOpacity
+                    activeOpacity={1}
                     onPress={() => {
                       setPhoneIsOn(!phoneIsOn);
                       setEmailIsOn(!emailIsOn);
@@ -144,6 +145,7 @@ export default function ForgotPassword() {
               <>
                 <View style={styles.row}>
                   <TouchableOpacity
+                    activeOpacity={1}
                     onPress={() => {
                       setEmailIsOn(!emailIsOn);
                       setPhoneIsOn(!phoneIsOn);

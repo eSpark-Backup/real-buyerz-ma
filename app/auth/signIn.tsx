@@ -18,6 +18,7 @@ export default function signIn() {
     <ScrollView contentContainerStyle={styles.main}>
       <View style={styles.top}>
         <TouchableOpacity
+          activeOpacity={1}
           onPress={() => router.push("(user)/anon/(tabs)/home")}
         >
           <MyText

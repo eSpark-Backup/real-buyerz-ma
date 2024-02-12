@@ -96,7 +96,7 @@ function Verify({
   return (
     <View style={styles(theme).box}>
       <View style={styles(theme).closebtn}>
-        <TouchableOpacity onPress={onClose}>
+        <TouchableOpacity activeOpacity={1} onPress={onClose}>
           <CloseBtn />
         </TouchableOpacity>
       </View>
@@ -236,7 +236,7 @@ function Feedback({
         placeholder="Describe your experience."
         placeholderColor={theme.dark ? theme.colors.listText : "#E7E7E7"}
       />
-      <TouchableOpacity style={styles(theme).cameraIcon}>
+      <TouchableOpacity activeOpacity={1} style={styles(theme).cameraIcon}>
         <AddImage />
       </TouchableOpacity>
       <View style={{ flexDirection: "row", gap: 11, top: 5, left: 88 }}>

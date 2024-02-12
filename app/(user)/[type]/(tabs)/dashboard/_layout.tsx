@@ -1,9 +1,32 @@
 import React from "react";
-import { StyleSheet, Text, View } from "react-native";
-import { Slot } from "expo-router";
+import { StyleSheet } from "react-native";
+import { useTheme } from "@react-navigation/native";
+import { Stack } from "expo-router";
+
+import { MyTheme } from "@types";
+import { MyHeader } from "@components";
 
 export default function DashboardLayout() {
-  return <Slot />;
+  const theme = useTheme() as MyTheme;
+
+  return (
+    <Stack
+      initialRouteName="index"
+      screenOptions={({ navigation, route }) => ({
+        headerShown: true,
+        header: (props) => {
+          return (
+            <MyHeader
+              {...props}
+              showRight
+              showBackIcon={route.name == "index" ? false : true}
+              theme={theme}
+            />
+          );
+        },
+      })}
+    />
+  );
 }
 
 const styles = StyleSheet.create({});

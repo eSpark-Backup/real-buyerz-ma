@@ -40,6 +40,7 @@ const PropertyListing = ({
   function renderList({ item, index }: { item: any; index: number }) {
     return (
       <TouchableOpacity
+        activeOpacity={1}
         onPress={() => {
           console.log("Hello world");
         }}

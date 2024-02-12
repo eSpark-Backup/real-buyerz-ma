@@ -23,7 +23,7 @@ const MyClickableCard = ({ title, onPress, children }: IClickableCard) => {
   const theme = useTheme() as MyTheme;
   return (
     <View>
-      <TouchableOpacity onPress={onPress}>
+      <TouchableOpacity activeOpacity={1} onPress={onPress}>
         <Card style={styles(theme).main}>
           {children}
           <GapView />

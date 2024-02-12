@@ -14,6 +14,7 @@ function BubbleIcon({ size = 30, children, style, plain, onPress }: Props) {
   const theme = useTheme();
   return (
     <TouchableOpacity
+      activeOpacity={1}
       onPress={onPress}
       style={{
         ...styles.container,

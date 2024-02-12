@@ -19,6 +19,7 @@ const PrimaryBtn = ({
   const theme = useTheme() as MyTheme;
   return (
     <TouchableOpacity
+      activeOpacity={1}
       style={[
         {
           backgroundColor: theme.colors.primary,

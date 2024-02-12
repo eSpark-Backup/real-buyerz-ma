@@ -64,7 +64,7 @@ export type MyInputProps = {
   onChangeText?: (value: string) => void;
   value?: string;
   width?: number | string;
-  style?: ViewStyle;
+  style?: StyleProp<ViewStyle>;
   placeholderColor?: string;
   inputStyle?: StyleProp<TextStyle>;
   rightIcon?: {
