@@ -7,6 +7,8 @@ import {
   DrawerItemList,
 } from "@react-navigation/drawer";
 import { Drawer } from "expo-router/drawer";
+import { StatusBar } from "expo-status-bar";
+import { router } from "expo-router";
 
 import { colors } from "@theme";
 import { MyTheme } from "@types";
@@ -23,8 +25,6 @@ import {
   Draw_Shop,
 } from "@assets/images";
 import { BubbleIcon, GapView, MyAvatar, MyHeader, MyText } from "@components";
-import { StatusBar } from "expo-status-bar";
-import { router } from "expo-router";
 
 const DrawerContent = (props: DrawerContentComponentProps) => {
   const { index } = props.state;
@@ -70,7 +70,7 @@ const DrawerContent = (props: DrawerContentComponentProps) => {
       </View>
       <DrawerContentScrollView
         style={styles.content}
-        contentContainerStyle={{ flexGrow: 1 }}
+        contentContainerStyle={{ flexGrow: 1, paddingTop: 0 }}
         showsVerticalScrollIndicator={false}
       >
         <DrawerItemList {...props} />
@@ -89,7 +89,7 @@ const DrawerContent = (props: DrawerContentComponentProps) => {
               }}
             />
           )}
-          onPress={() => console.log("Logout")}
+          onPress={() => router.replace("/auth/signIn")}
         />
       </View>
       {Platform.OS == "ios" && <GapView />}

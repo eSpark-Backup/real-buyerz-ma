@@ -1,9 +1,13 @@
-import { StyleSheet, Text, View } from "react-native";
 import React from "react";
-import { Redirect } from "expo-router";
+import { StyleSheet, Text, View } from "react-native";
+import { Redirect, useLocalSearchParams } from "expo-router";
 
 export default function App() {
-  return <Redirect href={"(user)/anon"} />;
+  const params = useLocalSearchParams();
+  console.log("kia ha params", params);
+
+  // return <Redirect href={"(user)"} />;
+  return <View />;
 }
 
 const styles = StyleSheet.create({});
