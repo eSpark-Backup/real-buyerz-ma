@@ -58,27 +58,21 @@ function Custom({ children }: { children: React.ReactNode }) {
 function Success({ message, onPress }: { message: string; onPress(): void }) {
   const theme = useTheme() as MyTheme;
   return (
-    <View style={[styles(theme).box, { height: 238 }]}>
-      <View
-        style={{
-          alignItems: "center",
-          justifyContent: "space-between",
-          marginTop: 80,
-          gap: 7,
-        }}
+    <View style={styles(theme).box2}>
+      <View style={{ width: 40, height: 40, backgroundColor: "grey" }} />
+      <MyText
+        style={styles(theme).message}
+        textColor={theme.colors.negative}
+        size={12}
       >
-        <MyText size={20}>Congratulations</MyText>
-        <MyText size={12} textColor={theme.colors.verificationText}>
-          {message}
-        </MyText>
-
-        <MyButton
-          label="Continue"
-          labelStyle={styles(theme).label}
-          style={styles(theme).cButton}
-          onPress={onPress}
-        />
-      </View>
+        {message}
+      </MyText>
+      <MyButton
+        label="Continue"
+        labelStyle={styles(theme).sLabel}
+        style={styles(theme).sButton}
+        onPress={onPress}
+      />
     </View>
   );
 }

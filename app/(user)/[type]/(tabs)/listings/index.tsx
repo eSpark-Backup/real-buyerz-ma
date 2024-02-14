@@ -650,8 +650,8 @@ const styles = (theme?: MyTheme) =>
     children: { paddingHorizontal: 15, paddingVertical: 20 },
     inputInnerStyle: {
       height: 45,
-      padding: 0,
       color: theme?.colors.text,
+      paddingBottom: 20,
     },
     singleInputStyle: {
       backgroundColor: theme?.colors.background,
