@@ -34,7 +34,12 @@ export default function MyInput({
         secureTextEntry={password ? (showPassword ? false : true) : false}
         placeholder={placeholder}
         placeholderTextColor={placeholderColor}
-        style={[styles.inputStyle, { fontFamily: "Inter-Regular" }, inputStyle]}
+        style={[
+          styles.inputStyle,
+          { fontFamily: "Inter-Regular" },
+          inputStyle,
+          { textAlignVertical: multiline ? "top" : "center" },
+        ]}
         value={text!}
         onChangeText={(val): void => onChange?.(val)}
       />
@@ -42,6 +47,7 @@ export default function MyInput({
         <Ionicons
           name={showPassword ? "eye-outline" : "md-eye-off-outline"}
           size={15}
+          style={{ alignSelf: "center" }}
           color={theme.colors.placeholderText}
           onPress={() => setShowPassword(!showPassword)}
         />
@@ -59,6 +65,7 @@ export default function MyInput({
 
 const styles = StyleSheet.create({
   inputContainerStyle: {
+    flex: 1,
     flexDirection: "row",
     paddingHorizontal: 8,
     paddingVertical: 6,
@@ -66,7 +73,8 @@ const styles = StyleSheet.create({
     elevation: 3,
   },
   inputStyle: {
-    width: "100%",
+    flex: 1,
+    height: "100%",
     alignSelf: "flex-start",
   },
 });

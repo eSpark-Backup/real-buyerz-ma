@@ -35,14 +35,16 @@ const PrimaryBtn = ({
       onPress={onPress}
     >
       {children && children}
-      <MyText
-        textColor={textColor ? textColor : "#ffffff"}
-        size={10}
-        weight={weight}
-        style={labelStyle}
-      >
-        {title}
-      </MyText>
+      {title && (
+        <MyText
+          textColor={textColor ? textColor : "#ffffff"}
+          size={10}
+          weight={weight}
+          style={labelStyle}
+        >
+          {title}
+        </MyText>
+      )}
     </TouchableOpacity>
   );
 };

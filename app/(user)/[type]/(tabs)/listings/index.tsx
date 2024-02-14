@@ -60,6 +60,7 @@ import {
 } from "@assets/images";
 import { data, testData } from "@constants";
 import { MyTheme } from "@types";
+import { Ionicons } from "@expo/vector-icons";
 
 interface CustomTableProps {
   children?: React.ReactNode;
@@ -111,7 +112,7 @@ export default function Listing() {
       <PropertyImagesAndVideo />
       <View style={styles(theme).footerButtons}>
         <PrimaryBtn btnStyle={styles(theme).eye}>
-          <EyePrimary />
+          <Ionicons name="eye" color={theme.colors.primary} size={20} />
         </PrimaryBtn>
         <PrimaryBtn
           title="Save as draft"
@@ -189,10 +190,7 @@ function AdInformation() {
               "Describe your property, it’s features, & your area it is in etc."
             }
             style={[styles(theme).titleInputStyle, { height: 83 }]}
-            inputStyle={[
-              styles(theme).inputInnerStyle,
-              { alignSelf: "flex-start" },
-            ]}
+            inputStyle={[styles(theme).inputInnerStyle, {}]}
             placeholderColor={theme.colors.placeholderText}
             multiline
           />
@@ -201,6 +199,7 @@ function AdInformation() {
     </CustomTable>
   );
 }
+
 function LocationAndPurpose() {
   const theme = useTheme() as MyTheme;
   const [selected, setSelected] = useState("");
@@ -297,6 +296,7 @@ function LocationAndPurpose() {
     </CustomTable>
   );
 }
+
 function PropertySizeandPricing() {
   const theme = useTheme() as MyTheme;
   const [n1, setn1] = useState(false);
@@ -398,7 +398,8 @@ function FeaturesAndAmenities() {
       />
       <GapView length={10} />
       <PrimaryBtn
-        btnStyle={[styles().addAmenity, { borderColor: theme.colors.primary }]}
+        width={90}
+        btnStyle={styles(theme).addAmenity}
         onPress={() => setVisible(true)}
       >
         <AddIcon />
@@ -534,6 +535,7 @@ function Counter({ type }: { type: "bed" | "tub" | "park" }) {
     </View>
   );
 }
+
 function PropertyImagesAndVideo() {
   const theme = useTheme() as MyTheme;
   return (
@@ -604,15 +606,15 @@ const styles = (theme?: MyTheme) =>
       flexDirection: "row",
       gap: 5,
       marginTop: 40,
+      // alignItems: "center",
       alignSelf: "flex-end",
     },
     eye: {
       backgroundColor: "transparent",
       borderColor: theme?.colors.primary,
       borderWidth: 1,
-      width: 30,
-      height: 30,
-      paddingTop: 14,
+      alignItems: "center",
+      justifyContent: "center",
     },
     draft: {
       backgroundColor: "transparent",
@@ -649,13 +651,11 @@ const styles = (theme?: MyTheme) =>
     AdField: { flex: 1, paddingTop: 10, gap: 10 },
     children: { paddingHorizontal: 15, paddingVertical: 20 },
     inputInnerStyle: {
-      height: 45,
       padding: 0,
       color: theme?.colors.text,
     },
     singleInputStyle: {
       backgroundColor: theme?.colors.background,
-      height: 38,
       borderColor: theme?.colors.dropdownBorder,
       borderWidth: 1,
       elevation: 0,
@@ -663,7 +663,7 @@ const styles = (theme?: MyTheme) =>
     titleInputStyle: {
       backgroundColor: theme?.colors.background,
       width: "100%",
-      height: 55,
+      height: 65,
       borderColor: theme?.colors.dropdownBorder,
       borderWidth: 1,
       elevation: 0,
@@ -681,10 +681,10 @@ const styles = (theme?: MyTheme) =>
       gap: 5,
     },
     addAmenity: {
-      width: 85,
-      gap: 2,
+      gap: 5,
       backgroundColor: "transparent",
       borderWidth: 1,
+      borderColor: theme?.colors?.primary,
       flexDirection: "row",
       alignItems: "center",
       justifyContent: "center",
