@@ -11,6 +11,7 @@ const MyCheckbox = ({
   onChange,
   style,
   checkboxStyle,
+  isAuth,
   ...restProps
 }: MyCheckboxProps) => {
   const theme = useTheme() as MyTheme;
@@ -35,13 +36,18 @@ const MyCheckbox = ({
           checkboxStyle,
           checked && styles.checked,
           {
-            backgroundColor: theme.dark
-              ? theme.colors.verificationBg
-              : theme.colors.positive,
+            backgroundColor:
+              theme.dark && !isAuth ? theme.colors.verificationBg : "#f3f4f6",
           },
         ]}
       >
-        {checked && <Feather name="check" size={12} color="#ffffff" />}
+        {checked && (
+          <Feather
+            name="check"
+            size={12}
+            color={isAuth ? theme.colors.secondary : "#ffffff"}
+          />
+        )}
       </View>
       <View>
         <MyText text={label} style={restProps.labelStyle} weight="300" />

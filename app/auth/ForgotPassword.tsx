@@ -42,6 +42,7 @@ export default function ForgotPassword() {
           onClose={toggleModal}
           onPress={handleConfirm}
           type={emailIsOn ? "email" : "phone number"}
+          isAuth
         />
       </MyPopupModal>
 
@@ -75,14 +76,15 @@ export default function ForgotPassword() {
                   <MyText textColor="#383838">
                     Please create a new password
                   </MyText>
-
-                  <MyInput
-                    placeholder="New password"
-                    password
-                    width="90%"
-                    style={styles.input}
-                    onChange={handleChange("password")}
-                  />
+                  <View style={{ flexDirection: "row" }}>
+                    <MyInput
+                      placeholder="New password"
+                      password
+                      width="90%"
+                      style={styles.input}
+                      onChange={handleChange("password")}
+                    />
+                  </View>
                   <View style={styles.errorBox}>
                     {touched.password && errors.password ? (
                       <MyText size={10} style={styles.error}>
@@ -91,13 +93,15 @@ export default function ForgotPassword() {
                       </MyText>
                     ) : null}
                   </View>
-                  <MyInput
-                    placeholder="Confirm new password"
-                    password
-                    width="90%"
-                    style={styles.rst_input}
-                    onChange={handleChange("confirmPassword")}
-                  />
+                  <View style={{ flexDirection: "row" }}>
+                    <MyInput
+                      placeholder="Confirm new password"
+                      password
+                      width="90%"
+                      style={styles.rst_input}
+                      onChange={handleChange("confirmPassword")}
+                    />
+                  </View>
                   <View style={styles.errorBox}>
                     {touched.confirmPassword && errors.confirmPassword ? (
                       <MyText size={10} style={styles.error}>
@@ -194,13 +198,14 @@ export default function ForgotPassword() {
                   Forgot Password
                 </MyText>
                 <MyText textColor="#383838">Enter email or phone number</MyText>
-
-                <MyInput
-                  placeholder="Email or Phone number"
-                  width="90%"
-                  style={styles.input}
-                  onChange={handleChange("input")}
-                />
+                <View style={{ flexDirection: "row" }}>
+                  <MyInput
+                    placeholder="Email or Phone number"
+                    width="90%"
+                    style={styles.input}
+                    onChange={handleChange("input")}
+                  />
+                </View>
                 <View style={styles.errorBox}>
                   {touched.input && errors.input ? (
                     <MyText size={10} style={styles.error}>

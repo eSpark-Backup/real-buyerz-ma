@@ -137,6 +137,7 @@ export default function SignUp() {
                 marginRight: 5,
               }}
               checkboxStyle={styles.checkbox}
+              isAuth
             />
             <View style={styles.termsTextContainer}>
               <MyText
@@ -228,7 +229,12 @@ const styles = StyleSheet.create({
     columnGap: 15,
   },
   title: { paddingTop: "1%", paddingBottom: "8%" },
-  fname: { width: "48%", height: "75%", marginBottom: "3%" },
+  fname: {
+    width: "48%",
+    height: "75%",
+    marginBottom: "3%",
+    backgroundColor: "#f3f4f6",
+  },
   dropdown: {
     backgroundColor: "#f3f4f6",
     borderRadius: 5,
@@ -242,6 +248,7 @@ const styles = StyleSheet.create({
     width: "100%",
     height: "14%",
     marginBottom: "4%",
+    backgroundColor: "#f3f4f6",
   },
   terms: {
     marginTop: "10%",

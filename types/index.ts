@@ -83,6 +83,7 @@ export type MyCheckboxProps = {
   style?: ViewStyle;
   checkboxStyle?: ViewStyle;
   labelStyle?: ViewStyle | TextStyle | ViewStyle[] | TextStyle[];
+  isAuth?: boolean;
 };
 
 export type MyButtonProps = {

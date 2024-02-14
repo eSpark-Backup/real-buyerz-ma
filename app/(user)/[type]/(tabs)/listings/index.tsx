@@ -606,7 +606,6 @@ const styles = (theme?: MyTheme) =>
       flexDirection: "row",
       gap: 5,
       marginTop: 40,
-      // alignItems: "center",
       alignSelf: "flex-end",
     },
     eye: {
