@@ -311,7 +311,7 @@ function PropertySizeandPricing() {
           <MyInput
             placeholder={"Enter Unit"}
             style={styles(theme).singleInputStyle}
-            inputStyle={[styles(theme).inputInnerStyle, { paddingBottom: 20 }]}
+            inputStyle={styles(theme).inputInnerStyle}
             placeholderColor={theme.colors.placeholderText}
           />
           <MyDropdown data={[]} placeholder="Unit" onSelect={() => {}} />
@@ -324,7 +324,7 @@ function PropertySizeandPricing() {
           <MyInput
             placeholder={"Enter Amount"}
             style={styles(theme).singleInputStyle}
-            inputStyle={[styles(theme).inputInnerStyle, { paddingBottom: 20 }]}
+            inputStyle={styles(theme).inputInnerStyle}
             placeholderColor={theme.colors.placeholderText}
           />
           <MyDropdown data={[]} placeholder="PKR" onSelect={() => {}} />
@@ -606,7 +606,6 @@ const styles = (theme?: MyTheme) =>
       flexDirection: "row",
       gap: 5,
       marginTop: 40,
-      // alignItems: "center",
       alignSelf: "flex-end",
     },
     eye: {
