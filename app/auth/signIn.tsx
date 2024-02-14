@@ -80,6 +80,7 @@ export default function signIn() {
                 }}
                 style={styles.rememberCont}
                 labelStyle={styles.label}
+                isAuth
               />
               <Link href={"/auth/ForgotPassword"} style={styles.forgotPass}>
                 <MyText text="Forgot Password?" textColor="#2e6fac" size={14} />
@@ -94,6 +95,7 @@ export default function signIn() {
                     setFieldValue("agreeToTerms", !values.agreeToTerms);
                   }}
                   checkboxStyle={styles.checkbox}
+                  isAuth
                 />
                 <View style={styles.termsTextContainer}>
                   <MyText
@@ -238,7 +240,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   logo: { marginTop: "4%" },
-  input: { width: "90%", height: "10%" },
+  input: { width: "90%", height: "10%", backgroundColor: "#f3f4f6" },
   rememberCont: { width: "50%" },
   label: { color: "#FFFFFF", fontSize: 14 },
   bottom: { flexDirection: "row", marginTop: "22%" },

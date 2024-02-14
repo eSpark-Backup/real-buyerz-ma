@@ -81,36 +81,52 @@ function Verify({
   type,
   onClose,
   onPress,
+  isAuth,
 }: {
   type?: "email" | "phone number";
   onClose(): void;
   onPress(): void;
+  isAuth?: boolean;
 }) {
   const theme = useTheme() as MyTheme;
   return (
-    <View style={styles(theme).box}>
+    <View
+      style={[
+        styles(theme).box,
+        {
+          backgroundColor: isAuth ? "#ffffff" : theme.colors.background,
+          borderColor: isAuth ? "#E9E9E9" : theme?.colors.border,
+          elevation: isAuth ? 4 : 0,
+        },
+      ]}
+    >
       <View style={styles(theme).closebtn}>
         <TouchableOpacity activeOpacity={1} onPress={onClose}>
           <CloseBtn />
         </TouchableOpacity>
       </View>
-      <MyText size={20}>Verification Code</MyText>
+      <MyText size={20} textColor={isAuth ? "#333333" : theme.colors.text}>
+        Verification Code
+      </MyText>
       <MyText
         size={12}
-        textColor={theme.colors.verificationText}
+        textColor={isAuth ? "#666666" : theme.colors.verificationText}
         style={styles(theme).text}
       >
         Please enter the code we have sent to the {""}
         {type}{" "}
-        <MyText size={14} textColor={theme.colors.verificationText}>
+        <MyText
+          size={14}
+          textColor={isAuth ? "#666666" : theme.colors.verificationText}
+        >
           {type === "email" ? "Du******65@gmail.com" : "03******163"}
         </MyText>
       </MyText>
       <View style={styles(theme).boxes}>
-        <BoxInput />
-        <BoxInput />
-        <BoxInput />
-        <BoxInput />
+        <BoxInput isAuth={isAuth} />
+        <BoxInput isAuth={isAuth} />
+        <BoxInput isAuth={isAuth} />
+        <BoxInput isAuth={isAuth} />
       </View>
       <MyButton
         label="Confirm"
@@ -119,7 +135,7 @@ function Verify({
         onPress={onPress}
       />
       <MyText
-        textColor={theme.colors.verificationText}
+        textColor={isAuth ? "#666666" : theme.colors.verificationText}
         size={10}
         style={styles(theme).resendText}
       >
@@ -354,15 +370,26 @@ MyPopupModal.OrderSummary = OrderSummary;
  * For the verification Code Input (Otp)
  * @returns JSX.Element
  */
-const BoxInput = () => {
+const BoxInput = ({ isAuth }: { isAuth?: boolean }) => {
   const [inputValue, setInputValue] = useState(""); //to be used later
   const theme = useTheme() as MyTheme;
   return (
-    <View style={styles(theme).container}>
+    <View
+      style={[
+        styles(theme).container,
+        {
+          backgroundColor: isAuth
+            ? theme.dark
+              ? theme.colors.negative
+              : theme.colors.background
+            : "#D1EDFF",
+        },
+      ]}
+    >
       <TextInput
         placeholder="-"
         placeholderTextColor={"#126FAA"}
-        style={styles(theme).input}
+        style={[styles(theme).input]}
         keyboardType="numeric"
         textContentType="oneTimeCode"
         maxLength={1}
@@ -391,7 +418,6 @@ const styles = (theme?: MyTheme) =>
       backgroundColor: theme?.colors.background,
       borderRadius: 15,
       borderWidth: 1,
-      borderColor: theme?.colors.border,
       shadowColor: "#00000040",
       elevation: 4,
       shadowOffset: { width: 0, height: 4 },
