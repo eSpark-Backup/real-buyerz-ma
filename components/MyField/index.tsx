@@ -7,6 +7,7 @@ import PrimaryBtn from "components/MyButton/primaryBtn";
 import MyCheckbox from "components/MyCheckbox";
 import { MyTheme } from "@types";
 import { useTheme } from "@react-navigation/native";
+import GapView from "@components/GapView";
 
 export enum Variants {
   SINGLE = "single",
@@ -44,13 +45,18 @@ const MyField = ({ variant, list, onPress, title }: IMyField) => {
           />
           <View style={styles(theme).dflex}>
             {list?.inputs.map((input, index) => (
-              <View key={index}>
-                <MyInput
-                  placeholder={input.placeholder}
-                  style={styles(theme).dualInputStyle}
-                  inputStyle={styles(theme).inputInnerStyle}
-                  placeholderColor={theme.colors.placeholderText}
-                />
+              <View style={{ flex: 1 }} key={index}>
+                <View style={{ flexDirection: "row" }}>
+                  <MyInput
+                    placeholder={input.placeholder}
+                    style={styles(theme).dualInputStyle}
+                    inputStyle={styles(theme).inputInnerStyle}
+                    placeholderColor={theme.colors.placeholderText}
+                  />
+                  {index < list?.inputs.length - 1 && (
+                    <GapView length={10} mode="horizontal" />
+                  )}
+                </View>
                 <MyText
                   size={10}
                   text={input.label}
@@ -199,7 +205,8 @@ const styles = (theme?: MyTheme) =>
     },
     dualInputStyle: {
       backgroundColor: theme?.colors.background,
-      width: 160,
+      // width: 150,
+      flex: 1,
       height: 35,
       borderColor: theme?.colors.dropdownBorder,
       borderWidth: 1,

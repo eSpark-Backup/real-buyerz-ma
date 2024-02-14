@@ -54,6 +54,8 @@ export type MyTextProps = {
   onPress?: () => void;
 };
 
+export type UserType = "anon" | "user" | "agent";
+
 export type MyInputProps = {
   label?: string;
   placeholder?: string;
