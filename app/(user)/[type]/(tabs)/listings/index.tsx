@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   ScrollView,
   StyleSheet,
@@ -6,9 +6,12 @@ import {
   TouchableOpacity,
   Pressable,
   FlatList,
+  Image,
 } from "react-native";
 import Modal from "react-native-modal";
 import { useTheme } from "@react-navigation/native";
+import { Feather, Ionicons } from "@expo/vector-icons";
+import * as ImagePicker from "expo-image-picker";
 
 import {
   GapView,
@@ -21,6 +24,7 @@ import {
   TabFilter,
   ToggleSwitch,
   MyPopupModal,
+  MyButton,
 } from "@components";
 import {
   AddIcon,
@@ -58,9 +62,9 @@ import {
   Washing,
   Well,
 } from "@assets/images";
-import { data, testData } from "@constants";
+import { WINDOW_WIDTH, data, testData } from "@constants";
 import { MyTheme } from "@types";
-import { Ionicons } from "@expo/vector-icons";
+import { requestPermissionsMedia } from "./utils/functions";
 
 interface CustomTableProps {
   children?: React.ReactNode;
@@ -81,6 +85,7 @@ interface AmenitiesPopupProps {
 
 export default function Listing() {
   const theme = useTheme() as MyTheme;
+
   const [visible, setVisible] = useState(false);
 
   return (
@@ -111,7 +116,7 @@ export default function Listing() {
       <GapView length={20} />
       <PropertyImagesAndVideo />
       <View style={styles(theme).footerButtons}>
-        <PrimaryBtn btnStyle={styles(theme).eye}>
+        <PrimaryBtn btnStyle={styles(theme).icon}>
           <Ionicons name="eye" color={theme.colors.primary} size={20} />
         </PrimaryBtn>
         <PrimaryBtn
@@ -538,6 +543,94 @@ function Counter({ type }: { type: "bed" | "tub" | "park" }) {
 
 function PropertyImagesAndVideo() {
   const theme = useTheme() as MyTheme;
+  const [statusMedia, requestPermissionMedia] =
+    ImagePicker.useMediaLibraryPermissions();
+  const [media, setMedia] = useState<ImagePicker.ImagePickerAsset[]>([]);
+
+  const handleGetMedia = async () => {
+    const data = await requestPermissionsMedia(
+      statusMedia,
+      requestPermissionMedia
+    );
+    if (!data) {
+      return;
+    }
+    const mediaArr = [...media, ...data];
+    setMedia(mediaArr);
+  };
+
+  const handleDeleteMedia = (index: number) => {
+    if (media.length < 1) {
+      return;
+    }
+    if (index > -1) {
+      const mediaArr = [...media];
+      mediaArr.splice(index, 1);
+      setMedia(mediaArr);
+    }
+  };
+
+  const renderMedia = (item: ImagePicker.ImagePickerAsset, index: number) => {
+    console.log("mida", item);
+    return (
+      <View
+        key={index}
+        style={{
+          backgroundColor: "transparent",
+          borderWidth: 1,
+          borderColor: theme.colors.primary,
+          borderRadius: 4,
+          marginLeft: index > 0 && index < media.length && index % 3 ? 15 : 0,
+          marginBottom: 10,
+        }}
+      >
+        <PrimaryBtn
+          btnStyle={[
+            styles(theme).icon,
+            {
+              zIndex: 1,
+              right: -10,
+              backgroundColor: theme.colors.background,
+              top: -10,
+              position: "absolute",
+              width: 20,
+              height: 20,
+              paddingHorizontal: 0,
+              paddingVertical: 0,
+              borderRadius: 50,
+            },
+          ]}
+          onPress={() => handleDeleteMedia(index)}
+        >
+          <Ionicons name="close" color={theme.colors.primary} size={15} />
+        </PrimaryBtn>
+        <Image
+          source={{ uri: item.uri }}
+          style={{
+            borderRadius: 4,
+          }}
+          height={WINDOW_WIDTH / 3 - 45}
+          width={WINDOW_WIDTH / 3 - 45}
+          resizeMethod="auto"
+          resizeMode="cover"
+        />
+        <Ionicons
+          name={item.type === "image" ? "image-outline" : "film-outline"}
+          color={theme.colors.primary}
+          size={14}
+          style={{
+            position: "absolute",
+            bottom: 2,
+            left: 2,
+            backgroundColor: "#ffffff",
+            borderRadius: 4,
+            paddingHorizontal: 2,
+          }}
+        />
+      </View>
+    );
+  };
+  const mediaStyles = media.length > 0 ? styles().mediaStyles : {};
   return (
     <CustomTable title="Property Images and Video" indexIcon={16}>
       <View style={styles().AdInfo}>
@@ -552,26 +645,65 @@ function PropertyImagesAndVideo() {
           styles().dashed,
           {
             borderColor: theme.colors.primary,
+            minHeight: 250,
           },
+          mediaStyles,
         ]}
       >
-        <View style={styles().buttonContainer}>
-          <PrimaryBtn title="Upload Images" width="100%" />
-          <PrimaryBtn
-            title="Add Video"
-            btnStyle={[styles().draft, { borderColor: theme.colors.primary }]}
-            textColor={theme.colors.primary}
-            width="100%"
-          />
-        </View>
-        <GapView length={10} mode="horizontal" />
-        <View style={styles().list}>
-          <Ticktext text="Cover all areas of your property" />
-          <Ticktext text="Maximum 5 Pictures and 5 Videos can be uploaded" />
-          <Ticktext text="Ads with picture got 5x more views and leads" />
-          <Ticktext text="Upload good quality pictures with proper lighting" />
-          <Ticktext text="The video upload feature is optional; you can choose to upload photos without including a video." />
-        </View>
+        {media.length > 0 ? (
+          <View
+            style={{
+              flex: 1,
+              flexDirection: "row",
+              flexWrap: "wrap",
+            }}
+          >
+            {media.map((item, index) => renderMedia(item, index))}
+            <PrimaryBtn
+              btnStyle={[
+                styles(theme).icon,
+                {
+                  marginLeft: media.length % 3 ? 15 : 0,
+                  width: WINDOW_WIDTH / 3 - 43.5,
+                  height: WINDOW_WIDTH / 3 - 45,
+                  paddingHorizontal: 0,
+                  paddingVertical: 0,
+                  borderRadius: 4,
+                },
+              ]}
+              onPress={() => handleGetMedia()}
+            >
+              <Feather name="plus" color={theme.colors.primary} size={35} />
+            </PrimaryBtn>
+          </View>
+        ) : (
+          <>
+            <View style={styles().buttonContainer}>
+              <PrimaryBtn
+                title="Upload Images"
+                width="100%"
+                onPress={() => handleGetMedia()}
+              />
+              <PrimaryBtn
+                title="Add Video"
+                btnStyle={[
+                  styles().draft,
+                  { borderColor: theme.colors.primary },
+                ]}
+                textColor={theme.colors.primary}
+                width="100%"
+              />
+            </View>
+            <GapView length={10} mode="horizontal" />
+            <View style={styles().list}>
+              <Ticktext text="Cover all areas of your property" />
+              <Ticktext text="Maximum 5 Pictures and 5 Videos can be uploaded" />
+              <Ticktext text="Ads with picture got 5x more views and leads" />
+              <Ticktext text="Upload good quality pictures with proper lighting" />
+              <Ticktext text="The video upload feature is optional; you can choose to upload photos without including a video." />
+            </View>
+          </>
+        )}
       </View>
     </CustomTable>
   );
@@ -608,7 +740,7 @@ const styles = (theme?: MyTheme) =>
       marginTop: 40,
       alignSelf: "flex-end",
     },
-    eye: {
+    icon: {
       backgroundColor: "transparent",
       borderColor: theme?.colors.primary,
       borderWidth: 1,
@@ -709,6 +841,10 @@ const styles = (theme?: MyTheme) =>
       flexDirection: "row",
       alignItems: "center",
       justifyContent: "space-around",
+    },
+    mediaStyles: {
+      alignItems: "flex-start",
+      justifyContent: "flex-start",
     },
     buttonContainer: {
       gap: 10,
