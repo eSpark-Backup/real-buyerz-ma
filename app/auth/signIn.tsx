@@ -240,7 +240,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   logo: { marginTop: "4%" },
-  input: { width: "90%", height: "10%", backgroundColor: "#f3f4f6" },
+  input: { width: "90%", height: 45, backgroundColor: "#f3f4f6" },
   rememberCont: { width: "50%" },
   label: { color: "#FFFFFF", fontSize: 14 },
   bottom: { flexDirection: "row", marginTop: "22%" },

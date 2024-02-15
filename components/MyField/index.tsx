@@ -109,9 +109,9 @@ const MyField = ({ variant, list, onPress, title }: IMyField) => {
                 console.log("data", value);
               }}
             />
-            <View>
+            <View style={{ width: "79%" }}>
               {list?.inputs.map((input, index) => (
-                <View key={index}>
+                <View key={index} style={{ width: "100%" }}>
                   <MyInput
                     placeholder={input.placeholder}
                     style={styles(theme).selectInput}
@@ -176,9 +176,6 @@ const MyField = ({ variant, list, onPress, title }: IMyField) => {
             labelStyle={{ fontSize: 12 }}
             label="Update details in all property listings"
             onChange={() => {}}
-            style={{
-              marginRight: 5,
-            }}
             checkboxStyle={{
               width: 20,
               height: 20,
@@ -241,7 +238,7 @@ const styles = (theme?: MyTheme) =>
     },
     selectInput: {
       backgroundColor: theme?.colors.background,
-      width: 250,
+      // width: "80%",
       height: 38,
       borderColor: theme?.colors.dropdownBorder,
       borderWidth: 1,
