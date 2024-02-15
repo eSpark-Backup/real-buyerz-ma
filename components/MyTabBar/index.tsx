@@ -2,7 +2,7 @@ import React from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import { BottomTabBarProps } from "@react-navigation/bottom-tabs";
 
-import MyText from "../MyText";
+import MyText from "@components/MyText";
 import { MyTheme } from "@types";
 import {
   HomeTab,

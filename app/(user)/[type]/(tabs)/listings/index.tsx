@@ -64,7 +64,7 @@ import {
 } from "@assets/images";
 import { WINDOW_WIDTH, data, testData } from "@constants";
 import { MyTheme } from "@types";
-import { requestPermissionsMedia } from "./utils/functions";
+import { requestPermissionsMedia } from "utils/functions";
 
 interface CustomTableProps {
   children?: React.ReactNode;
@@ -550,7 +550,8 @@ function PropertyImagesAndVideo() {
   const handleGetMedia = async () => {
     const data = await requestPermissionsMedia(
       statusMedia,
-      requestPermissionMedia
+      requestPermissionMedia,
+      false
     );
     if (!data) {
       return;

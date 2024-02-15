@@ -11,7 +11,8 @@
       "@constants": ["./constants/index"],
       "@types": ["./types/index"],
       "@validations/*": ["./constants/validations/*"],
-      "@store": ["./store/index"]
+      "@store": ["./store/index"],
+      "@utils/*": ["./utils/*"]
     }
   }
 }
