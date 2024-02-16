@@ -164,7 +164,7 @@ function Alert({
   return (
     <View style={styles(theme).confirmationBox}>
       <Confirmation />
-      <MyText text={message} style={{ textAlign: "center" }} />
+      <MyText text={message} style={{ textAlign: "center" }} size={12} />
       <View style={styles(theme).buttonContainer}>
         <MyButton
           label="Cancel"
