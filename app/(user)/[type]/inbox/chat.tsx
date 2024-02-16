@@ -261,7 +261,7 @@ const styles = (theme?: MyTheme) =>
       alignItems: "center",
       paddingHorizontal: 14,
       height: 60,
-      // flex: 1,
+      marginVertical: 12,
     },
     inputContainer: {
       flexDirection: "row",

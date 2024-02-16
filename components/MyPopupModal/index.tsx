@@ -407,7 +407,7 @@ const styles = (theme?: MyTheme) =>
     },
     orderSummaryBox: {
       width: 290,
-      height: 190,
+      // height: 190,
       backgroundColor: theme?.colors.background,
       borderRadius: 5,
       padding: 15,

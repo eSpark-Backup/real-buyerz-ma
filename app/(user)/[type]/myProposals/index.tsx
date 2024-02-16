@@ -230,7 +230,7 @@ export default function MyProposals() {
           }}
         />
       </View>
-      <MyTopTabs data={topTabsData} />
+      <MyTopTabs data={topTabsData} paddingH={15} />
       <View style={styles.content}>
         <FlatList
           data={testContentData}

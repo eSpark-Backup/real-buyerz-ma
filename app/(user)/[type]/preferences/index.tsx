@@ -75,8 +75,8 @@ export default function Preferences() {
             title="Save Changes"
             textColor="#ffffff"
             labelStyle={{ fontSize: 12 }}
-            width={105}
-            btnStyle={{ marginTop: 5 }}
+            // width={105}
+            btnStyle={{ marginTop: 5, alignSelf: "flex-start" }}
           />
         </View>
       </View>
@@ -107,7 +107,6 @@ const styles = (theme?: MyTheme) =>
       flexDirection: "row",
       elevation: 0,
       width: "100%",
-      height: 31,
       borderColor: theme?.colors.border,
     },
     inputStyle: {

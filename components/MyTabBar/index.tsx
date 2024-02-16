@@ -11,6 +11,7 @@ import {
   Tab_Projects,
   Tab_Profile,
 } from "@assets/images";
+import Static from "./static";
 
 function MyTabBar({
   state,
@@ -18,6 +19,11 @@ function MyTabBar({
   navigation,
   theme,
 }: BottomTabBarProps & { theme: MyTheme }) {
+  console.log(
+    "descriptors",
+    JSON.stringify(descriptors["home-rBHWXVOMNAznVqEH2BOQb"])
+  );
+
   return (
     <View style={styles({ theme }).container}>
       {state.routes.map((route, index) => {
@@ -152,6 +158,8 @@ const renderTabIcon = (
 };
 
 export default MyTabBar;
+
+MyTabBar.Static = Static;
 
 const styles = ({
   isFocused,

@@ -9,9 +9,10 @@ import { WINDOW_WIDTH } from "@constants";
 interface TopTabsProps {
   data: { title: string; selected: boolean }[];
   list?: boolean;
+  paddingH?: number;
 }
 
-export default function MyTopTabs({ data, list }: TopTabsProps) {
+export default function MyTopTabs({ data, list, paddingH }: TopTabsProps) {
   const theme = useTheme() as MyTheme;
 
   const Tab = ({ label, selected }: { label: string; selected: boolean }) => {
@@ -20,7 +21,11 @@ export default function MyTopTabs({ data, list }: TopTabsProps) {
         style={{
           height: "100%",
           borderBottomWidth: selected ? 2 : 0,
-          paddingHorizontal: list ? WINDOW_WIDTH / (data.length * 3) : 25,
+          paddingHorizontal: list
+            ? WINDOW_WIDTH / (data.length * 3.5)
+            : paddingH
+            ? paddingH
+            : 25,
           paddingVertical: 15,
           borderColor: theme.colors.primary,
         }}
