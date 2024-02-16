@@ -190,10 +190,10 @@ export default function Projects() {
 
 const styles = StyleSheet.create({
   topFilter: {
-    paddingTop: 27,
-    paddingHorizontal: 25,
+    marginTop: 27,
+    marginHorizontal: 25,
     justifyContent: "flex-end",
-    paddingBottom: 5,
+    marginBottom: 5,
   },
   searchList: {
     flex: 1,

@@ -63,6 +63,7 @@ const DrawerContent = (props: DrawerContentComponentProps) => {
         </View>
         <BubbleIcon
           size={40}
+          style={{ backgroundColor: "#fff" }}
           onPress={() => router.push("(user)/anon/(tabs)/profile")}
         >
           <Draw_Settings />
@@ -85,7 +86,7 @@ const DrawerContent = (props: DrawerContentComponentProps) => {
           icon={({ color, size, focused }) => (
             <Draw_Logout
               style={{
-                color: focused ? theme.colors.secondary : theme.colors.text,
+                color: theme.colors.text,
               }}
             />
           )}
