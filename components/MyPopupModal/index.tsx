@@ -195,9 +195,11 @@ function Alert({
 function Feedback({
   message,
   avatarUrl,
+  onClose,
 }: {
   message: string;
   avatarUrl?: ImageSourcePropType;
+  onClose?: () => void;
 }) {
   const theme = useTheme() as MyTheme;
   return (
@@ -259,6 +261,7 @@ function Feedback({
           size={10}
           textColor={theme.colors.primary}
           weight="500"
+          onPress={onClose}
         />
         <MyText
           text="Post"

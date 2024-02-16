@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import { MyTheme } from "@types";
@@ -11,12 +11,14 @@ import {
   MyAvatar,
   CustomSlider,
   PrimaryBtn,
+  MyPopupModal,
 } from "@components";
 import { LocationIcon } from "@assets/images/svg";
 import { router } from "expo-router";
 
 const PropertyDetail = () => {
   const theme = useTheme() as MyTheme;
+  const [isVisble, setIsVisible] = useState(false);
   const images = [
     "https://picsum.photos/id/299/620",
     "https://picsum.photos/id/400/620",
@@ -129,7 +131,7 @@ const PropertyDetail = () => {
                 weight="600"
                 title="Contact"
                 textColor="#ffffff"
-                onPress={() => console.log("asd")}
+                onPress={() => setIsVisible(true)}
                 btnStyle={{
                   marginStart: 15,
                   paddingVertical: 10,
@@ -224,6 +226,14 @@ const PropertyDetail = () => {
         </Card>
         <PropertyList title="Similar Projects" theme={theme} />
       </View>
+      {/* temporarily */}
+      <MyPopupModal visible={isVisble} bgDim>
+        <MyPopupModal.Feedback
+          message="Moin Khan"
+          avatarUrl={{ uri: "https://i.pravatar.cc/300?img=68" }}
+          onClose={() => setIsVisible(false)}
+        />
+      </MyPopupModal>
     </ScrollView>
   );
 };
