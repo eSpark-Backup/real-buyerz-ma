@@ -24,9 +24,18 @@ import {
   Draw_Settings,
   Draw_Shop,
 } from "@assets/images";
-import { BubbleIcon, GapView, MyAvatar, MyHeader, MyText } from "@components";
+import {
+  BubbleIcon,
+  GapView,
+  MyAvatar,
+  MyHeader,
+  MyPopupModal,
+  MyText,
+} from "@components";
+import { useState } from "react";
 
 const DrawerContent = (props: DrawerContentComponentProps) => {
+  const [confirmLogout, setConfirmLogout] = useState(false);
   const { index } = props.state;
   const theme = useTheme() as MyTheme;
 
@@ -89,10 +98,20 @@ const DrawerContent = (props: DrawerContentComponentProps) => {
               }}
             />
           )}
-          onPress={() => router.replace("/auth/signIn")}
+          onPress={() => setConfirmLogout(true)}
         />
       </View>
       {Platform.OS == "ios" && <GapView />}
+      <MyPopupModal visible={confirmLogout} bgDim>
+        <MyPopupModal.Alert
+          message="Are you sure you want to Log out?"
+          onClose={() => setConfirmLogout(false)}
+          onPress={() => {
+            setConfirmLogout(false);
+            router.replace("/auth/signIn");
+          }}
+        />
+      </MyPopupModal>
     </View>
   );
 };
@@ -132,11 +151,7 @@ export default function MainLayout() {
         <Drawer.Screen
           name="search" // This is the name of the page and must match the url from root
           options={{
-            header: (props) => {
-              return (
-                <MyHeader {...props} showBackIcon hideCenter theme={theme} />
-              );
-            },
+            headerShown: false,
             drawerItemStyle: { display: "none" },
           }}
         />

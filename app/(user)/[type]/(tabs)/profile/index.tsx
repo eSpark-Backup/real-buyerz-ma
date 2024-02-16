@@ -101,7 +101,7 @@ const infoList = [
       title: "Address",
       inputs: [
         {
-          placeholder: "Enter Address",
+          placeholder: "Add Address",
         },
       ],
     },
@@ -112,7 +112,7 @@ const infoList = [
       title: "Bio",
       inputs: [
         {
-          placeholder: "Enter Bio",
+          placeholder: "Add Bio",
         },
       ],
     },

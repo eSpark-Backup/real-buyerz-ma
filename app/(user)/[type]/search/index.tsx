@@ -34,7 +34,7 @@ export default function Search() {
       <View style={styles.purpose}>
         <MyText text="Purpose" size={14} />
         <MyDropdown
-          placeholder="Purpose"
+          placeholder="Select Purpose"
           multiSelect
           data={["Buy", "Rent"]}
           onSelect={(value) => {
@@ -48,7 +48,7 @@ export default function Search() {
       <View style={styles.city}>
         <MyText text="City" />
         <MyDropdown
-          placeholder="City"
+          placeholder="Select City"
           multiSelect
           zIndex={8}
           data={[
@@ -67,6 +67,7 @@ export default function Search() {
       <GapView length={30} />
       <View style={styles.genre}>
         <TabFilter
+          isSearch
           data={testData}
           onSelect={(value) => {
             console.log("value", value);

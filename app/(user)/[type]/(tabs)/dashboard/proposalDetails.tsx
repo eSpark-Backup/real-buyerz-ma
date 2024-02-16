@@ -177,7 +177,7 @@ export default function ProposalDetails() {
       <View style={{ marginTop: 7 }}>
         <Card radius={10}>
           <Card.Title
-            weight="500"
+            weight="600"
             titleStyle={{
               fontSize: 16,
               color: theme.colors.text,
@@ -319,8 +319,8 @@ export default function ProposalDetails() {
 const styles = StyleSheet.create({
   temp: { flexDirection: "row", rowGap: 10, columnGap: 10 },
   tempImage: {
-    width: 90,
-    height: 72,
+    width: 130,
+    height: 80,
     backgroundColor: "#7e7575",
     marginRight: 10,
   },

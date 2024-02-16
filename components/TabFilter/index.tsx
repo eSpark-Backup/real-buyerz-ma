@@ -11,9 +11,15 @@ interface TabFilterProps {
   data: SearchDataProps[];
   onSelect: (value: object) => void;
   wrap?: boolean;
+  isSearch?: boolean;
 }
 
-export default function TabFilter({ data, onSelect, wrap }: TabFilterProps) {
+export default function TabFilter({
+  data,
+  onSelect,
+  wrap,
+  isSearch,
+}: TabFilterProps) {
   const theme = useTheme() as MyTheme;
   const [list, setList] = useState<SearchDataProps[] | null>(data);
   const [selectedItem, setSelectedItem] = useState<SearchDataProps | null>(
@@ -149,7 +155,11 @@ export default function TabFilter({ data, onSelect, wrap }: TabFilterProps) {
                 gap: 5,
               }}
             >
-              {nestedItem.selected ? <SellTab /> : <RentTab />}
+              {isSearch ? null : nestedItem.selected ? (
+                <SellTab />
+              ) : (
+                <RentTab />
+              )}
               <MyText
                 text={nestedItem.label}
                 size={12}

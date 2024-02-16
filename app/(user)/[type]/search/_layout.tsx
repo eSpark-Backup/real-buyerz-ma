@@ -1,16 +1,46 @@
 import React from "react";
-import { StyleSheet, Text, View } from "react-native";
-import { Stack } from "expo-router";
+import { StyleSheet } from "react-native";
+import { Stack, useLocalSearchParams, useNavigation } from "expo-router";
+import { MyHeader, MyTabBar } from "@components";
+import { useTheme } from "@react-navigation/native";
+import { MyTheme } from "@types";
+
+import { Tabs } from "expo-router/tabs";
 
 export default function SearchLayout() {
+  const params = useLocalSearchParams();
+  const theme = useTheme() as MyTheme;
+  const navigation = useNavigation();
+
+  console.log("params of Search Layout: ", params);
+
   return (
     <Stack
       initialRouteName="search/index"
-      screenOptions={{
-        headerShown: false,
+      screenOptions={() => ({
+        headerShown: true,
         contentStyle: { paddingHorizontal: 20, paddingTop: 14 },
-      }}
-    />
+      })}
+    >
+      <Stack.Screen
+        name="index"
+        options={{
+          header: (props) => {
+            return (
+              <MyHeader {...props} showBackIcon hideCenter theme={theme} />
+            );
+          },
+        }}
+      />
+      <Stack.Screen
+        name="searchList"
+        options={{
+          header: (props) => {
+            return <MyHeader {...props} showBackIcon showRight theme={theme} />;
+          },
+        }}
+      />
+    </Stack>
   );
 }
 
