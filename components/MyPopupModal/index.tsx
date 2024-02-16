@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import {
+  Image,
   View,
   TextInput,
   StyleSheet,
@@ -59,7 +60,10 @@ function Success({ message, onPress }: { message: string; onPress(): void }) {
   const theme = useTheme() as MyTheme;
   return (
     <View style={styles(theme).box2}>
-      <View style={{ width: 40, height: 40, backgroundColor: "grey" }} />
+      <Image
+        source={require("../../assets/images/gif/verify.gif")}
+        style={{ width: 40, height: 40, resizeMode: "contain" }}
+      />
       <MyText
         style={styles(theme).message}
         textColor={theme.colors.negative}
