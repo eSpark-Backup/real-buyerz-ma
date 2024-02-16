@@ -132,11 +132,7 @@ export default function MainLayout() {
         <Drawer.Screen
           name="search" // This is the name of the page and must match the url from root
           options={{
-            header: (props) => {
-              return (
-                <MyHeader {...props} showBackIcon hideCenter theme={theme} />
-              );
-            },
+            headerShown: false,
             drawerItemStyle: { display: "none" },
           }}
         />
