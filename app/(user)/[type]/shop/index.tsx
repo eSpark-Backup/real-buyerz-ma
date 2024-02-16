@@ -10,6 +10,7 @@ import {
   MyButton,
   MyDropdown,
   MyPopupModal,
+  MyTabBar,
   MyText,
 } from "@components";
 import { WINDOW_WIDTH } from "@constants";
@@ -51,133 +52,140 @@ export default function Shop() {
   const [visible, setVisible] = useState(false);
   const theme = useTheme() as MyTheme;
   return (
-    <View style={styles.container}>
-      <MyPopupModal visible={visible} bgDim>
-        <MyPopupModal.OrderSummary
-          total="2500"
-          onPress={() => {
-            router.push("(user)/anon/shop/orderSummary");
-            setVisible(false);
-          }}
-          items={[{ amount: "2500", name: "Refresh Credits", qty: "1" }]}
-        />
-      </MyPopupModal>
-      <ScrollView
-        style={{ flex: 1 }}
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={styles.scrollContainer}
-      >
-        <Card plain>
-          <View
-            style={{
-              flexDirection: "row",
-              paddingVertical: 17,
-              paddingHorizontal: 20,
-              justifyContent: "space-between",
+    <View style={{ flex: 1 }}>
+      <View style={styles.container}>
+        <MyPopupModal visible={visible} bgDim>
+          <MyPopupModal.OrderSummary
+            total="2500"
+            onPress={() => {
+              router.push("(user)/anon/shop/orderSummary");
+              setVisible(false);
             }}
-          >
-            <MyText
-              text="Package"
-              textColor={theme.colors.negative}
-              weight="700"
-              size={14}
-            />
-            <MyText
-              text="Price"
-              textColor={theme.colors.negative}
-              weight="700"
-              size={14}
-            />
-          </View>
-          <Card.Divider />
-          <View
-            style={{
-              paddingVertical: 22,
-              paddingHorizontal: 10,
-              justifyContent: "space-between",
+            items={[{ amount: "2500", name: "Refresh Credits", qty: "1" }]}
+          />
+        </MyPopupModal>
+        <ScrollView
+          style={{ flex: 1 }}
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={styles.scrollContainer}
+        >
+          <Card plain>
+            <View
+              style={{
+                flexDirection: "row",
+                paddingVertical: 17,
+                paddingHorizontal: 20,
+                justifyContent: "space-between",
+              }}
+            >
+              <MyText
+                text="Package"
+                textColor={theme.colors.negative}
+                weight="700"
+                size={14}
+              />
+              <MyText
+                text="Price"
+                textColor={theme.colors.negative}
+                weight="700"
+                size={14}
+              />
+            </View>
+            <Card.Divider />
+            <View
+              style={{
+                paddingVertical: 22,
+                paddingHorizontal: 10,
+                justifyContent: "space-between",
+              }}
+            >
+              <Package
+                icon={<PDollar_Green />}
+                label="Basic"
+                text="Get a slot for 4 listing with initial 60 connection"
+                price="2500"
+                theme={theme}
+              />
+              <GapView length={20} />
+              <Package
+                icon={<PFire_Orange />}
+                label="Hot"
+                text="Get a slot for 8 listing with initial 80 connection"
+                price="65000"
+                theme={theme}
+              />
+              <GapView length={20} />
+              <Package
+                icon={<PFire_Red />}
+                label="Super"
+                text="Get a slot for 12 listing with initial 100 connection"
+                price="17500"
+                theme={theme}
+              />
+            </View>
+          </Card>
+          <GapView length={20} />
+          <Card plain style={{ marginBottom: 20 }}>
+            <View
+              style={{
+                flexDirection: "row",
+                paddingVertical: 17,
+                paddingHorizontal: 20,
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <MyText
+                text="Buy Connects"
+                textColor={theme.colors.negative}
+                weight="700"
+                size={14}
+              />
+              <MyText
+                text=" (Only applicable if you buy a subscription)"
+                textColor={theme.colors.negative}
+                style={{ top: 1 }}
+                size={10}
+              />
+            </View>
+            <Card.Divider />
+            <View
+              style={{
+                paddingVertical: 24,
+                paddingHorizontal: 30,
+                justifyContent: "space-between",
+              }}
+            >
+              {connectsData.map((item, index) =>
+                renderItem(item, index, theme)
+              )}
+            </View>
+          </Card>
+        </ScrollView>
+        <View
+          style={[
+            styles.footerContainer,
+            {
+              borderColor: theme.colors.border,
+              backgroundColor: theme.colors.background,
+              position: "absolute",
+              bottom: -40,
+            },
+          ]}
+        >
+          <MyButton
+            label="Buy"
+            textColor={"#ffffff"}
+            backgroundColor={theme.colors.primary}
+            onPress={() => {
+              setVisible(true);
             }}
-          >
-            <Package
-              icon={<PDollar_Green />}
-              label="Basic"
-              text="Get a slot for 4 listing with initial 60 connection"
-              price="2500"
-              theme={theme}
-            />
-            <GapView length={20} />
-            <Package
-              icon={<PFire_Orange />}
-              label="Hot"
-              text="Get a slot for 8 listing with initial 80 connection"
-              price="65000"
-              theme={theme}
-            />
-            <GapView length={20} />
-            <Package
-              icon={<PFire_Red />}
-              label="Super"
-              text="Get a slot for 12 listing with initial 100 connection"
-              price="17500"
-              theme={theme}
-            />
-          </View>
-        </Card>
-        <GapView length={20} />
-        <Card plain style={{ marginBottom: 20 }}>
-          <View
-            style={{
-              flexDirection: "row",
-              paddingVertical: 17,
-              paddingHorizontal: 20,
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-          >
-            <MyText
-              text="Buy Connects"
-              textColor={theme.colors.negative}
-              weight="700"
-              size={14}
-            />
-            <MyText
-              text=" (Only applicable if you buy a subscription)"
-              textColor={theme.colors.negative}
-              style={{ top: 1 }}
-              size={10}
-            />
-          </View>
-          <Card.Divider />
-          <View
-            style={{
-              paddingVertical: 24,
-              paddingHorizontal: 30,
-              justifyContent: "space-between",
-            }}
-          >
-            {connectsData.map((item, index) => renderItem(item, index, theme))}
-          </View>
-        </Card>
-      </ScrollView>
-      <View
-        style={[
-          styles.footerContainer,
-          {
-            borderColor: theme.colors.border,
-            backgroundColor: theme.colors.background,
-          },
-        ]}
-      >
-        <MyButton
-          label="Buy"
-          textColor={"#ffffff"}
-          backgroundColor={theme.colors.primary}
-          onPress={() => {
-            setVisible(true);
-          }}
-          style={{ borderRadius: 5.73, paddingVertical: 10 }}
-          labelStyle={{ fontSize: 15, fontWeight: "700" }}
-        />
+            style={{ borderRadius: 5.73, paddingVertical: 10 }}
+            labelStyle={{ fontSize: 15, fontWeight: "700" }}
+          />
+        </View>
       </View>
+      <MyTabBar.Static theme={theme} />
     </View>
   );
 }
@@ -287,6 +295,7 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     paddingTop: 26,
     paddingHorizontal: 20,
+    paddingBottom: 70,
   },
   footerContainer: {
     width: WINDOW_WIDTH,
@@ -305,5 +314,6 @@ const styles = StyleSheet.create({
     borderEndWidth: 2,
     paddingHorizontal: 58,
     paddingVertical: 33,
+    paddingBottom: 40,
   },
 });

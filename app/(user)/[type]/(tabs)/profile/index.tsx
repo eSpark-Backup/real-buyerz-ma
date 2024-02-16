@@ -1,9 +1,11 @@
-import React from "react";
-import { StyleSheet, View, ScrollView } from "react-native";
+import React, { useState } from "react";
+import { StyleSheet, View, ScrollView, TouchableOpacity } from "react-native";
 import { useTheme } from "@react-navigation/native";
+import * as ImagePicker from "expo-image-picker";
 
 import { MyText, MyAvatar, MyField, Variants } from "@components";
 import { MyTheme } from "@types";
+import { requestPermissionsMedia } from "@utils/functions";
 
 const infoList = [
   {
@@ -174,17 +176,34 @@ const passList = [
 
 export default function ProfileSettings() {
   const theme = useTheme() as MyTheme;
+  const [statusMedia, requestPermissionMedia] =
+    ImagePicker.useMediaLibraryPermissions();
+  const [profileImage, setProfileImage] = useState(
+    "https://i.pravatar.cc/300?img=68"
+  );
+
+  const handleUpdateProfilePic = async () => {
+    const res = await requestPermissionsMedia(
+      statusMedia,
+      requestPermissionMedia,
+      true
+    );
+    if (!res) {
+      return;
+    }
+    setProfileImage(res[0].uri);
+  };
 
   return (
     <ScrollView showsVerticalScrollIndicator={false}>
       <View style={styles(theme).container}>
-        <View style={styles(theme).avatarWrapper}>
-          <MyAvatar
-            imageUrl={{ uri: "https://i.pravatar.cc/300?img=68" }}
-            size={85}
-            edit={true}
-          />
-        </View>
+        <TouchableOpacity
+          activeOpacity={1}
+          onPress={() => handleUpdateProfilePic()}
+          style={styles(theme).avatarWrapper}
+        >
+          <MyAvatar imageUrl={{ uri: profileImage }} size={85} edit={true} />
+        </TouchableOpacity>
         <View style={styles(theme).infoListWrapper}>
           <View>
             <View style={styles(theme).headingStyle}>

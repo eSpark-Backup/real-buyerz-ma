@@ -9,6 +9,7 @@ import { Back, GLogo, SLogo } from "@assets/images/svg";
 import { DarkTheme, LightTheme } from "@theme";
 import { MyText, MyButton, MyCheckbox, MyInput, MyDropdown } from "@components";
 import { UserSignUpSchema } from "@validations/schema";
+import { WINDOW_WIDTH } from "@constants";
 
 interface InputField {
   placeholder: string;
@@ -66,13 +67,28 @@ export default function SignUp() {
         setFieldValue,
       }) => (
         <ScrollView contentContainerStyle={styles.mainContainer}>
-          <View style={styles.back}>
-            <Link href={"/auth/signIn"}>
-              <Back />
-            </Link>
-          </View>
           <View style={styles.header}>
-            <TouchableOpacity activeOpacity={1}>
+            <View style={{ flex: 20 }}>
+              <Link href={"/auth/signIn"}>
+                <Back />
+              </Link>
+            </View>
+            <View
+              style={{
+                flex: 70,
+                alignItems: "center",
+              }}
+            >
+              <SLogo />
+            </View>
+            <TouchableOpacity
+              activeOpacity={1}
+              style={{
+                flex: 10,
+                flexDirection: "row",
+                alignItems: "center",
+              }}
+            >
               <MyText
                 text="Skip"
                 style={{ textDecorationLine: "underline" }}
@@ -80,15 +96,12 @@ export default function SignUp() {
                 weight="500"
                 textColor="black"
               />
+              <MaterialIcons
+                name="keyboard-arrow-right"
+                size={24}
+                color="black"
+              />
             </TouchableOpacity>
-            <MaterialIcons
-              name="keyboard-arrow-right"
-              size={24}
-              color="black"
-            />
-          </View>
-          <View>
-            <SLogo />
           </View>
           <View style={styles.form}>
             <MyText
@@ -195,14 +208,16 @@ const styles = StyleSheet.create({
   back: {
     position: "absolute",
     left: "7%",
-    top: "0.8%",
-    flexDirection: "row",
+    top: "2%",
+    // flexDirection: "row",
   },
   header: {
-    position: "absolute",
-    top: "2%",
-    right: "7%",
+    paddingHorizontal: 20,
+    width: "100%",
     flexDirection: "row",
+    // justifyContent: "space-between",
+    alignItems: "center",
+    flex: 1,
   },
   form: {
     justifyContent: "space-around",
@@ -214,12 +229,14 @@ const styles = StyleSheet.create({
     borderRadius: 15,
     padding: 20,
     marginTop: "6%",
+    gap: 10,
   },
   fields: {
     justifyContent: "space-evenly",
     alignItems: "center",
     width: "100%",
     flex: 1,
+    gap: 10,
   },
   name: {
     flexDirection: "row",

@@ -205,7 +205,7 @@ export default function MyProposals() {
         }}
       >
         <MyButton
-          leftIcon={<Feather name="plus" color={"#ffffff"} size={12} />}
+          leftIcon={<Feather name="plus" color={"#ffffff"} size={14} />}
           label={"Post Listing"}
           labelStyle={{
             color: "#ffffff",
@@ -214,7 +214,7 @@ export default function MyProposals() {
           }}
           style={{
             width: 120,
-            height: 30,
+            height: 35,
             borderRadius: 4,
             justifyContent: "space-evenly",
             paddingHorizontal: 5,
@@ -230,7 +230,7 @@ export default function MyProposals() {
           }}
         />
       </View>
-      <MyTopTabs data={topTabsData} />
+      <MyTopTabs data={topTabsData} paddingH={15} />
       <View style={styles.content}>
         <FlatList
           data={testContentData}
@@ -246,18 +246,29 @@ export default function MyProposals() {
             />
           )}
           renderItem={({ item, index }) => (
-            <AdBox
-              title={item.title}
-              description={item.description}
-              btns={btnsData}
-              points={[
-                { label: "Est. Range", value: item?.amount },
-                { label: "Purpose", value: item?.purpose },
-                { label: "Property Type", value: item?.type },
-                { label: "City", value: item?.city },
-                { label: "Location", value: item?.location },
-              ]}
-            />
+            <View>
+              {index == 1 && (
+                <MyText
+                  text="Submitted Proposals"
+                  size={18}
+                  weight="500"
+                  style={{ marginBottom: 20, marginTop: 10 }}
+                  textColor={theme.colors.negative}
+                />
+              )}
+              <AdBox
+                title={item.title}
+                description={item.description}
+                btns={btnsData}
+                points={[
+                  { label: "Est. Range", value: item?.amount },
+                  { label: "Purpose", value: item?.purpose },
+                  { label: "Property Type", value: item?.type },
+                  { label: "City", value: item?.city },
+                  { label: "Location", value: item?.location },
+                ]}
+              />
+            </View>
           )}
           ItemSeparatorComponent={() => <GapView />}
         />

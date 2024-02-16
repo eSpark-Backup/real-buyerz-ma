@@ -160,7 +160,7 @@ const dropdownData: DropDownList[] = [
 const topTabsData = [
   { title: "All (0)", selected: true },
   { title: "Active (0)", selected: false },
-  { title: "Drafts (0)", selected: false },
+  { title: "Draft (0)", selected: false },
   { title: "Trash (0)", selected: false },
 ];
 

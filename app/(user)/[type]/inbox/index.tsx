@@ -10,7 +10,7 @@ import { useTheme } from "@react-navigation/native";
 import { router } from "expo-router";
 
 import { ReloadIcon } from "@assets/images";
-import { MyText, InboxList, Card } from "@components";
+import { MyText, InboxList, Card, MyTabBar } from "@components";
 import { MyTheme } from "@types";
 
 const Inbox: React.FC = () => {

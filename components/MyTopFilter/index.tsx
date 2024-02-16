@@ -21,7 +21,9 @@ export default function MyTopFilter({
         onPress={onPressFilter}
         style={{
           backgroundColor: theme.colors.secondary,
-          padding: 6,
+          height: "100%",
+          alignItems: "center",
+          justifyContent: "center",
           paddingHorizontal: 8,
           borderRadius: 5,
         }}
@@ -37,7 +39,9 @@ export default function MyTopFilter({
         activeOpacity={1}
         style={{
           paddingHorizontal: 13,
-          paddingVertical: 6,
+          alignItems: "center",
+          justifyContent: "center",
+          height: "100%",
           borderWidth: 1,
           borderRadius: 4,
           marginLeft: 5,
@@ -55,5 +59,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "flex-start",
+    height: 35,
   },
 });

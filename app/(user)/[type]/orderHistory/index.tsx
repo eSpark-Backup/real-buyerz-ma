@@ -118,6 +118,7 @@ export default function OrderHistory() {
         </View>
         {temp.map((item, index) => (
           <OrderRow
+            key={index}
             description={item.description}
             time={item.time}
             cost={item.cost}

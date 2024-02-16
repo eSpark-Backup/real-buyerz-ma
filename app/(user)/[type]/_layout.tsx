@@ -72,6 +72,7 @@ const DrawerContent = (props: DrawerContentComponentProps) => {
         </View>
         <BubbleIcon
           size={40}
+          style={{ backgroundColor: "#fff" }}
           onPress={() => router.push("(user)/anon/(tabs)/profile")}
         >
           <Draw_Settings />
@@ -94,7 +95,7 @@ const DrawerContent = (props: DrawerContentComponentProps) => {
           icon={({ color, size, focused }) => (
             <Draw_Logout
               style={{
-                color: focused ? theme.colors.secondary : theme.colors.text,
+                color: theme.colors.text,
               }}
             />
           )}
@@ -127,9 +128,9 @@ export default function MainLayout() {
         backBehavior="history"
         screenOptions={({ route }) => ({
           // headerShown: false,
-          sceneContainerStyle: { marginBottom: 10 },
+          // sceneContainerStyle: { marginBottom: 10 },
           header: (props) => {
-            return <MyHeader {...props} showBackIcon showRight theme={theme} />;
+            return <MyHeader {...props} showRight theme={theme} />;
           },
           drawerStyle: { width: "80%" },
         })}
@@ -145,7 +146,7 @@ export default function MainLayout() {
           options={{
             drawerItemStyle: { display: "none" },
             headerShown: false,
-            sceneContainerStyle: { marginBottom: 0 },
+            // sceneContainerStyle: { marginBottom: 10 },
           }}
         />
         <Drawer.Screen
