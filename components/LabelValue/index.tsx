@@ -18,7 +18,7 @@ const LabelValue = ({
   valueWeight?: TextStyle["fontWeight"];
 }) => {
   return (
-    <View style={{ flexDirection: "row" }}>
+    <View style={{ flexDirection: "row", paddingBottom: 10 }}>
       <MyText text={`${label}: `} style={labelStyle} weight={labelWeight} />
       <MyText text={`${value}`} style={valueStyle} weight={valueWeight} />
     </View>

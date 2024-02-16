@@ -285,7 +285,7 @@ function LocationAndPurpose() {
             data={["Karachi", "Lahore", "Islamabad", "Hyderabad", "Quetta"]}
             onSelect={() => {}}
             style={{ width: "90%" }}
-            placeholder="city"
+            placeholder="Select city"
             zIndex={10}
           />
         </View>
@@ -295,7 +295,7 @@ function LocationAndPurpose() {
         <ListingIcon iconIndex={7} />
         <View style={styles().AdField}>
           <RequiredText text="Select Location" />
-          <Map />
+          <View style={{ backgroundColor: "pink", width: "90%", height: 50 }} />
         </View>
       </View>
     </CustomTable>
@@ -319,9 +319,10 @@ function PropertySizeandPricing() {
             inputStyle={styles(theme).inputInnerStyle}
             placeholderColor={theme.colors.placeholderText}
           />
-          <MyDropdown data={[]} placeholder="Unit" onSelect={() => {}} />
+          <MyDropdown data={[]} placeholder="Select Unit" onSelect={() => {}} />
         </View>
       </View>
+      <GapView length={5} />
       <View style={styles().AdInfo}>
         <ListingIcon iconIndex={2} />
         <View style={styles().AdField}>
@@ -335,6 +336,7 @@ function PropertySizeandPricing() {
           <MyDropdown data={[]} placeholder="PKR" onSelect={() => {}} />
         </View>
       </View>
+      <GapView length={5} />
       <View style={styles().AdInfo}>
         <ListingIcon iconIndex={9} />
         <View style={styles().AdField}>
@@ -356,6 +358,7 @@ function PropertySizeandPricing() {
           />
         </View>
       </View>
+      <GapView length={5} />
       <View style={styles().AdInfo}>
         <ListingIcon iconIndex={10} />
         <View style={styles().AdField}>
@@ -779,7 +782,6 @@ const styles = (theme?: MyTheme) =>
     },
     align: { flexDirection: "row", justifyContent: "space-between" },
     AdInfo: { flexDirection: "row", flex: 1, gap: 10 },
-
     AdField: { flex: 1, paddingTop: 10, gap: 10 },
     children: { paddingHorizontal: 15, paddingVertical: 20 },
     inputInnerStyle: {

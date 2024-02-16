@@ -38,7 +38,7 @@ function Title({
   const theme = useTheme() as MyTheme;
   return (
     <View style={[{ paddingVertical: 15 }, style]}>
-      <MyText style={[styles({ theme }).textStyle, titleStyle]}>
+      <MyText weight={weight} style={[styles({ theme }).textStyle, titleStyle]}>
         {children}
       </MyText>
     </View>

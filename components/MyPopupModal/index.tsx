@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import {
+  Image,
   View,
   TextInput,
   StyleSheet,
@@ -59,7 +60,10 @@ function Success({ message, onPress }: { message: string; onPress(): void }) {
   const theme = useTheme() as MyTheme;
   return (
     <View style={styles(theme).box2}>
-      <View style={{ width: 40, height: 40, backgroundColor: "grey" }} />
+      <Image
+        source={require("../../assets/images/gif/verify.gif")}
+        style={{ width: 40, height: 40, resizeMode: "contain" }}
+      />
       <MyText
         style={styles(theme).message}
         textColor={theme.colors.negative}
@@ -160,7 +164,7 @@ function Alert({
   return (
     <View style={styles(theme).confirmationBox}>
       <Confirmation />
-      <MyText text={message} style={{ textAlign: "center" }} />
+      <MyText text={message} style={{ textAlign: "center" }} size={12} />
       <View style={styles(theme).buttonContainer}>
         <MyButton
           label="Cancel"
@@ -191,9 +195,11 @@ function Alert({
 function Feedback({
   message,
   avatarUrl,
+  onClose,
 }: {
   message: string;
   avatarUrl?: ImageSourcePropType;
+  onClose?: () => void;
 }) {
   const theme = useTheme() as MyTheme;
   return (
@@ -255,6 +261,7 @@ function Feedback({
           size={10}
           textColor={theme.colors.primary}
           weight="500"
+          onPress={onClose}
         />
         <MyText
           text="Post"

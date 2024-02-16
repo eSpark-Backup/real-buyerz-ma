@@ -45,7 +45,13 @@ const MyCheckbox = ({
           <Feather
             name="check"
             size={12}
-            color={isAuth ? theme.colors.secondary : "#ffffff"}
+            color={
+              isAuth
+                ? theme.colors.secondary
+                : theme.dark
+                ? "#ffffff"
+                : theme.colors.secondary
+            }
           />
         )}
       </View>
