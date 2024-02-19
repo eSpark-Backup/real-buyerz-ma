@@ -47,6 +47,8 @@ export default function MyDropdown({
   const [label, setLabel] = useState("");
   const listData = multiSelect ? ["All", ...data] : data;
 
+  console.log("theme is dark: ", theme.dark);
+
   const handleSelection = (item: string) => {
     let updatedSelection: string[] = [...selectedItems];
 
@@ -152,9 +154,10 @@ export default function MyDropdown({
                 zIndex: zIndex + 2,
                 overflow: "hidden",
                 top: height - 2,
-                backgroundColor: theme.dark
-                  ? colors.dark.background
-                  : colors.light.background,
+                // backgroundColor: theme.dark
+                //   ? colors.dark.background
+                //   : colors.light.background,
+                backgroundColor: theme.colors.background,
                 borderColor: theme.colors.border,
                 borderWidth: 1,
                 borderBottomRightRadius: 5,

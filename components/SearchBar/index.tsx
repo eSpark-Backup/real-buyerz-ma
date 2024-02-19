@@ -104,5 +104,6 @@ const styles = (theme?: MyTheme) =>
       fontSize: 14,
       fontWeight: "300",
       fontFamily: "Inter",
+      color: theme?.colors.placeholderText,
     },
   });

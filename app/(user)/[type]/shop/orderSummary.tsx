@@ -152,6 +152,7 @@ export default function OrderSummary() {
                 borderColor: theme.colors.border,
                 paddingHorizontal: 10,
                 paddingVertical: 15,
+                color: theme.colors.placeholderText,
               }}
             />
             <MyInput
@@ -163,6 +164,7 @@ export default function OrderSummary() {
                 borderColor: theme.colors.border,
                 paddingHorizontal: 10,
                 paddingVertical: 15,
+                color: theme.colors.placeholderText,
               }}
             />
             <View style={{ flexDirection: "row" }}>
@@ -180,6 +182,7 @@ export default function OrderSummary() {
                   borderColor: theme.colors.border,
                   paddingHorizontal: 10,
                   paddingVertical: 15,
+                  color: theme.colors.placeholderText,
                 }}
               />
               <MyInput
@@ -196,6 +199,7 @@ export default function OrderSummary() {
                   borderColor: theme.colors.border,
                   paddingHorizontal: 10,
                   paddingVertical: 15,
+                  color: theme.colors.placeholderText,
                 }}
               />
             </View>

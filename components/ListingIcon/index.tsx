@@ -79,8 +79,7 @@ export default function ListingIcon({
 const styles = (theme?: MyTheme) =>
   StyleSheet.create({
     container: {
-      backgroundColor: "#F4F5F7",
-
+      backgroundColor: theme?.dark ? theme.colors.dropdownBorder : "#F4F5F7",
       alignItems: "center",
       justifyContent: "center",
     },

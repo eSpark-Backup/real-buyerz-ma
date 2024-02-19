@@ -523,7 +523,7 @@ function Counter({ type }: { type: "bed" | "tub" | "park" }) {
       {type == "bed" && <AmenitiesBed />}
       {type == "tub" && <AmenitiesTub />}
       {type == "park" && <AmenitiesParking />}
-      <View style={styles().innerCounter}>
+      <View style={styles(theme).innerCounter}>
         <Pressable
           onPress={() => {
             value != 1 ? setValue(value - 1) : console.log("abcd");
@@ -830,7 +830,7 @@ const styles = (theme?: MyTheme) =>
     innerCounter: {
       width: 60,
       height: 25,
-      backgroundColor: theme?.dark ? theme.colors.cardBg : "#F4F5F7",
+      backgroundColor: theme?.dark ? theme.colors.dropdownBorder : "#F4F5F7",
       flexDirection: "row",
       alignItems: "center",
       justifyContent: "space-between",
