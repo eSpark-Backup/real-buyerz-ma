@@ -119,10 +119,14 @@ const PropertriesCard = ({
       <View
         style={[styles(theme).cardContainer, { paddingVertical: 10 }, style]}
       >
-        <HomeSmall />
-        <MyText size={12} style={{ width: "80%" }}>
-          {plots + houses + commercials} Properties for {sale ? "sale" : "rent"}
-        </MyText>
+        <View style={styles(theme).viewAll}>
+          <HomeSmall />
+          <GapView mode="horizontal" length={5} />
+          <MyText size={12}>
+            {plots + houses + commercials} Properties for{" "}
+            {sale ? "sale" : "rent"}
+          </MyText>
+        </View>
         <TouchableOpacity activeOpacity={1} style={styles(theme).viewAll}>
           <MyText size={12} textColor={theme.colors.primary} text="View All" />
           <MiniArrow />

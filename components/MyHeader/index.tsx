@@ -4,8 +4,14 @@ import { NativeStackHeaderProps } from "@react-navigation/native-stack";
 import { BottomTabHeaderProps } from "@react-navigation/bottom-tabs";
 import { router } from "expo-router";
 
-import { Head_Back, Head_Logo, Head_Menu, Head_Search } from "@assets/images";
-import { MyTheme } from "@types";
+import {
+  HeadLogoSolo,
+  Head_Back,
+  Head_Logo,
+  Head_Menu,
+  Head_Search,
+} from "@assets/images";
+import { MyTheme, UserType } from "@types";
 import BubbleIcon from "@components/BubbleIcon";
 import { DrawerActions } from "@react-navigation/native";
 import { DrawerHeaderProps } from "@react-navigation/drawer";
@@ -20,6 +26,7 @@ interface MyProps {
   type?: string;
   theme?: MyTheme;
   title?: string;
+  userType: UserType;
 }
 
 type HeaderProps = (
@@ -38,23 +45,28 @@ export default function MyHeader({
   showRight,
   hideCenter,
   theme,
+  userType,
 }: HeaderProps & MyProps) {
   const headerStyle = options.headerStyle as ViewStyle;
 
   return (
     <View style={{ ...styles(theme).container, ...headerStyle }}>
       <View style={styles(theme).left}>
-        <BubbleIcon
-          onPress={() =>
-            showBackIcon
-              ? router.back()
-              : navigation.dispatch(DrawerActions.openDrawer())
-          }
-          plain
-          size={40}
-        >
-          {showBackIcon ? <Head_Back /> : <Head_Menu />}
-        </BubbleIcon>
+        {userType === "anon" ? (
+          <HeadLogoSolo />
+        ) : (
+          <BubbleIcon
+            onPress={() =>
+              showBackIcon
+                ? router.back()
+                : navigation.dispatch(DrawerActions.openDrawer())
+            }
+            plain
+            size={40}
+          >
+            {showBackIcon ? <Head_Back /> : <Head_Menu />}
+          </BubbleIcon>
+        )}
       </View>
       {title && (
         <View style={styles(theme).middle}>
@@ -76,7 +88,7 @@ export default function MyHeader({
           <BubbleIcon
             plain
             size={40}
-            onPress={() => router.push("/(user)/anon/search")}
+            onPress={() => router.push(`/(user)/${userType}/search`)}
           >
             <Head_Search />
           </BubbleIcon>

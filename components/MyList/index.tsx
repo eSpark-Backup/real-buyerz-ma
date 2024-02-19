@@ -49,7 +49,7 @@ const MyListItem: React.FC<MyListItemProps> = ({ item, index, theme, fav }) => {
         />
         <View style={styles(theme).row1}>
           <View style={styles(theme).row3_inner}>
-            <BedOutline />
+            <BedOutline style={{ color: theme.colors.text }} />
             <MyText
               text={item.beds.toString().padStart(2, "0")}
               style={styles(theme).miniText}
@@ -58,7 +58,7 @@ const MyListItem: React.FC<MyListItemProps> = ({ item, index, theme, fav }) => {
             />
           </View>
           <View style={styles(theme).row3_inner}>
-            <BathOutline />
+            <BathOutline style={{ color: theme.colors.text }} />
             <MyText
               text={item.bathroom.toString().padStart(2, "0")}
               style={styles(theme).miniText}
@@ -67,7 +67,7 @@ const MyListItem: React.FC<MyListItemProps> = ({ item, index, theme, fav }) => {
             />
           </View>
           <View style={styles(theme).row3_inner}>
-            <Parking />
+            <Parking style={{ color: theme.colors.text }} />
             <MyText
               text={item.parking.toString().padStart(2, "0")}
               style={styles(theme).miniText}
@@ -76,7 +76,7 @@ const MyListItem: React.FC<MyListItemProps> = ({ item, index, theme, fav }) => {
             />
           </View>
           <View style={styles(theme).sqft}>
-            <LandPlot />
+            <LandPlot style={{ color: theme.colors.text }} />
             <MyText
               text={item.sqft.toString().padStart(2, "0") + " sqft"}
               style={styles(theme).miniText}
@@ -178,7 +178,7 @@ const styles = (theme?: MyTheme) =>
       flexDirection: "row",
       alignItems: "center",
     },
-    miniText: { marginLeft: 5 },
+    miniText: { marginLeft: 5, opacity: 0.8 },
     sqft: {
       flexDirection: "row",
       alignItems: "center",

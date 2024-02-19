@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { StyleSheet, View, FlatList, ScrollView, Image } from "react-native";
 import { useTheme } from "@react-navigation/native";
-import { router } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 
 import {
   Card,
@@ -12,7 +12,7 @@ import {
   MyText,
   SearchBar,
 } from "@components";
-import { MyTheme } from "@types";
+import { MyTheme, UserType } from "@types";
 import { MiFilter } from "@assets/images";
 
 interface Posting {
@@ -89,6 +89,7 @@ function timeAgo(date: Date, minutesAgo: number = 0): string {
 
 export default function ProposalsList() {
   const theme = useTheme() as MyTheme;
+  const params = useLocalSearchParams<{ type: UserType }>();
 
   return (
     <>
@@ -119,7 +120,7 @@ export default function ProposalsList() {
                   data={testProposalsData}
                   scrollEnabled={false}
                   renderItem={({ item, index }) =>
-                    renderProposalsList({ item, index, theme })
+                    renderProposalsList({ item, index, theme, params })
                   }
                   ItemSeparatorComponent={() => (
                     <Card.Divider style={{ width: "100%" }} />
@@ -185,10 +186,12 @@ const renderProposalsList = ({
   item,
   index,
   theme,
+  params,
 }: {
   item: Proposals;
   index: number;
   theme: MyTheme;
+  params: { type?: UserType };
 }) => {
   return (
     <View style={{ paddingHorizontal: 20, paddingVertical: 15 }}>
@@ -235,7 +238,9 @@ const renderProposalsList = ({
         <MyButton
           label="View"
           onPress={() =>
-            router.push("(user)/anon/(tabs)/dashboard/proposalDetails")
+            router.push(
+              `(user)/${params?.type!}/(tabs)/dashboard/proposalDetails`
+            )
           }
           labelStyle={{
             color: "#ffffff",

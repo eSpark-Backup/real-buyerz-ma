@@ -1,13 +1,14 @@
 import React from "react";
 import { StyleSheet } from "react-native";
-import { Stack } from "expo-router";
+import { Stack, useLocalSearchParams } from "expo-router";
 import { useTheme } from "@react-navigation/native";
 
-import { MyTheme } from "@types";
+import { MyTheme, UserType } from "@types";
 import { MyHeader } from "@components";
 
 export default function HomeLayout() {
   const theme = useTheme() as MyTheme;
+  const params = useLocalSearchParams<{ type: UserType }>();
 
   return (
     <Stack
@@ -19,6 +20,7 @@ export default function HomeLayout() {
             <MyHeader
               {...props}
               showRight
+              userType={params.type!}
               showBackIcon={route.name == "index" ? false : true}
               theme={theme}
             />

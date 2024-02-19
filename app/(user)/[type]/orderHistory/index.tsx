@@ -79,7 +79,7 @@ const temp = [
   },
   {
     id: "Arman Khan",
-    description: "Basic + 1000 connection",
+    description: "Basic + 100 connection",
     date: "01-02-24",
     time: "09:22 PM",
     cost: "3500",

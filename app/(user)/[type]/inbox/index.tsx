@@ -7,15 +7,16 @@ import {
   FlatList,
 } from "react-native";
 import { useTheme } from "@react-navigation/native";
-import { router } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 
 import { ReloadIcon } from "@assets/images";
 import { MyText, InboxList, Card, MyTabBar } from "@components";
-import { MyTheme } from "@types";
+import { MyTheme, UserType } from "@types";
 
 const Inbox: React.FC = () => {
   const theme = useTheme() as MyTheme;
   const [tab, setTab] = useState("inbox");
+  const params = useLocalSearchParams<{ type: UserType }>();
 
   const handleTab = (buttonName: string) => {
     if (tab !== buttonName) {
@@ -128,7 +129,9 @@ const Inbox: React.FC = () => {
                 time={item.time}
                 count={item.count}
                 avatarUrl={item.avatarUrl}
-                onPress={() => router.push("(user)/anon/inbox/chat")}
+                onPress={() =>
+                  router.push(`(user)/${params?.type!}/inbox/chat`)
+                }
               />
             )}
             ItemSeparatorComponent={() => (

@@ -148,7 +148,7 @@ export default function Projects() {
         ))}
         {["Price Range", "Area"].map((item, index) => (
           <View key={index}>
-            <RangeSlider title={item} />
+            <RangeSlider title={item} theme={theme} />
             {index === 1 && <GapView length={20} />}
           </View>
         ))}

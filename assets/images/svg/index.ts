@@ -63,6 +63,7 @@ export { default as Draw_Logout } from "./draw-logout.svg";
 export { default as AddImage } from "./add-image.svg";
 export { default as DownArrow } from "./down-arrow.svg";
 export { default as CardPayment } from "./card-payment.svg";
+export { default as HeadLogoSolo } from "./head-solo-logo.svg";
 
 // *(Used in listing screen)
 export { default as AdInfo } from "./AdInfoIcon.svg";

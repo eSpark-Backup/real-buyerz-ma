@@ -6,7 +6,7 @@ export default function App() {
   const params = useLocalSearchParams();
   console.log("kia ha params", params);
 
-  return <Redirect href={"(user)/anon/(tabs)"} />;
+  return <View />;
 }
 
 const styles = StyleSheet.create({});

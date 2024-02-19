@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
-import { MyTheme } from "@types";
+import { MyTheme, UserType } from "@types";
 import { useTheme } from "@react-navigation/native";
 
 import {
@@ -14,11 +14,13 @@ import {
   MyPopupModal,
 } from "@components";
 import { LocationIcon } from "@assets/images/svg";
-import { router } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 
 const PropertyDetail = () => {
   const theme = useTheme() as MyTheme;
   const [isVisble, setIsVisible] = useState(false);
+  const params = useLocalSearchParams<{ type: UserType }>();
+
   const images = [
     "https://picsum.photos/id/299/620",
     "https://picsum.photos/id/400/620",
@@ -120,7 +122,9 @@ const PropertyDetail = () => {
                 textColor="#ffffff"
                 width={100}
                 onPress={() =>
-                  router.push("(user)/anon/(tabs)/home/AgentProfile")
+                  router.push(
+                    `(user)/${params?.type!}/(tabs)/home/AgentProfile`
+                  )
                 }
                 btnStyle={{
                   paddingVertical: 10,

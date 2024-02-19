@@ -7,10 +7,10 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { useTheme } from "@react-navigation/native";
-import { router } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 
 import { Card, GapView, LabelValue, MyButton, MyText } from "@components";
-import { MyTheme } from "@types";
+import { MyTheme, UserType } from "@types";
 import { Feather, Ionicons } from "@expo/vector-icons";
 import Bidding from "./bidding";
 
@@ -88,7 +88,7 @@ function timeAgo(date: Date, minutesAgo: number = 0): string {
 
 function Dashboard() {
   const theme = useTheme() as MyTheme;
-
+  const params = useLocalSearchParams<{ type: UserType }>();
   return (
     <>
       <ScrollView
@@ -125,7 +125,9 @@ function Dashboard() {
                 />
                 <TouchableOpacity
                   activeOpacity={1}
-                  onPress={() => router.push("(user)/anon/myListings")}
+                  onPress={() =>
+                    router.push(`(user)/${params?.type!}/myListings`)
+                  }
                 >
                   <View style={{ flexDirection: "row", alignItems: "center" }}>
                     <MyText
@@ -145,7 +147,7 @@ function Dashboard() {
                 data={testPostingData}
                 scrollEnabled={false}
                 renderItem={({ item, index }) =>
-                  renderPostingList({ item, index, theme })
+                  renderPostingList({ item, index, theme, params })
                 }
                 showsVerticalScrollIndicator={false}
                 ItemSeparatorComponent={() => <Card.Divider />}
@@ -167,10 +169,12 @@ const renderPostingList = ({
   item,
   index,
   theme,
+  params,
 }: {
   item: Posting;
   index: number;
   theme: MyTheme;
+  params: { type?: UserType };
 }) => {
   return (
     <View style={{ padding: 20 }}>
@@ -216,7 +220,9 @@ const renderPostingList = ({
       <MyButton
         label="View Proposals"
         textColor="#ffffff"
-        onPress={() => router.push("(user)/anon/(tabs)/dashboard/proposalList")}
+        onPress={() =>
+          router.push(`(user)/${params?.type!}/(tabs)/dashboard/proposalList`)
+        }
         labelStyle={{ fontSize: 12 }}
         style={{
           marginTop: 20,

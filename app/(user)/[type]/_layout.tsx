@@ -8,10 +8,10 @@ import {
 } from "@react-navigation/drawer";
 import { Drawer } from "expo-router/drawer";
 import { StatusBar } from "expo-status-bar";
-import { router } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 
 import { colors } from "@theme";
-import { MyTheme } from "@types";
+import { MyTheme, UserType } from "@types";
 import {
   Draw_Favorites,
   Draw_Inbox,
@@ -36,6 +36,7 @@ import { useState } from "react";
 
 const DrawerContent = (props: DrawerContentComponentProps) => {
   const [confirmLogout, setConfirmLogout] = useState(false);
+  const params = useLocalSearchParams<{ type: UserType }>();
   const { index } = props.state;
   const theme = useTheme() as MyTheme;
 
@@ -73,7 +74,7 @@ const DrawerContent = (props: DrawerContentComponentProps) => {
         <BubbleIcon
           size={40}
           style={{ backgroundColor: "#fff" }}
-          onPress={() => router.push("(user)/anon/(tabs)/profile")}
+          onPress={() => router.push(`(user)/${params?.type!}/(tabs)/profile`)}
         >
           <Draw_Settings />
         </BubbleIcon>
@@ -119,6 +120,8 @@ const DrawerContent = (props: DrawerContentComponentProps) => {
 
 export default function MainLayout() {
   const theme = useTheme() as MyTheme;
+  const params = useLocalSearchParams<{ type: UserType }>();
+
   return (
     <>
       <StatusBar backgroundColor={theme.colors.secondary} style="light" />
@@ -127,10 +130,18 @@ export default function MainLayout() {
         drawerContent={(props) => <DrawerContent {...props} />}
         backBehavior="history"
         screenOptions={({ route }) => ({
+          swipeEnabled: params?.type! === "anon" ? false : true,
           // headerShown: false,
           // sceneContainerStyle: { marginBottom: 10 },
           header: (props) => {
-            return <MyHeader {...props} showRight theme={theme} />;
+            return (
+              <MyHeader
+                {...props}
+                userType={params?.type!}
+                showRight
+                theme={theme}
+              />
+            );
           },
           drawerStyle: { width: "80%" },
         })}
@@ -160,6 +171,7 @@ export default function MainLayout() {
           name="inbox" // This is the name of the page and must match the url from root
           options={{
             drawerActiveBackgroundColor: "#DCEAF2",
+            headerShown: false,
             drawerIcon: ({ focused }) => (
               <Draw_Inbox
                 style={{
@@ -313,6 +325,7 @@ export default function MainLayout() {
                 <MyHeader
                   {...props}
                   showBackIcon
+                  userType={params?.type!}
                   title="Privacy Policy"
                   hideCenter
                   theme={theme}
@@ -344,6 +357,7 @@ export default function MainLayout() {
                 <MyHeader
                   {...props}
                   showBackIcon
+                  userType={params?.type!}
                   title="Terms & Conditions"
                   hideCenter
                   theme={theme}

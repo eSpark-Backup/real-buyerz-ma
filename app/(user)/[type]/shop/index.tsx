@@ -3,7 +3,7 @@ import { StyleSheet, Text, View } from "react-native";
 import { useTheme } from "@react-navigation/native";
 import { ScrollView } from "react-native-gesture-handler";
 
-import { MyTheme } from "@types";
+import { MyTheme, UserType } from "@types";
 import {
   Card,
   GapView,
@@ -15,7 +15,7 @@ import {
 } from "@components";
 import { WINDOW_WIDTH } from "@constants";
 import { PDollar_Green, PFire_Orange, PFire_Red } from "@assets/images";
-import { router } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 
 interface ConnectsData {
   label: string;
@@ -51,6 +51,7 @@ const connectsData: ConnectsData[] = [
 export default function Shop() {
   const [visible, setVisible] = useState(false);
   const theme = useTheme() as MyTheme;
+  const params = useLocalSearchParams<{ type: UserType }>();
   return (
     <View style={{ flex: 1 }}>
       <View style={styles.container}>
@@ -58,7 +59,7 @@ export default function Shop() {
           <MyPopupModal.OrderSummary
             total="2500"
             onPress={() => {
-              router.push("(user)/anon/shop/orderSummary");
+              router.push(`(user)/${params?.type!}/shop/orderSummary`);
               setVisible(false);
             }}
             items={[{ amount: "2500", name: "Refresh Credits", qty: "1" }]}
@@ -185,7 +186,7 @@ export default function Shop() {
           />
         </View>
       </View>
-      <MyTabBar.Static theme={theme} />
+      <MyTabBar.Static theme={theme} params={params} />
     </View>
   );
 }

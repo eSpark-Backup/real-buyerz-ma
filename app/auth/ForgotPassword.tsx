@@ -37,7 +37,7 @@ export default function ForgotPassword() {
       {/* Todo: there is some space coming in between status bar and scroll view
           needs to be edited
           temporarily adjusted by negative margin */}
-      <MyPopupModal visible={isModalVisible}>
+      <MyPopupModal bgDim visible={isModalVisible}>
         <MyPopupModal.Verify
           onClose={toggleModal}
           onPress={handleConfirm}
