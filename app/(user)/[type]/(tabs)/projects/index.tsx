@@ -141,6 +141,7 @@ export default function Projects() {
               height={40}
               zIndex={4 - index}
               title={item.title}
+              theme={theme}
             />
             {dropdownData.length - 1 && <GapView length={20} />}
           </View>

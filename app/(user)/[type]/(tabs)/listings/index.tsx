@@ -287,6 +287,7 @@ function LocationAndPurpose() {
             style={{ width: "90%" }}
             placeholder="Select city"
             zIndex={10}
+            theme={theme}
           />
         </View>
       </View>
@@ -319,7 +320,12 @@ function PropertySizeandPricing() {
             inputStyle={styles(theme).inputInnerStyle}
             placeholderColor={theme.colors.placeholderText}
           />
-          <MyDropdown data={[]} placeholder="Select Unit" onSelect={() => {}} />
+          <MyDropdown
+            data={[]}
+            placeholder="Select Unit"
+            onSelect={() => {}}
+            theme={theme}
+          />
         </View>
       </View>
       <GapView length={5} />
@@ -333,7 +339,12 @@ function PropertySizeandPricing() {
             inputStyle={styles(theme).inputInnerStyle}
             placeholderColor={theme.colors.placeholderText}
           />
-          <MyDropdown data={[]} placeholder="PKR" onSelect={() => {}} />
+          <MyDropdown
+            data={[]}
+            placeholder="PKR"
+            onSelect={() => {}}
+            theme={theme}
+          />
         </View>
       </View>
       <GapView length={5} />

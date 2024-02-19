@@ -173,6 +173,7 @@ export default function MyProperties() {
               height={40}
               zIndex={4 - index}
               title={item.title}
+              theme={theme}
             />
             {index < dropdownData.length - 1 && <GapView length={20} />}
           </View>

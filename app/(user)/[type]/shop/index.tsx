@@ -283,6 +283,7 @@ function renderItem(item: ConnectsData, index: number, theme: MyTheme) {
           onSelect={(value) => {
             console.log("data", value);
           }}
+          theme={theme}
         />
       )}
     </View>

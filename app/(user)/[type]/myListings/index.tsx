@@ -1,12 +1,5 @@
 import React, { useState } from "react";
-import {
-  FlatList,
-  ScrollView,
-  StyleProp,
-  StyleSheet,
-  View,
-  ViewStyle,
-} from "react-native";
+import { FlatList, StyleProp, StyleSheet, View, ViewStyle } from "react-native";
 import { useTheme } from "@react-navigation/native";
 import { router } from "expo-router";
 
@@ -187,6 +180,8 @@ export default function MyListings() {
               height={40}
               zIndex={4 - index}
               title={item.title}
+              placeholderColor={theme.colors.placeholderText}
+              theme={theme}
             />
             {index < dropdownData.length - 1 && <GapView length={20} />}
           </View>
