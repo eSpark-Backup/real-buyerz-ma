@@ -1,23 +1,33 @@
 import React from "react";
 import { StyleSheet } from "react-native";
-import { Stack } from "expo-router";
+import { Stack, useLocalSearchParams } from "expo-router";
 import { useTheme } from "@react-navigation/native";
 
-import { MyTabBar } from "@components";
-import { MyTheme } from "@types";
+import { MyHeader, MyTabBar } from "@components";
+import { MyTheme, UserType } from "@types";
 
 export default function InboxLayout() {
   const theme = useTheme() as MyTheme;
+  const params = useLocalSearchParams<{ type: UserType }>();
+
   return (
     <>
       <Stack
-        initialRouteName="inbox/index"
+        initialRouteName="index"
         screenOptions={{
-          headerShown: false,
           contentStyle: { paddingTop: 14 },
+          header: (props) => (
+            <MyHeader
+              {...props}
+              showRight
+              userType={params?.type!}
+              showBackIcon={props.route.name == "index" ? false : true}
+              theme={theme}
+            />
+          ),
         }}
       />
-      <MyTabBar.Static theme={theme} />
+      <MyTabBar.Static theme={theme} params={params} />
     </>
   );
 }

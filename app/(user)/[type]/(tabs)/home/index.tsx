@@ -12,56 +12,16 @@ import {
 } from "react-native";
 import { Feather } from "@expo/vector-icons";
 import { useTheme } from "@react-navigation/native";
-import { router } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 
 import { Card, MyText, GapView, AdCard } from "@components";
 import { WINDOW_WIDTH } from "@constants";
-import { MyTheme } from "@types";
+import { MyTheme, UserType } from "@types";
 
 export default function Home() {
   const theme = useTheme() as MyTheme;
   const scrollOffsetY = useRef(new Animated.Value(0)).current;
-
-  // const handleScroll = Animated.event(
-  //   [{ nativeEvent: { contentOffset: { y: scrollOffsetY } } }],
-  //   { useNativeDriver: false }
-  // );
-
-  // const DynamicAppBar = ({ value }: any) => {
-  //   const headerOpacity = scrollOffsetY.interpolate({
-  //     inputRange: [0, 80],
-  //     outputRange: [1, 0],
-  //     extrapolate: "clamp",
-  //   });
-
-  //   return (
-  //     <Animated.View
-  //       style={[styles(theme).header, { opacity: headerOpacity, zIndex: 5 }]}
-  //     >
-  //       <MyAppBar />
-  //     </Animated.View>
-  //   );
-  // };
-
-  // const DynamicHomeHeader = () => {
-  //   const homeHeaderOpacity = scrollOffsetY.interpolate({
-  //     inputRange: [0, 80],
-  //     outputRange: [0, 1],
-  //     extrapolate: "clamp",
-  //   });
-
-  //   return (
-  //     <Animated.View
-  //       style={{
-  //         opacity: homeHeaderOpacity,
-  //         position: "absolute",
-  //         width: "100%",
-  //       }}
-  //     >
-  //       <HomeHeader />
-  //     </Animated.View>
-  //   );
-  // };
+  const params = useLocalSearchParams<{ type: UserType }>();
 
   return (
     <>
@@ -99,14 +59,22 @@ export default function Home() {
               style={{ left: 5 }}
             />
           </View>
-          <PropertyListing title="Featured Properties" theme={theme} />
+          <PropertyListing
+            title="Featured Properties"
+            theme={theme}
+            params={params}
+          />
           <ImageCard />
           <AdCard
             label="Looking to sell or rent out your property?"
             btnLabel="Post an Ad"
             theme={theme}
           />
-          <PropertyListing title="Newly Listed Properties" theme={theme} />
+          <PropertyListing
+            title="Newly Listed Properties"
+            theme={theme}
+            params={params}
+          />
           {/* <GapView length={30} />
           <Title text="Our Home Partners" theme={theme} />
           <MarqueeScrollView /> */}
@@ -281,9 +249,11 @@ const BrowseProps = ({ theme }: { theme?: MyTheme }) => {
 export const PropertyListing = ({
   title,
   theme,
+  params,
 }: {
   title?: string;
   theme?: MyTheme;
+  params: { type?: UserType };
 }) => {
   const data = [
     {
@@ -309,13 +279,20 @@ export const PropertyListing = ({
     },
   ];
 
-  function renderList({ item, index }: { item: any; index: number }) {
+  function renderList({
+    item,
+    index,
+    params,
+  }: {
+    item: any;
+    index: number;
+    params: { type?: UserType };
+  }) {
     return (
       <TouchableOpacity
         activeOpacity={1}
         onPress={() => {
-          console.log("Hello world");
-          router.push("(user)/anon/(tabs)/home/propertyDetail");
+          router.push(`(user)/${params?.type!}/(tabs)/home/propertyDetail`);
         }}
       >
         <Card radius={2} style={{ height: 180, width: 130 }}>
@@ -373,7 +350,7 @@ export const PropertyListing = ({
           data={data}
           showsHorizontalScrollIndicator={false}
           horizontal
-          renderItem={renderList}
+          renderItem={({ item, index }) => renderList({ item, index, params })}
           ItemSeparatorComponent={() => <GapView mode="horizontal" />}
           keyExtractor={(item) => item.id.toString()}
         />

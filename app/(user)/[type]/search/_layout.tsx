@@ -3,12 +3,12 @@ import { StyleSheet } from "react-native";
 import { Stack, useLocalSearchParams, useNavigation } from "expo-router";
 import { MyHeader, MyTabBar } from "@components";
 import { useTheme } from "@react-navigation/native";
-import { MyTheme } from "@types";
+import { MyTheme, UserType } from "@types";
 
 import { Tabs } from "expo-router/tabs";
 
 export default function SearchLayout() {
-  const params = useLocalSearchParams();
+  const params = useLocalSearchParams<{ type: UserType }>();
   const theme = useTheme() as MyTheme;
   const navigation = useNavigation();
 
@@ -27,7 +27,13 @@ export default function SearchLayout() {
         options={{
           header: (props) => {
             return (
-              <MyHeader {...props} showBackIcon hideCenter theme={theme} />
+              <MyHeader
+                {...props}
+                userType={params?.type!}
+                showBackIcon
+                hideCenter
+                theme={theme}
+              />
             );
           },
         }}
@@ -36,7 +42,15 @@ export default function SearchLayout() {
         name="searchList"
         options={{
           header: (props) => {
-            return <MyHeader {...props} showBackIcon showRight theme={theme} />;
+            return (
+              <MyHeader
+                {...props}
+                userType={params?.type!}
+                showBackIcon
+                showRight
+                theme={theme}
+              />
+            );
           },
         }}
       />

@@ -1,80 +1,100 @@
-import React, { memo } from "react";
+import React, { memo, useState } from "react";
 import { StyleSheet } from "react-native";
 import { Tabs } from "expo-router/tabs";
 import { useLocalSearchParams } from "expo-router";
 import { useTheme, useNavigation } from "@react-navigation/native";
 
-import { MyTabBar, MyHeader } from "@components";
-import { MyTheme } from "@types";
+import { MyTabBar, MyHeader, LoginModal } from "@components";
+import { MyTheme, UserType } from "@types";
 
 function UserTabLayout() {
   const theme = useTheme() as MyTheme;
-  const params = useLocalSearchParams();
+  const params = useLocalSearchParams<{ type: UserType }>();
+  const [visible, setVisible] = useState(false);
+
+  console.log("What is the type", params.type);
 
   return (
-    <Tabs
-      initialRouteName="home"
-      backBehavior="initialRoute"
-      sceneContainerStyle={{ paddingBottom: 35 }}
-      screenOptions={{
-        // headerShown: false,
-        // headerStyle: styles(theme).headerStyle,
-        header: (props) => {
-          return <MyHeader {...props} showRight theme={theme} />;
-        },
-      }}
-      tabBar={(props) => {
-        return <MyTabBar {...props} theme={theme} />;
-      }}
-    >
-      <Tabs.Screen
-        name="index"
-        options={{
-          href: null,
+    <>
+      <Tabs
+        initialRouteName="home"
+        backBehavior="initialRoute"
+        sceneContainerStyle={{ paddingBottom: 35 }}
+        screenOptions={{
+          // headerShown: false,
+          // headerStyle: styles(theme).headerStyle,
+          header: (props) => {
+            return (
+              <MyHeader
+                {...props}
+                userType={params?.type!}
+                showRight
+                theme={theme}
+              />
+            );
+          },
         }}
-      />
-      <Tabs.Screen
-        name="home"
-        options={{
-          headerShown: false,
-          title: "Home",
-          href: "(user)/anon/(tabs)/home",
+        tabBar={(props) => {
+          return (
+            <MyTabBar
+              openModal={(value) => setVisible(value)}
+              userType={params?.type!}
+              {...props}
+              theme={theme}
+            />
+          );
         }}
-      />
-      <Tabs.Screen
-        name="projects"
-        options={{
-          // headerShown: true,
-          title: "Projects",
-          href: "(user)/anon/(tabs)/projects",
-        }}
-      />
-      <Tabs.Screen
-        name="dashboard"
-        options={{
-          headerShown: false,
-          title: "Dashboard",
-          href: "(user)/anon/(tabs)/dashboard",
-        }}
-      />
+      >
+        <Tabs.Screen
+          name="index"
+          options={{
+            href: null,
+          }}
+        />
+        <Tabs.Screen
+          name="home"
+          options={{
+            headerShown: false,
+            title: "Home",
+            href: `(user)/${params?.type!}/(tabs)/home`,
+          }}
+        />
+        <Tabs.Screen
+          name="projects"
+          options={{
+            // headerShown: true,
+            title: "Projects",
+            href: `(user)/${params?.type!}/(tabs)/projects`,
+          }}
+        />
+        <Tabs.Screen
+          name="dashboard"
+          options={{
+            headerShown: false,
+            title: "Dashboard",
+            href: `(user)/${params?.type!}/(tabs)/dashboard`,
+          }}
+        />
 
-      <Tabs.Screen
-        name="listings"
-        options={{
-          // headerShown: true,
-          title: "Listings",
-          href: "(user)/anon/(tabs)/listings",
-        }}
-      />
-      <Tabs.Screen
-        name="profile"
-        options={{
-          // headerShown: true,
-          title: "Profile",
-          href: "(user)/anon/(tabs)/profile",
-        }}
-      />
-    </Tabs>
+        <Tabs.Screen
+          name="listings"
+          options={{
+            // headerShown: true,
+            title: "Listings",
+            href: `(user)/${params?.type!}/(tabs)/listings`,
+          }}
+        />
+        <Tabs.Screen
+          name="profile"
+          options={{
+            // headerShown: true,
+            title: "Profile",
+            href: `(user)/${params?.type!}/(tabs)/profile`,
+          }}
+        />
+      </Tabs>
+      <LoginModal visible={visible} onClose={() => setVisible(false)} />
+    </>
   );
 }
 

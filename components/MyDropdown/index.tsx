@@ -217,11 +217,10 @@ const renderList = ({
         height: height,
         borderTopWidth: index > 0 ? 1 : 0,
         justifyContent: "space-between",
-        borderColor: "#E7E7E7",
+        borderColor: theme.colors.border,
         paddingHorizontal: 15,
         flexDirection: "row",
         alignItems: "center",
-        // backgroundColor: "#ffffff",
       }}
       // key={item}
       onPress={() => {

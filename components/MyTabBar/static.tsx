@@ -3,7 +3,7 @@ import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import { BottomTabBarProps } from "@react-navigation/bottom-tabs";
 
 import MyText from "@components/MyText";
-import { MyTheme } from "@types";
+import { MyTheme, UserType } from "@types";
 import {
   HomeTab,
   Tab_Listing,
@@ -21,7 +21,13 @@ const routes = [
   { name: "profile" },
 ];
 
-function Static({ theme }: { theme: MyTheme }) {
+function Static({
+  theme,
+  params,
+}: {
+  theme: MyTheme;
+  params: { type?: UserType };
+}) {
   return (
     <View style={styles({ theme }).container}>
       {routes.map((route, index) => {
@@ -31,7 +37,7 @@ function Static({ theme }: { theme: MyTheme }) {
           route.name !== "search"
         ) {
           const onPress = () => {
-            router.push("(user)/anon/(tabs)/" + route.name);
+            router.push(`(user)/${params?.type!}/(tabs)/` + route.name);
           };
 
           const btnStyle =

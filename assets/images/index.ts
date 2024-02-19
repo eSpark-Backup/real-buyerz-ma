@@ -58,6 +58,7 @@ export {
   DownArrow,
   AddImage,
   CardPayment,
+  HeadLogoSolo,
 
   //used only in shop Screen
   PFire_Orange,

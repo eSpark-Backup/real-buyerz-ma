@@ -3,7 +3,7 @@ import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import { BottomTabBarProps } from "@react-navigation/bottom-tabs";
 
 import MyText from "@components/MyText";
-import { MyTheme } from "@types";
+import { MyTheme, UserType } from "@types";
 import {
   HomeTab,
   Tab_Listing,
@@ -13,17 +13,19 @@ import {
 } from "@assets/images";
 import Static from "./static";
 
+interface MyProps {
+  userType: UserType;
+  openModal?(value: boolean): void;
+}
+
 function MyTabBar({
   state,
   descriptors,
   navigation,
   theme,
-}: BottomTabBarProps & { theme: MyTheme }) {
-  console.log(
-    "descriptors",
-    JSON.stringify(descriptors["home-rBHWXVOMNAznVqEH2BOQb"])
-  );
-
+  userType,
+  openModal,
+}: BottomTabBarProps & { theme: MyTheme } & MyProps) {
   return (
     <View style={styles({ theme }).container}>
       {state.routes.map((route, index) => {
@@ -43,14 +45,22 @@ function MyTabBar({
           const isFocused = state.index === index;
 
           const onPress = () => {
-            const event = navigation.emit({
-              type: "tabPress",
-              target: route.key,
-              canPreventDefault: true,
-            });
+            if (
+              userType !== "anon" ||
+              route.name == "projects" ||
+              route.name == "home"
+            ) {
+              const event = navigation.emit({
+                type: "tabPress",
+                target: route.key,
+                canPreventDefault: true,
+              });
 
-            if (!isFocused && !event.defaultPrevented) {
-              navigation.navigate(route.name, route.params);
+              if (!isFocused && !event.defaultPrevented) {
+                navigation.navigate(route.name, route.params);
+              }
+            } else {
+              openModal?.(true);
             }
           };
 

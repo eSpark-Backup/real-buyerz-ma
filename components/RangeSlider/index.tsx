@@ -8,16 +8,17 @@ import { MyTheme } from "@types";
 
 interface RangeSliderProps {
   title: string;
+  theme: MyTheme;
 }
 
-export default function RangeSlider({ title }: RangeSliderProps) {
+export default function RangeSlider({ title, theme }: RangeSliderProps) {
   const [start, setStart] = useState("0");
   const [end, setEnd] = useState("Any");
-  const theme = useTheme() as MyTheme;
   return (
     <View>
       {title && (
         <MyText
+          textColor={theme.colors.text}
           text={title}
           style={{ alignSelf: "flex-start", paddingBottom: 10.5 }}
           size={15}
@@ -41,6 +42,7 @@ export default function RangeSlider({ title }: RangeSliderProps) {
         </View>
         <MyText
           text={"To"}
+          textColor={theme.colors.text + "99"}
           size={16}
           weight="600"
           style={{ marginHorizontal: 10 }}

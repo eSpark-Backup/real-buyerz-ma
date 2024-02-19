@@ -1,6 +1,6 @@
 import React from "react";
 import { StyleSheet, View } from "react-native";
-import { router } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 import { useTheme } from "@react-navigation/native";
 
 import {
@@ -13,10 +13,11 @@ import {
   MyButton,
 } from "@components";
 import { testData } from "@constants";
-import { MyTheme } from "@types";
+import { MyTheme, UserType } from "@types";
 
 export default function Search() {
   const theme = useTheme() as MyTheme;
+  const params = useLocalSearchParams<{ type: UserType }>();
 
   return (
     <View style={styles.container}>
@@ -96,7 +97,9 @@ export default function Search() {
           label="Search"
           textColor={"#ffffff"}
           backgroundColor={theme.colors.primary}
-          onPress={() => router.push("(user)/anon/search/searchList")}
+          onPress={() =>
+            router.push(`(user)/${params?.type!}/search/searchList`)
+          }
           style={{ borderRadius: 4, paddingHorizontal: 21, paddingVertical: 6 }}
           labelStyle={{ fontSize: 15 }}
         />

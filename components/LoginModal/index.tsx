@@ -17,7 +17,7 @@ function LoginModal({ visible, onClose }: LoginModalProps) {
   return (
     <Modal
       isVisible={visible}
-      backdropColor="transparent"
+      backdropColor="#00000080"
       onBackdropPress={onClose}
       animationIn={"slideInUp"}
       animationOut={"slideOutDown"}
@@ -41,40 +41,57 @@ function LoginModal({ visible, onClose }: LoginModalProps) {
           size={16}
           style={{ paddingVertical: "4%" }}
         />
-        <MyInput
-          placeholder="Email Address"
+        <View
           style={{
-            marginVertical: "8%",
-            backgroundColor: theme.colors.inputBg,
+            flex: 1,
+            alignItems: "center",
+            justifyContent: "center",
+            width: "100%",
           }}
-          placeholderColor={theme.colors.placeholderText}
-        />
-
-        <MyInput
-          placeholder="Password"
-          password
-          style={{
-            backgroundColor: theme.colors.inputBg,
-          }}
-          placeholderColor={theme.colors.placeholderText}
-        />
-        <View style={styles.coupleContainer}>
-          <MyCheckbox
-            label="Remember"
-            onChange={(value) => {
-              console.log("Remember checked !");
-            }}
+        >
+          <MyInput
+            placeholder="Email Address"
             style={{
-              width: "50%",
+              flex: 0,
+              backgroundColor: theme.colors.inputBg,
+              marginBottom: 20,
+              borderWidth: 1,
+              borderColor: theme.colors.border,
+              elevation: 1,
             }}
-            labelStyle={[styles.label, { color: theme.colors.text }]}
+            placeholderColor={theme.colors.placeholderText}
           />
-          <MyText
-            text="Forgot Password?"
-            textColor={theme.colors.secondary}
-            size={14}
-            style={styles.forgotPass}
+
+          <MyInput
+            placeholder="Password"
+            password
+            style={{
+              flex: 0,
+              backgroundColor: theme.colors.inputBg,
+              borderWidth: 1,
+              borderColor: theme.colors.border,
+              elevation: 1,
+            }}
+            placeholderColor={theme.colors.placeholderText}
           />
+          <View style={styles.coupleContainer}>
+            <MyCheckbox
+              label="Remember"
+              onChange={(value) => {
+                console.log("Remember checked !");
+              }}
+              style={{
+                width: "50%",
+              }}
+              labelStyle={[styles.label, { color: theme.colors.text }]}
+            />
+            <MyText
+              text="Forgot Password?"
+              textColor={theme.colors.secondary}
+              size={14}
+              style={styles.forgotPass}
+            />
+          </View>
         </View>
         <MyButton label="Log In" textColor="white" style={styles.button} />
         <MyText
@@ -127,8 +144,9 @@ const styles = StyleSheet.create({
 
   popupStyle: {
     alignItems: "center",
-    height: "100%",
-    marginTop: "55%",
+    flex: 1,
+    // height: "80%",
+    marginTop: "30%",
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
     paddingHorizontal: "9%",
@@ -142,9 +160,8 @@ const styles = StyleSheet.create({
   },
   coupleContainer: {
     flexDirection: "row",
+    marginTop: 5,
     width: "100%",
-    marginTop: "2%",
-    marginBottom: "6%",
   },
   label: { color: "#333333", fontSize: 14 },
   forgotPass: { width: "50%", textAlign: "right", marginTop: 5 },

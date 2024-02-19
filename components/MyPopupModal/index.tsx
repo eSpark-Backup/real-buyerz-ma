@@ -208,7 +208,7 @@ function Feedback({
         style={{
           flexDirection: "row",
           gap: 10,
-          width: 240,
+          width: "100%",
         }}
       >
         <View style={{ paddingTop: 3 }}>
@@ -247,6 +247,7 @@ function Feedback({
         <StarDisabled />
       </View>
       <MyInput
+        multiline
         style={styles(theme).fbInput}
         inputStyle={styles(theme).fbInputText}
         placeholder="Describe your experience."
@@ -471,8 +472,9 @@ const styles = (theme?: MyTheme) =>
     },
     message: { textAlign: "center" },
     box2: {
-      width: 256,
-      height: 149,
+      // width: 256,
+      // height: 149,
+      gap: 10,
       alignItems: "center",
       backgroundColor: theme?.colors.background,
       borderRadius: 10,
@@ -505,8 +507,9 @@ const styles = (theme?: MyTheme) =>
     },
     label2: { color: "white", fontSize: 20 },
     confirmationBox: {
-      width: 256,
-      height: 149,
+      // width: 256,
+      // height: 149,
+      gap: 10,
       backgroundColor: theme?.colors.background,
       borderRadius: 10,
       elevation: 1,
@@ -532,8 +535,8 @@ const styles = (theme?: MyTheme) =>
       marginTop: 4,
     },
     fbBox: {
-      width: 285,
-      height: 227,
+      // width: 285,
+      height: "35%",
       backgroundColor: theme?.colors.background,
       borderRadius: 10,
       borderWidth: 1,
@@ -543,7 +546,7 @@ const styles = (theme?: MyTheme) =>
       shadowOffset: { width: 0, height: 4 },
       alignItems: "center",
       paddingVertical: 20,
-      paddingHorizontal: 23,
+      paddingHorizontal: 20,
     },
     fbInput: {
       width: 200,
