@@ -26,6 +26,7 @@ interface DropdownProps {
   height?: number;
   title?: string;
   bgColor?: string;
+  theme: MyTheme;
 }
 
 export default function MyDropdown({
@@ -40,12 +41,14 @@ export default function MyDropdown({
   height = 30,
   title,
   bgColor,
+  theme,
 }: DropdownProps) {
-  const theme = useTheme() as MyTheme;
   const [show, setShow] = useState(false);
   const [selectedItems, setSelectedItems] = useState<string[]>([]);
   const [label, setLabel] = useState("");
   const listData = multiSelect ? ["All", ...data] : data;
+
+  console.log("theme is dark: ", theme.dark);
 
   const handleSelection = (item: string) => {
     let updatedSelection: string[] = [...selectedItems];
@@ -102,6 +105,7 @@ export default function MyDropdown({
           style={{ alignSelf: "flex-start", paddingBottom: 10 }}
           size={15}
           weight="400"
+          textColor={theme.colors.text}
         />
       )}
       <View
@@ -152,9 +156,7 @@ export default function MyDropdown({
                 zIndex: zIndex + 2,
                 overflow: "hidden",
                 top: height - 2,
-                backgroundColor: theme.dark
-                  ? colors.dark.background
-                  : colors.light.background,
+                backgroundColor: bgColor ? bgColor : theme.colors.background,
                 borderColor: theme.colors.border,
                 borderWidth: 1,
                 borderBottomRightRadius: 5,
@@ -229,7 +231,7 @@ const renderList = ({
         handleSelection(item);
       }}
     >
-      <MyText text={item} />
+      <MyText text={item} textColor={theme.colors.text} />
       {isSelected(item) && <Feather name="check" size={16} color="#34e145" />}
     </TouchableOpacity>
   );

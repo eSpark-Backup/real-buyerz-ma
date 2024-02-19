@@ -113,5 +113,6 @@ const styles = (theme?: MyTheme) =>
       padding: 0,
       fontSize: 14,
       fontWeight: "300",
+      color: theme?.colors.placeholderText,
     },
   });

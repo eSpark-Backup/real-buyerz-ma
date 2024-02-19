@@ -287,6 +287,7 @@ function LocationAndPurpose() {
             style={{ width: "90%" }}
             placeholder="Select city"
             zIndex={10}
+            theme={theme}
           />
         </View>
       </View>
@@ -319,7 +320,12 @@ function PropertySizeandPricing() {
             inputStyle={styles(theme).inputInnerStyle}
             placeholderColor={theme.colors.placeholderText}
           />
-          <MyDropdown data={[]} placeholder="Select Unit" onSelect={() => {}} />
+          <MyDropdown
+            data={[]}
+            placeholder="Select Unit"
+            onSelect={() => {}}
+            theme={theme}
+          />
         </View>
       </View>
       <GapView length={5} />
@@ -333,7 +339,12 @@ function PropertySizeandPricing() {
             inputStyle={styles(theme).inputInnerStyle}
             placeholderColor={theme.colors.placeholderText}
           />
-          <MyDropdown data={[]} placeholder="PKR" onSelect={() => {}} />
+          <MyDropdown
+            data={[]}
+            placeholder="PKR"
+            onSelect={() => {}}
+            theme={theme}
+          />
         </View>
       </View>
       <GapView length={5} />
@@ -523,7 +534,7 @@ function Counter({ type }: { type: "bed" | "tub" | "park" }) {
       {type == "bed" && <AmenitiesBed />}
       {type == "tub" && <AmenitiesTub />}
       {type == "park" && <AmenitiesParking />}
-      <View style={styles().innerCounter}>
+      <View style={styles(theme).innerCounter}>
         <Pressable
           onPress={() => {
             value != 1 ? setValue(value - 1) : console.log("abcd");
@@ -830,7 +841,7 @@ const styles = (theme?: MyTheme) =>
     innerCounter: {
       width: 60,
       height: 25,
-      backgroundColor: theme?.dark ? theme.colors.cardBg : "#F4F5F7",
+      backgroundColor: theme?.dark ? theme.colors.dropdownBorder : "#F4F5F7",
       flexDirection: "row",
       alignItems: "center",
       justifyContent: "space-between",

@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { StyleSheet, View } from "react-native";
 import { router } from "expo-router";
 import { useTheme } from "@react-navigation/native";
 
@@ -40,6 +40,7 @@ export default function Search() {
           onSelect={(value) => {
             console.log("data", value);
           }}
+          theme={theme}
         />
       </View>
       <GapView length={30} />
@@ -62,6 +63,7 @@ export default function Search() {
           onSelect={(value) => {
             console.log("data", value);
           }}
+          theme={theme}
         />
       </View>
       <GapView length={30} />
