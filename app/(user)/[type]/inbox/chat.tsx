@@ -87,7 +87,7 @@ const renderDropdown = (theme?: MyTheme) => {
   return (
     <View style={styles(theme).dropdown}>
       <TouchableOpacity style={styles(theme).dropdownItem}>
-        <MyText size={12} text="Mark as Unread"></MyText>
+        <MyText size={12} text="Mark as Unread" />
       </TouchableOpacity>
       <TouchableOpacity style={styles(theme).dropdownItem}>
         <MyText size={12} text="Block" />
@@ -96,9 +96,7 @@ const renderDropdown = (theme?: MyTheme) => {
         <MyText size={12} text="Delete" />
       </TouchableOpacity>
       <TouchableOpacity style={styles(theme).dropdownItem}>
-        <MyText size={12} text="Archive">
-          Archive
-        </MyText>
+        <MyText size={12} text="Archive" />
       </TouchableOpacity>
     </View>
   );
