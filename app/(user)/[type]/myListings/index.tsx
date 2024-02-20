@@ -180,7 +180,7 @@ export default function MyListings() {
               height={40}
               zIndex={4 - index}
               title={item.title}
-              placeholderColor={theme.colors.placeholderText}
+              placeholderColor={theme.colors.dimText}
               theme={theme}
             />
             {index < dropdownData.length - 1 && <GapView length={20} />}

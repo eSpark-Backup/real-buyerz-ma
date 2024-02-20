@@ -24,13 +24,6 @@ export default function Search() {
       <View style={styles.searchBar}>
         <SearchBar leftIcon clearIcon />
       </View>
-      {/* <TouchableOpacity style={styles.filterCont}>
-        <MyText
-          size={10}
-          text="Clear Filter"
-          style={[styles.filter, { color: theme.colors.secondary }]}
-        />
-      </TouchableOpacity> */}
       <GapView length={25} />
       <View style={styles.purpose}>
         <MyText text="Purpose" size={14} />

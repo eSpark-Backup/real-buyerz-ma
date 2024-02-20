@@ -2,7 +2,7 @@ import React, { memo, useState } from "react";
 import { StyleSheet } from "react-native";
 import { Tabs } from "expo-router/tabs";
 import { useLocalSearchParams } from "expo-router";
-import { useTheme, useNavigation } from "@react-navigation/native";
+import { useTheme } from "@react-navigation/native";
 
 import { MyTabBar, MyHeader, LoginModal } from "@components";
 import { MyTheme, UserType } from "@types";
@@ -21,8 +21,6 @@ function UserTabLayout() {
         backBehavior="initialRoute"
         sceneContainerStyle={{ paddingBottom: 35 }}
         screenOptions={{
-          // headerShown: false,
-          // headerStyle: styles(theme).headerStyle,
           header: (props) => {
             return (
               <MyHeader
@@ -62,7 +60,6 @@ function UserTabLayout() {
         <Tabs.Screen
           name="projects"
           options={{
-            // headerShown: true,
             title: "Projects",
             href: `(user)/${params?.type!}/(tabs)/projects`,
           }}
@@ -79,15 +76,15 @@ function UserTabLayout() {
         <Tabs.Screen
           name="listings"
           options={{
-            // headerShown: true,
             title: "Listings",
+            tabBarLabel:
+              params?.type! == "agent" ? "Post Request" : "Post Listing",
             href: `(user)/${params?.type!}/(tabs)/listings`,
           }}
         />
         <Tabs.Screen
           name="profile"
           options={{
-            // headerShown: true,
             title: "Profile",
             href: `(user)/${params?.type!}/(tabs)/profile`,
           }}

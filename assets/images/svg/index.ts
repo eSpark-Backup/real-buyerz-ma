@@ -126,3 +126,13 @@ export { default as Head_Logo } from "./head-logo.svg";
 export { default as Head_Menu } from "./head-menu.svg";
 export { default as Head_Search } from "./head-search.svg";
 export { default as Head_Back } from "./head-back.svg";
+
+// *(Used in browse properties)
+export { default as ComShop } from "./com-shop.svg";
+export { default as FarmHouse } from "./farm-house.svg";
+export { default as LowPortion } from "./low-portion.svg";
+export { default as PentHouse } from "./pent-house.svg";
+export { default as ResApartment } from "./res-apartment.svg";
+export { default as ResHouse } from "./res-house.svg";
+export { default as ResPlot } from "./res-plot.svg";
+export { default as UpPortion } from "./up-portion.svg";

@@ -7,12 +7,10 @@ import {
   ViewStyle,
 } from "react-native";
 import { Entypo, Feather } from "@expo/vector-icons";
-import { useTheme } from "@react-navigation/native";
 import { ScrollView } from "react-native-gesture-handler"; //? for scrolling inside a absolute view
 
-import MyText from "../MyText";
+import MyText from "@components/MyText";
 import { MyTheme } from "@types";
-import { colors } from "@theme";
 
 interface DropdownProps {
   data: string[];
@@ -131,6 +129,7 @@ export default function MyDropdown({
         >
           <MyText
             text={label ? label : `${placeholder}`}
+            size={12}
             textColor={placeholderColor ? placeholderColor : "#969696"}
           />
           <Entypo
