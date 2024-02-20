@@ -1,16 +1,10 @@
 import React, { useState } from "react";
-import {
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-  FlatList,
-} from "react-native";
+import { StyleSheet, TouchableOpacity, View, FlatList } from "react-native";
 import { useTheme } from "@react-navigation/native";
 import { router, useLocalSearchParams } from "expo-router";
 
 import { ReloadIcon } from "@assets/images";
-import { MyText, InboxList, Card, MyTabBar } from "@components";
+import { MyText, InboxList, Card } from "@components";
 import { MyTheme, UserType } from "@types";
 
 const Inbox: React.FC = () => {
