@@ -310,11 +310,12 @@ const styles = (theme?: MyTheme) =>
     },
     dropdown: {
       position: "absolute",
-      top: 48,
+      top: 43,
       right: 10,
       backgroundColor: theme?.colors.background,
       borderRadius: 5,
       elevation: 3,
+      width: 125,
     },
     dropdownItem: {
       padding: 10,
