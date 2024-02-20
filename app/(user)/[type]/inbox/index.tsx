@@ -21,7 +21,7 @@ const Inbox: React.FC = () => {
   const listData = [
     {
       title: "John Doe",
-      subTitle: "Lorem ipsum dolor sit amet, consectetur adipiscing elit",
+      subTitle: "Lorem ipsum dolor sit amet, consectetur adipiscing elit asdsa",
       time: "10:00 AM",
       count: "1",
       avatarUrl: "https://picsum.photos/id/151/130",

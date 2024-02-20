@@ -24,7 +24,6 @@ export default function InboxList({
   onPress,
 }: IList) {
   const theme = useTheme() as MyTheme;
-  const colorScheme = Appearance.getColorScheme();
 
   return (
     <TouchableOpacity
@@ -43,12 +42,18 @@ export default function InboxList({
             text={title}
             size={15}
             weight="500"
-            textColor={colorScheme === "dark" ? "#919090" : theme.colors.text}
+            textColor={theme.colors.text}
           />
-          <MyText text={subTitle} size={12} weight="400" textColor="#909394" />
+          <MyText
+            text={subTitle}
+            size={12}
+            weight="400"
+            textColor={theme.colors.dimText}
+            numberOfLines={2}
+          />
         </View>
         <View style={styles(theme).dateTimeStyle}>
-          <MyText text={time} size={10} textColor="#898989" />
+          <MyText text={time} size={10} textColor={theme.colors.dimText} />
           {count && (
             <View style={styles(theme).circle}>
               <MyText text={count} size={12} textColor="#ffffff" />
@@ -97,11 +102,10 @@ const styles = (theme?: MyTheme) =>
     },
     circle: {
       backgroundColor: "#126FAAd9",
-      borderRadius: 25,
+      borderRadius: 50,
       borderWidth: 1,
       borderColor: "#126FAA",
       justifyContent: "center",
-      alignContent: "center",
       alignItems: "center",
       width: 25,
       height: 25,
