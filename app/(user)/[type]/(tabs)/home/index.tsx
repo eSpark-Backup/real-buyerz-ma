@@ -17,24 +17,40 @@ import { router, useLocalSearchParams } from "expo-router";
 import { Card, MyText, GapView, AdCard } from "@components";
 import { WINDOW_WIDTH } from "@constants";
 import { MyTheme, UserType } from "@types";
+import {
+  ComShop,
+  FarmHouse,
+  LowPortion,
+  PentHouse,
+  ResApartment,
+  ResHouse,
+  ResPlot,
+  UpPortion,
+} from "@assets/images";
+
+interface BrowseProps {
+  icon: React.ReactNode;
+  label: string;
+}
+
+const PropertiesData = [
+  { icon: <ResHouse />, label: "Residential House" },
+  { icon: <ResApartment />, label: "Residential Apartment" },
+  { icon: <UpPortion />, label: "Upper Portion" },
+  { icon: <LowPortion />, label: "Lower Portion" },
+  { icon: <PentHouse />, label: "Pent House" },
+  { icon: <FarmHouse />, label: "Farm House" },
+  { icon: <ResPlot />, label: "Residential Plot" },
+  { icon: <ComShop />, label: "Commercial Shops" },
+];
 
 export default function Home() {
   const theme = useTheme() as MyTheme;
-  const scrollOffsetY = useRef(new Animated.Value(0)).current;
   const params = useLocalSearchParams<{ type: UserType }>();
 
   return (
     <>
-      {/* <View style={styles(theme).HomeHeader}>
-        <DynamicHomeHeader />
-      </View> */}
-
-      <ScrollView
-        style={[styles(theme).wrapper]}
-        // onScroll={handleScroll}
-        // scrollEventThrottle={16}
-      >
-        {/* <DynamicAppBar value={scrollOffsetY} /> */}
+      <ScrollView style={[styles(theme).wrapper]}>
         <View style={styles(theme).container}>
           <AdCard
             label="View Your listings or post your ad to rent or sell your house"
@@ -43,7 +59,6 @@ export default function Home() {
           />
           <GapView length={30} />
           <Title text="Browse Properties" theme={theme} />
-
           <View style={styles(theme).carousel}>
             <Feather
               name="chevron-left"
@@ -51,7 +66,7 @@ export default function Home() {
               color={theme.colors.text + "77"}
               style={{ right: 5 }}
             />
-            <BrowseProps theme={theme} />
+            <BrowseProps theme={theme} data={PropertiesData} />
             <Feather
               name="chevron-right"
               size={18}
@@ -75,9 +90,6 @@ export default function Home() {
             theme={theme}
             params={params}
           />
-          {/* <GapView length={30} />
-          <Title text="Our Home Partners" theme={theme} />
-          <MarqueeScrollView /> */}
         </View>
       </ScrollView>
     </>
@@ -221,14 +233,24 @@ const ImageCard = () => {
   );
 };
 
-const BrowseProps = ({ theme }: { theme?: MyTheme }) => {
-  function renderList({ item, index }: { item: any; index: number }) {
+const BrowseProps = ({
+  data,
+  theme,
+}: {
+  data: BrowseProps[];
+  theme?: MyTheme;
+}) => {
+  function renderList({ item, index }: { item: BrowseProps; index: number }) {
     return (
       <Card style={styles(theme).bCard}>
-        <MyText>Icon</MyText>
+        {item.icon}
         <GapView />
-        <MyText size={10} textColor="#838383" style={styles(theme).bText}>
-          Residential House
+        <MyText
+          size={10}
+          textColor={theme?.colors.dimText}
+          style={styles(theme).bText}
+        >
+          {item.label}
         </MyText>
       </Card>
     );
@@ -237,11 +259,11 @@ const BrowseProps = ({ theme }: { theme?: MyTheme }) => {
   return (
     <FlatList
       horizontal
-      data={[0, 1, 2, 3, 4]}
+      data={data}
       renderItem={renderList}
       showsHorizontalScrollIndicator={false}
       ItemSeparatorComponent={() => <GapView mode="horizontal" length={15} />}
-      keyExtractor={(item) => item.toString()}
+      keyExtractor={(item, index) => item.toString() + index}
     />
   );
 };
