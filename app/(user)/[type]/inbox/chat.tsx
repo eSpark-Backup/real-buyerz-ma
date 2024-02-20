@@ -278,5 +278,6 @@ const styles = (theme?: MyTheme) =>
       fontSize: 14,
       fontWeight: "300",
       fontFamily: "Inter",
+      height: 20,
     },
   });
