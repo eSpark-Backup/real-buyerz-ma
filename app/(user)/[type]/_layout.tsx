@@ -263,6 +263,7 @@ export default function MainLayout() {
         <Drawer.Screen
           name="shop" // This is the name of the page and must match the url from root
           options={{
+            headerShown: false,
             drawerActiveBackgroundColor: "#DCEAF2",
             drawerIcon: ({ focused }) => (
               <Draw_Shop
