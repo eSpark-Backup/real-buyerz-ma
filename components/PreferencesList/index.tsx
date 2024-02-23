@@ -45,7 +45,6 @@ export default function PreferencesList({
             <ToggleSwitch
               value={switchValue}
               onValueChange={() => {
-                // dispatch(toggleTheme(!switchValue ? "Dark" : "Default"));
                 setSwitchValue(!switchValue);
                 updateThemeInSession(!switchValue ? "Dark" : "Default");
               }}
