@@ -144,8 +144,8 @@ const dropdownData: DropDownList[] = [
     height: 40,
     zIndex: 4,
     onSelect: (val: string) => {},
-    placeholder: "Purpose",
-    title: "Purpose",
+    placeholder: "Property Type",
+    title: "Property Type",
     style: { width: "100%" },
   },
 ];
