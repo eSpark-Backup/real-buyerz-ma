@@ -1,5 +1,5 @@
 import { SafeAreaView, LogBox } from "react-native";
-import { ThemeProvider } from "@react-navigation/native";
+import { ThemeProvider, useTheme } from "@react-navigation/native";
 import { Slot } from "expo-router";
 import { useSelector, Provider } from "react-redux";
 import { StatusBar } from "expo-status-bar";
@@ -8,6 +8,8 @@ import { RootState, store } from "@store";
 import { DarkTheme, LightTheme } from "@theme";
 import { ThemeTypes } from "@types";
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
+import { storage } from "store/mmkv";
+import { useEffect, useState } from "react";
 
 LogBox.ignoreLogs([
   "VirtualizedLists should never be nested inside plain ScrollViews",
@@ -27,10 +29,17 @@ function RootComponent() {
   const theme = useSelector(
     (state: RootState): ThemeTypes => state.theme.value
   );
-  console.log("Theme", theme);
+
+  const [storedTheme, setStoredTheme] = useState(storage.getBoolean("theme"));
+
+  useEffect(() => {
+    const theme = storage.getBoolean("theme");
+    setStoredTheme(theme);
+    console.log(theme ? "dark" : "default");
+  }, [theme]);
 
   return (
-    <ThemeProvider value={theme === "Dark" ? DarkTheme : LightTheme}>
+    <ThemeProvider value={storedTheme ? DarkTheme : LightTheme}>
       <StatusBar style={"dark"} translucent />
       <SafeAreaView style={{ flex: 1 }}>
         <Slot />

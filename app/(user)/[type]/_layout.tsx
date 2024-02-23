@@ -40,9 +40,10 @@ const DrawerContent = (props: DrawerContentComponentProps) => {
   const params = useLocalSearchParams<{ type: UserType }>();
   const { index } = props.state;
   const theme = useTheme() as MyTheme;
-  const { clearSession } = useSessionManagement();
+  const { clearSession, clearTheme } = useSessionManagement();
 
   const handleLogout = () => {
+    clearTheme();
     clearSession(); // Call clearSession function to logout
     router.replace("/auth/signIn"); // Redirect user to sign-in screen
   };
