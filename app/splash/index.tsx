@@ -14,6 +14,8 @@ import { MaterialCommunityIcons, Ionicons } from "@expo/vector-icons";
 import { WINDOW_HEIGHT, WINDOW_WIDTH } from "@constants";
 import { customFonts } from "utils/customFonts";
 import { customImages } from "utils/customImages";
+import { MMKV } from "react-native-mmkv";
+import { checkLoggedInUser } from "app/auth/utils/authUtils";
 
 // SplashScreen.preventAutoHideAsync(); //? Disable Auto Hide
 
@@ -96,10 +98,23 @@ export default function App() {
     };
   }, [translateY, scale]);
 
+  // useEffect(() => {}, []);
+
   useEffect(() => {
-    setTimeout(() => {
-      router.push("/auth");
-    }, 5000);
+    const sessionCheckLoggedIn = async () => {
+      // Check if the user is logged in
+      const isLoggedIn = checkLoggedInUser(); // Assuming you store the logged-in state in MMKV
+      if (isLoggedIn) {
+        // If logged in, navigate to home or another authenticated screen
+        router.push("/(user)/user");
+      } else {
+        // If not logged in, navigate to the authentication screen
+        setTimeout(() => {
+          router.push("/auth");
+        }, 5000);
+      }
+    };
+    sessionCheckLoggedIn();
   }, []);
 
   if (!appIsReady) {

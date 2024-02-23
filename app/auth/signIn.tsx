@@ -9,10 +9,12 @@ import { GLogo, RLogo } from "@assets/images";
 import { DarkTheme, LightTheme } from "@theme";
 import { MyText, MyButton, MyCheckbox, MyInput, GapView } from "@components";
 import { UserSignInSchema } from "@validations/schema";
+import useSessionManagement from "hooks/useSessionManagement";
 
 export default function signIn() {
   const colorScheme = Appearance.getColorScheme();
   const theme = colorScheme === "dark" ? DarkTheme : LightTheme;
+  const { updateUserInSession } = useSessionManagement();
 
   return (
     <ScrollView contentContainerStyle={styles.main}>
@@ -43,6 +45,12 @@ export default function signIn() {
         }}
         onSubmit={async (values, { resetForm }) => {
           console.log("Sign In success", values);
+          const userData = {
+            email: values.email,
+            password: values.password,
+          };
+          updateUserInSession(userData);
+          router.push("/(user)/user");
         }}
         validationSchema={UserSignInSchema.signInForm}
       >
@@ -58,7 +66,7 @@ export default function signIn() {
           <View style={styles.form}>
             <MyInput
               placeholder="Email address"
-              onChange={handleChange("username")}
+              onChange={handleChange("email")}
               style={styles.input}
               placeholderColor="#666666"
             />
@@ -115,8 +123,9 @@ export default function signIn() {
                 textColor="white"
                 style={styles.button}
                 onPress={() => {
-                  // handleSubmit();
-                  router.push("/(user)/user"); // user | agent type based on login
+                  console.log(errors);
+                  handleSubmit();
+                  // user | agent type based on login
                 }}
               />
               <MyText
