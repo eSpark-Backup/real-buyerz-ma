@@ -5,6 +5,7 @@ import { useDispatch } from "react-redux";
 import ToggleSwitch from "../MySwitch/toggleSwitch";
 import MyText from "../MyText";
 import { toggleTheme } from "features/themeSlice";
+import useSessionManagement from "hooks/useSessionManagement";
 
 export interface PList {
   title: string;
@@ -23,9 +24,9 @@ export default function PreferencesList({
   index,
   onPress,
 }: PList) {
-  const dispatch = useDispatch();
   const [switchValue, setSwitchValue] = useState(false);
   const [toggleValue, setToggleValue] = useState(value);
+  const { updateThemeInSession } = useSessionManagement();
 
   const handleToggleValue = (key: number) => {
     console.log("key", key);
@@ -44,8 +45,9 @@ export default function PreferencesList({
             <ToggleSwitch
               value={switchValue}
               onValueChange={() => {
-                dispatch(toggleTheme(!switchValue ? "Dark" : "Default"));
+                // dispatch(toggleTheme(!switchValue ? "Dark" : "Default"));
                 setSwitchValue(!switchValue);
+                updateThemeInSession(!switchValue ? "Dark" : "Default");
               }}
             />
           )}

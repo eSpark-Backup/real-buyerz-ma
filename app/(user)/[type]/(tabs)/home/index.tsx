@@ -27,6 +27,7 @@ import {
   ResPlot,
   UpPortion,
 } from "@assets/images";
+import { checkLoggedInUser } from "app/auth/utils/authUtils";
 
 interface BrowseProps {
   icon: React.ReactNode;
@@ -47,6 +48,8 @@ const PropertiesData = [
 export default function Home() {
   const theme = useTheme() as MyTheme;
   const params = useLocalSearchParams<{ type: UserType }>();
+  const isLoggedIn = checkLoggedInUser();
+  useEffect(() => console.log("home;is Logged in? ", isLoggedIn), []);
 
   return (
     <>

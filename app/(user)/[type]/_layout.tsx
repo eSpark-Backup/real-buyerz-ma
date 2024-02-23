@@ -33,12 +33,20 @@ import {
   MyText,
 } from "@components";
 import { useState } from "react";
+import useSessionManagement from "hooks/useSessionManagement";
 
 const DrawerContent = (props: DrawerContentComponentProps) => {
   const [confirmLogout, setConfirmLogout] = useState(false);
   const params = useLocalSearchParams<{ type: UserType }>();
   const { index } = props.state;
   const theme = useTheme() as MyTheme;
+  const { clearSession, clearTheme } = useSessionManagement();
+
+  const handleLogout = () => {
+    clearTheme();
+    clearSession(); // Call clearSession function to logout
+    router.replace("/auth/signIn"); // Redirect user to sign-in screen
+  };
 
   return (
     <View style={{ ...styles.container }}>
@@ -108,10 +116,7 @@ const DrawerContent = (props: DrawerContentComponentProps) => {
         <MyPopupModal.Alert
           message="Are you sure you want to Log out?"
           onClose={() => setConfirmLogout(false)}
-          onPress={() => {
-            setConfirmLogout(false);
-            router.replace("/auth/signIn");
-          }}
+          onPress={handleLogout}
         />
       </MyPopupModal>
     </View>
