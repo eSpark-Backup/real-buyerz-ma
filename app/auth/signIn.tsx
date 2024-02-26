@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { Appearance, StyleSheet, Text, View, ScrollView } from "react-native";
+import React from "react";
+import { Appearance, StyleSheet, View, ScrollView } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { MaterialIcons } from "@expo/vector-icons";
 import { Link, router } from "expo-router";
@@ -114,7 +114,7 @@ export default function signIn() {
                     text="Terms and Conditions"
                     style={styles.termsDecText}
                   />
-                  <MyText text="and " style={styles.termsText} />
+                  <MyText text=" and " style={styles.termsText} />
                   <MyText text="Privacy Policy" style={styles.termsDecText} />
                 </View>
               </View>
@@ -125,6 +125,7 @@ export default function signIn() {
                 onPress={() => {
                   console.log(errors);
                   handleSubmit();
+                  router.push("/(user)/user");
                   // user | agent type based on login
                 }}
               />

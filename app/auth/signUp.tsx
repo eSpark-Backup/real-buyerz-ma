@@ -7,9 +7,8 @@ import { Formik } from "formik";
 
 import { Back, GLogo, SLogo } from "@assets/images/svg";
 import { DarkTheme, LightTheme } from "@theme";
-import { MyText, MyButton, MyCheckbox, MyInput, MyDropdown } from "@components";
+import { MyText, MyButton, MyCheckbox, MyInput } from "@components";
 import { UserSignUpSchema } from "@validations/schema";
-import { WINDOW_WIDTH } from "@constants";
 
 interface InputField {
   placeholder: string;
@@ -159,7 +158,7 @@ export default function SignUp() {
               />
 
               <MyText text="Terms and Conditions" style={styles.termsDecText} />
-              <MyText text="and " style={styles.termsText} />
+              <MyText text=" and " style={styles.termsText} />
 
               <MyText text="Privacy Policy" style={styles.termsDecText} />
             </View>
