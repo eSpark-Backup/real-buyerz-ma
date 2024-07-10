@@ -1,15 +1,15 @@
+import { useEffect, useState } from "react";
+import { storage } from "store/mmkv";
 import { SafeAreaView, LogBox } from "react-native";
 import { ThemeProvider, useTheme } from "@react-navigation/native";
 import { Slot } from "expo-router";
 import { useSelector, Provider } from "react-redux";
 import { StatusBar } from "expo-status-bar";
+import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 
 import { RootState, store } from "@store";
 import { DarkTheme, LightTheme } from "@theme";
 import { ThemeTypes } from "@types";
-import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
-import { storage } from "store/mmkv";
-import { useEffect, useState } from "react";
 
 LogBox.ignoreLogs([
   "VirtualizedLists should never be nested inside plain ScrollViews",

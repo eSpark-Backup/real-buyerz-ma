@@ -9,15 +9,21 @@ import {
 import { SplashScreen, router } from "expo-router";
 import * as Font from "expo-font";
 import { Asset } from "expo-asset";
-import { MaterialCommunityIcons, Ionicons } from "@expo/vector-icons";
+import {
+  MaterialCommunityIcons,
+  Ionicons,
+  Feather,
+  Octicons,
+  Entypo,
+  MaterialIcons,
+} from "@expo/vector-icons";
 
 import { WINDOW_HEIGHT, WINDOW_WIDTH } from "@constants";
 import { customFonts } from "utils/customFonts";
 import { customImages } from "utils/customImages";
-import { MMKV } from "react-native-mmkv";
 import { checkLoggedInUser } from "app/auth/utils/authUtils";
 
-// SplashScreen.preventAutoHideAsync(); //? Disable Auto Hide
+SplashScreen.preventAutoHideAsync(); //? Disable Auto Hide
 
 const cacheImages = (images: any[]) => {
   return images.map((image) => {
@@ -46,6 +52,10 @@ export default function App() {
       const fontAssets = cacheFonts([
         MaterialCommunityIcons.font,
         Ionicons.font,
+        Feather.font,
+        Octicons.font,
+        Entypo.font,
+        MaterialIcons.font,
       ]);
 
       await Promise.all([...imageAssets, ...fontAssets, ...customFontAssets]);
