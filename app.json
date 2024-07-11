@@ -12,16 +12,17 @@
       "resizeMode": "cover",
       "backgroundColor": "#ccd4df"
     },
-    "assetBundlePatterns": ["assets/images/*"],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.eSpark.realbuyerz"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.eSpark.realbuyerz"
+      "package": "com.eSpark.realbuyerz",
+      "permissions": ["android.permission.RECORD_AUDIO"]
     },
     "web": {
       "favicon": "./assets/favicon.png"

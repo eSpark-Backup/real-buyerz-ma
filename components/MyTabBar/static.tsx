@@ -1,5 +1,11 @@
 import React from "react";
-import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  Platform,
+} from "react-native";
 import { BottomTabBarProps } from "@react-navigation/bottom-tabs";
 
 import MyText from "@components/MyText";
@@ -12,6 +18,7 @@ import {
   Tab_Profile,
 } from "@assets/images";
 import { router } from "expo-router";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 const routes = [
   { name: "home" },
@@ -28,8 +35,16 @@ function Static({
   theme: MyTheme;
   params: { type?: UserType };
 }) {
+  const insets = useSafeAreaInsets();
   return (
-    <View style={styles({ theme }).container}>
+    <View
+      style={[
+        styles({ theme }).container,
+        {
+          height: Platform.OS == "ios" ? 52 + insets.bottom / 2 : 52,
+        },
+      ]}
+    >
       {routes.map((route, index) => {
         if (
           route.name !== "index" &&
@@ -149,8 +164,8 @@ const styles = ({
       backgroundColor: theme?.colors.TabBar,
       justifyContent: "center",
       alignItems: "center",
-      height: 52,
-      marginTop: 35,
+      // height: 52,
+      // marginTop: 35,
     },
     normalStyle: {
       justifyContent: "center",

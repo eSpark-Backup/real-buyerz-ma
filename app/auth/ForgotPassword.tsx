@@ -10,11 +10,13 @@ import { OnRadioBtn, OffRadioBtn } from "@assets/images";
 import { ForgotPasswordSchema, ResetPasswordSchema } from "@validations/schema";
 import { MyTheme } from "@types";
 import { Back } from "@assets/images/svg";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 type InputType = "email" | "phone number";
 
 export default function ForgotPassword() {
   const { colors, dark } = useTheme() as MyTheme;
+  const insets = useSafeAreaInsets();
   const [formSubmitted, setFormSubmitted] = useState(false);
   const [inputValue, setInputValue] = useState("");
   const [inputType, setInputType] = useState<InputType>("email");
@@ -33,6 +35,15 @@ export default function ForgotPassword() {
   };
   return (
     <>
+      <View
+        style={{
+          height: insets.top,
+          backgroundColor: colors.secondary,
+          position: "absolute",
+          width: "100%",
+          top: -insets.top,
+        }}
+      />
       <StatusBar backgroundColor={colors.secondary} style="light" />
       {/* Todo: there is some space coming in between status bar and scroll view
           needs to be edited

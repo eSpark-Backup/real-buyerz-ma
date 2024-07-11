@@ -1,20 +1,15 @@
 import React, { useEffect, useRef } from "react";
-import {
-  StatusBar,
-  View,
-  Animated,
-  Easing,
-  StyleSheet,
-  BackHandler,
-} from "react-native";
+import { View, Animated, Easing, StyleSheet, BackHandler } from "react-native";
 import { Slot } from "expo-router";
 import { LinearGradient } from "expo-linear-gradient";
 
 import { SCREEN_HEIGHT, WINDOW_HEIGHT } from "@constants";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export default function AuthLayout() {
   const translateX = useRef(new Animated.Value(0)).current;
   const opacity = useRef(new Animated.Value(0.5)).current;
+  const insets = useSafeAreaInsets();
 
   useEffect(() => {
     Animated.timing(opacity, {
@@ -65,6 +60,7 @@ export default function AuthLayout() {
     <LinearGradient
       style={{
         flex: 1,
+        // paddingTop: insets.top,
       }}
       // Background Linear Gradient
       colors={["rgba(255,255,255,0.48)", "rgba(12,12,12,0.47)"]}
@@ -90,7 +86,7 @@ export default function AuthLayout() {
       />
       <View
         style={{
-          marginTop: StatusBar.currentHeight,
+          marginTop: insets.top,
           flex: 1,
           zIndex: 1,
         }}

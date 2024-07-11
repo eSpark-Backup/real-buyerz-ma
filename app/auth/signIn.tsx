@@ -19,7 +19,7 @@ export default function signIn() {
       <View style={styles.top}>
         <TouchableOpacity
           activeOpacity={1}
-          onPress={() => router.push("(user)/anon")} //this is constant anon type
+          onPress={() => router.push("(user)/anon/home")} //this is constant anon type
         >
           <MyText
             text="Skip"
@@ -116,7 +116,7 @@ export default function signIn() {
                 style={styles.button}
                 onPress={() => {
                   // handleSubmit();
-                  router.push("/(user)/user"); // user | agent type based on login
+                  router.push("/(user)/user/home"); // user | agent type based on login
                 }}
               />
               <MyText
