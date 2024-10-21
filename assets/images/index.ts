@@ -60,6 +60,16 @@ export {
   CardPayment,
   HeadLogoSolo,
 
+  //used in home screen browse properties
+  ComShop,
+  FarmHouse,
+  LowPortion,
+  PentHouse,
+  ResApartment,
+  ResHouse,
+  ResPlot,
+  UpPortion,
+
   //used only in shop Screen
   PFire_Orange,
   PFire_Red,

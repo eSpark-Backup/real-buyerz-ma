@@ -1,10 +1,12 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Pressable, StyleSheet, View } from "react-native";
 import { useDispatch } from "react-redux";
 
 import ToggleSwitch from "../MySwitch/toggleSwitch";
 import MyText from "../MyText";
 import { toggleTheme } from "features/themeSlice";
+import useSessionManagement from "hooks/useSessionManagement";
+import { storage } from "store/mmkv";
 
 export interface PList {
   title: string;
@@ -23,9 +25,11 @@ export default function PreferencesList({
   index,
   onPress,
 }: PList) {
-  const dispatch = useDispatch();
-  const [switchValue, setSwitchValue] = useState(false);
+  const [switchValue, setSwitchValue] = useState<boolean>(
+    storage.getBoolean("theme") ? true : false
+  );
   const [toggleValue, setToggleValue] = useState(value);
+  const { updateThemeInSession } = useSessionManagement();
 
   const handleToggleValue = (key: number) => {
     console.log("key", key);
@@ -44,8 +48,10 @@ export default function PreferencesList({
             <ToggleSwitch
               value={switchValue}
               onValueChange={() => {
-                dispatch(toggleTheme(!switchValue ? "Dark" : "Default"));
+                console.log("switch value before: ", switchValue);
                 setSwitchValue(!switchValue);
+                updateThemeInSession(switchValue ? "Default" : "Dark");
+                console.log("switch value after: ", switchValue);
               }}
             />
           )}

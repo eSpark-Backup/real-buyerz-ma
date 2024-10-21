@@ -17,33 +17,87 @@ import { router, useLocalSearchParams } from "expo-router";
 import { Card, MyText, GapView, AdCard } from "@components";
 import { WINDOW_WIDTH } from "@constants";
 import { MyTheme, UserType } from "@types";
+import {
+  ComShop,
+  FarmHouse,
+  LowPortion,
+  PentHouse,
+  ResApartment,
+  ResHouse,
+  ResPlot,
+  UpPortion,
+} from "@assets/images";
+import { checkLoggedInUser } from "app/auth/utils/authUtils";
+
+interface BrowseProps {
+  onPress: () => void;
+  icon: React.ReactNode;
+  label: string;
+}
 
 export default function Home() {
   const theme = useTheme() as MyTheme;
-  const scrollOffsetY = useRef(new Animated.Value(0)).current;
   const params = useLocalSearchParams<{ type: UserType }>();
+  const isLoggedIn = checkLoggedInUser();
+  useEffect(() => console.log("home;is Logged in? ", isLoggedIn), []);
+
+  const PropertiesData = [
+    {
+      icon: <ResHouse />,
+      label: "Residential House",
+      onPress: () => router.push(`(user)/${params?.type!}/(tabs)/projects`),
+    },
+    {
+      icon: <ResApartment />,
+      label: "Residential Apartment",
+      onPress: () => router.push(`(user)/${params?.type!}/(tabs)/projects`),
+    },
+    {
+      icon: <UpPortion />,
+      label: "Upper Portion",
+      onPress: () => router.push(`(user)/${params?.type!}/(tabs)/projects`),
+    },
+    {
+      icon: <LowPortion />,
+      label: "Lower Portion",
+      onPress: () => router.push(`(user)/${params?.type!}/(tabs)/projects`),
+    },
+    {
+      icon: <PentHouse />,
+      label: "Pent House",
+      onPress: () => router.push(`(user)/${params?.type!}/(tabs)/projects`),
+    },
+    {
+      icon: <FarmHouse />,
+      label: "Farm House",
+      onPress: () => router.push(`(user)/${params?.type!}/(tabs)/projects`),
+    },
+    {
+      icon: <ResPlot />,
+      label: "Residential Plot",
+      onPress: () => router.push(`(user)/${params?.type!}/(tabs)/projects`),
+    },
+    {
+      icon: <ComShop />,
+      label: "Commercial Shops",
+      onPress: () => router.push(`(user)/${params?.type!}/(tabs)/projects`),
+    },
+  ];
 
   return (
     <>
-      {/* <View style={styles(theme).HomeHeader}>
-        <DynamicHomeHeader />
-      </View> */}
-
-      <ScrollView
-        style={[styles(theme).wrapper]}
-        // onScroll={handleScroll}
-        // scrollEventThrottle={16}
-      >
-        {/* <DynamicAppBar value={scrollOffsetY} /> */}
+      <ScrollView style={[styles(theme).wrapper]}>
         <View style={styles(theme).container}>
           <AdCard
             label="View Your listings or post your ad to rent or sell your house"
             btnLabel="Go to Dashboard"
             theme={theme}
+            onPress={() =>
+              router.push(`(user)/${params?.type!}/(tabs)/dashboard`)
+            }
           />
           <GapView length={30} />
           <Title text="Browse Properties" theme={theme} />
-
           <View style={styles(theme).carousel}>
             <Feather
               name="chevron-left"
@@ -51,7 +105,7 @@ export default function Home() {
               color={theme.colors.text + "77"}
               style={{ right: 5 }}
             />
-            <BrowseProps theme={theme} />
+            <BrowseProps theme={theme} data={PropertiesData} />
             <Feather
               name="chevron-right"
               size={18}
@@ -69,15 +123,15 @@ export default function Home() {
             label="Looking to sell or rent out your property?"
             btnLabel="Post an Ad"
             theme={theme}
+            onPress={() =>
+              router.push(`(user)/${params?.type!}/(tabs)/listings`)
+            }
           />
           <PropertyListing
             title="Newly Listed Properties"
             theme={theme}
             params={params}
           />
-          {/* <GapView length={30} />
-          <Title text="Our Home Partners" theme={theme} />
-          <MarqueeScrollView /> */}
         </View>
       </ScrollView>
     </>
@@ -170,6 +224,7 @@ const MarqueeScrollView = () => {
 };
 
 const ImageCard = () => {
+  const params = useLocalSearchParams<{ type: UserType }>();
   return (
     <ImageBackground
       source={{ uri: "https://picsum.photos/id/299/620" }}
@@ -210,7 +265,9 @@ const ImageCard = () => {
             paddingHorizontal: 10,
             borderRadius: 3,
           }}
-          onPress={() => console.log("asd")}
+          onPress={() =>
+            router.push(`(user)/${params?.type!}/(tabs)/dashboard`)
+          }
         >
           <MyText textColor="#ffffff" size={10} weight="600">
             View Dashboard
@@ -221,14 +278,24 @@ const ImageCard = () => {
   );
 };
 
-const BrowseProps = ({ theme }: { theme?: MyTheme }) => {
-  function renderList({ item, index }: { item: any; index: number }) {
+const BrowseProps = ({
+  data,
+  theme,
+}: {
+  data: BrowseProps[];
+  theme?: MyTheme;
+}) => {
+  function renderList({ item, index }: { item: BrowseProps; index: number }) {
     return (
-      <Card style={styles(theme).bCard}>
-        <MyText>Icon</MyText>
+      <Card style={styles(theme).bCard} onPress={item?.onPress}>
+        {item.icon}
         <GapView />
-        <MyText size={10} textColor="#838383" style={styles(theme).bText}>
-          Residential House
+        <MyText
+          size={10}
+          textColor={theme?.colors.dimText}
+          style={styles(theme).bText}
+        >
+          {item.label}
         </MyText>
       </Card>
     );
@@ -237,11 +304,11 @@ const BrowseProps = ({ theme }: { theme?: MyTheme }) => {
   return (
     <FlatList
       horizontal
-      data={[0, 1, 2, 3, 4]}
+      data={data}
       renderItem={renderList}
       showsHorizontalScrollIndicator={false}
       ItemSeparatorComponent={() => <GapView mode="horizontal" length={15} />}
-      keyExtractor={(item) => item.toString()}
+      keyExtractor={(item, index) => item.toString() + index}
     />
   );
 };

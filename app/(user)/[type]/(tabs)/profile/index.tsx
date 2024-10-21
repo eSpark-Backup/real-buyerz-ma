@@ -233,7 +233,7 @@ export default function ProfileSettings() {
           <View>
             <View style={styles(theme).headingStyle}>
               <MyText
-                text="Information"
+                text="Password"
                 size={16}
                 weight="600"
                 textColor={theme.colors.negative}
