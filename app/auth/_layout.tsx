@@ -1,20 +1,15 @@
 import React, { useEffect, useRef } from "react";
-import {
-  StatusBar,
-  View,
-  Animated,
-  Easing,
-  StyleSheet,
-  BackHandler,
-} from "react-native";
+import { View, Animated, Easing, StyleSheet, BackHandler } from "react-native";
 import { Slot } from "expo-router";
 import { LinearGradient } from "expo-linear-gradient";
 
-import { SCREEN_HEIGHT, WINDOW_HEIGHT } from "@constants";
+import { SCREEN_HEIGHT } from "@constants";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export default function AuthLayout() {
   const translateX = useRef(new Animated.Value(0)).current;
   const opacity = useRef(new Animated.Value(0.5)).current;
+  const insets = useSafeAreaInsets();
 
   useEffect(() => {
     Animated.timing(opacity, {
@@ -23,6 +18,7 @@ export default function AuthLayout() {
       useNativeDriver: true,
       easing: Easing.linear,
     }).start();
+    
     const slideAnimation = Animated.loop(
       Animated.sequence([
         Animated.timing(translateX, {
@@ -49,7 +45,6 @@ export default function AuthLayout() {
   useEffect(() => {
     const backAction = () => {
       BackHandler.exitApp();
-      console.log("helo");
       return true;
     };
 
@@ -62,42 +57,42 @@ export default function AuthLayout() {
   }, []);
 
   return (
-    <LinearGradient
-      style={{
-        flex: 1,
-      }}
-      // Background Linear Gradient
-      colors={["rgba(255,255,255,0.48)", "rgba(12,12,12,0.47)"]}
-    >
-      <Animated.View
-        style={{
-          backgroundColor: "#000000",
-          opacity: opacity,
-          position: "absolute",
-          height: SCREEN_HEIGHT,
-          width: "100%",
-        }}
-      />
-      <Animated.Image
-        source={require("@assets/images/png/bg_wide.png")}
-        style={[
-          styles.backgroundImage,
-          {
-            transform: [{ translateX }], //? 0 to -390 range
-          },
-        ]}
-        resizeMode="cover"
-      />
-      <View
-        style={{
-          marginTop: StatusBar.currentHeight,
-          flex: 1,
-          zIndex: 1,
-        }}
+    <View style={{ flex: 1 }}>
+      <LinearGradient
+        style={{ flex: 1 }}
+        // Background Linear Gradient
+        colors={["rgba(255,255,255,0.48)", "rgba(12,12,12,0.47)"]}
       >
-        <Slot />
-      </View>
-    </LinearGradient>
+        <Animated.View
+          style={{
+            backgroundColor: "#000000",
+            opacity: opacity,
+            position: "absolute",
+            height: SCREEN_HEIGHT,
+            width: "100%",
+          }}
+        />
+        <Animated.Image
+          source={require("@assets/images/png/bg_wide.png")}
+          style={[
+            styles.backgroundImage,
+            {
+              transform: [{ translateX }], //? 0 to -390 range
+            },
+          ]}
+          resizeMode="cover"
+        />
+        <View
+          style={{
+            marginTop: insets.top,
+            flex: 1,
+            zIndex: 1,
+          }}
+        >
+          <Slot />
+        </View>
+      </LinearGradient>
+    </View>
   );
 }
 

@@ -116,7 +116,10 @@ const DrawerContent = (props: DrawerContentComponentProps) => {
         <MyPopupModal.Alert
           message="Are you sure you want to Log out?"
           onClose={() => setConfirmLogout(false)}
-          onPress={handleLogout}
+          onPress={() => {
+            setConfirmLogout(false);
+            router.replace("/auth/SignIn/signIn");
+          }}
         />
       </MyPopupModal>
     </View>

@@ -187,6 +187,17 @@ export default function MyListings() {
           </View>
         ))}
         <GapView length={60} />
+        <View
+          style={{
+            backgroundColor: "red",
+            width: 50,
+            height: 50,
+            position: "absolute",
+            bottom: "30%",
+            right: "10%",
+            // zIndex: 1,
+          }}
+        />
         <MyButton
           label={"Save"}
           labelStyle={{

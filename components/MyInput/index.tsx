@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { TextInput, View, StyleSheet, ViewStyle } from "react-native";
+import { TextInput, View, StyleSheet, ViewStyle, Platform } from "react-native";
 import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 import { useTheme } from "@react-navigation/native";
 
@@ -24,7 +24,10 @@ export default function MyInput({
   return (
     <View
       style={[
-        { backgroundColor: theme.colors.inputBg },
+        {
+          backgroundColor: theme.colors.inputBg,
+          paddingVertical: Platform.OS == "ios" ? (multiline ? 5 : 12) : 6,
+        },
         inputContainerStyle,
         style,
       ]}
@@ -45,7 +48,7 @@ export default function MyInput({
       />
       {password && (
         <Ionicons
-          name={showPassword ? "eye-outline" : "md-eye-off-outline"}
+          name={showPassword ? "eye-outline" : "eye-off-outline"}
           size={15}
           style={{ alignSelf: "center" }}
           color={theme.colors.placeholderText}
@@ -68,7 +71,6 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: "row",
     paddingHorizontal: 8,
-    paddingVertical: 6,
     borderRadius: 5,
     elevation: 3,
   },

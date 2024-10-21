@@ -14,10 +14,6 @@ export const UserSignInSchema = {
       .required("Email is required")
       .matches(EMAIL_REGEX, { message: "Invalid email" }),
     password: string().required("Password is required!"),
-    agreeToTerms: bool().oneOf(
-      [true],
-      "You must agree to the Terms and Conditions!"
-    ),
   }),
 };
 
@@ -57,11 +53,7 @@ export const UserSignUpSchema = {
       .required("Confirm Password is required")
       .test("passwords-match", "Passwords must match", function (value) {
         return value === this.parent.password;
-      }),
-    agreeToTerms: bool().oneOf(
-      [true],
-      "You must agree to the Terms and Conditions"
-    ),
+      })
   }),
 };
 

@@ -9,6 +9,7 @@ export { TabSwitch, ToggleSwitch } from "./MySwitch";
 export { default as MyDropdown } from "./MyDropdown";
 export { default as MyAvatar } from "./MyAvatar";
 export { default as BubbleIcon } from "./BubbleIcon";
+export { default as OverlayLoader} from './OverlayLoader';
 export { default as LabelValue } from "./LabelValue";
 export { AdCard, MyClickableCard } from "./MyCard";
 export { default as MyField, Variants } from "./MyField";

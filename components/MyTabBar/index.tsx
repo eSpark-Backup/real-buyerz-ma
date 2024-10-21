@@ -1,5 +1,11 @@
 import React from "react";
-import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  Platform,
+} from "react-native";
 import { BottomTabBarProps } from "@react-navigation/bottom-tabs";
 
 import MyText from "@components/MyText";
@@ -12,6 +18,7 @@ import {
   Tab_Profile,
 } from "@assets/images";
 import Static from "./static";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 interface MyProps {
   userType: UserType;
@@ -26,8 +33,16 @@ function MyTabBar({
   userType,
   openModal,
 }: BottomTabBarProps & { theme: MyTheme } & MyProps) {
+  const insets = useSafeAreaInsets();
   return (
-    <View style={styles({ theme }).container}>
+    <View
+      style={[
+        styles({ theme }).container,
+        {
+          height: Platform.OS == "ios" ? 52 + insets.bottom / 2 : 52,
+        },
+      ]}
+    >
       {state.routes.map((route, index) => {
         if (
           route.name !== "index" &&
@@ -184,7 +199,6 @@ const styles = ({
       backgroundColor: theme?.colors.TabBar,
       justifyContent: "center",
       alignItems: "center",
-      height: 52,
     },
     normalStyle: {
       justifyContent: "center",

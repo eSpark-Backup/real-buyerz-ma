@@ -97,51 +97,64 @@ export default function MyDropdown({
 
   return (
     <>
-      {title && (
-        <MyText
-          text={title}
-          style={{ alignSelf: "flex-start", paddingBottom: 10 }}
-          size={15}
-          weight="400"
-          textColor={theme.colors.text}
-        />
-      )}
       <View
-        style={[
-          styles(theme).container,
-          { zIndex: zIndex },
-          show ? { borderBottomRightRadius: 0, borderBottomLeftRadius: 0 } : {},
-          style,
-          { height },
-        ]}
-      >
-        <View
-          style={{
-            flexDirection: "row",
-            justifyContent: "space-between",
-            alignItems: "center",
-            width: "100%",
-            height: "100%",
-            paddingHorizontal: 15,
-            zIndex: zIndex - 2,
-            ...containerStyle,
-          }}
-        >
+        style={{
+          // backgroundColor: "yellow",
+          width: "100%",
+          height: 50,
+          zIndex: 100,
+          position: "absolute",
+          top: 100,
+        }}
+      />
+      <View style={{ zIndex: 5 }}>
+        {title && (
           <MyText
-            text={label ? label : `${placeholder}`}
-            size={12}
-            textColor={placeholderColor ? placeholderColor : "#969696"}
+            text={title}
+            style={{ alignSelf: "flex-start", paddingBottom: 10 }}
+            size={15}
+            weight="400"
+            textColor={theme.colors.text}
           />
-          <Entypo
-            name={!show ? "chevron-down" : "chevron-up"}
-            color={"#66666666"}
-            size={16}
-            onPress={() => {
-              setShow(!show);
+        )}
+
+        <View
+          style={[
+            styles(theme).container,
+            {},
+            show
+              ? { borderBottomRightRadius: 0, borderBottomLeftRadius: 0 }
+              : {},
+            style,
+            { height },
+          ]}
+        >
+          <View
+            style={{
+              flexDirection: "row",
+              justifyContent: "space-between",
+              alignItems: "center",
+              width: "100%",
+              height: "100%",
+              paddingHorizontal: 15,
+              zIndex: 10,
             }}
-          />
-        </View>
-        {show && (
+          >
+            <MyText
+              text={label ? label : `${placeholder}`}
+              textColor={placeholderColor ? placeholderColor : "#969696"}
+            />
+            <Entypo
+              name={!show ? "chevron-down" : "chevron-up"}
+              color={"#66666666"}
+              size={16}
+              onPress={() => {
+                setShow(!show);
+              }}
+            />
+          </View>
+
+          {/* {show && (
           <View
             style={{
               position: "absolute",
@@ -182,7 +195,8 @@ export default function MyDropdown({
               )}
             </ScrollView>
           </View>
-        )}
+        )} */}
+        </View>
       </View>
     </>
   );

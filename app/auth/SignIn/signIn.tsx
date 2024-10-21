@@ -1,27 +1,78 @@
-import React from "react";
+import React, { useState } from "react";
 import { Appearance, StyleSheet, View, ScrollView } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { MaterialIcons } from "@expo/vector-icons";
 import { Link, router } from "expo-router";
 import { Formik } from "formik";
-
+import { UserObject, handleLoginUser } from '../SignIn/utils';
+import { useDispatch } from 'react-redux';
+import { storage } from '../../redux/mmkv';
+import { setUserData, setUserToken } from '../../../features/user/userSlice';
 import { GLogo, RLogo } from "@assets/images";
 import { DarkTheme, LightTheme } from "@theme";
-import { MyText, MyButton, MyCheckbox, MyInput, GapView } from "@components";
+import { MyText, MyButton, MyCheckbox, MyInput, GapView, OverlayLoader } from "@components";
 import { UserSignInSchema } from "@validations/schema";
 import useSessionManagement from "hooks/useSessionManagement";
 
-export default function signIn() {
+import Toast from "react-native-toast-message";
+
+export default function SignIn() {
   const colorScheme = Appearance.getColorScheme();
   const theme = colorScheme === "dark" ? DarkTheme : LightTheme;
-  const { updateUserInSession } = useSessionManagement();
+  const [loading, setLoading] = useState(false);
+  const dispatch = useDispatch();
+
+  const signInUser = async (values) => {
+    setLoading(true)
+
+    const { email, password } = values;
+    const response = await handleLoginUser({ email, password });
+    console.log("Submitting values:", response);
+    if (response.status) {
+        setLoading(false)
+        const userInfo = response.userInfo;
+        if (userInfo) {
+          savingDataToSessionStorage(userInfo); 
+          router.push(`/(user)/${userInfo.user.role}/home`);
+        } else {
+          showToast('User info not available', 'error');
+        }
+    } else {
+      setLoading(false)
+      showToast(
+        response.message || 'Sign in failed',
+        'error',
+      )
+    };
+  }
+
+  const savingDataToSessionStorage = (userInfo: UserObject) => {
+    storage.set('userToken', userInfo?.token as string);
+    storage.set('userData', JSON.stringify(userInfo?.user));
+    dispatch(setUserToken(userInfo?.token));
+    dispatch(setUserData(userInfo?.user));
+    const userDataString = storage.getString('userData');
+    const userData = userDataString ? JSON.parse(userDataString) : null; // Parse JSON if available
+    console.log(userData)
+  }
+
+
+  const showToast = (message: string, type?: 'success' | 'error') => {
+    Toast.show({
+      type: type,
+      position: 'top',
+      text1: message,
+      topOffset: 0,
+    });
+  };
 
   return (
     <ScrollView contentContainerStyle={styles.main}>
+      <OverlayLoader isShow={loading} />
       <View style={styles.top}>
         <TouchableOpacity
           activeOpacity={1}
-          onPress={() => router.push("(user)/anon")} //this is constant anon type
+          onPress={() => router.push("(user)/anon/home")}
         >
           <MyText
             text="Skip"
@@ -44,13 +95,16 @@ export default function signIn() {
           agreeToTerms: false,
         }}
         onSubmit={async (values, { resetForm }) => {
-          console.log("Sign In success", values);
-          const userData = {
-            email: values.email,
-            password: values.password,
-          };
-          updateUserInSession(userData);
-          router.push("/(user)/user");
+          console.log("Form submitted with values:", values);
+          if (values.agreeToTerms) {
+            await signInUser(values);
+          }
+          else {
+            showToast(
+              'You must agree to the Terms and Conditions!',
+              'error',
+            )
+          }
         }}
         validationSchema={UserSignInSchema.signInForm}
       >
@@ -67,20 +121,30 @@ export default function signIn() {
             <MyInput
               placeholder="Email address"
               onChange={handleChange("email")}
+              onBlur={() => setFieldTouched("email")}
+              value={values.email}
               style={styles.input}
               placeholderColor="#666666"
             />
+            {errors.email && touched.email && (
+              <MyText style={styles.errorText}>{errors.email}</MyText> // Show email error
+            )}
             <GapView length={25} />
 
             <MyInput
               placeholder="Password"
               onChange={handleChange("password")}
+              onBlur={() => setFieldTouched("password")}
+              value={values.password}
               style={styles.input}
               password
               placeholderColor="#666666"
             />
+            {errors.password && touched.password && (
+              <MyText style={styles.errorText}>{errors.password}</MyText>
+            )}
 
-            <View style={styles.coupleConatiner}>
+            <View style={styles.coupleContainer}>
               <MyCheckbox
                 label="Remember"
                 onChange={(value) => {
@@ -90,7 +154,7 @@ export default function signIn() {
                 labelStyle={styles.label}
                 isAuth
               />
-              <Link href={"/auth/ForgotPassword"} style={styles.forgotPass}>
+              <Link href={"/auth/ForgotPassword/ForgotPassword"} style={styles.forgotPass}>
                 <MyText text="Forgot Password?" textColor="#2e6fac" size={14} />
               </Link>
             </View>
@@ -123,10 +187,8 @@ export default function signIn() {
                 textColor="white"
                 style={styles.button}
                 onPress={() => {
-                  console.log(errors);
+                  console.log("Submit button pressed");
                   handleSubmit();
-                  router.push("/(user)/user");
-                  // user | agent type based on login
                 }}
               />
               <MyText
@@ -154,7 +216,7 @@ export default function signIn() {
                 weight="700"
                 textColor="white"
               />
-              <Link href={"/auth/signUp"}>
+              <Link href={"/auth/Signup/signUp"}>
                 <MyText
                   text=" Sign Up"
                   size={14}
@@ -185,20 +247,9 @@ const styles = StyleSheet.create({
     marginTop: "18%",
     flex: 1,
   },
-  forgotUN: {
-    width: "90%",
-    textAlign: "right",
-    marginTop: 5,
-    marginBottom: "7%",
-  },
-  coupleConatiner: {
+  coupleContainer: {
     flexDirection: "row",
     width: "90%",
-  },
-  forgotPass: {
-    marginTop: 5,
-    width: "50%",
-    textAlign: "right",
   },
   box: {
     width: "100%",
@@ -249,9 +300,21 @@ const styles = StyleSheet.create({
     marginTop: "4%",
     alignItems: "center",
   },
+  forgotPass: {
+    marginTop: 5,
+    width: "50%",
+    textAlign: "right",
+  },
   logo: { marginTop: "4%" },
   input: { width: "90%", height: 45, backgroundColor: "#f3f4f6" },
   rememberCont: { width: "50%" },
   label: { color: "#FFFFFF", fontSize: 14 },
   bottom: { flexDirection: "row", marginTop: "22%" },
+  errorText: {
+    color: 'red',
+    fontSize: 12,
+    marginTop: 5,
+    marginLeft: '5%',
+    width: '90%',
+  },
 });
