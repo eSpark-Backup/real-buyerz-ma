@@ -1,10 +1,10 @@
 import React, { useState } from "react";
-import { Appearance, StyleSheet, Text, View, ScrollView } from "react-native";
+import { Appearance, StyleSheet, View, ScrollView } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { MaterialIcons } from "@expo/vector-icons";
 import { Link, router } from "expo-router";
 import { Formik } from "formik";
-import { User, UserObject, handleLoginUser } from '../SignIn/utils';
+import { UserObject, handleLoginUser } from '../SignIn/utils';
 import { useDispatch } from 'react-redux';
 import { storage } from '../../redux/mmkv';
 import { setUserData, setUserToken } from '../../../features/user/userSlice';
@@ -12,6 +12,7 @@ import { GLogo, RLogo } from "@assets/images";
 import { DarkTheme, LightTheme } from "@theme";
 import { MyText, MyButton, MyCheckbox, MyInput, GapView, OverlayLoader } from "@components";
 import { UserSignInSchema } from "@validations/schema";
+
 import Toast from "react-native-toast-message";
 
 export default function SignIn() {
@@ -96,7 +97,6 @@ export default function SignIn() {
           console.log("Form submitted with values:", values);
           if (values.agreeToTerms) {
             await signInUser(values);
-            resetForm();
           }
           else {
             showToast(
@@ -126,7 +126,7 @@ export default function SignIn() {
               placeholderColor="#666666"
             />
             {errors.email && touched.email && (
-              <Text style={styles.errorText}>{errors.email}</Text> // Show email error
+              <MyText style={styles.errorText}>{errors.email}</MyText> // Show email error
             )}
             <GapView length={25} />
 
@@ -140,7 +140,7 @@ export default function SignIn() {
               placeholderColor="#666666"
             />
             {errors.password && touched.password && (
-              <Text style={styles.errorText}>{errors.password}</Text>
+              <MyText style={styles.errorText}>{errors.password}</MyText>
             )}
 
             <View style={styles.coupleContainer}>

@@ -161,9 +161,9 @@ function Dashboard() {
   );
 }
 
-export default Dashboard;
+// export default Dashboard;
 
-// export default Bidding;
+export default Bidding;
 
 const renderPostingList = ({
   item,

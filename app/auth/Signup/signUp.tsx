@@ -8,6 +8,7 @@ import { Back, GLogo, SLogo } from "@assets/images/svg";
 import { DarkTheme, LightTheme } from "@theme";
 import { MyText, MyButton, MyCheckbox, MyInput, OverlayLoader } from "@components";
 import { UserSignUpSchema } from "@validations/schema";
+
 import { handleSignUpUser } from "./utils";
 import Toast from "react-native-toast-message";
 import { useDispatch } from "react-redux";
@@ -77,7 +78,6 @@ export default function SignUp() {
       }}
       onSubmit={async (values, { resetForm }) => {
         if (values.agreeToTerms) {
-          resetForm();
           await callApiSignUp(values);
         } else {
           showToast('You must agree to the Terms and Conditions!', 'error');

@@ -12,10 +12,12 @@ const AdCard = ({
   label,
   btnLabel,
   theme,
+  onPress,
 }: {
   label?: string;
   btnLabel?: string;
   theme?: MyTheme;
+  onPress?: () => void;
 }) => {
   return (
     <Card style={styles(theme).cardConatainer}>
@@ -26,7 +28,9 @@ const AdCard = ({
         </View>
         <GapView length={15} />
         <View style={styles(theme).btn}>
-          <MyText textColor={theme?.colors.primary}>{btnLabel}</MyText>
+          <MyText textColor={theme?.colors.primary} onPress={onPress}>
+            {btnLabel}
+          </MyText>
         </View>
       </View>
     </Card>
