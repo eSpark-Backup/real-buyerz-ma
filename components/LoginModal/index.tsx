@@ -122,7 +122,7 @@ function LoginModal({ visible, onClose }: LoginModalProps) {
             weight="700"
             textColor={theme.colors.text}
           />
-          <Link href={"/auth/signUp"}>
+          <Link href={"/auth/Signup/signUp"}>
             <MyText
               text=" Sign Up"
               size={14}

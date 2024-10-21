@@ -110,7 +110,7 @@ const DrawerContent = (props: DrawerContentComponentProps) => {
           onClose={() => setConfirmLogout(false)}
           onPress={() => {
             setConfirmLogout(false);
-            router.replace("/auth/signIn");
+            router.replace("/auth/SignIn/signIn");
           }}
         />
       </MyPopupModal>

@@ -9,6 +9,7 @@ import { DarkTheme, LightTheme } from "@theme";
 import { ThemeTypes } from "@types";
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
+import ToastConfig from "./utils/toastConfig";
 
 LogBox.ignoreLogs([
   "VirtualizedLists should never be nested inside plain ScrollViews",
@@ -37,6 +38,7 @@ function RootComponent() {
         {/* <SafeAreaView style={{ flex: 1 }}> */}
         <Slot />
         {/* </SafeAreaView> */}
+        <ToastConfig />
       </ThemeProvider>
     </GestureHandlerRootView>
   );

@@ -7,7 +7,7 @@ import { MyTheme } from "@types";
 
 export default function App() {
   const { dark, colors } = useTheme() as MyTheme;
-  return <Redirect href={"/auth/signIn"} />;
+  return <Redirect href={"/auth/SignIn/signIn"} />;
 }
 
 const styles = StyleSheet.create({});

@@ -61,9 +61,12 @@ export type MyInputProps = {
   placeholder?: string;
   password?: boolean;
   text?: string;
+  secureTextEntry?: boolean;
+  keyboardType?: string;
   onChange?: (val: string) => void;
   onBlur?: () => void;
   onChangeText?: (value: string) => void;
+  onSubmitEditing?: () => void;
   value?: string;
   width?: number | string;
   style?: StyleProp<ViewStyle>;

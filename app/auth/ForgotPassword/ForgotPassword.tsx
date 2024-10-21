@@ -62,7 +62,7 @@ export default function ForgotPassword() {
         style={styles.wrapper}
         contentContainerStyle={{ flex: 1 }}
       >
-        <Link href={"/auth/signIn"} style={styles.link}>
+        <Link href={"/auth/SignIn/signIn"} style={styles.link}>
           <Back />
         </Link>
 

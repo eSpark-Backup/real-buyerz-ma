@@ -1,49 +1,71 @@
-import React from "react";
-import { Appearance, StyleSheet, View, ScrollView } from "react-native";
+import React, { useState } from "react";
+import { Appearance, StyleSheet, View, ScrollView, Text } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { MaterialIcons } from "@expo/vector-icons";
-import { Link } from "expo-router";
+import { Link, router } from "expo-router";
 import { Formik } from "formik";
-
 import { Back, GLogo, SLogo } from "@assets/images/svg";
 import { DarkTheme, LightTheme } from "@theme";
-import { MyText, MyButton, MyCheckbox, MyInput, MyDropdown } from "@components";
+import { MyText, MyButton, MyCheckbox, MyInput, OverlayLoader } from "@components";
 import { UserSignUpSchema } from "@validations/schema";
-import { WINDOW_WIDTH } from "@constants";
+import { handleSignUpUser } from "./utils";
+import Toast from "react-native-toast-message";
+import { useDispatch } from "react-redux";
 
-interface InputField {
-  placeholder: string;
-  rightIcon?: { name: string; size: number };
-  password?: boolean;
-  name: string;
+interface SignUpFormValues {
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone: string;
+  password: string;
+  confirmPassword: string;
+  agreeToTerms: boolean;
 }
 
 export default function SignUp() {
   const colorScheme = Appearance.getColorScheme();
   const theme = colorScheme === "dark" ? DarkTheme : LightTheme;
+  const [loading, setLoading] = useState(false);
+  const dispatch = useDispatch();
 
-  const inputFields: InputField[] = [
-    {
-      placeholder: "Email Address",
-      name: "email",
-    },
-    {
-      placeholder: "Contact Number",
-      name: "phone",
-    },
-    {
-      placeholder: "Password",
-      name: "password",
-    },
-    {
-      placeholder: "Confirm Password",
-      password: true,
-      name: "confirmPassword",
-    },
+  const inputFields = [
+    { placeholder: "First Name", name: "firstName" },
+    { placeholder: "Last Name", name: "lastName" },
+    { placeholder: "Email Address", name: "email" },
+    { placeholder: "Contact Number", name: "phone", keyboardType: "numeric" }, // Set keyboardType to "numeric"
+    { placeholder: "Password", name: "password", secureTextEntry: true },
+    { placeholder: "Confirm Password", name: "confirmPassword", secureTextEntry: true },
   ];
 
+  const callApiSignUp = async (values: SignUpFormValues) => {
+    setLoading(true);
+    const response = await handleSignUpUser({
+      firstName: values.firstName,
+      lastName: values.lastName,
+      email: values.email,
+      mobileNumber: values.phone,
+      password: values.password,
+      role: 'user',
+    });
+    setLoading(false);
+    if (response.status) {
+      router.replace("/auth/SignIn/signIn");
+    } else {
+      showToast(response.message || 'Sign in failed', 'error');
+    }
+  };
+
+  const showToast = (message: string, type: 'success' | 'error') => {
+    Toast.show({
+      type,
+      position: 'top',
+      text1: message,
+      topOffset: 0,
+    });
+  };
+
   return (
-    <Formik
+    <Formik<SignUpFormValues>
       initialValues={{
         firstName: "",
         lastName: "",
@@ -54,7 +76,12 @@ export default function SignUp() {
         agreeToTerms: false,
       }}
       onSubmit={async (values, { resetForm }) => {
-        console.log("Sign Up success", values);
+        if (values.agreeToTerms) {
+          resetForm();
+          await callApiSignUp(values);
+        } else {
+          showToast('You must agree to the Terms and Conditions!', 'error');
+        }
       }}
       validationSchema={UserSignUpSchema.signUpForm}
     >
@@ -67,27 +94,19 @@ export default function SignUp() {
         setFieldValue,
       }) => (
         <ScrollView contentContainerStyle={styles.mainContainer}>
+          <OverlayLoader isShow={loading} />
           <View style={styles.header}>
             <View style={{ flex: 20 }}>
-              <Link href={"/auth/signIn"}>
+              <Link href="/auth/SignIn/signIn">
                 <Back />
               </Link>
             </View>
-            <View
-              style={{
-                flex: 70,
-                alignItems: "center",
-              }}
-            >
+            <View style={{ flex: 70, alignItems: "center" }}>
               <SLogo />
             </View>
             <TouchableOpacity
               activeOpacity={1}
-              style={{
-                flex: 10,
-                flexDirection: "row",
-                alignItems: "center",
-              }}
+              style={{ flex: 10, flexDirection: "row", alignItems: "center" }}
             >
               <MyText
                 text="Skip"
@@ -96,11 +115,7 @@ export default function SignUp() {
                 weight="500"
                 textColor="black"
               />
-              <MaterialIcons
-                name="keyboard-arrow-right"
-                size={24}
-                color="black"
-              />
+              <MaterialIcons name="keyboard-arrow-right" size={24} color="black" />
             </TouchableOpacity>
           </View>
           <View style={styles.form}>
@@ -112,71 +127,44 @@ export default function SignUp() {
               style={styles.title}
             />
             <View style={styles.fields}>
-              <View style={styles.name}>
-                <MyInput
-                  placeholder="First name"
-                  style={styles.fname}
-                  onChange={handleChange("firstName")}
-                  placeholderColor="#666666"
-                />
-                <MyInput
-                  placeholder="Last name"
-                  style={styles.fname}
-                  onChange={handleChange("lastName")}
-                  placeholderColor="#666666"
-                />
-              </View>
               {inputFields.map((field, index) => (
-                <MyInput
-                  key={index}
-                  placeholder={field.placeholder}
-                  style={styles.input}
-                  rightIcon={field?.rightIcon}
-                  password={field?.password}
-                  onChange={handleChange(field.name)}
-                  placeholderColor="#666666"
-                />
+                <View key={index} style={{ width: "100%" }}>
+                  <MyInput
+                    placeholder={field.placeholder}
+                    onChange={handleChange(field.name)}
+                    value={values[field.name as keyof SignUpFormValues] as string}
+                    placeholderColor="#666666"
+                    password={field.secureTextEntry} 
+                    secureTextEntry={field.secureTextEntry}
+                    keyboardType={field.keyboardType} />
+                  {errors[field.name as keyof SignUpFormValues] && touched[field.name as keyof SignUpFormValues] && (
+                    <Text style={styles.errorText}>{errors[field.name as keyof SignUpFormValues]}</Text>
+                  )}
+                </View>
               ))}
             </View>
           </View>
           <View style={styles.terms}>
             <MyCheckbox
               label=""
-              onChange={() => {
-                console.log("old: ", values.agreeToTerms);
-                setFieldValue("agreeToTerms", !values.agreeToTerms);
-              }}
-              style={{
-                marginRight: 5,
-              }}
+              onChange={() => setFieldValue("agreeToTerms", !values.agreeToTerms)}
+              style={{ marginRight: 5 }}
               checkboxStyle={styles.checkbox}
               isAuth
             />
             <View style={styles.termsTextContainer}>
-              <MyText
-                text="I have read and agree to the "
-                style={styles.termsText}
-              />
-
+              <MyText text="I have read and agree to the " style={styles.termsText} />
               <MyText text="Terms and Conditions" style={styles.termsDecText} />
-              <MyText text="and " style={styles.termsText} />
-
+              <MyText text=" and " style={styles.termsText} />
               <MyText text="Privacy Policy" style={styles.termsDecText} />
             </View>
           </View>
           <MyButton
             label="Submit"
             textColor="white"
-            onPress={() => {
-              console.log("Form values", values);
-              console.log("Form errors", errors);
-              console.log("Form touched", touched);
-
-              handleSubmit();
-            }}
+            onPress={handleSubmit}
             style={styles.button}
           />
-
           <View style={styles.bottom}>
             <MyText
               text="Or"
@@ -186,12 +174,7 @@ export default function SignUp() {
               style={styles.google}
             />
             <View style={styles.google}>
-              <MyText
-                text="Sign Up with  "
-                size={14}
-                weight="600"
-                textColor="white"
-              />
+              <MyText text="Sign Up with  " size={14} weight="600" textColor="white" />
               <GLogo />
             </View>
           </View>
@@ -205,17 +188,10 @@ const styles = StyleSheet.create({
   mainContainer: {
     alignItems: "center",
   },
-  back: {
-    position: "absolute",
-    left: "7%",
-    top: "2%",
-    // flexDirection: "row",
-  },
   header: {
     paddingHorizontal: 20,
     width: "100%",
     flexDirection: "row",
-    // justifyContent: "space-between",
     alignItems: "center",
     flex: 1,
   },
@@ -236,37 +212,9 @@ const styles = StyleSheet.create({
     alignItems: "center",
     width: "100%",
     flex: 1,
-    gap: 10,
-  },
-  name: {
-    flexDirection: "row",
-    width: "100%",
-    justifyContent: "center",
-    alignItems: "center",
-    columnGap: 15,
+    gap: 20,
   },
   title: { paddingTop: "1%", paddingBottom: "8%" },
-  fname: {
-    width: "48%",
-    height: "75%",
-    marginBottom: "3%",
-    backgroundColor: "#f3f4f6",
-  },
-  dropdown: {
-    backgroundColor: "#f3f4f6",
-    borderRadius: 5,
-    borderWidth: 0,
-    elevation: 3,
-    width: "100%",
-    height: "12%",
-    marginBottom: "4%",
-  },
-  input: {
-    width: "100%",
-    height: "14%",
-    marginBottom: "4%",
-    backgroundColor: "#f3f4f6",
-  },
   terms: {
     marginTop: "10%",
     flexDirection: "row",
@@ -294,7 +242,6 @@ const styles = StyleSheet.create({
   },
   termsDecText: {
     color: "#FB631C",
-    textDecorationColor: "#FB631C",
     textDecorationLine: "underline",
     fontSize: 10,
   },
@@ -303,7 +250,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     height: 35,
     justifyContent: "center",
-    alignContent: "center",
     marginTop: "9%",
   },
   bottom: {
@@ -315,5 +261,12 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     marginTop: "3%",
     alignItems: "center",
+  },
+  errorText: {
+    color: 'red',
+    fontSize: 12,
+    marginTop: 5,
+    rowGap: 15,
+    width: '90%',
   },
 });
