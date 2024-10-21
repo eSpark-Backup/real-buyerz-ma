@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   StyleSheet,
   Text,
@@ -61,22 +61,48 @@ const testData: Chat[] = [
 
 export default function ChatScreen() {
   const theme = useTheme() as MyTheme;
+  const [isDropdownVisible, setIsDropdownVisible] = useState(false);
+
+  const toggleDropdown = () => {
+    setIsDropdownVisible(!isDropdownVisible);
+  };
+
   return (
     <View style={{ paddingHorizontal: 10 }}>
       <Card radius={9} style={{ height: "100%" }}>
-        {renderHeader(theme)}
+        {renderHeader(toggleDropdown, theme)}
         <FlatList
           data={testData}
           showsVerticalScrollIndicator={false}
           renderItem={renderList}
         />
         {renderFooter(theme)}
+        {isDropdownVisible && renderDropdown(theme)}
       </Card>
     </View>
   );
 }
 
-const renderHeader = (theme?: MyTheme) => {
+const renderDropdown = (theme?: MyTheme) => {
+  return (
+    <View style={styles(theme).dropdown}>
+      <TouchableOpacity style={styles(theme).dropdownItem}>
+        <MyText size={12} text="Mark as Unread" />
+      </TouchableOpacity>
+      <TouchableOpacity style={styles(theme).dropdownItem}>
+        <MyText size={12} text="Block" />
+      </TouchableOpacity>
+      <TouchableOpacity style={styles(theme).dropdownItem}>
+        <MyText size={12} text="Delete" />
+      </TouchableOpacity>
+      <TouchableOpacity style={styles(theme).dropdownItem}>
+        <MyText size={12} text="Archive" />
+      </TouchableOpacity>
+    </View>
+  );
+};
+
+const renderHeader = (toggleDropdown: () => void, theme?: MyTheme) => {
   return (
     <View style={styles(theme).header}>
       <View style={{ flexDirection: "row", alignItems: "center" }}>
@@ -91,11 +117,13 @@ const renderHeader = (theme?: MyTheme) => {
           textColor={theme?.colors.negative}
         />
       </View>
-      <Entypo
-        name="dots-three-vertical"
-        size={18}
-        color={theme?.colors.negative}
-      />
+      <TouchableOpacity onPress={toggleDropdown}>
+        <Entypo
+          name="dots-three-vertical"
+          size={18}
+          color={theme?.colors.negative}
+        />
+      </TouchableOpacity>
     </View>
   );
 };
@@ -278,5 +306,20 @@ const styles = (theme?: MyTheme) =>
       fontSize: 14,
       fontWeight: "300",
       fontFamily: "Inter",
+      height: 20,
+    },
+    dropdown: {
+      position: "absolute",
+      top: 43,
+      right: 10,
+      backgroundColor: theme?.colors.background,
+      borderRadius: 5,
+      elevation: 3,
+      width: 125,
+    },
+    dropdownItem: {
+      padding: 10,
+      borderBottomWidth: 1,
+      borderColor: theme?.colors.border,
     },
   });

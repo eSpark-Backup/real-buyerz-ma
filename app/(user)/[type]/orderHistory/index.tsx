@@ -5,6 +5,7 @@ import { useTheme } from "@react-navigation/native";
 import { MyTheme } from "@types";
 import { ScrollView } from "react-native-gesture-handler";
 import { DownArrow } from "@assets/images";
+import { Octicons } from "@expo/vector-icons";
 
 const temp = [
   {
@@ -175,9 +176,16 @@ function OrderRow({
             </MyText>
           )
         )}
-        {/* need to change downArrow to upArrow; svg required */}
         <BubbleIcon size={16} plain onPress={toggleExpand}>
-          <DownArrow />
+          {expanded ? (
+            <Octicons
+              name="chevron-up"
+              size={12}
+              color={theme.colors.secondary}
+            />
+          ) : (
+            <DownArrow />
+          )}
         </BubbleIcon>
       </Pressable>
       {expanded && (

@@ -1,9 +1,9 @@
 import React from "react";
 import { FlatList, ScrollView, StyleSheet, View } from "react-native";
 import { useTheme } from "@react-navigation/native";
-import { router } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 
-import { MyTheme } from "@types";
+import { MyTheme, UserType } from "@types";
 import {
   AdBox,
   Card,
@@ -74,6 +74,17 @@ const topTabsData = [
 
 export default function Bidding() {
   const theme = useTheme() as MyTheme;
+  const params = useLocalSearchParams<{ type?: UserType }>();
+
+  const btnsData = [
+    { label: "Trash", onPress: () => console.log("trash"), outline: true },
+    {
+      label: "View",
+      onPress: () => {
+        router.push(`(user)/${params.type}/(tabs)/dashboard/proposalPreview`);
+      },
+    },
+  ];
 
   return (
     <ScrollView nestedScrollEnabled showsVerticalScrollIndicator={false}>
@@ -118,11 +129,6 @@ export default function Bidding() {
     </ScrollView>
   );
 }
-
-const btnsData = [
-  { label: "Trash", onPress: () => console.log("trash"), outline: true },
-  { label: "View", onPress: () => console.log("view") },
-];
 
 const styles = StyleSheet.create({
   container: {
