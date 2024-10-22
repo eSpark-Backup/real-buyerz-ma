@@ -12,10 +12,10 @@ import MyInput from "../MyInput";
 import { LoginModalProps, MyTheme } from "@types";
 import { GLogo, PLogo } from "@assets/images";
 import { useDispatch } from 'react-redux';
-import { storage } from 'app/redux/mmkv';
 import { handleLoginUser, UserObject } from 'app/auth/SignIn/utils';
 import OverlayLoader from "@components/OverlayLoader";
 import { setUserData, setUserToken } from "features/user/userSlice";
+import useSessionManagement from "hooks/useSessionManagement";
 
 function LoginModal({ visible, onClose, lastRoute }: LoginModalProps) {
   const theme = useTheme() as MyTheme;
@@ -23,9 +23,11 @@ function LoginModal({ visible, onClose, lastRoute }: LoginModalProps) {
   const [password, setPassword] = useState("");
   const router = useRouter();
   const [loading, setLoading] = useState(false);
+  const [isRememberedMe, setRememberedMe] = useState(false);
   const dispatch = useDispatch();
   const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
+  const { updateUserInSession,updateUserIsLoggedInSession } = useSessionManagement();
 
 
   const onLoginPress = async () => {
@@ -64,12 +66,10 @@ function LoginModal({ visible, onClose, lastRoute }: LoginModalProps) {
   };
 
   const savingDataToSessionStorage = (userInfo: UserObject) => {
-    storage.set('userToken', userInfo?.token as string);
-    storage.set('userData', JSON.stringify(userInfo?.user));
+    updateUserInSession(userInfo?.user, userInfo?.token as string);
+    updateUserIsLoggedInSession(isRememberedMe);
     dispatch(setUserToken(userInfo?.token));
     dispatch(setUserData(userInfo?.user));
-    const userDataString = storage.getString('userData');
-    const userData = userDataString ? JSON.parse(userDataString) : null; // Parse JSON if available
   }
 
   const showToast = (message: string, type?: 'success' | 'error') => {
@@ -172,7 +172,7 @@ function LoginModal({ visible, onClose, lastRoute }: LoginModalProps) {
                 <MyCheckbox
                   label="Remember"
                   onChange={(value) => {
-                    console.log("Remember checked !");
+                    setRememberedMe(value)
                   }}
                   style={{
                     flexGrow: 1, // Allow checkbox to grow and take available space
