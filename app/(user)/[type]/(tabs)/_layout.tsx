@@ -10,7 +10,7 @@ function UserTabLayout() {
   const theme = useTheme() as MyTheme;
   const params = useLocalSearchParams<{ type: UserType }>();
   const [visible, setVisible] = useState(false);
-  const [lastRoute, setLastRoute] = useState(""); 
+  const [lastRoute, setLastRoute] = useState("");
 
   const openLoginModal = (routeName: string, isFromTab: boolean) => {
     setLastRoute(routeName);
@@ -46,7 +46,13 @@ function UserTabLayout() {
           );
         }}
       >
-        {/* Define your tabs/screens here */}
+        <Tabs.Screen
+          name="index"
+          options={{
+            href: null,
+          }}
+        />
+
         <Tabs.Screen
           name="home"
           options={{
@@ -56,12 +62,13 @@ function UserTabLayout() {
           }}
         />
         <Tabs.Screen
-          name="profile"
+          name="projects"
           options={{
-            title: "Profile",
-            href: `(user)/${params?.type!}/(tabs)/profile`,
+            title: "Projects",
+            href: `(user)/${params?.type!}/(tabs)/projects`,
           }}
         />
+
         <Tabs.Screen
           name="dashboard"
           options={{
@@ -74,6 +81,13 @@ function UserTabLayout() {
           options={{
             title: "Listings",
             href: `(user)/${params?.type!}/(tabs)/listings`,
+          }}
+        />
+        <Tabs.Screen
+          name="profile"
+          options={{
+            title: "Profile",
+            href: `(user)/${params?.type!}/(tabs)/profile`,
           }}
         />
       </Tabs>
