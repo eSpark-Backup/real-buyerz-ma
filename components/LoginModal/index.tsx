@@ -12,7 +12,7 @@ import MyInput from "../MyInput";
 import { LoginModalProps, MyTheme } from "@types";
 import { GLogo, PLogo } from "@assets/images";
 import { useDispatch } from 'react-redux';
-import { storage } from 'app/redux/mmkv';
+import { storage } from 'store/mmkv';
 import { handleLoginUser, UserObject } from 'app/auth/SignIn/utils';
 import OverlayLoader from "@components/OverlayLoader";
 import { setUserData, setUserToken } from "features/user/userSlice";

@@ -33,6 +33,7 @@ import { useDispatch } from "react-redux";
 import { PropertySliceState, setAllProperties } from "features/property/propertySlice";
 import { useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@store";
+import { UserState } from "features/user/userSlice";
 
 interface BrowseProps {
   onPress: () => void;
@@ -47,6 +48,9 @@ export default function Home() {
   const dispatch: AppDispatch = useDispatch();
 
   const { allProperties } = useSelector<RootState, PropertySliceState>((state) => state.property);
+  const { userData } = useSelector<RootState, UserState>((state) => state.user);
+
+  console.log("userData", userData);
   
   useEffect(() => {
     fetchAllProperties()

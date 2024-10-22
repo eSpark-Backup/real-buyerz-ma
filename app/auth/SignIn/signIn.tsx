@@ -6,7 +6,7 @@ import { Link, router } from "expo-router";
 import { Formik } from "formik";
 import { UserObject, handleLoginUser } from '../SignIn/utils';
 import { useDispatch } from 'react-redux';
-import { storage } from '../../redux/mmkv';
+import { storage } from 'store/mmkv';
 import { setUserData, setUserToken } from '../../../features/user/userSlice';
 import { GLogo, RLogo } from "@assets/images";
 import { DarkTheme, LightTheme } from "@theme";
