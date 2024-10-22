@@ -356,45 +356,44 @@ export const PropertyListing = ({
     params: { type?: UserType };
   }) {
     return (
-      <TouchableOpacity
-        activeOpacity={1}
-        onPress={() => {
-          router.push(`(user)/${params?.type!}/(tabs)/home/propertyDetail`);
-        }}
-      >
-        <Card radius={2} style={{ height: 180, width: 130 }}>
-          <Image
-            source={{ uri: item?.image }}
-            style={{ height: 80, borderRadius: 2 }}
-          />
-          <View style={{ padding: 8 }}>
-            <MyText
-              text="Contact for price"
-              size={10}
-              textColor={theme?.colors.text}
-              style={{ fontWeight: "500", marginBottom: 10 }}
-            />
-            <MyText
-              text={item.name}
-              size={10}
-              textColor={theme?.colors.text}
-              style={{ fontWeight: "400", marginBottom: 10 }}
-            />
-            <MyText
-              text={item.location}
-              size={10}
-              textColor="#898989"
-              style={{ fontWeight: "400", marginBottom: 10 }}
-            />
-            <MyText
-              text={item.size}
-              size={8}
-              textColor="#898989"
-              style={{ fontWeight: "400", marginBottom: 10 }}
-            />
-          </View>
-        </Card>
-      </TouchableOpacity>
+      <Card
+      onPress={() => {
+        router.push(`(user)/${params?.type!}/(tabs)/home/propertyDetail`);
+      }}
+      radius={2}
+      style={{ height: 180, width: 130 }}
+    >
+      <Image
+        source={{ uri: item?.image }}
+        style={{ height: 80, borderRadius: 2 }}
+      />
+      <View style={{ padding: 8 }}>
+        <MyText
+          text="Contact for price"
+          size={10}
+          textColor={theme?.colors.text}
+          style={{ fontWeight: "500", marginBottom: 10 }}
+        />
+        <MyText
+          text={item.name}
+          size={10}
+          textColor={theme?.colors.text}
+          style={{ fontWeight: "400", marginBottom: 10 }}
+        />
+        <MyText
+          text={item.location}
+          size={10}
+          textColor="#898989"
+          style={{ fontWeight: "400", marginBottom: 10 }}
+        />
+        <MyText
+          text={item.size}
+          size={8}
+          textColor="#898989"
+          style={{ fontWeight: "400", marginBottom: 10 }}
+        />
+      </View>
+    </Card>
     );
   }
 
