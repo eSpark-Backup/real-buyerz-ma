@@ -126,6 +126,7 @@ export interface IPropsBtn {
 export type LoginModalProps = {
   visible?: boolean;
   onClose: () => void;
+  lastRoute: string;
 };
 
 export type SearchDataProps = {

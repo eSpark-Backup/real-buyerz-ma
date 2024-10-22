@@ -22,7 +22,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 interface MyProps {
   userType: UserType;
-  openModal?(value: boolean): void;
+  openModal?(routeName:String, value: boolean): void;
 }
 
 function MyTabBar({
@@ -75,8 +75,7 @@ function MyTabBar({
                 navigation.navigate(route.name, route.params);
               }
             } else {
-              openModal?.(true);
-            }
+              openModal?.(route.name, true);            }
           };
 
           const onLongPress = () => {
