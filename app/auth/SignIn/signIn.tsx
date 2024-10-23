@@ -4,25 +4,25 @@ import { TouchableOpacity } from "react-native-gesture-handler";
 import { MaterialIcons } from "@expo/vector-icons";
 import { Link, router } from "expo-router";
 import { Formik } from "formik";
-import { UserObject, handleLoginUser } from '../SignIn/utils';
 import { useDispatch } from 'react-redux';
 import { storage } from 'store/mmkv';
-import { setUserData, setUserToken } from '../../../features/user/userSlice';
 import { GLogo, RLogo } from "@assets/images";
 import { DarkTheme, LightTheme } from "@theme";
 import { MyText, MyButton, MyCheckbox, MyInput, GapView, OverlayLoader } from "@components";
 import { UserSignInSchema } from "@validations/schema";
 import useSessionManagement from "hooks/useSessionManagement";
-
 import Toast from "react-native-toast-message";
+
+import { setUserData, setUserToken } from '../../../features/user/userSlice';
+import { UserObject, handleLoginUser } from '../SignIn/utils';
 
 export default function SignIn() {
   const colorScheme = Appearance.getColorScheme();
   const theme = colorScheme === "dark" ? DarkTheme : LightTheme;
   const [loading, setLoading] = useState(false);
   const [isRememberedMe, setRememberedMe] = useState(false);
-  const dispatch = useDispatch();
   const { updateUserInSession,updateUserIsLoggedInSession } = useSessionManagement();
+  const dispatch = useDispatch();
 
   const signInUser = async (values) => {
     setLoading(true)

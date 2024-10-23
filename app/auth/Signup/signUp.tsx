@@ -8,10 +8,12 @@ import { Back, GLogo, SLogo } from "@assets/images/svg";
 import { DarkTheme, LightTheme } from "@theme";
 import { MyText, MyButton, MyCheckbox, MyInput, OverlayLoader } from "@components";
 import { UserSignUpSchema } from "@validations/schema";
-
-import { handleSignUpUser } from "./utils";
+import useSessionManagement from "hooks/useSessionManagement";
+import { UserObject, handleSignUpUser } from "./utils";
 import Toast from "react-native-toast-message";
-import { useDispatch } from "react-redux";
+import { useDispatch } from 'react-redux';
+
+import { setUserData, setUserToken } from '../../../features/user/userSlice';
 
 interface SignUpFormValues {
   firstName: string;
@@ -27,6 +29,7 @@ export default function SignUp() {
   const colorScheme = Appearance.getColorScheme();
   const theme = colorScheme === "dark" ? DarkTheme : LightTheme;
   const [loading, setLoading] = useState(false);
+  const { updateUserInSession,updateUserIsLoggedInSession } = useSessionManagement();
   const dispatch = useDispatch();
 
   const inputFields = [
@@ -50,11 +53,25 @@ export default function SignUp() {
     });
     setLoading(false);
     if (response.status) {
-      router.replace("/auth/SignIn/signIn");
+      setLoading(false)
+      const userInfo = response.userInfo;
+      if (userInfo) {
+        savingDataToSessionStorage(userInfo); 
+        router.push(`/(user)/${userInfo.user.role}/home`);
+      } else {
+        showToast('User info not available', 'error');
+      }
     } else {
       showToast(response.message || 'Sign in failed', 'error');
     }
   };
+
+  const savingDataToSessionStorage = (userInfo: UserObject) => {
+    updateUserInSession(userInfo?.user, userInfo?.token as string);
+    updateUserIsLoggedInSession(false);
+    dispatch(setUserToken(userInfo?.token));
+    dispatch(setUserData(userInfo?.user));
+  }
 
   const showToast = (message: string, type: 'success' | 'error') => {
     Toast.show({
