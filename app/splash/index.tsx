@@ -21,7 +21,10 @@ import {
 import { WINDOW_HEIGHT, WINDOW_WIDTH } from "@constants";
 import { customFonts } from "utils/customFonts";
 import { customImages } from "utils/customImages";
-import { checkLoggedInUser } from "app/auth/utils/authUtils";
+import { checkLoggedInUser, getLoggedInUserInfo } from "app/auth/utils/authUtils";
+import { storage } from "store/mmkv";
+import { useDispatch } from "react-redux";
+import { setUserData } from "features/user/userSlice";
 
 SplashScreen.preventAutoHideAsync(); //? Disable Auto Hide
 
@@ -44,7 +47,8 @@ export default function App() {
   const translateY = useRef(new Animated.Value(WINDOW_HEIGHT * 1.5)).current;
   const scale = useRef(new Animated.Value(1)).current;
   const rotate = useRef(new Animated.Value(0)).current;
-
+  const dispatch = useDispatch();
+  
   const loadResourcesAsync = async () => {
     try {
       const imageAssets = cacheImages(customImages);
@@ -112,13 +116,13 @@ export default function App() {
 
   useEffect(() => {
     const sessionCheckLoggedIn = async () => {
-      // Check if the user is logged in
-      const isLoggedIn = checkLoggedInUser(); // Assuming you store the logged-in state in MMKV
+      const isLoggedIn = checkLoggedInUser();
       if (isLoggedIn) {
-        // If logged in, navigate to home or another authenticated screen
-        router.push("/(user)/user");
+        const userInfo = getLoggedInUserInfo();
+        dispatch(setUserData(userInfo))
+        const role = userInfo && userInfo.user && userInfo.user.role ? userInfo.user.role : "user";
+        router.push(`(user)/${role}/home`);
       } else {
-        // If not logged in, navigate to the authentication screen
         setTimeout(() => {
           router.push("/auth");
         }, 5000);

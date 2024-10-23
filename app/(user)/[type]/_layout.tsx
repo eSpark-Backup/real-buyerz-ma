@@ -9,7 +9,7 @@ import {
 import { Drawer } from "expo-router/drawer";
 import { StatusBar } from "expo-status-bar";
 import { router, useLocalSearchParams } from "expo-router";
-
+import { useDispatch } from 'react-redux';
 import { colors } from "@theme";
 import { MyTheme, UserType } from "@types";
 import {
@@ -34,6 +34,7 @@ import {
 } from "@components";
 import { useState } from "react";
 import useSessionManagement from "hooks/useSessionManagement";
+import { setUserData, setUserToken } from "features/user/userSlice";
 
 const DrawerContent = (props: DrawerContentComponentProps) => {
   const [confirmLogout, setConfirmLogout] = useState(false);
@@ -41,11 +42,14 @@ const DrawerContent = (props: DrawerContentComponentProps) => {
   const { index } = props.state;
   const theme = useTheme() as MyTheme;
   const { clearSession, clearTheme } = useSessionManagement();
+  const dispatch = useDispatch();
 
   const handleLogout = () => {
     clearTheme();
-    clearSession(); // Call clearSession function to logout
-    router.replace("/auth/signIn"); // Redirect user to sign-in screen
+    clearSession(); 
+    dispatch(setUserToken(''));
+    dispatch(setUserData(''));
+    router.replace("/auth/SignIn/signIn"); // Redirect user to sign-in screen
   };
 
   return (
@@ -117,8 +121,7 @@ const DrawerContent = (props: DrawerContentComponentProps) => {
           message="Are you sure you want to Log out?"
           onClose={() => setConfirmLogout(false)}
           onPress={() => {
-            setConfirmLogout(false);
-            router.replace("/auth/SignIn/signIn");
+            handleLogout()
           }}
         />
       </MyPopupModal>

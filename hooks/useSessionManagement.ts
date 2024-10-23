@@ -10,22 +10,19 @@ const useSessionManagement = () => {
   const dispatch = useDispatch();
   const theme = useTheme() as MyTheme;
 
-  useEffect(() => {
-    const storedUser = storage.getString("user");
-    if (storedUser) {
-      const user = JSON.parse(storedUser);
-      dispatch(setLoggedInUser(user));
-    }
-  }, [dispatch]);
+  const updateUserInSession = (user: any, userToken:string) => {
+    storage.set("userData", JSON.stringify(user));
+    storage.set("userToken", JSON.stringify(userToken));
+  };
 
-  const updateUserInSession = (user: any) => {
-    storage.set("user", JSON.stringify(user));
-    dispatch(setLoggedInUser(user));
+  const updateUserIsLoggedInSession = (isRememberMe:boolean) => {
+    storage.set("isRememberMe", isRememberMe);
+    console.log(storage.getBoolean("isRememberMe"))
   };
 
   const clearSession = () => {
-    storage.set("user", "");
-    dispatch(clearLoggedInUser());
+    storage.set("userData", "");
+    storage.set("userToken", "");
   };
 
   const updateThemeInSession = (value: ThemeTypes) => {
@@ -34,13 +31,14 @@ const useSessionManagement = () => {
   };
 
   const clearTheme = () => {
-    console.log("clearing theme");
     storage.set("theme", false);
+    storage.set("isRememberMe", false);
     dispatch(resetTheme());
     console.log(storage.getBoolean("theme"));
   };
   return {
     updateUserInSession,
+    updateUserIsLoggedInSession,
     clearSession,
     updateThemeInSession,
     clearTheme,

@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from "react";
+import React, { useRef, useEffect, useState } from "react";
 import {
   FlatList,
   StyleSheet,
@@ -11,10 +11,10 @@ import {
   Easing,
 } from "react-native";
 import { Feather } from "@expo/vector-icons";
-import { useTheme } from "@react-navigation/native";
+import { useRoute, useTheme } from "@react-navigation/native";
 import { router, useLocalSearchParams } from "expo-router";
 
-import { Card, MyText, GapView, AdCard } from "@components";
+import { Card, MyText, GapView, AdCard, LoginModal } from "@components";
 import { WINDOW_WIDTH } from "@constants";
 import { MyTheme, UserType } from "@types";
 import {
@@ -44,13 +44,12 @@ interface BrowseProps {
 export default function Home() {
   const theme = useTheme() as MyTheme;
   const params = useLocalSearchParams<{ type: UserType }>();
+  const route = useRoute()
   const isLoggedIn = checkLoggedInUser();
   const dispatch: AppDispatch = useDispatch();
-
+  const [visible, setVisible] = useState<boolean>(false)
   const { allProperties } = useSelector<RootState, PropertySliceState>((state) => state.property);
   const { userData } = useSelector<RootState, UserState>((state) => state.user);
-
-  console.log("userData", userData);
   
   useEffect(() => {
     fetchAllProperties()
@@ -119,7 +118,7 @@ export default function Home() {
             btnLabel="Go to Dashboard"
             theme={theme}
             onPress={() =>
-              router.push(`(user)/${params?.type!}/(tabs)/dashboard`)
+              Boolean(userData) ? router.push(`(user)/${params?.type!}/(tabs)/dashboard`) : setVisible(true)
             }
           />
           <GapView length={30} />
@@ -151,7 +150,7 @@ export default function Home() {
             btnLabel="Post an Ad"
             theme={theme}
             onPress={() =>
-              router.push(`(user)/${params?.type!}/(tabs)/listings`)
+              Boolean(userData) ? router.push(`(user)/${params?.type!}/(tabs)/listings`) : setVisible(true)
             }
           />
           <PropertyListing
@@ -162,6 +161,7 @@ export default function Home() {
           />
         </View>
       </ScrollView>
+      <LoginModal visible={visible} onClose={() => setVisible(false)} lastRoute={`home`} />
     </>
   );
 }

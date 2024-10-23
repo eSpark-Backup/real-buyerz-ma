@@ -12,6 +12,7 @@ import { GLogo, RLogo } from "@assets/images";
 import { DarkTheme, LightTheme } from "@theme";
 import { MyText, MyButton, MyCheckbox, MyInput, GapView, OverlayLoader } from "@components";
 import { UserSignInSchema } from "@validations/schema";
+import useSessionManagement from "hooks/useSessionManagement";
 
 import Toast from "react-native-toast-message";
 
@@ -19,7 +20,9 @@ export default function SignIn() {
   const colorScheme = Appearance.getColorScheme();
   const theme = colorScheme === "dark" ? DarkTheme : LightTheme;
   const [loading, setLoading] = useState(false);
+  const [isRememberedMe, setRememberedMe] = useState(false);
   const dispatch = useDispatch();
+  const { updateUserInSession,updateUserIsLoggedInSession } = useSessionManagement();
 
   const signInUser = async (values) => {
     setLoading(true)
@@ -46,13 +49,10 @@ export default function SignIn() {
   }
 
   const savingDataToSessionStorage = (userInfo: UserObject) => {
-    storage.set('userToken', userInfo?.token as string);
-    storage.set('userData', JSON.stringify(userInfo?.user));
+    updateUserInSession(userInfo?.user, userInfo?.token as string);
+    updateUserIsLoggedInSession(isRememberedMe);
     dispatch(setUserToken(userInfo?.token));
     dispatch(setUserData(userInfo?.user));
-    const userDataString = storage.getString('userData');
-    const userData = userDataString ? JSON.parse(userDataString) : null; // Parse JSON if available
-    console.log(userData)
   }
 
 
@@ -147,7 +147,7 @@ export default function SignIn() {
               <MyCheckbox
                 label="Remember"
                 onChange={(value) => {
-                  console.log("Remember checked !");
+                  setRememberedMe(value)
                 }}
                 style={styles.rememberCont}
                 labelStyle={styles.label}
