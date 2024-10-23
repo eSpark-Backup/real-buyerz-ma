@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from "react";
+import React, { useRef, useEffect, useState } from "react";
 import {
   FlatList,
   StyleSheet,
@@ -11,10 +11,10 @@ import {
   Easing,
 } from "react-native";
 import { Feather } from "@expo/vector-icons";
-import { useTheme } from "@react-navigation/native";
+import { useRoute, useTheme } from "@react-navigation/native";
 import { router, useLocalSearchParams } from "expo-router";
 
-import { Card, MyText, GapView, AdCard } from "@components";
+import { Card, MyText, GapView, AdCard, LoginModal } from "@components";
 import { WINDOW_WIDTH } from "@constants";
 import { MyTheme, UserType } from "@types";
 import {
@@ -27,6 +27,13 @@ import {
   ResPlot,
   UpPortion,
 } from "@assets/images";
+import { checkLoggedInUser } from "app/auth/utils/authUtils";
+import { AllPropertiesData, handleGetAllProperties, PropertyItem } from "./utils";
+import { useDispatch } from "react-redux";
+import { PropertySliceState, setAllProperties } from "features/property/propertySlice";
+import { useSelector } from "react-redux";
+import { AppDispatch, RootState } from "@store";
+import { UserState } from "features/user/userSlice";
 
 interface BrowseProps {
   onPress: () => void;
@@ -37,6 +44,27 @@ interface BrowseProps {
 export default function Home() {
   const theme = useTheme() as MyTheme;
   const params = useLocalSearchParams<{ type: UserType }>();
+  const route = useRoute()
+  const isLoggedIn = checkLoggedInUser();
+  const dispatch: AppDispatch = useDispatch();
+  const [visible, setVisible] = useState<boolean>(false)
+  const { allProperties } = useSelector<RootState, PropertySliceState>((state) => state.property);
+  const { userData } = useSelector<RootState, UserState>((state) => state.user);
+  
+  useEffect(() => {
+    fetchAllProperties()
+  }, []);
+
+  const fetchAllProperties = async () => {
+    try {
+      const response = await handleGetAllProperties()
+      if(response.data) {
+        dispatch(setAllProperties(response.data))
+      }
+    } catch (error) {
+      
+    }
+  }
 
   const PropertiesData = [
     {
@@ -90,7 +118,7 @@ export default function Home() {
             btnLabel="Go to Dashboard"
             theme={theme}
             onPress={() =>
-              router.push(`(user)/${params?.type!}/(tabs)/dashboard`)
+              Boolean(userData) ? router.push(`(user)/${params?.type!}/(tabs)/dashboard`) : setVisible(true)
             }
           />
           <GapView length={30} />
@@ -114,6 +142,7 @@ export default function Home() {
             title="Featured Properties"
             theme={theme}
             params={params}
+            data={allProperties}
           />
           <ImageCard />
           <AdCard
@@ -121,16 +150,18 @@ export default function Home() {
             btnLabel="Post an Ad"
             theme={theme}
             onPress={() =>
-              router.push(`(user)/${params?.type!}/(tabs)/listings`)
+              Boolean(userData) ? router.push(`(user)/${params?.type!}/(tabs)/listings`) : setVisible(true)
             }
           />
           <PropertyListing
             title="Newly Listed Properties"
             theme={theme}
             params={params}
+            data={allProperties}
           />
         </View>
       </ScrollView>
+      <LoginModal visible={visible} onClose={() => setVisible(false)} lastRoute={`home`} />
     </>
   );
 }
@@ -314,84 +345,68 @@ export const PropertyListing = ({
   title,
   theme,
   params,
+  data
 }: {
   title?: string;
   theme?: MyTheme;
   params: { type?: UserType };
+  data: AllPropertiesData | null
 }) => {
-  const data = [
-    {
-      id: 0,
-      name: "Mount Khalid",
-      location: "Gulberg",
-      image: "https://picsum.photos/id/151/130",
-      size: "1155 sqft to 2684 sqft",
-    },
-    {
-      id: 1,
-      name: "Mount Khalid",
-      location: "Gulberg",
-      image: "https://picsum.photos/id/153/130",
-      size: "1155 sqft to 2684 sqft",
-    },
-    {
-      id: 2,
-      name: "Mount Khalid",
-      location: "Gulberg",
-      image: "https://picsum.photos/id/162/130",
-      size: "1155 sqft to 2684 sqft",
-    },
-  ];
 
   function renderList({
     item,
     index,
     params,
   }: {
-    item: any;
+    item: PropertyItem;
     index: number;
     params: { type?: UserType };
   }) {
+    const images = item?.PropertyData?.filter(val => val.type == "image")
     return (
-      <TouchableOpacity
-        activeOpacity={1}
+      <Card
         onPress={() => {
-          router.push(`(user)/${params?.type!}/(tabs)/home/propertyDetail`);
+          router.navigate({
+            pathname: `(user)/${params?.type!}/(tabs)/home/propertyDetail`,
+            params: {
+              item: JSON.stringify(item)
+            }
+          });
         }}
-      >
-        <Card radius={2} style={{ height: 180, width: 130 }}>
-          <Image
-            source={{ uri: item?.image }}
-            style={{ height: 80, borderRadius: 2 }}
-          />
-          <View style={{ padding: 8 }}>
-            <MyText
-              text="Contact for price"
-              size={10}
-              textColor={theme?.colors.text}
-              style={{ fontWeight: "500", marginBottom: 10 }}
-            />
-            <MyText
-              text={item.name}
-              size={10}
-              textColor={theme?.colors.text}
-              style={{ fontWeight: "400", marginBottom: 10 }}
-            />
-            <MyText
-              text={item.location}
-              size={10}
-              textColor="#898989"
-              style={{ fontWeight: "400", marginBottom: 10 }}
-            />
-            <MyText
-              text={item.size}
-              size={8}
-              textColor="#898989"
-              style={{ fontWeight: "400", marginBottom: 10 }}
-            />
-          </View>
-        </Card>
-      </TouchableOpacity>
+      radius={2}
+      style={{ height: 180, width: 130 }}
+    >
+      <Image
+        source={{ uri: images?.[0]?.url ?? 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR56IbLaMQyafnD6P0AnEdKTBEmob1H_-bLdw&s' }}
+        style={{ height: 80, borderRadius: 2 }}
+      />
+      <View style={{ padding: 8 }}>
+        <MyText
+          text="Contact for price"
+          size={10}
+          textColor={theme?.colors.text}
+          style={{ fontWeight: "500", marginBottom: 10 }}
+        />
+        <MyText
+          text={item.propertyName}
+          size={10}
+          textColor={theme?.colors.text}
+          style={{ fontWeight: "400", marginBottom: 10 }}
+        />
+        <MyText
+          text={item.propertyAddress}
+          size={10}
+          textColor="#898989"
+          style={{ fontWeight: "400", marginBottom: 10 }}
+        />
+        <MyText
+          text={item.propertyArea}
+          size={8}
+          textColor="#898989"
+          style={{ fontWeight: "400", marginBottom: 10 }}
+        />
+      </View>
+    </Card>
     );
   }
 
@@ -411,7 +426,7 @@ export const PropertyListing = ({
           Find your dream projects from our latest projects
         </MyText>
         <FlatList
-          data={data}
+          data={data?.items ?? []}
           showsHorizontalScrollIndicator={false}
           horizontal
           renderItem={({ item, index }) => renderList({ item, index, params })}

@@ -170,3 +170,8 @@ export interface DropdownProps {
   onSelect: (value: string | string[]) => void;
   style?: StyleProp<ViewStyle>;
 }
+
+export type PropertyDetailScreenParams = { 
+  type: UserType;
+  item: string
+}

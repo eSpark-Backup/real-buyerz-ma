@@ -23,6 +23,8 @@ import { customFonts } from "utils/customFonts";
 import { customImages } from "utils/customImages";
 import { checkLoggedInUser, getLoggedInUserInfo } from "app/auth/utils/authUtils";
 import { storage } from "store/mmkv";
+import { useDispatch } from "react-redux";
+import { setUserData } from "features/user/userSlice";
 
 SplashScreen.preventAutoHideAsync(); //? Disable Auto Hide
 
@@ -45,7 +47,8 @@ export default function App() {
   const translateY = useRef(new Animated.Value(WINDOW_HEIGHT * 1.5)).current;
   const scale = useRef(new Animated.Value(1)).current;
   const rotate = useRef(new Animated.Value(0)).current;
-
+  const dispatch = useDispatch();
+  
   const loadResourcesAsync = async () => {
     try {
       const imageAssets = cacheImages(customImages);
@@ -116,6 +119,7 @@ export default function App() {
       const isLoggedIn = checkLoggedInUser();
       if (isLoggedIn) {
         const userInfo = getLoggedInUserInfo();
+        dispatch(setUserData(userInfo))
         const role = userInfo && userInfo.user && userInfo.user.role ? userInfo.user.role : "user";
         router.push(`(user)/${role}/home`);
       } else {
