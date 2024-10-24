@@ -19,11 +19,13 @@ LogBox.ignoreLogs([
 
 export default function RootLayout() {
   return (
-    <Provider store={store}>
-      <BottomSheetModalProvider>
-        <RootComponent />
-      </BottomSheetModalProvider>
-    </Provider>
+    <GestureHandlerRootView>
+      <Provider store={store}>
+        <BottomSheetModalProvider>
+          <RootComponent />
+        </BottomSheetModalProvider>
+      </Provider>
+    </GestureHandlerRootView>
   );
 }
 

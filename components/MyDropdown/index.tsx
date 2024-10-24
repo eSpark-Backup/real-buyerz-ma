@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import {
+  Pressable,
   StyleProp,
   StyleSheet,
   TouchableOpacity,
@@ -17,7 +18,7 @@ interface DropdownProps {
   placeholder?: string;
   multiSelect?: boolean;
   zIndex?: number;
-  onSelect: (value: string | string[]) => void;
+  onSelect: ({ key, value }: { key: string; value: string | string[] }) => void;
   style?: StyleProp<ViewStyle>;
   value?:String
   placeholderColor?: string;
@@ -26,6 +27,8 @@ interface DropdownProps {
   title?: string;
   bgColor?: string;
   theme: MyTheme;
+  id: string;
+  selected?: string[] | null
 }
 
 export default function MyDropdown({
@@ -42,6 +45,8 @@ export default function MyDropdown({
   title,
   bgColor,
   theme,
+  id,
+  selected
 }: DropdownProps) {
   const [show, setShow] = useState(false);
   const [selectedItems, setSelectedItems] = useState<string[]>([]);
@@ -226,6 +231,8 @@ const renderList = ({
         paddingHorizontal: 15,
         flexDirection: "row",
         alignItems: "center",
+        zIndex: 100,
+        width: '100%'
       }}
       onPress={() => {
         if (!multiSelect) {
@@ -250,6 +257,5 @@ const styles = (theme?: MyTheme) =>
       borderRadius: 5,
       borderColor: theme?.colors.border,
       alignItems: "center",
-      zIndex: 10,
     },
   });

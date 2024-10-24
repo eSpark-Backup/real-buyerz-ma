@@ -8,6 +8,7 @@ import {
   ViewStyle,
 } from "react-native";
 import { Theme } from "@react-navigation/native";
+import { PropertyItem } from "app/(user)/[type]/(tabs)/home/utils";
 
 export type MyTheme = Theme & {
   colors: {
@@ -143,19 +144,13 @@ export type SearchListProps = {
 };
 
 export type MyListItemProps = {
-  item: {
-    title: string;
-    cost: string;
-    address: string;
-    beds: number;
-    bathroom: number;
-    parking: number;
-    sqft: number;
-    image: string;
-  };
+  item: PropertyItem;
   index: number;
   theme: MyTheme;
   fav?: boolean;
+  params: {
+    type: UserType
+  }
 };
 
 export interface IMyAvatar {

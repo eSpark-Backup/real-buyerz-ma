@@ -9,10 +9,14 @@ export default function MyTopFilter({
   style,
   theme,
   onPressFilter,
+  onReset,
+  applied=false
 }: {
   style?: ViewStyle;
   theme: MyTheme;
   onPressFilter: () => void;
+  onReset?: () => void,
+  applied?: boolean
 }) {
   return (
     <View style={{ ...styles.top_filter, ...style }}>
@@ -34,6 +38,7 @@ export default function MyTopFilter({
           color="#ffffff"
           style={{ transform: [{ rotateY: "180deg" }] }}
         />
+        {applied && <View style={{height: 10, width: 10, position: 'absolute', top: -3, left:  -3, backgroundColor: theme.colors.primary, borderRadius: 100}} />}
       </TouchableOpacity>
       <TouchableOpacity
         activeOpacity={1}
@@ -47,6 +52,7 @@ export default function MyTopFilter({
           marginLeft: 5,
           borderColor: theme.colors.secondary,
         }}
+        onPress={onReset}
       >
         <MyText text="Reset" textColor={theme.colors.secondary} size={14} />
       </TouchableOpacity>
