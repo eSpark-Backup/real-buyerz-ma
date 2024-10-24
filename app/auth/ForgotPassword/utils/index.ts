@@ -113,20 +113,4 @@ const handleResetPass = async (
   }
 };
 
-const showToast = (status: boolean, message: string) => {
-  if (status) {
-    Toast.show({
-      type: 'success',
-      text1: 'Success',
-      text2: message,
-    });
-  } else {
-    Toast.show({
-      type: 'error',
-      text1: 'Error',
-      text2: message,
-    });
-  }
-};
-
-export { handleSendOTP, handleVerifyOTP, handlePasswordResetEmailLink, handleResetPass, showToast };
+export { handleSendOTP, handleVerifyOTP, handlePasswordResetEmailLink, handleResetPass };

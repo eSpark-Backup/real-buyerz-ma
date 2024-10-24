@@ -10,10 +10,11 @@ import { MyText, MyButton, MyCheckbox, MyInput, OverlayLoader } from "@component
 import { UserSignUpSchema } from "@validations/schema";
 import useSessionManagement from "hooks/useSessionManagement";
 import { UserObject, handleSignUpUser } from "./utils";
-import Toast from "react-native-toast-message";
 import { useDispatch } from 'react-redux';
 
 import { setUserData, setUserToken } from '../../../features/user/userSlice';
+import { handleGetUserProfile, UserProfileData } from "app/(user)/[type]/(tabs)/profile/utils";
+import { showToast } from "@utils/showToast";
 
 interface SignUpFormValues {
   firstName: string;
@@ -31,6 +32,9 @@ export default function SignUp() {
   const [loading, setLoading] = useState(false);
   const { updateUserInSession,updateUserIsLoggedInSession } = useSessionManagement();
   const dispatch = useDispatch();
+  const mergeUserRoleWithProfile = (profileData: UserProfileData, role: string): UserProfileData => {
+    return { ...profileData, role };
+  };
 
   const inputFields = [
     { placeholder: "First Name", name: "firstName" },
@@ -56,7 +60,7 @@ export default function SignUp() {
       setLoading(false)
       const userInfo = response.userInfo;
       if (userInfo) {
-        savingDataToSessionStorage(userInfo); 
+        fetchAllUserProfileData(userInfo)
         router.push(`/(user)/${userInfo.user.role}/home`);
       } else {
         showToast('User info not available', 'error');
@@ -66,21 +70,26 @@ export default function SignUp() {
     }
   };
 
-  const savingDataToSessionStorage = (userInfo: UserObject) => {
-    updateUserInSession(userInfo?.user, userInfo?.token as string);
-    updateUserIsLoggedInSession(false);
-    dispatch(setUserToken(userInfo?.token));
-    dispatch(setUserData(userInfo?.user));
+  const fetchAllUserProfileData = async (userInfo: UserObject) => {
+    try {
+      const response = await handleGetUserProfile()
+      if (response.data) {
+        setLoading(false)
+        savingDataToSessionStorage(userInfo, response.data);
+        router.push(`/(user)/${userInfo.user.role}/home`);
+      }
+    } catch (error) {
+      setLoading(false)
+    }
   }
 
-  const showToast = (message: string, type: 'success' | 'error') => {
-    Toast.show({
-      type,
-      position: 'top',
-      text1: message,
-      topOffset: 0,
-    });
-  };
+  const savingDataToSessionStorage = (userInfo: UserObject, userProfileData: UserProfileData) => {
+    let userProfileInfo= mergeUserRoleWithProfile(userProfileData, userInfo.user.role || "user");
+    updateUserInSession(userProfileInfo, userInfo?.token as string);
+    updateUserIsLoggedInSession(false);
+    dispatch(setUserToken(userInfo?.token));
+    dispatch(setUserData(userProfileInfo));
+  }
 
   return (
     <Formik<SignUpFormValues>

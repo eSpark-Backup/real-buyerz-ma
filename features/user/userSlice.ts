@@ -1,20 +1,22 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 
 export type User = {
-  createdAt: Date;
-  updatedAt: Date;
   id: string;
   firstName: string;
   lastName: string;
-  profileImage: string;
-  imageKey: null;
   email: string;
-  phoneNumber: string;
-  userStatus: string;
-  role: string;
+  landlineNumber: string;
+  city: string;
+  bio: string;
+  whatsapp: string;
+  country: string;
+  address: string;
   isVerified: boolean;
   socialId: string;
-  displayName: string | null;
+  profileImage: string;
+  profileVisibility: boolean;
+  role: string;
+  preferences: null;
 };
 
 export interface UserState {

@@ -9,9 +9,15 @@ export const checkLoggedInUser = (): boolean => {
 };
 export const getLoggedInUserInfo = (): UserObject | null => {
   try {
-    const userState = storage.getString("userData");
-    if (userState) {
-      return JSON.parse(userState) as UserObject;
+    const userData = storage.getString("userData");
+    if (userData) {
+      const userToken = storage.getString("userToken");
+      const userObject: UserObject = {
+        token: userToken!,  
+        user: JSON.parse(userData), 
+      };
+
+      return userObject
     }
     return null;
   } catch (error) {
