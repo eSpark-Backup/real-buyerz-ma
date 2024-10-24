@@ -1,7 +1,6 @@
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { storage } from "store/mmkv";
-import { setLoggedInUser, clearLoggedInUser } from "../features/user/userSlice"; // Import actions from userSlice
 import { resetTheme, toggleTheme } from "features/themeSlice";
 import { useTheme } from "@react-navigation/native";
 import { MyTheme, ThemeTypes } from "@types";
@@ -12,7 +11,7 @@ const useSessionManagement = () => {
 
   const updateUserInSession = (user: any, userToken:string) => {
     storage.set("userData", JSON.stringify(user));
-    storage.set("userToken", JSON.stringify(userToken));
+    storage.set("userToken", userToken);
   };
 
   const updateUserIsLoggedInSession = (isRememberMe:boolean) => {

@@ -17,6 +17,8 @@ import { handleLoginUser, UserObject } from 'app/auth/SignIn/utils';
 import OverlayLoader from "@components/OverlayLoader";
 import { setUserData, setUserToken } from "features/user/userSlice";
 import useSessionManagement from "hooks/useSessionManagement";
+import { handleGetUserProfile, UserProfileData } from "app/(user)/[type]/(tabs)/profile/utils";
+import { showToast } from "@utils/showToast";
 
 function LoginModal({ visible, onClose, lastRoute }: LoginModalProps) {
   const theme = useTheme() as MyTheme;
@@ -29,7 +31,9 @@ function LoginModal({ visible, onClose, lastRoute }: LoginModalProps) {
   const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
   const { updateUserInSession,updateUserIsLoggedInSession } = useSessionManagement();
-
+  const mergeUserRoleWithProfile = (profileData: UserProfileData, role: string): UserProfileData => {
+    return { ...profileData, role };
+  };
 
   const onLoginPress = async () => {
     setEmailError("");
@@ -48,12 +52,10 @@ function LoginModal({ visible, onClose, lastRoute }: LoginModalProps) {
     setLoading(true)
     const response = await handleLoginUser({ email, password });
     if (response.status) {
-      setLoading(false)
       const userInfo = response.userInfo;
       if (userInfo) {
-        savingDataToSessionStorage(userInfo);
-        onClose();
-        router.replace(`/${response.userInfo?.user.role}/${lastRoute}`);
+        fetchAllUserProfileData(userInfo)
+        showToast(response.message|| 'Login successfull', 'success')
       } else {
         showToast('User info not available', 'error');
       }
@@ -66,21 +68,26 @@ function LoginModal({ visible, onClose, lastRoute }: LoginModalProps) {
     };
   };
 
-  const savingDataToSessionStorage = (userInfo: UserObject) => {
-    updateUserInSession(userInfo?.user, userInfo?.token as string);
-    updateUserIsLoggedInSession(isRememberedMe);
-    dispatch(setUserToken(userInfo?.token));
-    dispatch(setUserData(userInfo?.user));
+  const fetchAllUserProfileData = async (userInfo: UserObject) => {
+    try {
+      const response = await handleGetUserProfile()
+      if (response.data) {
+        setLoading(false)
+        savingDataToSessionStorage(userInfo, response.data);
+        router.push(`/(user)/${userInfo.user.role}/home`);
+      }
+    } catch (error) {
+      setLoading(false)
+    }
   }
 
-  const showToast = (message: string, type?: 'success' | 'error') => {
-    Toast.show({
-      type: type,
-      position: 'top',
-      text1: message,
-      topOffset: 0,
-    });
-  };
+  const savingDataToSessionStorage = (userInfo: UserObject, userProfileData: UserProfileData) => {
+    let userProfileInfo= mergeUserRoleWithProfile(userProfileData, userInfo.user.role || "user");
+    updateUserInSession(userProfileInfo, userInfo?.token as string);
+    updateUserIsLoggedInSession(isRememberedMe);
+    dispatch(setUserToken(userInfo?.token));
+    dispatch(setUserData(userProfileInfo));
+  }
 
   return (
     <Modal

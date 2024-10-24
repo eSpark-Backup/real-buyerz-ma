@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   StyleProp,
   StyleSheet,
@@ -7,7 +7,7 @@ import {
   ViewStyle,
 } from "react-native";
 import { Entypo, Feather } from "@expo/vector-icons";
-import { ScrollView } from "react-native-gesture-handler"; //? for scrolling inside a absolute view
+import { ScrollView } from "react-native-gesture-handler"; //? for scrolling inside an absolute view
 
 import MyText from "@components/MyText";
 import { MyTheme } from "@types";
@@ -19,6 +19,7 @@ interface DropdownProps {
   zIndex?: number;
   onSelect: (value: string | string[]) => void;
   style?: StyleProp<ViewStyle>;
+  value?:String
   placeholderColor?: string;
   containerStyle?: ViewStyle;
   height?: number;
@@ -34,6 +35,7 @@ export default function MyDropdown({
   zIndex = 10,
   multiSelect = false,
   style,
+  value,
   placeholderColor,
   containerStyle,
   height = 30,
@@ -43,11 +45,13 @@ export default function MyDropdown({
 }: DropdownProps) {
   const [show, setShow] = useState(false);
   const [selectedItems, setSelectedItems] = useState<string[]>([]);
-  const [label, setLabel] = useState("");
+  const [label, setLabel] = useState(value || "");
   const listData = multiSelect ? ["All", ...data] : data;
-
-  console.log("theme is dark: ", theme.dark);
-
+  useEffect(() => {
+    if (value) {
+      setLabel(value);
+    }
+  }, [value]);
   const handleSelection = (item: string) => {
     let updatedSelection: string[] = [...selectedItems];
 
@@ -72,9 +76,10 @@ export default function MyDropdown({
       }
     }
 
+    
+
     setSelectedItems(updatedSelection);
     onSelect(updatedSelection);
-
     if (!multiSelect && updatedSelection.length > 0) {
       setLabel(item);
     } else if (updatedSelection.length === data.length) {
@@ -97,16 +102,6 @@ export default function MyDropdown({
 
   return (
     <>
-      <View
-        style={{
-          // backgroundColor: "yellow",
-          width: "100%",
-          height: 50,
-          zIndex: 100,
-          position: "absolute",
-          top: 100,
-        }}
-      />
       <View style={{ zIndex: 5 }}>
         {title && (
           <MyText
@@ -121,7 +116,6 @@ export default function MyDropdown({
         <View
           style={[
             styles(theme).container,
-            {},
             show
               ? { borderBottomRightRadius: 0, borderBottomLeftRadius: 0 }
               : {},
@@ -142,7 +136,7 @@ export default function MyDropdown({
           >
             <MyText
               text={label ? label : `${placeholder}`}
-              textColor={placeholderColor ? placeholderColor : "#969696"}
+              textColor={label ? theme?.colors.text : placeholderColor || "#969696"} 
             />
             <Entypo
               name={!show ? "chevron-down" : "chevron-up"}
@@ -154,48 +148,46 @@ export default function MyDropdown({
             />
           </View>
 
-          {/* {show && (
-          <View
-            style={{
-              position: "absolute",
-              width: "100%",
-            }}
-          >
-            <ScrollView
-              removeClippedSubviews
-              keyboardShouldPersistTaps="handled"
+          {show && (
+            <View
               style={{
+                position: "absolute",
+                width: "100%",
+                top: height - 2, // Adjust position based on the height of the dropdown
                 zIndex: zIndex + 2,
-                overflow: "hidden",
-                top: height - 2,
-                backgroundColor: bgColor ? bgColor : theme.colors.background,
-                borderColor: theme.colors.border,
-                borderWidth: 1,
-                borderBottomRightRadius: 5,
-                borderBottomLeftRadius: 5,
-                height: listData.length > 3 ? 120 : "auto",
-              }}
-              contentContainerStyle={{
-                flexGrow: 1,
-                justifyContent: "space-between",
-                overflow: "hidden",
               }}
             >
-              {listData.map((item, index) =>
-                renderList({
-                  item,
-                  index,
-                  handleSelection,
-                  height,
-                  isSelected,
-                  multiSelect,
-                  setShow,
-                  theme,
-                })
-              )}
-            </ScrollView>
-          </View>
-        )} */}
+              <ScrollView
+                removeClippedSubviews
+                keyboardShouldPersistTaps="handled"
+                style={{
+                  backgroundColor: bgColor ? bgColor : theme.colors.background,
+                  borderColor: theme.colors.border,
+                  borderWidth: 1,
+                  borderBottomRightRadius: 5,
+                  borderBottomLeftRadius: 5,
+                  maxHeight: 120, // Set a max height for the dropdown
+                }}
+                contentContainerStyle={{
+                  flexGrow: 1,
+                  justifyContent: "space-between",
+                }}
+              >
+                {listData.map((item, index) =>
+                  renderList({
+                    item,
+                    index,
+                    handleSelection,
+                    height,
+                    isSelected,
+                    multiSelect,
+                    setShow,
+                    theme,
+                  })
+                )}
+              </ScrollView>
+            </View>
+          )}
         </View>
       </View>
     </>
@@ -235,7 +227,6 @@ const renderList = ({
         flexDirection: "row",
         alignItems: "center",
       }}
-      // key={item}
       onPress={() => {
         if (!multiSelect) {
           setShow(false);
@@ -243,7 +234,9 @@ const renderList = ({
         handleSelection(item);
       }}
     >
-      <MyText text={item} textColor={theme.colors.text} />
+      <MyText text={item}
+        textColor={isSelected(item) ? theme?.colors.text : theme.colors.text}
+        />
       {isSelected(item) && <Feather name="check" size={16} color="#34e145" />}
     </TouchableOpacity>
   );
@@ -253,7 +246,6 @@ const styles = (theme?: MyTheme) =>
   StyleSheet.create({
     container: {
       width: 150,
-      // height: 30,
       borderWidth: 1,
       borderRadius: 5,
       borderColor: theme?.colors.border,

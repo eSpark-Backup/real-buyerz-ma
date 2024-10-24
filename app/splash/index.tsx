@@ -22,9 +22,10 @@ import { WINDOW_HEIGHT, WINDOW_WIDTH } from "@constants";
 import { customFonts } from "utils/customFonts";
 import { customImages } from "utils/customImages";
 import { checkLoggedInUser, getLoggedInUserInfo } from "app/auth/utils/authUtils";
-import { storage } from "store/mmkv";
 import { useDispatch } from "react-redux";
-import { setUserData } from "features/user/userSlice";
+import { setUserData, setUserToken } from "features/user/userSlice";
+import { storage } from "store/mmkv";
+import { api } from "api";
 
 SplashScreen.preventAutoHideAsync(); //? Disable Auto Hide
 
@@ -48,7 +49,7 @@ export default function App() {
   const scale = useRef(new Animated.Value(1)).current;
   const rotate = useRef(new Animated.Value(0)).current;
   const dispatch = useDispatch();
-  
+
   const loadResourcesAsync = async () => {
     try {
       const imageAssets = cacheImages(customImages);
@@ -68,6 +69,23 @@ export default function App() {
     } finally {
       setAppIsReady(true);
       SplashScreen.hideAsync();
+    }
+  };
+
+  const sessionCheckLoggedIn = async () => {
+    const isLoggedIn = checkLoggedInUser();
+    if (isLoggedIn) {
+      const userInfo = getLoggedInUserInfo();
+      const actualToken = userInfo?.token.replace(/\\+/g, '').replace(/^"|"$/g, '');
+      api.setHeader('Authorization', `Bearer ${actualToken}`);
+      dispatch(setUserData(userInfo?.user))
+      dispatch(setUserToken(userInfo?.token as string))
+      const role = userInfo && userInfo.user && userInfo.user.role ? userInfo.user.role : "user";
+      router.push(`(user)/${role}/home`);
+    } else {
+      setTimeout(() => {
+        router.push("/auth");
+      }, 5000);
     }
   };
 
@@ -112,22 +130,8 @@ export default function App() {
     };
   }, [translateY, scale]);
 
-  // useEffect(() => {}, []);
 
   useEffect(() => {
-    const sessionCheckLoggedIn = async () => {
-      const isLoggedIn = checkLoggedInUser();
-      if (isLoggedIn) {
-        const userInfo = getLoggedInUserInfo();
-        dispatch(setUserData(userInfo))
-        const role = userInfo && userInfo.user && userInfo.user.role ? userInfo.user.role : "user";
-        router.push(`(user)/${role}/home`);
-      } else {
-        setTimeout(() => {
-          router.push("/auth");
-        }, 5000);
-      }
-    };
     sessionCheckLoggedIn();
   }, []);
 

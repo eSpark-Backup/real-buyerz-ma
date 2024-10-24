@@ -1,4 +1,3 @@
-import Toast from 'react-native-toast-message';
 import { api } from 'api';
 
 interface Creds {
@@ -35,13 +34,6 @@ const handleLoginUser = async (
   try {
     const { data } = await api.post<AuthResponse>('/user/login', creds);
     if (data?.response?.data?.token) {
-      api.setHeader('Authorization', `Bearer ${data.response.data.token}`);
-      Toast.show({
-        type: 'success',
-        position: 'top',
-        text1: data.message,
-        topOffset: 0,
-      });
       return {
         status: true,
         userInfo: data.response.data
