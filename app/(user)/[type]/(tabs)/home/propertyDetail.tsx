@@ -16,6 +16,7 @@ import {
 import { LocationIcon } from "@assets/images/svg";
 import { router, useLocalSearchParams } from "expo-router";
 import { PropertyItem } from "./utils";
+import { isImageUrl } from "@utils/functions";
 
 const PropertyDetail = () => {
   const theme = useTheme() as MyTheme;
@@ -34,7 +35,7 @@ const PropertyDetail = () => {
   const tableList = [
     {
       title: "Type",
-      value: productDetail?.propertyType.subTypeName,
+      value: productDetail?.propertyType.typeName,
     },
     {
       title: "Location",
@@ -73,13 +74,6 @@ const PropertyDetail = () => {
   ];
 
   const amentiesList = productDetail?.amenities?.map(val => val?.amenetiesName)
-  // [
-  //   "Park",
-  //   "Masjid",
-  //   "Playground",
-  //   "24 Hours CCTV Security Camera",
-  //   "24 Hour Water Supply",
-  // ];
 
   const colorDetector = (value: number) => {
     if (value % 2 === 0) {
@@ -94,20 +88,32 @@ const PropertyDetail = () => {
     }
     return 0;
   };
+  
   return (
     <ScrollView>
       <View style={styles(theme).wrapper}>
-        <CustomSlider images={images} title={productDetail?.propertyName ?? "4 BEDROOMS APARTMENT"} />
+        <CustomSlider
+          images={images}
+          title={productDetail?.propertyName ?? "4 BEDROOMS APARTMENT"}
+        />
         <Card style={styles(theme).cardWrapper}>
           <View>
             <MyAvatar
               size={70}
-              imageUrl={{ uri: "https://picsum.photos/id/151/130" }}
+              imageUrl={{
+                uri: (productDetail.user?.profileImage && isImageUrl(productDetail.user?.profileImage ?? ""))
+                  ? productDetail.user?.profileImage
+                  : "https://picsum.photos/id/151/130",
+              }}
             />
           </View>
           <View style={styles(theme).textWrapper}>
             <MyText
-              text="Moin khan"
+              text={
+                productDetail.user?.firstName +
+                " " +
+                productDetail.user?.lastName
+              }
               size={16}
               weight="600"
               textColor={theme.colors.listText}
@@ -115,10 +121,11 @@ const PropertyDetail = () => {
             <View style={styles(theme).dFlex}>
               <LocationIcon />
               <MyText
-                text="Lahore-Pakistan"
+                text={productDetail.user?.address ?? "N/A"}
                 size={12}
                 textColor={theme.colors.listText}
                 weight="600"
+                style={{ marginHorizontal: 4 }}
               />
             </View>
             <View style={styles(theme).btnWrapper}>
@@ -128,9 +135,7 @@ const PropertyDetail = () => {
                 textColor="#ffffff"
                 width={100}
                 onPress={() =>
-                  router.push(
-                    `(user)/${type!}/(tabs)/home/AgentProfile`
-                  )
+                  router.push(`(user)/${type!}/(tabs)/home/AgentProfile`)
                 }
                 btnStyle={{
                   paddingVertical: 10,
@@ -226,11 +231,21 @@ const PropertyDetail = () => {
             </View>
             <View style={styles(theme).mt5}>
               <MyText text="Area" size={16} weight="600" />
-              <MyText text={(productDetail?.propertyArea ?? "250000") + " sq.m"} size={14} weight="400" />
+              <MyText
+                text={(productDetail?.propertyArea ?? "250000") + " sq.m"}
+                size={14}
+                weight="400"
+              />
             </View>
             <View style={styles(theme).mt5}>
               <MyText text="Demand" size={16} weight="600" />
-              <MyText text={productDetail?.propertyPrice?.toString() ?? "1 Crore 50 lac"} size={14} weight="400" />
+              <MyText
+                text={
+                  productDetail?.propertyPrice?.toString() ?? "1 Crore 50 lac"
+                }
+                size={14}
+                weight="400"
+              />
             </View>
           </View>
         </Card>

@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import {
+  Pressable,
   StyleProp,
   StyleSheet,
   TouchableOpacity,
@@ -17,7 +18,7 @@ interface DropdownProps {
   placeholder?: string;
   multiSelect?: boolean;
   zIndex?: number;
-  onSelect: (value: string | string[]) => void;
+  onSelect: ({ key, value }: { key: string; value: string | string[] }) => void;
   style?: StyleProp<ViewStyle>;
   placeholderColor?: string;
   containerStyle?: ViewStyle;
@@ -25,6 +26,8 @@ interface DropdownProps {
   title?: string;
   bgColor?: string;
   theme: MyTheme;
+  id: string;
+  selected?: string[] | null
 }
 
 export default function MyDropdown({
@@ -40,13 +43,14 @@ export default function MyDropdown({
   title,
   bgColor,
   theme,
+  id,
+  selected
 }: DropdownProps) {
   const [show, setShow] = useState(false);
-  const [selectedItems, setSelectedItems] = useState<string[]>([]);
-  const [label, setLabel] = useState("");
+  const [selectedItems, setSelectedItems] = useState<string[]>(selected ?? []);
+  const [label, setLabel] = useState(selected ?? "");
   const listData = multiSelect ? ["All", ...data] : data;
 
-  console.log("theme is dark: ", theme.dark);
 
   const handleSelection = (item: string) => {
     let updatedSelection: string[] = [...selectedItems];
@@ -73,7 +77,7 @@ export default function MyDropdown({
     }
 
     setSelectedItems(updatedSelection);
-    onSelect(updatedSelection);
+    onSelect({key: id, value: updatedSelection});
 
     if (!multiSelect && updatedSelection.length > 0) {
       setLabel(item);
@@ -96,76 +100,66 @@ export default function MyDropdown({
   };
 
   return (
-    <>
+    <View>
+      {title && (
+        <MyText
+          text={title}
+          style={{ alignSelf: "flex-start", paddingBottom: 10 }}
+          size={15}
+          weight="400"
+          textColor={theme.colors.text}
+        />
+      )}
+
       <View
-        style={{
-          // backgroundColor: "yellow",
-          width: "100%",
-          height: 50,
-          zIndex: 100,
-          position: "absolute",
-          top: 100,
-        }}
-      />
-      <View style={{ zIndex: 5 }}>
-        {title && (
-          <MyText
-            text={title}
-            style={{ alignSelf: "flex-start", paddingBottom: 10 }}
-            size={15}
-            weight="400"
-            textColor={theme.colors.text}
-          />
-        )}
-
-        <View
-          style={[
-            styles(theme).container,
-            {},
-            show
-              ? { borderBottomRightRadius: 0, borderBottomLeftRadius: 0 }
-              : {},
-            style,
-            { height },
-          ]}
+        style={[
+          style,
+          { height },
+        ]}
+      >
+        <Pressable
+          style={{
+            flexDirection: "row",
+            justifyContent: "space-between",
+            alignItems: "center",
+            width: "100%",
+            height: "100%",
+            paddingHorizontal: 15,
+            borderColor: theme.colors.border,
+            borderWidth: 1,
+            borderBottomRightRadius: 5,
+            borderBottomLeftRadius: 5,
+          }}
+          onPress={() => setShow(!show)}
         >
-          <View
-            style={{
-              flexDirection: "row",
-              justifyContent: "space-between",
-              alignItems: "center",
-              width: "100%",
-              height: "100%",
-              paddingHorizontal: 15,
-              zIndex: 10,
-            }}
-          >
-            <MyText
-              text={label ? label : `${placeholder}`}
-              textColor={placeholderColor ? placeholderColor : "#969696"}
-            />
-            <Entypo
-              name={!show ? "chevron-down" : "chevron-up"}
-              color={"#66666666"}
-              size={16}
-              onPress={() => {
-                setShow(!show);
-              }}
-            />
-          </View>
+          <MyText
+            text={label ? label?.toString() : `${placeholder}`}
+            textColor={placeholderColor ? placeholderColor : "#969696"}
+          />
+          <Entypo
+            name={!show ? "chevron-down" : "chevron-up"}
+            color={"#66666666"}
+            size={16}
+          />
+        </Pressable>
 
-          {/* {show && (
-          <View
+        {show && (
+          <Pressable
             style={{
               position: "absolute",
               width: "100%",
+              zIndex: 1,
+              borderColor: theme.colors.border,
+              borderWidth: 1,
+              borderBottomRightRadius: 5,
+              borderBottomLeftRadius: 5,
             }}
+            onPress={() => setShow(!show)}
           >
             <ScrollView
               removeClippedSubviews
               keyboardShouldPersistTaps="handled"
               style={{
-                zIndex: zIndex + 2,
                 overflow: "hidden",
                 top: height - 2,
                 backgroundColor: bgColor ? bgColor : theme.colors.background,
@@ -179,6 +173,7 @@ export default function MyDropdown({
                 flexGrow: 1,
                 justifyContent: "space-between",
                 overflow: "hidden",
+                zIndex: zIndex + 200,
               }}
             >
               {listData.map((item, index) =>
@@ -194,11 +189,10 @@ export default function MyDropdown({
                 })
               )}
             </ScrollView>
-          </View>
-        )} */}
-        </View>
+          </Pressable>
+        )}
       </View>
-    </>
+    </View>
   );
 }
 
@@ -234,8 +228,9 @@ const renderList = ({
         paddingHorizontal: 15,
         flexDirection: "row",
         alignItems: "center",
+        zIndex: 100,
+        width: '100%'
       }}
-      // key={item}
       onPress={() => {
         if (!multiSelect) {
           setShow(false);
@@ -258,6 +253,5 @@ const styles = (theme?: MyTheme) =>
       borderRadius: 5,
       borderColor: theme?.colors.border,
       alignItems: "center",
-      zIndex: 10,
     },
   });

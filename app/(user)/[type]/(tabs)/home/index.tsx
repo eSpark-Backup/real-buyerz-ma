@@ -15,7 +15,7 @@ import { useRoute, useTheme } from "@react-navigation/native";
 import { router, useLocalSearchParams } from "expo-router";
 
 import { Card, MyText, GapView, AdCard, LoginModal } from "@components";
-import { WINDOW_WIDTH } from "@constants";
+import { dummyImage, WINDOW_WIDTH } from "@constants";
 import { MyTheme, UserType } from "@types";
 import {
   ComShop,
@@ -28,12 +28,13 @@ import {
   UpPortion,
 } from "@assets/images";
 import { checkLoggedInUser } from "app/auth/utils/authUtils";
-import { AllPropertiesData, handleGetAllProperties, PropertyItem } from "./utils";
+import { AllPropertiesData, handleGetAllProperties, handleGetAllPropertType, PropertyItem, PropertyType } from "./utils";
 import { useDispatch } from "react-redux";
-import { PropertySliceState, setAllProperties } from "features/property/propertySlice";
+import { PropertySliceState, setAllProperties, setFilter, setPropertyType } from "features/property/propertySlice";
 import { useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@store";
 import { UserState } from "features/user/userSlice";
+import { isImageUrl } from "@utils/functions";
 
 interface BrowseProps {
   onPress: () => void;
@@ -48,11 +49,12 @@ export default function Home() {
   const isLoggedIn = checkLoggedInUser();
   const dispatch: AppDispatch = useDispatch();
   const [visible, setVisible] = useState<boolean>(false)
-  const { allProperties } = useSelector<RootState, PropertySliceState>((state) => state.property);
+  const { allProperties, propertyTypes } = useSelector<RootState, PropertySliceState>((state) => state.property);
   const { userData } = useSelector<RootState, UserState>((state) => state.user);
   
   useEffect(() => {
     fetchAllProperties()
+    fetchAllPropertyTypes()
   }, []);
 
   const fetchAllProperties = async () => {
@@ -62,10 +64,18 @@ export default function Home() {
         dispatch(setAllProperties(response.data))
       }
     } catch (error) {
-      
     }
   }
 
+  const fetchAllPropertyTypes = async () => {
+    try {
+      const response = await handleGetAllPropertType()
+      if(response.status) {
+        dispatch(setPropertyType(response.data))
+      }
+    } catch (error) {
+    }
+  }
   const PropertiesData = [
     {
       icon: <ResHouse />,
@@ -130,7 +140,7 @@ export default function Home() {
               color={theme.colors.text + "77"}
               style={{ right: 5 }}
             />
-            <BrowseProps theme={theme} data={PropertiesData} />
+            <BrowseProps theme={theme} data={propertyTypes ?? []} type={params.type} />
             <Feather
               name="chevron-right"
               size={18}
@@ -309,21 +319,32 @@ const ImageCard = () => {
 const BrowseProps = ({
   data,
   theme,
+  type
 }: {
-  data: BrowseProps[];
+  data: PropertyType[];
   theme?: MyTheme;
+  type: UserType;
 }) => {
-  function renderList({ item, index }: { item: BrowseProps; index: number }) {
+  const dispatch = useDispatch();
+
+  function renderList({ item, index }: { item: PropertyType; index: number }) {
     return (
-      <Card style={styles(theme).bCard} onPress={item?.onPress}>
-        {item.icon}
+      <Card onPress={() => {
+        router.push({
+          pathname: `(user)/${type!}/(tabs)/projects`,
+        });
+        dispatch(setFilter({
+          propertyType: item.typeName
+        }))
+      }} style={styles(theme).bCard}>
+        <Image source={{uri: isImageUrl(item?.url) ? item?.url : dummyImage}} style={{ height: 40, width: 40 }} />
         <GapView />
         <MyText
           size={10}
           textColor={theme?.colors.dimText}
           style={styles(theme).bText}
         >
-          {item.label}
+          {item?.typeName}
         </MyText>
       </Card>
     );
@@ -332,7 +353,7 @@ const BrowseProps = ({
   return (
     <FlatList
       horizontal
-      data={data}
+      data={data ?? []}
       renderItem={renderList}
       showsHorizontalScrollIndicator={false}
       ItemSeparatorComponent={() => <GapView mode="horizontal" length={15} />}
@@ -377,7 +398,7 @@ export const PropertyListing = ({
       style={{ height: 180, width: 130 }}
     >
       <Image
-        source={{ uri: images?.[0]?.url ?? 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR56IbLaMQyafnD6P0AnEdKTBEmob1H_-bLdw&s' }}
+        source={{ uri: isImageUrl(images?.[0]?.url) ? images?.[0]?.url : dummyImage}}
         style={{ height: 80, borderRadius: 2 }}
       />
       <View style={{ padding: 8 }}>

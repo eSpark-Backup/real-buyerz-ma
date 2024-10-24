@@ -145,3 +145,6 @@ export const data: ListData[] = [
     title: "Utility Store",
   },
 ];
+
+
+export const dummyImage = 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR56IbLaMQyafnD6P0AnEdKTBEmob1H_-bLdw&s' 
