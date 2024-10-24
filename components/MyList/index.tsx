@@ -1,6 +1,6 @@
 import React from "react";
-import { View, Image, TouchableOpacity, StyleSheet } from "react-native";
-import { useTheme } from "@react-navigation/native";
+import { View, Image, TouchableOpacity, StyleSheet, Pressable } from "react-native";
+import { useRoute, useTheme } from "@react-navigation/native";
 
 import {
   BathOutline,
@@ -13,12 +13,24 @@ import {
 import MyText from "../MyText";
 import PrimaryBtn from "../MyButton/primaryBtn";
 import { MyListItemProps, MyTheme } from "@types";
+import { dummyImage } from "@constants";
+import { isImageUrl } from "@utils/functions";
+import { useRouter } from "expo-router";
 
-const MyListItem: React.FC<MyListItemProps> = ({ item, index, theme, fav }) => {
+const MyListItem: React.FC<MyListItemProps> = ({ item, index, theme, fav, params }) => {
+  const images = item?.PropertyData?.filter(val => val.type == "image")
+  const router = useRouter()
   return (
-    <View style={styles(theme).searchItem}>
+    <Pressable onPress={() => {
+      router.navigate({
+        pathname: `(user)/${params?.type!}/(tabs)/home/propertyDetail`,
+        params: {
+          item: JSON.stringify(item)
+        }
+      });
+    }} style={styles(theme).searchItem}>
       <View>
-        <Image source={{ uri: item.image }} style={styles(theme).image} />
+        <Image source={{ uri: isImageUrl(images?.[0].url) ? images?.[0].url : dummyImage}} style={styles(theme).image} />
         <TouchableOpacity activeOpacity={1} style={styles(theme).likeBtn}>
           {fav ? <LikeActiveButton /> : <LikeButton />}
         </TouchableOpacity>
@@ -26,7 +38,7 @@ const MyListItem: React.FC<MyListItemProps> = ({ item, index, theme, fav }) => {
       <View style={styles(theme).rows}>
         <View style={styles(theme).row1}>
           <MyText
-            text={item.title}
+            text={item.propertyName}
             textColor={theme.colors.listText}
             size={12}
             style={{ width: "59%" }}
@@ -34,7 +46,7 @@ const MyListItem: React.FC<MyListItemProps> = ({ item, index, theme, fav }) => {
           <View style={styles(theme).row1_inner}>
             <MyText text="PKR " size={12} />
             <MyText
-              text={item.cost}
+              text={item.propertyPrice?.toString()}
               size={14}
               textColor={theme.colors.text}
               weight="500"
@@ -42,7 +54,7 @@ const MyListItem: React.FC<MyListItemProps> = ({ item, index, theme, fav }) => {
           </View>
         </View>
         <MyText
-          text={item.address}
+          text={item?.propertyAddress}
           textColor={theme.colors.text}
           size={14}
           numberOfLines={2}
@@ -51,7 +63,7 @@ const MyListItem: React.FC<MyListItemProps> = ({ item, index, theme, fav }) => {
           <View style={styles(theme).row3_inner}>
             <BedOutline style={{ color: theme.colors.text }} />
             <MyText
-              text={item.beds.toString().padStart(2, "0")}
+              text={"2".toString().padStart(2, "0")}
               style={styles(theme).miniText}
               size={10}
               weight="300"
@@ -60,7 +72,7 @@ const MyListItem: React.FC<MyListItemProps> = ({ item, index, theme, fav }) => {
           <View style={styles(theme).row3_inner}>
             <BathOutline style={{ color: theme.colors.text }} />
             <MyText
-              text={item.bathroom.toString().padStart(2, "0")}
+              text={"2".toString().padStart(2, "0")}
               style={styles(theme).miniText}
               size={10}
               weight="300"
@@ -69,7 +81,7 @@ const MyListItem: React.FC<MyListItemProps> = ({ item, index, theme, fav }) => {
           <View style={styles(theme).row3_inner}>
             <Parking style={{ color: theme.colors.text }} />
             <MyText
-              text={item.parking.toString().padStart(2, "0")}
+              text={"2".toString().padStart(2, "0")}
               style={styles(theme).miniText}
               size={10}
               weight="300"
@@ -78,7 +90,7 @@ const MyListItem: React.FC<MyListItemProps> = ({ item, index, theme, fav }) => {
           <View style={styles(theme).sqft}>
             <LandPlot style={{ color: theme.colors.text }} />
             <MyText
-              text={item.sqft.toString().padStart(2, "0") + " sqft"}
+              text={item?.propertyArea?.toString().padStart(2, "0") + " sqft"}
               style={styles(theme).miniText}
               size={10}
               weight="300"
@@ -112,7 +124,7 @@ const MyListItem: React.FC<MyListItemProps> = ({ item, index, theme, fav }) => {
           />
         )}
       </View>
-    </View>
+    </Pressable>
   );
 };
 

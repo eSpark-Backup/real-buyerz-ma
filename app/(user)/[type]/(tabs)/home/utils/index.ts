@@ -24,7 +24,7 @@ export interface PropertyItem {
   propertyName: string;
   propertyPrice: number | null;
   propertyArea: string;
-  propertyImage: string | null; 
+  propertyImage: string | null;
   purpose: string;
   propertyAddress: string;
   propertyCity: string;
@@ -42,7 +42,15 @@ export interface PropertyItem {
   updatedAt: string;
   amenities: Amenity[];
   propertyType: PropertyType;
-  PropertyData: PropertyDataItem[]
+  PropertyData: PropertyDataItem[];
+  user: {
+    id: string;
+    firstName: string;
+    lastName: string;
+    address: string | null;
+    profileImage: string | null;
+    socialId: string | null;
+  };
 }
 
 interface Amenity {
@@ -56,24 +64,25 @@ interface Amenity {
   imageKey: string;
 }
 
-interface PropertyType {
+export interface PropertyType {
   id: string;
-  subTypeName: string;
-  propertyTypeId: string;
+  typeName: string;
   url: string;
   imageKey: string;
   createdAt: string;
   updatedAt: string;
-  propertyType: {
+  subTypes?: PropertySubType | PropertySubType[];
+}
+
+interface PropertySubType {
     id: string;
     typeName: string;
     url: string;
-    imageKey: string;
+    imageKey?: string;
     createdAt: string;
     updatedAt: string;
-  };
-}
 
+}
 interface PropertyDataItem {
   id: string;
   propertyId: string;
@@ -84,13 +93,13 @@ interface PropertyDataItem {
   updatedAt: string;
 }
 
-const handleGetAllProperties = async (): Promise<{
+const handleGetAllProperties = async (params?: string): Promise<{
   status: boolean;
   data?: AllPropertiesData;
   message?: string;
 }> => {
   try {
-    const { data } = await api.get<FindAllPropertiesResponse>("/userProperty");
+    const { data } = await api.get<FindAllPropertiesResponse>("/userProperty" + (params ?? ""));
     if (data?.success) {
       return {
         status: true,
@@ -104,4 +113,34 @@ const handleGetAllProperties = async (): Promise<{
   }
 };
 
-export { handleGetAllProperties };
+interface GetAllPropertTypeResponse {
+    success: boolean;
+    message: string;
+    response: {
+      timestamp_ms: number;
+      action: string;
+      data: PropertyType[]  ;
+    };
+}
+
+
+const handleGetAllPropertType = async (): Promise<{
+  status: boolean;
+  message?: string;
+  data?: PropertyType[];
+}> => {
+  try {
+    const { data } = await api.get<GetAllPropertTypeResponse>("/admin/propertyType");
+    if (data?.success) {
+      return {
+        status: true,
+        data: data.response.data,
+      };
+    }
+
+    return { status: false, message: data?.message };
+  } catch (error) {
+    return { status: false, message: "An error occurred." };
+  }
+};
+export { handleGetAllProperties, handleGetAllPropertType };
