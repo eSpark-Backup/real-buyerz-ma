@@ -28,7 +28,7 @@ export default function SignIn() {
   };
   const dispatch = useDispatch();
 
-  const signInUser = async (values) => {
+  const signInUser = async (values: { email: string, password: string}) => {
     setLoading(true)
 
     const { email, password } = values;
