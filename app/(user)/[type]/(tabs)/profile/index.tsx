@@ -110,7 +110,8 @@ export default function ProfileSettings() {
         title: "Enter Old Password",
         inputs: [
           {
-            placeholder: "New Password",
+            id: 'oldpassword',
+            placeholder: "Old Password",
             value: passwords.oldPassword || "",
             onChangeText: (text: string) => handlePasswordChange('oldPassword', text),
           },
@@ -123,6 +124,7 @@ export default function ProfileSettings() {
         title: "Enter New Password",
         inputs: [
           {
+            id: 'newpassword',
             placeholder: "New Password",
             value: passwords.newPassword || "",
             onChangeText: (text: string) => handlePasswordChange('newPassword', text),
@@ -136,6 +138,7 @@ export default function ProfileSettings() {
         title: "Confirm Password",
         inputs: [
           {
+            id: 'confirmpassword',
             placeholder: "Enter Confirm Password",
             value: passwords.confirmPassword || "",
             onChangeText: (text: string) => handlePasswordChange('confirmPassword', text),
@@ -177,6 +180,7 @@ export default function ProfileSettings() {
         title: "First Name",
         inputs: [
           {
+            id: 'firstname',
             placeholder: "Enter First Name",
             label: "First Name",
             value: profileState.firstName || "",
@@ -185,6 +189,7 @@ export default function ProfileSettings() {
             },
           },
           {
+            id: 'lastname',
             placeholder: "Enter Last Name",
             label: "Last Name",
             value: profileState.lastName || "",
@@ -199,6 +204,7 @@ export default function ProfileSettings() {
         title: "Email",
         inputs: [
           {
+            id: 'email',
             placeholder: "Enter Email",
             value: profileState.email || "",
             onChangeText: (text: string) => handleInputChange("email", text),
@@ -212,6 +218,7 @@ export default function ProfileSettings() {
         title: "Mobile",
         inputs: [
           {
+            id: 'mobile',
             placeholder: "+92",
             value: profileState.mobileNumber || "",
             onChangeText: (text: string) => handleInputChange("mobileNumber", text),
@@ -225,6 +232,7 @@ export default function ProfileSettings() {
         title: "Landline",
         inputs: [
           {
+            id: 'landline',
             placeholder: "Enter Landline",
             value: profileState.landlineNumber || "",
             onChangeText: (text: string) => handleInputChange("landlineNumber", text),
@@ -238,6 +246,7 @@ export default function ProfileSettings() {
         title: "Whatsapp",
         inputs: [
           {
+            id: 'whatsapp',
             placeholder: "+92",
             value: profileState.whatsapp || "",
             onChangeText: (text: string) => handleInputChange("whatsapp", text),
@@ -251,6 +260,7 @@ export default function ProfileSettings() {
         title: "Country",
         inputs: [
           {
+            id: 'country',
             placeholder: "Enter Country",
             value: profileState.country || "",
             onChangeText: (text: string) => handleInputChange("country", text),
@@ -264,6 +274,7 @@ export default function ProfileSettings() {
         title: "City",
         inputs: [
           {
+            id: 'city',
             placeholder: "Select City",
             value: profileState.city || "",
             onChangeText: (text: string) => {
@@ -279,6 +290,7 @@ export default function ProfileSettings() {
         title: "Address",
         inputs: [
           {
+            id: 'address',
             placeholder: "Add Address",
             value: profileState.address || "",
             onChangeText: (text: string) => handleInputChange("address", text),
@@ -292,6 +304,7 @@ export default function ProfileSettings() {
         title: "Bio",
         inputs: [
           {
+            id: 'bio',
             placeholder: "Add Bio",
             value: profileState.bio || "",
             onChangeText: (text: string) => handleInputChange("bio", text),

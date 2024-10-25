@@ -22,9 +22,10 @@ export enum Variants {
 }
 
 type Iinputs = {
+  id: string
   label?: string;
   placeholder: string;
-  value?: string;
+  value: string;
   onChangeText?: (text: string) => void;
 };
 
@@ -197,18 +198,19 @@ const MyField = ({ variant, list, onPress, title }: IMyField) => {
           {list?.inputs.map((input, index) => (
             <View key={index} style={styles(theme).dropdownContainer}>
               <MyDropdown
+                id={input.id}
                 data={pakistaniCities}
-                onSelect={(value) => {
-                  if (typeof value === 'string') {
-                    input.onChangeText?.(value);
-                  } else if (Array.isArray(value)) {
-                    input.onChangeText?.(value.join(', '));
+                onSelect={(val) => {
+                  if (typeof val.value === 'string') {
+                    input.onChangeText?.(val.value);
+                  } else if (Array.isArray(val.value)) {
+                    input.onChangeText?.(val.value.join(', '));
                   }
                 }}
-                value={input.value}
+                selected={[input.value]}
                 placeholder="Select city"
-                zIndex={1000}
                 height={40}
+                zIndex={4 - index}
                 style={{ width: "100%" }}
                 theme={theme}
               />
