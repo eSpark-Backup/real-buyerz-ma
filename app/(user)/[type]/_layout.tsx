@@ -34,7 +34,9 @@ import {
 } from "@components";
 import { useState } from "react";
 import useSessionManagement from "hooks/useSessionManagement";
-import { setUserData, setUserToken } from "features/user/userSlice";
+import { setUserData, setUserToken, UserState } from "features/user/userSlice";
+import { useSelector } from "react-redux";
+import { RootState } from "@store";
 
 const DrawerContent = (props: DrawerContentComponentProps) => {
   const [confirmLogout, setConfirmLogout] = useState(false);
@@ -43,6 +45,7 @@ const DrawerContent = (props: DrawerContentComponentProps) => {
   const theme = useTheme() as MyTheme;
   const { clearSession, clearTheme } = useSessionManagement();
   const dispatch = useDispatch();
+  const { userData } = useSelector<RootState, UserState>((state) => state.user);
 
   const handleLogout = () => {
     clearTheme();
@@ -56,19 +59,17 @@ const DrawerContent = (props: DrawerContentComponentProps) => {
     <View style={{ ...styles.container }}>
       <View style={styles.header}>
         <View style={{ flexDirection: "row" }}>
-          <MyAvatar
-            size={40}
-            imageUrl={{ uri: "https://i.pravatar.cc/300?img=68" }}
-          />
+        <MyAvatar imageUrl={{ uri: userData?.profileImage || "https://i.pravatar.cc/300?img=68"}} size={35}/>
+
           <View style={{ marginLeft: 10 }}>
             <MyText
-              text="Arman Khan"
+              text={`${userData?.firstName} ${userData?.lastName}` || "Arman Khan"} // Use name from user data
               size={16}
               weight="600"
               textColor="#ffffff"
             />
             <MyText
-              text="Email123@gmail.com"
+              text={userData?.email || "Email123@gmail.com"}
               size={12}
               textColor="#ffffff"
               style={{ marginVertical: 5 }}

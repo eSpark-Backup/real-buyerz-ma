@@ -5,23 +5,27 @@ import { MaterialIcons } from "@expo/vector-icons";
 import { Link, router } from "expo-router";
 import { Formik } from "formik";
 import { useDispatch } from 'react-redux';
-import { storage } from 'store/mmkv';
 import { GLogo, RLogo } from "@assets/images";
 import { DarkTheme, LightTheme } from "@theme";
 import { MyText, MyButton, MyCheckbox, MyInput, GapView, OverlayLoader } from "@components";
 import { UserSignInSchema } from "@validations/schema";
 import useSessionManagement from "hooks/useSessionManagement";
-import Toast from "react-native-toast-message";
+import { api } from 'api';
 
 import { setUserData, setUserToken } from '../../../features/user/userSlice';
 import { UserObject, handleLoginUser } from '../SignIn/utils';
+import { handleGetUserProfile, UserProfileData } from "app/(user)/[type]/(tabs)/profile/utils";
+import { showToast } from "@utils/showToast";
 
 export default function SignIn() {
   const colorScheme = Appearance.getColorScheme();
   const theme = colorScheme === "dark" ? DarkTheme : LightTheme;
   const [loading, setLoading] = useState(false);
   const [isRememberedMe, setRememberedMe] = useState(false);
-  const { updateUserInSession,updateUserIsLoggedInSession } = useSessionManagement();
+  const { updateUserInSession, updateUserIsLoggedInSession } = useSessionManagement();
+  const mergeUserRoleWithProfile = (profileData: UserProfileData, role: string): UserProfileData => {
+    return { ...profileData, role };
+  };
   const dispatch = useDispatch();
 
   const signInUser = async (values) => {
@@ -31,14 +35,13 @@ export default function SignIn() {
     const response = await handleLoginUser({ email, password });
     console.log("Submitting values:", response);
     if (response.status) {
-        setLoading(false)
-        const userInfo = response.userInfo;
-        if (userInfo) {
-          savingDataToSessionStorage(userInfo); 
-          router.push(`/(user)/${userInfo.user.role}/home`);
-        } else {
-          showToast('User info not available', 'error');
-        }
+      const userInfo = response.userInfo;
+      if (userInfo) {
+        api.setHeader('Authorization', `Bearer ${userInfo?.token as string}`);
+        fetchAllUserProfileData(userInfo)
+      } else {
+        showToast('User info not available', 'error');
+      }
     } else {
       setLoading(false)
       showToast(
@@ -48,22 +51,29 @@ export default function SignIn() {
     };
   }
 
-  const savingDataToSessionStorage = (userInfo: UserObject) => {
-    updateUserInSession(userInfo?.user, userInfo?.token as string);
-    updateUserIsLoggedInSession(isRememberedMe);
-    dispatch(setUserToken(userInfo?.token));
-    dispatch(setUserData(userInfo?.user));
+  const fetchAllUserProfileData = async (userInfo: UserObject) => {
+    try {
+      const response = await handleGetUserProfile()
+      if (response.data) {
+        setLoading(false)
+        showToast('Login successfull', 'success')
+        savingDataToSessionStorage(userInfo, response.data);
+        router.push(`/(user)/${userInfo.user.role}/home`);
+      }
+    } catch (error) {
+      showToast('User info not available', 'error');
+      setLoading(false)
+    }
   }
 
-
-  const showToast = (message: string, type?: 'success' | 'error') => {
-    Toast.show({
-      type: type,
-      position: 'top',
-      text1: message,
-      topOffset: 0,
-    });
-  };
+  const savingDataToSessionStorage = (userInfo: UserObject, userProfileData: UserProfileData) => {
+    let userProfileInfo = mergeUserRoleWithProfile(userProfileData, userInfo.user.role || "user");
+    console.log(`Milgaya token ${userInfo?.token as string}`)
+    updateUserInSession(userProfileInfo, userInfo?.token as string);
+    updateUserIsLoggedInSession(isRememberedMe);
+    dispatch(setUserToken(userInfo?.token));
+    dispatch(setUserData(userProfileInfo));
+  }
 
   return (
     <ScrollView contentContainerStyle={styles.main}>
