@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import {
   Pressable,
   StyleProp,
@@ -12,6 +12,7 @@ import { ScrollView } from "react-native-gesture-handler"; //? for scrolling ins
 
 import MyText from "@components/MyText";
 import { MyTheme } from "@types";
+import { useFocusEffect } from "expo-router";
 
 interface DropdownProps {
   data: string[];
@@ -52,8 +53,11 @@ export default function MyDropdown({
   const listData = multiSelect ? ["All", ...data] : data;
 
   useEffect(()=>{
-    setLabel(selected?.toString() ?? "")
+    if(!label?.toString()) {
+      setLabel(selected?.toString() ?? "")
+    }
   },[label])
+
   const handleSelection = (item: string) => {
     let updatedSelection: string[] = [...selectedItems];
 
