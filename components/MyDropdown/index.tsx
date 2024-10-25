@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Pressable,
   StyleProp,
@@ -51,7 +51,9 @@ export default function MyDropdown({
   const [label, setLabel] = useState(selected ?? "");
   const listData = multiSelect ? ["All", ...data] : data;
 
-
+  useEffect(()=>{
+    setLabel(selected?.toString() ?? "")
+  },[label])
   const handleSelection = (item: string) => {
     let updatedSelection: string[] = [...selectedItems];
 
