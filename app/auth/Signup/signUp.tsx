@@ -15,6 +15,8 @@ import { useDispatch } from 'react-redux';
 import { setUserData, setUserToken } from '../../../features/user/userSlice';
 import { handleGetUserProfile, UserProfileData } from "app/(user)/[type]/(tabs)/profile/utils";
 import { showToast } from "@utils/showToast";
+import { handleSavePreferences, PreferencesData } from "app/(user)/[type]/preferences/utils";
+import { api } from "api";
 
 interface SignUpFormValues {
   firstName: string;
@@ -30,11 +32,18 @@ export default function SignUp() {
   const colorScheme = Appearance.getColorScheme();
   const theme = colorScheme === "dark" ? DarkTheme : LightTheme;
   const [loading, setLoading] = useState(false);
-  const { updateUserInSession,updateUserIsLoggedInSession } = useSessionManagement();
+  const { updateUserInSession, updateUserIsLoggedInSession } = useSessionManagement();
   const dispatch = useDispatch();
   const mergeUserRoleWithProfile = (profileData: UserProfileData, role: string): UserProfileData => {
     return { ...profileData, role };
   };
+  const [preferences, setPreferences] = useState<PreferencesData>({
+    emailNotification: false,
+    newsLetter: false,
+    automatedReport: false,
+    currency: "PKR",
+    areaUnit: "Sq. Ft",
+  });
 
   const inputFields = [
     { placeholder: "First Name", name: "firstName" },
@@ -55,36 +64,51 @@ export default function SignUp() {
       password: values.password,
       role: 'user',
     });
-    setLoading(false);
     if (response.status) {
-      setLoading(false)
       const userInfo = response.userInfo;
       if (userInfo) {
-        fetchAllUserProfileData(userInfo)
-        router.push(`/(user)/${userInfo.user.role}/home`);
+        api.setHeader('Authorization', `Bearer ${userInfo?.token as string}`);
+        savePreferences(userInfo)
       } else {
+        setLoading(false)
         showToast('User info not available', 'error');
       }
     } else {
+      setLoading(false)
       showToast(response.message || 'Sign in failed', 'error');
     }
   };
 
+  const savePreferences = async (userInfo: UserObject) => {
+    const response = await handleSavePreferences(preferences);
+    if (response.status && response.preferencesResponse) {
+      fetchAllUserProfileData(userInfo)
+    } else {
+      showToast(response.message || "Failed to save preferences", 'error')
+      setLoading(false)
+    }
+  }
+
   const fetchAllUserProfileData = async (userInfo: UserObject) => {
     try {
       const response = await handleGetUserProfile()
+      setLoading(false)
       if (response.data) {
-        setLoading(false)
+        showToast("User Created Successfully", 'error')
         savingDataToSessionStorage(userInfo, response.data);
         router.push(`/(user)/${userInfo.user.role}/home`);
       }
+      else {
+        showToast(response.message || "Failed to fetch user profile data", 'error')
+      }
     } catch (error) {
+      showToast("Something went wrong while fetching user profile", 'error')
       setLoading(false)
     }
   }
 
   const savingDataToSessionStorage = (userInfo: UserObject, userProfileData: UserProfileData) => {
-    let userProfileInfo= mergeUserRoleWithProfile(userProfileData, userInfo.user.role || "user");
+    let userProfileInfo = mergeUserRoleWithProfile(userProfileData, userInfo.user.role || "user");
     updateUserInSession(userProfileInfo, userInfo?.token as string);
     updateUserIsLoggedInSession(false);
     dispatch(setUserToken(userInfo?.token));
@@ -160,7 +184,7 @@ export default function SignUp() {
                     onChange={handleChange(field.name)}
                     value={values[field.name as keyof SignUpFormValues] as string}
                     placeholderColor="#666666"
-                    password={field.secureTextEntry} 
+                    password={field.secureTextEntry}
                     secureTextEntry={field.secureTextEntry}
                     keyboardType={field.keyboardType} />
                   {errors[field.name as keyof SignUpFormValues] && touched[field.name as keyof SignUpFormValues] && (

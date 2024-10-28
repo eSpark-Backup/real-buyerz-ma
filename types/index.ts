@@ -64,6 +64,7 @@ export type MyInputProps = {
   text?: string;
   secureTextEntry?: boolean;
   keyboardType?: string;
+  editable?: boolean;
   onChange?: (val: string) => void;
   onBlur?: () => void;
   onChangeText?: (value: string) => void;
@@ -148,7 +149,8 @@ export type MyListItemProps = {
   index: number;
   theme: MyTheme;
   fav?: boolean;
-  params: {
+  onFavClicked?: () => void;
+  params?: {
     type: UserType
   }
 };

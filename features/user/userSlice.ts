@@ -1,4 +1,5 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
+import { PreferencesData } from 'app/(user)/[type]/preferences/utils';
 
 export type User = {
   id: string;
@@ -16,7 +17,7 @@ export type User = {
   profileImage: string;
   profileVisibility: boolean;
   role: string;
-  preferences: null;
+  preferences: PreferencesData;
 };
 
 export interface UserState {
