@@ -24,7 +24,7 @@ export interface PropertyItem {
   propertyName: string;
   propertyPrice: number | null;
   propertyArea: string;
-  propertyImage: string | null;
+  propertyImage?: string | null;
   purpose: string;
   propertyAddress: string;
   propertyCity: string;
@@ -43,17 +43,17 @@ export interface PropertyItem {
   amenities: Amenity[];
   propertyType: PropertyType;
   PropertyData: PropertyDataItem[];
-  user: {
+  user?: {
     id: string;
-    firstName: string;
-    lastName: string;
-    address: string | null;
-    profileImage: string | null;
-    socialId: string | null;
+    firstName?: string;
+    lastName?: string;
+    address?: string | null;
+    profileImage?: string | null;
+    socialId?: string | null;
   };
 }
 
-interface Amenity {
+export interface Amenity {
   id: string;
   amenetiesName: string;
   count: number | null;
@@ -83,7 +83,7 @@ interface PropertySubType {
     updatedAt: string;
 
 }
-interface PropertyDataItem {
+export interface PropertyDataItem {
   id: string;
   propertyId: string;
   url: string;
