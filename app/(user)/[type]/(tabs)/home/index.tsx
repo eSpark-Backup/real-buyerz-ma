@@ -28,9 +28,9 @@ import {
   UpPortion,
 } from "@assets/images";
 import { checkLoggedInUser } from "app/auth/utils/authUtils";
-import { AllPropertiesData, handleGetAllProperties, handleGetAllPropertType, PropertyItem, PropertyType } from "./utils";
+import { AllPropertiesData, handleGetAllAmenities, handleGetAllProperties, handleGetAllPropertType, PropertyItem, PropertyType } from "./utils";
 import { useDispatch } from "react-redux";
-import { PropertySliceState, setAllProperties, setFilter, setPropertyType } from "features/property/propertySlice";
+import { PropertySliceState, setAllProperties, setAmenities, setFilter, setPropertyType } from "features/property/propertySlice";
 import { useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@store";
 import { UserState } from "features/user/userSlice";
@@ -55,6 +55,7 @@ export default function Home() {
   useEffect(() => {
     fetchAllProperties()
     fetchAllPropertyTypes()
+    fetchAmenities()
   }, []);
 
   const fetchAllProperties = async () => {
@@ -72,6 +73,16 @@ export default function Home() {
       const response = await handleGetAllPropertType()
       if(response.status) {
         dispatch(setPropertyType(response.data))
+      }
+    } catch (error) {
+    }
+  }
+
+  const fetchAmenities = async () => {
+    try {
+      const response = await handleGetAllAmenities()
+      if(response.status && Boolean(response.data?.length)) {
+        dispatch(setAmenities(response.data))
       }
     } catch (error) {
     }

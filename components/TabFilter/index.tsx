@@ -4,14 +4,15 @@ import { useTheme } from "@react-navigation/native";
 
 import Card from "@components/Card";
 import MyText from "@components/MyText";
-import { MyTheme, SearchDataProps } from "@types";
+import { MyTheme, SearchDataProps, SearchListProps } from "@types";
 import { RentTab, SellTab } from "@assets/images";
 
 interface TabFilterProps {
   data: SearchDataProps[];
-  onSelect: (value: object) => void;
+  onSelect: (value: SearchListProps[]) => void;
   wrap?: boolean;
   isSearch?: boolean;
+  multiSelect?: boolean; // New prop for multi/single select toggle
 }
 
 export default function TabFilter({
@@ -19,6 +20,7 @@ export default function TabFilter({
   onSelect,
   wrap,
   isSearch,
+  multiSelect = true, // Default to multi-select if not provided
 }: TabFilterProps) {
   const theme = useTheme() as MyTheme;
   const [list, setList] = useState<SearchDataProps[] | null>(data);
@@ -30,46 +32,46 @@ export default function TabFilter({
   const handleSelect = (index: number) => {
     setList((prevList) => {
       if (!prevList) return prevList;
+
       const updatedList = prevList.map((listItem, i) => ({
         ...listItem,
-        selected: i === index ? true : false,
+        selected: multiSelect ? (i === index ? !listItem.selected : listItem.selected) : i === index,
       }));
+
+      if (!multiSelect) {
+        setSelectedItem(updatedList[index]);
+      }
 
       return updatedList;
     });
   };
 
   const handleItemSelect = (index: number) => {
-    setSelectedItem((prevState) => {
-      if (!prevState) return prevState;
-
-      const updatedList = [...prevState.list];
-      updatedList[index].selected = !updatedList[index].selected;
-
-      return { ...prevState, list: updatedList };
-    });
+    if (!selectedItem) return;
+    const updatedList = selectedItem.list.map((nestedItem, i) => ({
+      ...nestedItem,
+      selected: multiSelect
+        ? i === index
+          ? !nestedItem.selected
+          : nestedItem.selected
+        : i === index,
+    }));
+    const updatedSelectedItem = { ...selectedItem, list: updatedList };
+    setSelectedItem(updatedSelectedItem);
+    onSelect(updatedSelectedItem?.list?.filter(val => val.selected));
   };
 
   useEffect(() => {
-    // Use the last item in the updated 'list' as the selected item
-    const selectedItem = list?.find((item) => item.selected);
-    console.log(
-      "🚀 ~ file: index.tsx:36 ~ useEffect ~ selectedItem:",
-      selectedItem
-    );
-    setSelectedItem(selectedItem!);
+    const selected = list?.find((item) => item.selected);
+    setSelectedItem(selected || null);
 
-    if (scrollViewRef.current && selectedItem) {
+    if (scrollViewRef.current && selected) {
       scrollViewRef.current.scrollTo({
         x: 0,
         animated: true,
       });
     }
   }, [list]);
-
-  useEffect(() => {
-    onSelect(selectedItem!);
-  }, [selectedItem, onSelect]);
 
   const memoizedList = useMemo((): SearchDataProps[] | null => list, [list]);
   const memoizedSelectedItem = useMemo(
