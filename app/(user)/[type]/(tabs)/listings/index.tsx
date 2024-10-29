@@ -63,8 +63,13 @@ import {
   Well,
 } from "@assets/images";
 import { WINDOW_WIDTH, data, testData } from "@constants";
-import { MyTheme } from "@types";
+import { MyTheme, UserType } from "@types";
 import { requestPermissionsMedia } from "utils/functions";
+import { useSelector } from "react-redux";
+import { PropertySliceState } from "features/property/propertySlice";
+import { RootState } from "@store";
+import { IAmenity } from "../home/utils";
+import { useLocalSearchParams, useRouter } from "expo-router";
 
 interface CustomTableProps {
   children?: React.ReactNode;
@@ -80,14 +85,34 @@ interface RequiredTextProps {
 interface AmenitiesPopupProps {
   isVisible: boolean;
   onCancel: () => void;
-  onSave: () => void;
+  onSave: (e: IAmenity[]) => void;
+  amenities: IAmenity[]
 }
 
 export default function Listing() {
   const theme = useTheme() as MyTheme;
+  const params = useLocalSearchParams<{ type: UserType }>();
+  const router = useRouter()
 
   const [visible, setVisible] = useState(false);
+  const { propertyTypes } = useSelector<RootState, PropertySliceState>(state => state.property)
+  const [data, setData] = useState({
+    propertyName: "",
+    propertySubTypeId: "",
+    propertyPrice: "",
+    propertyArea: "",
+    purpose: "",
+    propertyAddress: "",
+    propertyCity: "",
+    propertyZip: "",
+    propertyDescription: "",
+    longitude: "231",
+    latitude: "213",
+    amenities: {},
+    propertyStatus: "true",
+  });
 
+  
   return (
     <ScrollView
       style={styles(theme).conatiner}
@@ -106,26 +131,76 @@ export default function Listing() {
         textColor={theme.colors.placeholderText}
       />
       <GapView length={20} />
-      <AdInformation />
+      <AdInformation
+        onChange={(data) => {
+          setData((prev) => {
+            return {
+              ...prev,
+              ...data,
+            };
+          });
+        }}
+      />
       <GapView length={20} />
-      <LocationAndPurpose />
+      <LocationAndPurpose
+        onChange={(data) => {
+          setData((prev) => {
+            return {
+              ...prev,
+              ...data,
+            };
+          });
+        }}
+      />
       <GapView length={20} />
-      <PropertySizeandPricing />
+      <PropertySizeandPricing
+        onChange={(data) => {
+          setData((prev) => {
+            return {
+              ...prev,
+              ...data,
+            };
+          });
+        }}
+      />
       <GapView length={20} />
-      <FeaturesAndAmenities />
-      <GapView length={20} />
-      <PropertyImagesAndVideo />
+      <FeaturesAndAmenities
+        onChange={(data) => {
+          setData((prev) => {
+            return {
+              ...prev,
+              ...data,
+            };
+          });
+        }}
+      />
+      {/* <GapView length={20} /> */}
+      {/* <PropertyImagesAndVideo /> */}
       <View style={styles(theme).footerButtons}>
-        <PrimaryBtn btnStyle={styles(theme).icon}>
+        <PrimaryBtn
+          disabled={Object.values(data)?.some(val => Boolean(val) == false)}
+          onPress={() => {
+            console.log("data", data);
+            router.push({
+              pathname: `(user)/${params.type}/(tabs)/dashboard/proposalPreview`,
+              params: {
+                data: JSON.stringify(data),
+              },
+            });
+          }}
+          btnStyle={styles(theme).icon}
+        >
           <Ionicons name="eye" color={theme.colors.primary} size={20} />
         </PrimaryBtn>
         <PrimaryBtn
+          disabled={Object.values(data)?.some(val => Boolean(val) == false)}
           title="Save as draft"
           btnStyle={styles(theme).draft}
           textColor={theme.colors.primary}
           weight="500"
         />
         <PrimaryBtn
+          disabled={Object.values(data)?.some(val => Boolean(val) == false)}
           title="Submit Ad"
           weight="500"
           width={100}
@@ -166,7 +241,11 @@ function CustomTable({ title, indexIcon, children }: CustomTableProps) {
   );
 }
 
-function AdInformation() {
+function AdInformation({
+  onChange,
+}: {
+  onChange: (e: { propertyName?: string; propertyDescription?: string }) => void;
+}) {
   const theme = useTheme() as MyTheme;
   return (
     <CustomTable title="Ad Information" indexIcon={0}>
@@ -182,6 +261,9 @@ function AdInformation() {
             inputStyle={[styles(theme).inputInnerStyle]}
             placeholderColor={theme.colors.placeholderText}
             multiline
+            onChange={(value) => {
+              onChange({ propertyName: value })
+            }}
           />
         </View>
       </View>
@@ -198,6 +280,7 @@ function AdInformation() {
             inputStyle={[styles(theme).inputInnerStyle, {}]}
             placeholderColor={theme.colors.placeholderText}
             multiline
+            onChange={(value) => onChange({ propertyDescription: value })}
           />
         </View>
       </View>
@@ -205,10 +288,29 @@ function AdInformation() {
   );
 }
 
-function LocationAndPurpose() {
+function LocationAndPurpose({
+  onChange,
+}: {
+  onChange?: (e: { purpose?: string; propertyCity?: string, propertySubTypeId?: string, propertyAddress?: string, propertyZip?: string }) => void;
+}) {
   const theme = useTheme() as MyTheme;
   const [selected, setSelected] = useState("");
+  const { propertyTypes } = useSelector<RootState, PropertySliceState>(state => state.property)
 
+  const types = propertyTypes?.map(val => {
+    return {
+      id: val.id,
+      title: val.typeName,
+      list: !!val?.subTypes?.length ? 
+       val?.subTypes?.map?.(val => {
+        return {
+          id: val?.id,
+          label: val?.typeName,
+        };
+      }) : []
+    }
+  }) ?? [] 
+  
   return (
     <CustomTable title="Location & Purpose" indexIcon={3}>
       <View style={styles().AdInfo}>
@@ -220,6 +322,7 @@ function LocationAndPurpose() {
               activeOpacity={1}
               onPress={() => {
                 setSelected("sell");
+                onChange?.({ purpose: "Sell" });
               }}
               style={[
                 styles(theme).tab,
@@ -244,6 +347,7 @@ function LocationAndPurpose() {
               activeOpacity={1}
               onPress={() => {
                 setSelected("rent");
+                onChange?.({ purpose: "Rent" });
               }}
               style={[
                 styles(theme).tab,
@@ -274,7 +378,14 @@ function LocationAndPurpose() {
             Select Property Type
           </MyText>
         </View>
-        <TabFilter data={testData} onSelect={() => {}} wrap />
+        <TabFilter
+          data={types ?? []}
+          multiSelect={false}
+          onSelect={(data) => {
+            onChange?.({ propertySubTypeId: data?.[0]?.id });
+          }}
+          wrap
+        />
       </View>
       <GapView length={10} />
       <View style={styles().AdInfo}>
@@ -282,8 +393,11 @@ function LocationAndPurpose() {
         <View style={{ flex: 1, paddingTop: 10, gap: 15 }}>
           <MyText textColor={theme.colors.negative}>Select City</MyText>
           <MyDropdown
+            id="city"
             data={["Karachi", "Lahore", "Islamabad", "Hyderabad", "Quetta"]}
-            onSelect={() => {}}
+            onSelect={(val) => {
+              onChange?.({ propertyCity: val.value?.[0] });
+            }}
             style={{ width: "90%" }}
             placeholder="Select city"
             zIndex={10}
@@ -299,11 +413,50 @@ function LocationAndPurpose() {
           <View style={{ backgroundColor: "pink", width: "90%", height: 50 }} />
         </View>
       </View>
+      <View style={styles().AdInfo}>
+        <ListingIcon iconIndex={1} />
+        <View style={styles().AdField}>
+          <RequiredText text="Zipcode" />
+          <MyInput
+            placeholder={
+              "Enter Zipcode"
+            }
+            style={styles(theme).titleInputStyle}
+            inputStyle={[styles(theme).inputInnerStyle]}
+            placeholderColor={theme.colors.placeholderText}
+            keyboardType="number-pad"
+            onChange={(value) => {
+              onChange?.({ propertyZip: value })
+            }}
+          />
+        </View>
+      </View>
+      <View style={styles().AdInfo}>
+        <ListingIcon iconIndex={1} />
+        <View style={styles().AdField}>
+          <RequiredText text="Address" />
+          <MyInput
+            placeholder={
+              "Enter Address"
+            }
+            style={styles(theme).titleInputStyle}
+            inputStyle={[styles(theme).inputInnerStyle]}
+            placeholderColor={theme.colors.placeholderText}
+            onChange={(value) => {
+              onChange?.({ propertyAddress: value })
+            }}
+          />
+        </View>
+      </View>
     </CustomTable>
   );
 }
 
-function PropertySizeandPricing() {
+function PropertySizeandPricing({
+  onChange,
+}: {
+  onChange?: (e: { propertyArea?: string; propertyPrice?: string }) => void;
+}) {
   const theme = useTheme() as MyTheme;
   const [n1, setn1] = useState(false);
   const [n2, setn2] = useState(false);
@@ -319,10 +472,12 @@ function PropertySizeandPricing() {
             style={styles(theme).singleInputStyle}
             inputStyle={styles(theme).inputInnerStyle}
             placeholderColor={theme.colors.placeholderText}
+            onChange={(val) => onChange?.({ propertyArea: val })}
           />
           <MyDropdown
+            id="unit"
             data={[]}
-            placeholder="Select Unit"
+            placeholder="sq ft"
             onSelect={() => {}}
             theme={theme}
           />
@@ -338,8 +493,10 @@ function PropertySizeandPricing() {
             style={styles(theme).singleInputStyle}
             inputStyle={styles(theme).inputInnerStyle}
             placeholderColor={theme.colors.placeholderText}
+            onChange={(val) => onChange?.({ propertyPrice: val })}
           />
           <MyDropdown
+            id="currency"
             data={[]}
             placeholder="PKR"
             onSelect={() => {}}
@@ -395,23 +552,54 @@ function PropertySizeandPricing() {
   );
 }
 
-function FeaturesAndAmenities() {
+function FeaturesAndAmenities({
+  onChange,
+}: {
+  onChange?: (e: { amenities?: {name: string, count: number}[];}) => void;
+}) {
   const theme = useTheme() as MyTheme;
   const [visible, setVisible] = useState(false);
+  const { amenities } = useSelector<RootState, PropertySliceState>(
+    (state) => state.property
+  );
+  const [selected, setSelected] = useState<IAmenity[]>([]);
+
+  useEffect(() => {
+    onChange?.({ amenities: selected?.map((e) => {
+      return {
+        name: e.amenetiesName,
+        count: e.count ?? 1
+      }
+    }) });
+  }, [selected]);
+
   return (
     <CustomTable title="Features and Amenities" indexIcon={11}>
       <View style={styles().AdInfo}>
         <ListingIcon iconIndex={12} />
         <View style={styles().AdField}>
           <MyText textColor={theme.colors.negative}>Feature & Amenities</MyText>
-          <Counter type="bed" />
-          <Counter type="tub" />
-          <Counter type="park" />
+          {selected?.map((val) => (
+            <Counter onChange={(count) => {
+              setSelected(prev => {
+                return prev.map(e => {
+                  return {
+                    ...e,
+                    count: e.id == val.id ? count : 1
+                  }
+                })
+              })
+            }} key={val.id} type={val?.amenetiesName} />
+          ))}
         </View>
       </View>
       <GapView length={10} />
       <MyText
-        text="Add additional features e.g. Rooftop terrace etc."
+        text={
+          selected?.length > 0
+            ? "Add additional features e.g. Rooftop terrace etc."
+            : "Press to add amenities"
+        }
         size={12}
         textColor={theme.colors.verificationText}
       />
@@ -425,11 +613,13 @@ function FeaturesAndAmenities() {
         <MyText text="Add amenity" size={10} textColor={theme.colors.primary} />
       </PrimaryBtn>
       <AmenitiesPopup
+        amenities={amenities}
         isVisible={visible}
         onCancel={() => {
           setVisible(false);
         }}
-        onSave={() => {
+        onSave={(data) => {
+          setSelected(data);
           setVisible(false);
         }}
       />
@@ -437,15 +627,27 @@ function FeaturesAndAmenities() {
   );
 }
 
-function AmenitiesPopup({ isVisible, onCancel, onSave }: AmenitiesPopupProps) {
+function AmenitiesPopup({ isVisible, onCancel, onSave, amenities }: AmenitiesPopupProps) {
   const theme = useTheme() as MyTheme;
+  const [data, setData] = useState(amenities)
+
+  const onSelect = (e: IAmenity & { checked?: boolean }) => {
+    setData(prev => {
+      return prev?.map(val => {
+        return {
+          ...val,
+          checked: e.id == val.id ? e.checked : val.checked
+        }
+      })
+    })
+  }
 
   return (
     <Modal isVisible={isVisible} style={styles().modal}>
       <View style={styles(theme).contentContainer}>
         <FlatList
           data={data}
-          renderItem={({ item }) => renderListItem({ item, theme })}
+          renderItem={({ item }) => renderListItem({ item, theme, onSelect })}
           keyExtractor={(item, index) => index.toString()}
           contentContainerStyle={styles().flatListContent}
           ItemSeparatorComponent={() => <GapView length={20} />}
@@ -471,7 +673,13 @@ function AmenitiesPopup({ isVisible, onCancel, onSave }: AmenitiesPopupProps) {
           width={80}
           onPress={onCancel}
         />
-        <PrimaryBtn title="Save" width={80} onPress={onSave} />
+        <PrimaryBtn
+          title="Save"
+          width={80}
+          onPress={() => {
+            onSave(data?.filter((val) => val?.checked));
+          }}
+        />
       </View>
     </Modal>
   );
@@ -480,9 +688,11 @@ function AmenitiesPopup({ isVisible, onCancel, onSave }: AmenitiesPopupProps) {
 const renderListItem = ({
   item,
   theme,
+  onSelect
 }: {
   theme: MyTheme;
-  item: { iconIndex: number; title: string };
+  item: IAmenity & { checked?: boolean };
+  onSelect: (e: IAmenity & { checked?: boolean }) => void
 }) => {
   const svgIcons: SvgIcon = {
     0: <Swimming />,
@@ -509,6 +719,7 @@ const renderListItem = ({
     21: <SeniorCitizenArea />,
     22: <UtilityStore />,
   };
+
   return (
     <View style={{ flexDirection: "row", gap: 15, alignItems: "center" }}>
       <View style={{ flexDirection: "row", gap: 15, alignItems: "center" }}>
@@ -518,26 +729,31 @@ const renderListItem = ({
             height: 16,
             borderColor: theme.colors.secondary,
           }}
+          isChecked={item.checked}
+          onChange={(bool) => onSelect({...item, checked: bool})}
         />
-        {svgIcons[item.iconIndex]}
+        {/* {svgIcons[item.iconIndex]} */}
       </View>
-      <MyText text={item.title} textColor={theme.colors.negative} />
+      <MyText text={item.amenetiesName} textColor={theme.colors.negative} />
     </View>
   );
 };
 
-function Counter({ type }: { type: "bed" | "tub" | "park" }) {
+function Counter({ type, icon, onChange }: { type: string, icon?: string, onChange: (e: number) => void }) {
   const theme = useTheme() as MyTheme;
   const [value, setValue] = useState(1);
+
+  useEffect(() => {
+    onChange(value);
+  }, [value]);
+
   return (
     <View style={styles().counter}>
-      {type == "bed" && <AmenitiesBed />}
-      {type == "tub" && <AmenitiesTub />}
-      {type == "park" && <AmenitiesParking />}
+      {<AmenitiesBed />}
       <View style={styles(theme).innerCounter}>
         <Pressable
           onPress={() => {
-            value != 1 ? setValue(value - 1) : console.log("abcd");
+            value != 1 ? setValue(value - 1) : console.log("Minimum Reached");
           }}
         >
           <Minus />
@@ -545,7 +761,7 @@ function Counter({ type }: { type: "bed" | "tub" | "park" }) {
         <MyText size={15}>{value}</MyText>
         <Pressable
           onPress={() => {
-            value != 10 ? setValue(value + 1) : console.log("abcd");
+            value != 10 ? setValue(value + 1) : console.log("Maximum Reached");
           }}
         >
           <Plus />
@@ -586,7 +802,6 @@ function PropertyImagesAndVideo() {
   };
 
   const renderMedia = (item: ImagePicker.ImagePickerAsset, index: number) => {
-    console.log("mida", item);
     return (
       <View
         key={index}

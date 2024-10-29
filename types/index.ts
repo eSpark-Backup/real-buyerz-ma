@@ -2,6 +2,7 @@ import {
   ImageSourcePropType,
   ImageStyle,
   ImageURISource,
+  KeyboardTypeOptions,
   StyleProp,
   TextStyle,
   View,
@@ -63,7 +64,7 @@ export type MyInputProps = {
   password?: boolean;
   text?: string;
   secureTextEntry?: boolean;
-  keyboardType?: string;
+  keyboardType?: KeyboardTypeOptions | undefined;
   editable?: boolean;
   onChange?: (val: string) => void;
   onBlur?: () => void;
@@ -89,6 +90,7 @@ export type MyCheckboxProps = {
   checkboxStyle?: ViewStyle;
   labelStyle?: ViewStyle | TextStyle | ViewStyle[] | TextStyle[];
   isAuth?: boolean;
+  isChecked?: boolean
 };
 
 export type MyButtonProps = {
@@ -123,6 +125,7 @@ export interface IPropsBtn {
     | "800"
     | "900";
   children?: React.ReactNode;
+  disabled?: boolean
 }
 
 export type LoginModalProps = {
@@ -134,14 +137,14 @@ export type LoginModalProps = {
 export type SearchDataProps = {
   id: string;
   title: string;
-  selected: boolean;
+  selected?: boolean;
   list: SearchListProps[];
 };
 
 export type SearchListProps = {
   id: string;
   label: string;
-  selected: boolean;
+  selected?: boolean;
 };
 
 export type MyListItemProps = {

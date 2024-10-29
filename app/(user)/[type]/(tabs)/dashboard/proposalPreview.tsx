@@ -1,29 +1,37 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { View, StyleSheet, ScrollView } from "react-native";
 import { useTheme } from "@react-navigation/native";
 
 import { Card, GapView, LabelValue, MyAvatar, MyText } from "@components";
 import { MyTheme } from "@types";
 import { LocationIcon } from "@assets/images";
+import { useSelector } from "react-redux";
+import { RootState } from "@store";
+import { UserState } from "features/user/userSlice";
+import dayjs from "dayjs";
+import { useLocalSearchParams } from "expo-router";
+import { PropertySliceState } from "features/property/propertySlice";
 
 interface Preview {
-  title: string;
-  desc: string;
-  purpose: string;
-  type: string;
-  location: string;
-  city: string;
-  size: string;
-  range: number;
-  installments: string;
-  readyFor: string;
-  map?: string;
-  imageMedia?: string[];
-  videoMedia?: string[];
+    propertyName: string,
+    propertySubTypeId: string,
+    propertyPrice: string,
+    propertyArea: string,
+    purpose: string,
+    propertyAddress: string,
+    propertyCity: string,
+    propertyZip: string,
+    propertyDescription: string,
+    longitude: string,
+    latitude: string,
+    amenities: any,
+    propertyStatus: string,
 }
 
 const AvatarContainer = () => {
   const theme = useTheme() as MyTheme;
+  const { userData } = useSelector<RootState, UserState>(state => state.user)
+
   return (
     <View
       style={{
@@ -39,7 +47,7 @@ const AvatarContainer = () => {
       />
       <View style={{ marginLeft: 13 }}>
         <MyText
-          text="John Doe"
+          text={userData?.firstName ? (userData?.firstName + " " + userData?.lastName) : "Anon"}
           size={14}
           weight="500"
           textColor={theme.colors.secondary}
@@ -48,7 +56,7 @@ const AvatarContainer = () => {
           <LocationIcon />
           <GapView mode="horizontal" length={5} />
           <MyText
-            text="Lahore, Pakistan - 3:16pm local time"
+            text={`${userData?.city}, ${userData?.country} - ${dayjs().format('h:mma')} local time`}
             weight="500"
             textColor="#757474"
             size={12}
@@ -61,21 +69,28 @@ const AvatarContainer = () => {
 
 function ProposalPreview() {
   const theme = useTheme() as MyTheme;
-  const data: Preview[] = [
-    {
-      title: "Need 4 Bedrooms Apartments",
-      desc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip.Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip.",
-      purpose: "Buying",
-      type: "Apartment",
-      city: "Karachi",
-      location: "Gulshan-e-Iqbal",
-      size: "Large",
-      range: 1000000,
-      installments: "Available",
-      readyFor: "Possession",
-    },
-  ];
+  const { propertyTypes } = useSelector<RootState, PropertySliceState>(state => state.property)
+  const { data: propertyData }: any = useLocalSearchParams();
 
+  const [data, setData] = useState<Preview[]>([JSON.parse(propertyData ?? {}) ?? {}])
+  const [propertyType, setPropertyType] = useState("N/A")
+
+  useEffect(() => {
+    setData([JSON.parse(propertyData ?? {}) ?? {}])
+    propertyTypes?.forEach(val => {
+      if(val?.id == data?.[0].propertySubTypeId) {
+        setPropertyType(val.typeName)
+      }else {
+        val.subTypes?.forEach(e => {
+          if(e.id == data?.[0].propertySubTypeId) {
+            setPropertyType(e.typeName);
+          }
+        })
+      }
+    })
+  }, [propertyData])
+
+  
   return (
     <ScrollView
       style={{ flex: 1, backgroundColor: theme?.colors.background }}
@@ -87,9 +102,9 @@ function ProposalPreview() {
           return (
             <View key={index}>
               <View style={[styles(theme).part1, { borderTopWidth: 0 }]}>
-                <MyText text={item.title} size={16} weight="500" />
+                <MyText text={item.propertyName} size={16} weight="500" />
                 <MyText
-                  text={item.desc}
+                  text={item.propertyDescription}
                   size={12}
                   style={{ textAlign: "justify" }}
                 />
@@ -97,9 +112,9 @@ function ProposalPreview() {
               <View style={styles(theme).part1}>
                 <MyText text={"Location & Purpose"} size={16} weight="500" />
                 <LabelValue label="Purpose" value={item.purpose} />
-                <LabelValue label="Property Type" value={item.type} />
-                <LabelValue label="City" value={item.city} />
-                <LabelValue label="Location" value={item.location} />
+                <LabelValue label="Property Type" value={propertyType} />
+                <LabelValue label="City" value={item.propertyCity} />
+                <LabelValue label="Location" value={item.propertyAddress} />
                 <View
                   style={{
                     width: "100%",
@@ -111,12 +126,11 @@ function ProposalPreview() {
               </View>
               <View style={styles(theme).part1}>
                 <MyText text={"Amount"} size={16} weight="500" />
-                <LabelValue label="Range" value={"80M"} />
+                <LabelValue label="Range" value={item?.propertyPrice} />
               </View>
               <View style={styles(theme).part1}>
                 <MyText text="Features & Amenities" size={16} weight="500" />
-                <LabelValue label="Bedrooms" value={"04"} />
-                <LabelValue label="Bathrooms" value={"02"} />
+                {item?.amenities?.map((val: { name: string, count: string}) => <LabelValue label={val?.name} value={val.count} />)}
               </View>
             </View>
           );

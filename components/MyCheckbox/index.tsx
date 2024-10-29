@@ -12,10 +12,11 @@ const MyCheckbox = ({
   style,
   checkboxStyle,
   isAuth,
+  isChecked = false,
   ...restProps
 }: MyCheckboxProps) => {
   const theme = useTheme() as MyTheme;
-  const [checked, setChecked] = useState(false);
+  const [checked, setChecked] = useState(isChecked);
 
   const handlePress = () => {
     setChecked(!checked);
