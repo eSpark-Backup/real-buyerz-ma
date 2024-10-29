@@ -106,8 +106,8 @@ export default function Listing() {
     propertyCity: "",
     propertyZip: "",
     propertyDescription: "",
-    longitude: "",
-    latitude: "",
+    longitude: "231",
+    latitude: "213",
     amenities: {},
     propertyStatus: "true",
   });
@@ -177,16 +177,30 @@ export default function Listing() {
       {/* <GapView length={20} /> */}
       {/* <PropertyImagesAndVideo /> */}
       <View style={styles(theme).footerButtons}>
-        <PrimaryBtn onPress={() => {}} btnStyle={styles(theme).icon}>
+        <PrimaryBtn
+          disabled={Object.values(data)?.some(val => Boolean(val) == false)}
+          onPress={() => {
+            console.log("data", data);
+            router.push({
+              pathname: `(user)/${params.type}/(tabs)/dashboard/proposalPreview`,
+              params: {
+                data: JSON.stringify(data),
+              },
+            });
+          }}
+          btnStyle={styles(theme).icon}
+        >
           <Ionicons name="eye" color={theme.colors.primary} size={20} />
         </PrimaryBtn>
         <PrimaryBtn
+          disabled={Object.values(data)?.some(val => Boolean(val) == false)}
           title="Save as draft"
           btnStyle={styles(theme).draft}
           textColor={theme.colors.primary}
           weight="500"
         />
         <PrimaryBtn
+          disabled={Object.values(data)?.some(val => Boolean(val) == false)}
           title="Submit Ad"
           weight="500"
           width={100}
@@ -291,8 +305,7 @@ function LocationAndPurpose({
        val?.subTypes?.map?.(val => {
         return {
           id: val?.id,
-          // @ts-ignore 
-          label: val?.subTypeName,
+          label: val?.typeName,
         };
       }) : []
     }

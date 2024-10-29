@@ -124,6 +124,7 @@ export interface IPropsBtn {
     | "800"
     | "900";
   children?: React.ReactNode;
+  disabled?: boolean
 }
 
 export type LoginModalProps = {

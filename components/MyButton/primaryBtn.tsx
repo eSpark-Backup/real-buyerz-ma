@@ -15,6 +15,7 @@ const PrimaryBtn = ({
   weight,
   paddingV,
   children,
+  disabled = false
 }: IPropsBtn) => {
   const theme = useTheme() as MyTheme;
   return (
@@ -29,9 +30,11 @@ const PrimaryBtn = ({
           paddingHorizontal: 10,
           borderRadius: 3,
           width: width,
+          opacity: disabled ? .5 : 1
         },
         btnStyle,
       ]}
+      disabled={disabled}
       onPress={onPress}
     >
       {children && children}
