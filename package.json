@@ -45,7 +45,6 @@
     "react-native-svg-transformer": "^1.4.0",
     "react-native-toast-message": "^2.1.7",
     "react-redux": "^9.0.0",
-    "realbuyerz-mobile": "file:",
     "rn-range-slider": "^2.2.2",
     "yup": "^1.3.2"
   },
