@@ -1,10 +1,12 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Pressable, StyleSheet, View } from "react-native";
 import { useDispatch } from "react-redux";
 
 import ToggleSwitch from "../MySwitch/toggleSwitch";
 import MyText from "../MyText";
 import { toggleTheme } from "features/themeSlice";
+import useSessionManagement from "hooks/useSessionManagement";
+import { storage } from "store/mmkv";
 
 export interface PList {
   title: string;
@@ -13,6 +15,7 @@ export interface PList {
   indexIcon: number;
   index: number;
   onPress?: () => void;
+  onToggleChange: (key: string, value: boolean) => void;
 }
 
 export default function PreferencesList({
@@ -22,14 +25,21 @@ export default function PreferencesList({
   indexIcon,
   index,
   onPress,
+  onToggleChange
 }: PList) {
-  const dispatch = useDispatch();
-  const [switchValue, setSwitchValue] = useState(false);
+  const [switchValue, setSwitchValue] = useState<boolean>(
+    storage.getBoolean("theme") ? true : false
+  );
   const [toggleValue, setToggleValue] = useState(value);
+  const { updateThemeInSession } = useSessionManagement();
 
-  const handleToggleValue = (key: number) => {
-    console.log("key", key);
+  const handleToggleValue = (key: number, value:boolean) => {
+    onToggleChange?.(key.toString(), value); 
   };
+
+  useEffect(() => {
+    setToggleValue(value)
+  }, [value])
 
   return (
     <View style={styles.wrapper}>
@@ -43,19 +53,20 @@ export default function PreferencesList({
           {indexIcon === 0 && (
             <ToggleSwitch
               value={switchValue}
-              onValueChange={() => {
-                dispatch(toggleTheme(!switchValue ? "Dark" : "Default"));
+              onValueChange={(val) => {
+                console.log("switch value before: ", switchValue);
                 setSwitchValue(!switchValue);
+                updateThemeInSession(switchValue ? "Default" : "Dark");
+                console.log("switch value after: ", switchValue);
               }}
             />
           )}
           {indexIcon !== 0 && indexIcon !== 4 && (
             <ToggleSwitch
               value={toggleValue}
-              onValueChange={() => {
-                console.log("toggle");
-                handleToggleValue(index);
-                setToggleValue(!toggleValue);
+              onValueChange={(val) => {
+                // console.log("toggle");
+                handleToggleValue(index, val);
               }}
             />
           )}

@@ -42,20 +42,8 @@ const handleSignUpUser = async (
       ...req,
     });
     if (response.data?.success) {
-      Toast.show({
-        type: 'success',
-        position: 'top',
-        text1: response?.data?.message,
-        topOffset: 0,
-      });
       return {status: true,userInfo: response.data.response.data};  
       } else {
-      Toast.show({
-        type: 'error',
-        position: 'top',
-        text1: response?.data?.message,
-        topOffset: 0,
-      });
       return {status: false, message: response.data?.message};
     }
   } catch (error) {

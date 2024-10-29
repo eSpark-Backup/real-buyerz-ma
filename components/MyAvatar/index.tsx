@@ -1,20 +1,20 @@
 import React from "react";
 import { View, Image, StyleSheet } from "react-native";
 import { useTheme } from "@react-navigation/native";
-
 import { EditIcon } from "@assets/images/svg";
 import { IMyAvatar, MyTheme } from "@types";
 
 const MyAvatar = ({ size, imageUrl, edit, status }: IMyAvatar) => {
   const theme = useTheme() as MyTheme;
+  
   return (
-    <View style={[styles.container, { width: size, height: size }]}>
+    <View style={[styles.container, { width: size, height: size, borderRadius: size / 2 }]}>
       {edit && (
         <View style={styles.edit}>
           <EditIcon />
         </View>
       )}
-      <Image source={imageUrl!} style={styles.image} />
+      <Image source={imageUrl!} style={[styles.image, { borderRadius: size / 2 }]} />
       {status && (
         <View
           style={{
@@ -37,21 +37,19 @@ const MyAvatar = ({ size, imageUrl, edit, status }: IMyAvatar) => {
 
 const styles = StyleSheet.create({
   container: {
-    borderRadius: 50,
-    // overflow: "hidden",
+    overflow: "hidden",
     alignItems: "center",
     justifyContent: "center",
   },
   image: {
     width: "100%",
     height: "100%",
-    borderRadius: 50,
+    resizeMode: "cover",
   },
-  username: {
-    marginTop: 5,
-    fontWeight: "bold",
+  edit: {
+    zIndex: 4,
+    position: "absolute",
   },
-  edit: { zIndex: 4, position: "absolute" },
 });
 
 export default MyAvatar;

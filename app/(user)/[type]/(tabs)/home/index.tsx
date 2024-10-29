@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from "react";
+import React, { useRef, useEffect, useState } from "react";
 import {
   FlatList,
   StyleSheet,
@@ -11,39 +11,128 @@ import {
   Easing,
 } from "react-native";
 import { Feather } from "@expo/vector-icons";
-import { useTheme } from "@react-navigation/native";
+import { useRoute, useTheme } from "@react-navigation/native";
 import { router, useLocalSearchParams } from "expo-router";
 
-import { Card, MyText, GapView, AdCard } from "@components";
-import { WINDOW_WIDTH } from "@constants";
+import { Card, MyText, GapView, AdCard, LoginModal } from "@components";
+import { dummyImage, WINDOW_WIDTH } from "@constants";
 import { MyTheme, UserType } from "@types";
+import {
+  ComShop,
+  FarmHouse,
+  LowPortion,
+  PentHouse,
+  ResApartment,
+  ResHouse,
+  ResPlot,
+  UpPortion,
+} from "@assets/images";
+import { checkLoggedInUser } from "app/auth/utils/authUtils";
+import { AllPropertiesData, handleGetAllProperties, handleGetAllPropertType, PropertyItem, PropertyType } from "./utils";
+import { useDispatch } from "react-redux";
+import { PropertySliceState, setAllProperties, setFilter, setPropertyType } from "features/property/propertySlice";
+import { useSelector } from "react-redux";
+import { AppDispatch, RootState } from "@store";
+import { UserState } from "features/user/userSlice";
+import { isImageUrl } from "@utils/functions";
+
+interface BrowseProps {
+  onPress: () => void;
+  icon: React.ReactNode;
+  label: string;
+}
 
 export default function Home() {
   const theme = useTheme() as MyTheme;
-  const scrollOffsetY = useRef(new Animated.Value(0)).current;
-  const params = useLocalSearchParams<{ type: UserType }>();
+  const params = useLocalSearchParams<{ type?: UserType }>();
+  const dispatch: AppDispatch = useDispatch();
+  const [visible, setVisible] = useState<boolean>(false)
+  const { allProperties, propertyTypes } = useSelector<RootState, PropertySliceState>((state) => state.property);
+  const { userData } = useSelector<RootState, UserState>((state) => state.user);
+  
+  console.log(`Home: kiya hai ${params.type}`)
+
+  useEffect(() => {
+    fetchAllProperties()
+    fetchAllPropertyTypes()
+  }, []);
+
+  const fetchAllProperties = async () => {
+    try {
+      const response = await handleGetAllProperties()
+      if(response.data) {
+        dispatch(setAllProperties(response.data))
+      }
+    } catch (error) {
+    }
+  }
+
+  const fetchAllPropertyTypes = async () => {
+    try {
+      const response = await handleGetAllPropertType()
+      if(response.status) {
+        dispatch(setPropertyType(response.data))
+      }
+    } catch (error) {
+    }
+  }
+  const PropertiesData = [
+    {
+      icon: <ResHouse />,
+      label: "Residential House",
+      onPress: () => router.push(`(user)/${params?.type!}/(tabs)/projects`),
+    },
+    {
+      icon: <ResApartment />,
+      label: "Residential Apartment",
+      onPress: () => router.push(`(user)/${params?.type!}/(tabs)/projects`),
+    },
+    {
+      icon: <UpPortion />,
+      label: "Upper Portion",
+      onPress: () => router.push(`(user)/${params?.type!}/(tabs)/projects`),
+    },
+    {
+      icon: <LowPortion />,
+      label: "Lower Portion",
+      onPress: () => router.push(`(user)/${params?.type!}/(tabs)/projects`),
+    },
+    {
+      icon: <PentHouse />,
+      label: "Pent House",
+      onPress: () => router.push(`(user)/${params?.type!}/(tabs)/projects`),
+    },
+    {
+      icon: <FarmHouse />,
+      label: "Farm House",
+      onPress: () => router.push(`(user)/${params?.type!}/(tabs)/projects`),
+    },
+    {
+      icon: <ResPlot />,
+      label: "Residential Plot",
+      onPress: () => router.push(`(user)/${params?.type!}/(tabs)/projects`),
+    },
+    {
+      icon: <ComShop />,
+      label: "Commercial Shops",
+      onPress: () => router.push(`(user)/${params?.type!}/(tabs)/projects`),
+    },
+  ];
 
   return (
     <>
-      {/* <View style={styles(theme).HomeHeader}>
-        <DynamicHomeHeader />
-      </View> */}
-
-      <ScrollView
-        style={[styles(theme).wrapper]}
-        // onScroll={handleScroll}
-        // scrollEventThrottle={16}
-      >
-        {/* <DynamicAppBar value={scrollOffsetY} /> */}
+      <ScrollView style={[styles(theme).wrapper]}>
         <View style={styles(theme).container}>
           <AdCard
             label="View Your listings or post your ad to rent or sell your house"
             btnLabel="Go to Dashboard"
             theme={theme}
+            onPress={() =>
+              Boolean(userData) ? router.push(`(user)/${params?.type!}/(tabs)/dashboard`) : setVisible(true)
+            }
           />
           <GapView length={30} />
           <Title text="Browse Properties" theme={theme} />
-
           <View style={styles(theme).carousel}>
             <Feather
               name="chevron-left"
@@ -51,7 +140,7 @@ export default function Home() {
               color={theme.colors.text + "77"}
               style={{ right: 5 }}
             />
-            <BrowseProps theme={theme} />
+            <BrowseProps theme={theme} data={propertyTypes ?? []} type={params.type} />
             <Feather
               name="chevron-right"
               size={18}
@@ -63,23 +152,26 @@ export default function Home() {
             title="Featured Properties"
             theme={theme}
             params={params}
+            data={allProperties}
           />
           <ImageCard />
           <AdCard
             label="Looking to sell or rent out your property?"
             btnLabel="Post an Ad"
             theme={theme}
+            onPress={() =>
+              Boolean(userData) ? router.push(`(user)/${params?.type!}/(tabs)/listings`) : setVisible(true)
+            }
           />
           <PropertyListing
             title="Newly Listed Properties"
             theme={theme}
             params={params}
+            data={allProperties}
           />
-          {/* <GapView length={30} />
-          <Title text="Our Home Partners" theme={theme} />
-          <MarqueeScrollView /> */}
         </View>
       </ScrollView>
+      <LoginModal visible={visible} onClose={() => setVisible(false)} lastRoute={`home`} />
     </>
   );
 }
@@ -170,6 +262,7 @@ const MarqueeScrollView = () => {
 };
 
 const ImageCard = () => {
+  const params = useLocalSearchParams<{ type: UserType }>();
   return (
     <ImageBackground
       source={{ uri: "https://picsum.photos/id/299/620" }}
@@ -210,7 +303,9 @@ const ImageCard = () => {
             paddingHorizontal: 10,
             borderRadius: 3,
           }}
-          onPress={() => console.log("asd")}
+          onPress={() =>
+            router.push(`(user)/${params?.type!}/(tabs)/dashboard`)
+          }
         >
           <MyText textColor="#ffffff" size={10} weight="600">
             View Dashboard
@@ -221,14 +316,35 @@ const ImageCard = () => {
   );
 };
 
-const BrowseProps = ({ theme }: { theme?: MyTheme }) => {
-  function renderList({ item, index }: { item: any; index: number }) {
+const BrowseProps = ({
+  data,
+  theme,
+  type
+}: {
+  data: PropertyType[];
+  theme?: MyTheme;
+  type: UserType;
+}) => {
+  const dispatch = useDispatch();
+
+  function renderList({ item, index }: { item: PropertyType; index: number }) {
     return (
-      <Card style={styles(theme).bCard}>
-        <MyText>Icon</MyText>
+      <Card onPress={() => {
+        router.push({
+          pathname: `(user)/${type!}/(tabs)/projects`,
+        });
+        dispatch(setFilter({
+          propertyType: item.typeName
+        }))
+      }} style={styles(theme).bCard}>
+        <Image source={{uri: isImageUrl(item?.url) ? item?.url : dummyImage}} style={{ height: 40, width: 40 }} />
         <GapView />
-        <MyText size={10} textColor="#838383" style={styles(theme).bText}>
-          Residential House
+        <MyText
+          size={10}
+          textColor={theme?.colors.dimText}
+          style={styles(theme).bText}
+        >
+          {item?.typeName}
         </MyText>
       </Card>
     );
@@ -237,11 +353,11 @@ const BrowseProps = ({ theme }: { theme?: MyTheme }) => {
   return (
     <FlatList
       horizontal
-      data={[0, 1, 2, 3, 4]}
+      data={data ?? []}
       renderItem={renderList}
       showsHorizontalScrollIndicator={false}
       ItemSeparatorComponent={() => <GapView mode="horizontal" length={15} />}
-      keyExtractor={(item) => item.toString()}
+      keyExtractor={(item, index) => item.toString() + index}
     />
   );
 };
@@ -250,84 +366,68 @@ export const PropertyListing = ({
   title,
   theme,
   params,
+  data
 }: {
   title?: string;
   theme?: MyTheme;
   params: { type?: UserType };
+  data: AllPropertiesData | null
 }) => {
-  const data = [
-    {
-      id: 0,
-      name: "Mount Khalid",
-      location: "Gulberg",
-      image: "https://picsum.photos/id/151/130",
-      size: "1155 sqft to 2684 sqft",
-    },
-    {
-      id: 1,
-      name: "Mount Khalid",
-      location: "Gulberg",
-      image: "https://picsum.photos/id/153/130",
-      size: "1155 sqft to 2684 sqft",
-    },
-    {
-      id: 2,
-      name: "Mount Khalid",
-      location: "Gulberg",
-      image: "https://picsum.photos/id/162/130",
-      size: "1155 sqft to 2684 sqft",
-    },
-  ];
 
   function renderList({
     item,
     index,
     params,
   }: {
-    item: any;
+    item: PropertyItem;
     index: number;
     params: { type?: UserType };
   }) {
+    const images = item?.PropertyData?.filter(val => val.type == "image")
     return (
-      <TouchableOpacity
-        activeOpacity={1}
+      <Card
         onPress={() => {
-          router.push(`(user)/${params?.type!}/(tabs)/home/propertyDetail`);
+          router.navigate({
+            pathname: `(user)/${params?.type!}/(tabs)/home/propertyDetail`,
+            params: {
+              item: JSON.stringify(item)
+            }
+          });
         }}
-      >
-        <Card radius={2} style={{ height: 180, width: 130 }}>
-          <Image
-            source={{ uri: item?.image }}
-            style={{ height: 80, borderRadius: 2 }}
-          />
-          <View style={{ padding: 8 }}>
-            <MyText
-              text="Contact for price"
-              size={10}
-              textColor={theme?.colors.text}
-              style={{ fontWeight: "500", marginBottom: 10 }}
-            />
-            <MyText
-              text={item.name}
-              size={10}
-              textColor={theme?.colors.text}
-              style={{ fontWeight: "400", marginBottom: 10 }}
-            />
-            <MyText
-              text={item.location}
-              size={10}
-              textColor="#898989"
-              style={{ fontWeight: "400", marginBottom: 10 }}
-            />
-            <MyText
-              text={item.size}
-              size={8}
-              textColor="#898989"
-              style={{ fontWeight: "400", marginBottom: 10 }}
-            />
-          </View>
-        </Card>
-      </TouchableOpacity>
+      radius={2}
+      style={{ height: 180, width: 130 }}
+    >
+      <Image
+        source={{ uri: isImageUrl(images?.[0]?.url) ? images?.[0]?.url : dummyImage}}
+        style={{ height: 80, borderRadius: 2 }}
+      />
+      <View style={{ padding: 8 }}>
+        <MyText
+          text="Contact for price"
+          size={10}
+          textColor={theme?.colors.text}
+          style={{ fontWeight: "500", marginBottom: 10 }}
+        />
+        <MyText
+          text={item.propertyName}
+          size={10}
+          textColor={theme?.colors.text}
+          style={{ fontWeight: "400", marginBottom: 10 }}
+        />
+        <MyText
+          text={item.propertyAddress}
+          size={10}
+          textColor="#898989"
+          style={{ fontWeight: "400", marginBottom: 10 }}
+        />
+        <MyText
+          text={item.propertyArea}
+          size={8}
+          textColor="#898989"
+          style={{ fontWeight: "400", marginBottom: 10 }}
+        />
+      </View>
+    </Card>
     );
   }
 
@@ -347,7 +447,7 @@ export const PropertyListing = ({
           Find your dream projects from our latest projects
         </MyText>
         <FlatList
-          data={data}
+          data={data?.items ?? []}
           showsHorizontalScrollIndicator={false}
           horizontal
           renderItem={({ item, index }) => renderList({ item, index, params })}

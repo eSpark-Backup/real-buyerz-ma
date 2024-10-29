@@ -8,6 +8,7 @@ import {
   ViewStyle,
 } from "react-native";
 import { Theme } from "@react-navigation/native";
+import { PropertyItem } from "app/(user)/[type]/(tabs)/home/utils";
 
 export type MyTheme = Theme & {
   colors: {
@@ -63,6 +64,7 @@ export type MyInputProps = {
   text?: string;
   secureTextEntry?: boolean;
   keyboardType?: string;
+  editable?: boolean;
   onChange?: (val: string) => void;
   onBlur?: () => void;
   onChangeText?: (value: string) => void;
@@ -126,6 +128,7 @@ export interface IPropsBtn {
 export type LoginModalProps = {
   visible?: boolean;
   onClose: () => void;
+  lastRoute: string;
 };
 
 export type SearchDataProps = {
@@ -142,19 +145,14 @@ export type SearchListProps = {
 };
 
 export type MyListItemProps = {
-  item: {
-    title: string;
-    cost: string;
-    address: string;
-    beds: number;
-    bathroom: number;
-    parking: number;
-    sqft: number;
-    image: string;
-  };
+  item: PropertyItem;
   index: number;
   theme: MyTheme;
   fav?: boolean;
+  onFavClicked?: () => void;
+  params?: {
+    type: UserType
+  }
 };
 
 export interface IMyAvatar {
@@ -168,4 +166,9 @@ export interface DropdownProps {
   zIndex?: number;
   onSelect: (value: string | string[]) => void;
   style?: StyleProp<ViewStyle>;
+}
+
+export type PropertyDetailScreenParams = { 
+  type: UserType;
+  item: string
 }

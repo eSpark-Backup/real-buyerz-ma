@@ -8,19 +8,27 @@ import MyCheckbox from "components/MyCheckbox";
 import { MyTheme } from "@types";
 import { useTheme } from "@react-navigation/native";
 import GapView from "@components/GapView";
+import MyDropdown from "@components/MyDropdown";
 
 export enum Variants {
   SINGLE = "single",
   DUAL = "dual",
+  PASSWORD = "password",
   SELECT = "select",
+  SELECTOR = "selector",
   PRIMARY = "primary",
   MULTI_LINE = "multiLine",
   CHECK_BOX = "checkbox",
 }
+
 type Iinputs = {
+  id: string
   label?: string;
   placeholder: string;
+  value: string;
+  onChangeText?: (text: string) => void;
 };
+
 interface IMyField {
   variant: Variants;
   list?: {
@@ -30,6 +38,24 @@ interface IMyField {
   onPress?: () => void;
   title?: string;
 }
+
+const pakistaniCities: string[] = [
+  "Karachi",
+  "Lahore",
+  "Islamabad",
+  "Rawalpindi",
+  "Faisalabad",
+  "Multan",
+  "Peshawar",
+  "Quetta",
+  "Sialkot",
+  "Gujranwala",
+  "Hyderabad",
+  "Abbottabad",
+  "Sargodha",
+  "Bahawalpur",
+  "Sukkur"
+];
 
 const MyField = ({ variant, list, onPress, title }: IMyField) => {
   const theme = useTheme() as MyTheme;
@@ -52,6 +78,8 @@ const MyField = ({ variant, list, onPress, title }: IMyField) => {
                     style={styles(theme).dualInputStyle}
                     inputStyle={styles(theme).inputInnerStyle}
                     placeholderColor={theme.colors.placeholderText}
+                    text={input.value}
+                    onChange={input.onChangeText}
                   />
                   {index < list?.inputs.length - 1 && (
                     <GapView length={10} mode="horizontal" />
@@ -81,6 +109,37 @@ const MyField = ({ variant, list, onPress, title }: IMyField) => {
                 style={styles(theme).singleInputStyle}
                 inputStyle={styles(theme).inputInnerStyle}
                 placeholderColor={theme.colors.placeholderText}
+                text={input.value}
+                onChange={input.onChangeText}
+              />
+              {input.label && (
+                <MyText
+                  size={10}
+                  text={input.label}
+                  style={styles(theme).labelStyle}
+                />
+              )}
+            </View>
+          ))}
+        </View>
+      )}
+      {variant === "password" && (
+        <View>
+          <MyText
+            size={14}
+            text={list?.title}
+            style={styles(theme).titleStyle}
+          />
+          {list?.inputs.map((input, index) => (
+            <View key={index}>
+              <MyInput
+                placeholder={input.placeholder}
+                style={styles(theme).singleInputStyle}
+                inputStyle={styles(theme).inputInnerStyle}
+                placeholderColor={theme.colors.placeholderText}
+                password
+                text={input.value}
+                onChange={input.onChangeText}
               />
               {input.label && (
                 <MyText
@@ -117,6 +176,8 @@ const MyField = ({ variant, list, onPress, title }: IMyField) => {
                     style={styles(theme).selectInput}
                     inputStyle={styles(theme).inputInnerStyle}
                     placeholderColor={theme.colors.placeholderText}
+                    text={input.value}
+                    onChange={input.onChangeText}
                   />
                 </View>
               ))}
@@ -124,6 +185,41 @@ const MyField = ({ variant, list, onPress, title }: IMyField) => {
           </View>
         </View>
       )}
+
+      {variant === "selector" && (
+        <View style={styles(theme).dropdownWrapper}>
+          {list?.title && (
+            <MyText
+              size={13}
+              text={list?.title}
+              style={styles(theme).titleStyle}
+            />
+          )}
+          {list?.inputs.map((input, index) => (
+            <View key={index} style={styles(theme).dropdownContainer}>
+              <MyDropdown
+                id={input.id}
+                data={pakistaniCities}
+                onSelect={(val) => {
+                  if (typeof val.value === 'string') {
+                    input.onChangeText?.(val.value);
+                  } else if (Array.isArray(val.value)) {
+                    input.onChangeText?.(val.value.join(', '));
+                  }
+                }}
+                selected={[input.value]}
+                placeholder="Select city"
+                height={40}
+                zIndex={4 - index}
+                style={{ width: "100%" }}
+                theme={theme}
+              />
+            </View>
+          ))}
+        </View>
+      )}
+
+
       {variant === "multiLine" && (
         <View>
           <MyText
@@ -139,6 +235,8 @@ const MyField = ({ variant, list, onPress, title }: IMyField) => {
                 style={styles(theme).multiLineStyle}
                 inputStyle={styles(theme).inputInnerStyle}
                 placeholderColor={theme.colors.placeholderText}
+                text={input.value}
+                onChange={input.onChangeText}
               />
               {input?.label && (
                 <MyText
@@ -175,7 +273,7 @@ const MyField = ({ variant, list, onPress, title }: IMyField) => {
           <MyCheckbox
             labelStyle={{ fontSize: 12 }}
             label="Update details in all property listings"
-            onChange={() => {}}
+            onChange={() => { }}
             checkboxStyle={{
               width: 20,
               height: 20,
@@ -202,7 +300,6 @@ const styles = (theme?: MyTheme) =>
     },
     dualInputStyle: {
       backgroundColor: theme?.colors.background,
-      // width: 150,
       flex: 1,
       height: 35,
       borderColor: theme?.colors.dropdownBorder,
@@ -236,9 +333,18 @@ const styles = (theme?: MyTheme) =>
       marginTop: 5,
       marginStart: 5,
     },
+    dropdownWrapper: {
+      position: 'relative',
+      zIndex: 1000,
+      width: '100%',
+    },
+    dropdownContainer: {
+      position: 'relative',
+      width: '100%',
+      zIndex: 1000,
+    },
     selectInput: {
       backgroundColor: theme?.colors.background,
-      // width: "80%",
       height: 38,
       borderColor: theme?.colors.dropdownBorder,
       borderWidth: 1,

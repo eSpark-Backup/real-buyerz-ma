@@ -9,7 +9,7 @@ import {
 import { Drawer } from "expo-router/drawer";
 import { StatusBar } from "expo-status-bar";
 import { router, useLocalSearchParams } from "expo-router";
-
+import { useDispatch } from 'react-redux';
 import { colors } from "@theme";
 import { MyTheme, UserType } from "@types";
 import {
@@ -33,30 +33,43 @@ import {
   MyText,
 } from "@components";
 import { useState } from "react";
+import useSessionManagement from "hooks/useSessionManagement";
+import { setUserData, setUserToken, UserState } from "features/user/userSlice";
+import { useSelector } from "react-redux";
+import { RootState } from "@store";
 
 const DrawerContent = (props: DrawerContentComponentProps) => {
   const [confirmLogout, setConfirmLogout] = useState(false);
   const params = useLocalSearchParams<{ type: UserType }>();
   const { index } = props.state;
   const theme = useTheme() as MyTheme;
+  const { clearSession, clearTheme } = useSessionManagement();
+  const dispatch = useDispatch();
+  const { userData } = useSelector<RootState, UserState>((state) => state.user);
+
+  const handleLogout = () => {
+    clearTheme();
+    clearSession(); 
+    dispatch(setUserToken(''));
+    dispatch(setUserData(''));
+    router.replace("/auth/SignIn/signIn"); // Redirect user to sign-in screen
+  };
 
   return (
     <View style={{ ...styles.container }}>
       <View style={styles.header}>
         <View style={{ flexDirection: "row" }}>
-          <MyAvatar
-            size={40}
-            imageUrl={{ uri: "https://i.pravatar.cc/300?img=68" }}
-          />
+        <MyAvatar imageUrl={{ uri: userData?.profileImage || "https://i.pravatar.cc/300?img=68"}} size={35}/>
+
           <View style={{ marginLeft: 10 }}>
             <MyText
-              text="Arman Khan"
+              text={`${userData?.firstName} ${userData?.lastName}` || "Arman Khan"} // Use name from user data
               size={16}
               weight="600"
               textColor="#ffffff"
             />
             <MyText
-              text="Email123@gmail.com"
+              text={userData?.email || "Email123@gmail.com"}
               size={12}
               textColor="#ffffff"
               style={{ marginVertical: 5 }}
@@ -109,8 +122,7 @@ const DrawerContent = (props: DrawerContentComponentProps) => {
           message="Are you sure you want to Log out?"
           onClose={() => setConfirmLogout(false)}
           onPress={() => {
-            setConfirmLogout(false);
-            router.replace("/auth/SignIn/signIn");
+            handleLogout()
           }}
         />
       </MyPopupModal>
@@ -263,6 +275,7 @@ export default function MainLayout() {
         <Drawer.Screen
           name="shop" // This is the name of the page and must match the url from root
           options={{
+            headerShown: false,
             drawerActiveBackgroundColor: "#DCEAF2",
             drawerIcon: ({ focused }) => (
               <Draw_Shop

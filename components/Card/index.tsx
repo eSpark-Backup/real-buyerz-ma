@@ -1,5 +1,12 @@
 import React from "react";
-import { StyleSheet, Text, View, ViewStyle, TextStyle } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  ViewStyle,
+  TextStyle,
+  Pressable,
+} from "react-native";
 
 import MyText from "../MyText";
 import { MyTheme } from "@types";
@@ -10,17 +17,22 @@ export default function Card({
   radius = 5,
   children,
   plain,
+  onPress,
 }: {
   style?: ViewStyle;
   radius?: number;
   children?: React.ReactNode;
   plain?: boolean;
+  onPress?: () => void;
 }) {
   const theme = useTheme() as MyTheme;
   return (
-    <View style={[styles({ radius, theme, plain }).cardStyle, { ...style }]}>
+    <Pressable
+      style={[styles({ radius, theme, plain }).cardStyle, { ...style }]}
+      onPress={onPress}
+    >
       {children}
-    </View>
+    </Pressable>
   );
 }
 

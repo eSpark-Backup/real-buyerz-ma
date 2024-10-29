@@ -1,8 +1,9 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Modal from "react-native-modal";
-import { Link } from "expo-router";
-import { View, StyleSheet } from "react-native";
+import { Link, useRouter } from "expo-router";
+import { View, StyleSheet, ScrollView, KeyboardAvoidingView, Platform } from "react-native";
 import { useTheme } from "@react-navigation/native";
+import Toast from "react-native-toast-message";
 
 import MyText from "../MyText";
 import MyButton from "../MyButton";
@@ -10,9 +11,83 @@ import MyCheckbox from "../MyCheckbox";
 import MyInput from "../MyInput";
 import { LoginModalProps, MyTheme } from "@types";
 import { GLogo, PLogo } from "@assets/images";
+import { useDispatch } from 'react-redux';
+import { storage } from 'store/mmkv';
+import { handleLoginUser, UserObject } from 'app/auth/SignIn/utils';
+import OverlayLoader from "@components/OverlayLoader";
+import { setUserData, setUserToken } from "features/user/userSlice";
+import useSessionManagement from "hooks/useSessionManagement";
+import { handleGetUserProfile, UserProfileData } from "app/(user)/[type]/(tabs)/profile/utils";
+import { showToast } from "@utils/showToast";
 
-function LoginModal({ visible, onClose }: LoginModalProps) {
+function LoginModal({ visible, onClose, lastRoute }: LoginModalProps) {
   const theme = useTheme() as MyTheme;
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const router = useRouter();
+  const [loading, setLoading] = useState(false);
+  const [isRememberedMe, setRememberedMe] = useState(false);
+  const dispatch = useDispatch();
+  const [emailError, setEmailError] = useState("");
+  const [passwordError, setPasswordError] = useState("");
+  const { updateUserInSession,updateUserIsLoggedInSession } = useSessionManagement();
+  const mergeUserRoleWithProfile = (profileData: UserProfileData, role: string): UserProfileData => {
+    return { ...profileData, role };
+  };
+
+  const onLoginPress = async () => {
+    setEmailError("");
+    setPasswordError("");
+    if (!email) {
+      setEmailError("Email is required");
+    }
+    if (!password) {
+      setPasswordError("Password is required");
+    }
+
+    if (!email || !password) {
+      return;
+    }
+
+    setLoading(true)
+    const response = await handleLoginUser({ email, password });
+    if (response.status) {
+      const userInfo = response.userInfo;
+      if (userInfo) {
+        fetchAllUserProfileData(userInfo)
+        showToast(response.message|| 'Login successfull', 'success')
+      } else {
+        showToast('User info not available', 'error');
+      }
+    } else {
+      setLoading(false)
+      showToast(
+        response.message || 'Sign in failed',
+        'error',
+      )
+    };
+  };
+
+  const fetchAllUserProfileData = async (userInfo: UserObject) => {
+    try {
+      const response = await handleGetUserProfile()
+      if (response.data) {
+        setLoading(false)
+        savingDataToSessionStorage(userInfo, response.data);
+        router.push(`/(user)/${userInfo.user.role}/home`);
+      }
+    } catch (error) {
+      setLoading(false)
+    }
+  }
+
+  const savingDataToSessionStorage = (userInfo: UserObject, userProfileData: UserProfileData) => {
+    let userProfileInfo= mergeUserRoleWithProfile(userProfileData, userInfo.user.role || "user");
+    updateUserInSession(userProfileInfo, userInfo?.token as string);
+    updateUserIsLoggedInSession(isRememberedMe);
+    dispatch(setUserToken(userInfo?.token));
+    dispatch(setUserData(userProfileInfo));
+  }
 
   return (
     <Modal
@@ -23,115 +98,147 @@ function LoginModal({ visible, onClose }: LoginModalProps) {
       animationOut={"slideOutDown"}
       style={styles.modal}
     >
-      <View
-        style={[
-          styles.popupStyle,
-          {
-            backgroundColor: theme.dark
-              ? theme.colors.verificationBg
-              : theme.colors.popupbg,
-          },
-        ]}
+      <KeyboardAvoidingView
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        style={styles.keyboardAvoidingView}
       >
-        <PLogo />
-        <MyText
-          text="Log In to Continue"
-          textColor={theme.colors.secondary}
-          weight="700"
-          size={16}
-          style={{ paddingVertical: "4%" }}
-        />
-        <View
-          style={{
-            flex: 1,
-            alignItems: "center",
-            justifyContent: "center",
-            width: "100%",
-          }}
-        >
-          <MyInput
-            placeholder="Email Address"
-            style={{
-              flex: 0,
-              backgroundColor: theme.colors.inputBg,
-              marginBottom: 20,
-              borderWidth: 1,
-              borderColor: theme.colors.border,
-              elevation: 1,
-            }}
-            placeholderColor={theme.colors.placeholderText}
-          />
-
-          <MyInput
-            placeholder="Password"
-            password
-            style={{
-              flex: 0,
-              backgroundColor: theme.colors.inputBg,
-              borderWidth: 1,
-              borderColor: theme.colors.border,
-              elevation: 1,
-            }}
-            placeholderColor={theme.colors.placeholderText}
-          />
-          <View style={styles.coupleContainer}>
-            <MyCheckbox
-              label="Remember"
-              onChange={(value) => {
-                console.log("Remember checked !");
-              }}
-              style={{
-                width: "50%",
-              }}
-              labelStyle={[styles.label, { color: theme.colors.text }]}
-            />
+        <ScrollView contentContainerStyle={styles.scrollView}>
+          <OverlayLoader isShow={loading} />
+          <View
+            style={[
+              styles.popupStyle,
+              {
+                backgroundColor: theme.dark
+                  ? theme.colors.verificationBg
+                  : theme.colors.popupbg,
+              },
+            ]}
+          >
+            <PLogo />
             <MyText
-              text="Forgot Password?"
+              text="Log In to Continue"
               textColor={theme.colors.secondary}
-              size={14}
-              style={styles.forgotPass}
-            />
-          </View>
-        </View>
-        <MyButton label="Log In" textColor="white" style={styles.button} />
-        <MyText
-          text="Or"
-          size={14}
-          weight="600"
-          textColor={theme.colors.text}
-          style={{ marginVertical: "4%" }}
-        />
-        <View style={styles.google}>
-          <MyText
-            text="Login with "
-            size={14}
-            weight="600"
-            textColor={theme.colors.text}
-          />
-          <GLogo />
-        </View>
-        <View
-          style={{
-            flexDirection: "row",
-            marginTop: "30%",
-          }}
-        >
-          <MyText
-            text="Don't have an account?"
-            size={14}
-            weight="700"
-            textColor={theme.colors.text}
-          />
-          <Link href={"/auth/Signup/signUp"}>
-            <MyText
-              text=" Sign Up"
-              size={14}
               weight="700"
-              textColor={theme.colors.primary}
+              size={16}
+              style={{ paddingVertical: "4%" }}
             />
-          </Link>
-        </View>
-      </View>
+            <View
+              style={{
+                flex: 1,
+                alignItems: "flex-start", // Align items to the start
+                justifyContent: "center",
+                width: "100%",
+              }}
+            >
+              <MyInput
+                placeholder="Email Address"
+                value={email}
+                onChange={(text) => {
+                  setEmail(text);
+                  setEmailError("");
+                }}
+                style={{
+                  flex: 0,
+                  backgroundColor: theme.colors.inputBg,
+                  borderWidth: 1,
+                  borderColor: theme.colors.border,
+                  elevation: 1,
+                }}
+                placeholderColor={theme.colors.placeholderText}
+              />
+              <View style={styles.errorContainer}>
+                {emailError ? (
+                  <MyText text={emailError} style={styles.errorText} />
+                ) : null}
+              </View>
+
+              <MyInput
+                placeholder="Password"
+                password
+                value={password}
+                onChange={(text) => {
+                  setPassword(text);
+                  setPasswordError("");
+                }}
+                style={{
+                  flex: 0,
+                  backgroundColor: theme.colors.inputBg,
+                  marginTop: 20,
+                  borderWidth: 1,
+                  borderColor: theme.colors.border,
+                  elevation: 1,
+                }}
+                placeholderColor={theme.colors.placeholderText}
+              />
+              <View style={styles.errorContainer}>
+                {passwordError ? (
+                  <MyText text={passwordError} style={styles.errorText} />
+                ) : null}
+              </View>
+
+              <View style={styles.coupleContainer}>
+                <MyCheckbox
+                  label="Remember"
+                  onChange={(value) => {
+                    setRememberedMe(value)
+                  }}
+                  style={{
+                    flexGrow: 1, // Allow checkbox to grow and take available space
+                  }}
+                  labelStyle={[styles.label, { color: theme.colors.text }]}
+                />
+                <Link href={"/auth/ForgotPassword/ForgotPassword"}>
+                  <MyText
+                    text="Forgot Password?"
+                    textColor={theme.colors.secondary}
+                    size={14}
+                    style={styles.forgotPass}
+                  />
+                </Link>
+              </View>
+            </View>
+
+            <MyButton label="Log In" textColor="white" style={styles.button} onPress={onLoginPress} />
+            <MyText
+              text="Or"
+              size={14}
+              weight="600"
+              textColor={theme.colors.text}
+              style={{ marginVertical: "4%" }}
+            />
+            <View style={styles.google}>
+              <MyText
+                text="Login with "
+                size={14}
+                weight="600"
+                textColor={theme.colors.text}
+              />
+              <GLogo />
+            </View>
+            <View
+              style={{
+                flexDirection: "row",
+                marginTop: "30%",
+              }}
+            >
+              <MyText
+                text="Don't have an account?"
+                size={14}
+                weight="700"
+                textColor={theme.colors.text}
+              />
+              <Link href={"/auth/Signup/signUp"}>
+                <MyText
+                  text=" Sign Up"
+                  size={14}
+                  weight="700"
+                  textColor={theme.colors.primary}
+                />
+              </Link>
+            </View>
+          </View>
+        </ScrollView>
+      </KeyboardAvoidingView>
     </Modal>
   );
 }
@@ -141,30 +248,42 @@ const styles = StyleSheet.create({
     margin: 0,
     justifyContent: "center",
   },
-
+  keyboardAvoidingView: {
+    flex: 1,
+  },
+  scrollView: {
+    flexGrow: 1,
+    justifyContent: "center",
+  },
   popupStyle: {
     alignItems: "center",
     flex: 1,
-    // height: "80%",
     marginTop: "30%",
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
     paddingHorizontal: "9%",
     paddingVertical: "6%",
   },
-  frg_un: {
-    width: "100%",
-    textAlign: "right",
-    marginTop: "4%",
-    marginBottom: "6%",
-  },
   coupleContainer: {
     flexDirection: "row",
     marginTop: 5,
     width: "100%",
+    alignItems: "center", // Align items in the center vertically
+  },
+  forgotPass: { 
+    textAlign: "right", 
+    marginLeft: "auto", // This ensures the text is pushed to the right
+    marginTop: 5,
+  },
+  errorContainer: {
+    alignItems: 'flex-start',
+    marginTop: 5
+  },
+  errorText: {
+    color: 'red',
+    fontSize: 14,
   },
   label: { color: "#333333", fontSize: 14 },
-  forgotPass: { width: "50%", textAlign: "right", marginTop: 5 },
   button: {
     width: 110,
     alignItems: "center",

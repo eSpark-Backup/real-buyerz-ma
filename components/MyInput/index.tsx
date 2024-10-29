@@ -15,11 +15,13 @@ export default function MyInput({
   inputStyle,
   rightIcon,
   placeholderColor,
+  editable = true,
 }: MyInputProps) {
   const [showPassword, setShowPassword] = useState(false);
   const inputContainerStyle: ViewStyle = {
     ...styles.inputContainerStyle,
   };
+
   const theme = useTheme() as MyTheme;
   return (
     <View
@@ -37,6 +39,7 @@ export default function MyInput({
         secureTextEntry={password ? (showPassword ? false : true) : false}
         placeholder={placeholder}
         placeholderTextColor={placeholderColor}
+        editable={editable} 
         style={[
           styles.inputStyle,
           { fontFamily: "Inter-Regular" },

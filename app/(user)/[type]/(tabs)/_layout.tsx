@@ -1,8 +1,7 @@
-import React, { memo, useState } from "react";
-import { StyleSheet } from "react-native";
+import React, { memo, useEffect, useState } from "react";
 import { Tabs } from "expo-router/tabs";
 import { useLocalSearchParams } from "expo-router";
-import { useTheme, useNavigation } from "@react-navigation/native";
+import { useTheme } from "@react-navigation/native";
 
 import { MyTabBar, MyHeader, LoginModal } from "@components";
 import { MyTheme, UserType } from "@types";
@@ -11,8 +10,17 @@ function UserTabLayout() {
   const theme = useTheme() as MyTheme;
   const params = useLocalSearchParams<{ type: UserType }>();
   const [visible, setVisible] = useState(false);
+  const [lastRoute, setLastRoute] = useState("");
 
-  console.log("What is the type", params.type);
+  useEffect(() => {
+    console.log('User type:', params.type);
+  });
+  
+  
+  const openLoginModal = (routeName: string, isFromTab: boolean) => {
+    setLastRoute(routeName);
+    setVisible(true);
+  };
 
   return (
     <>
@@ -21,8 +29,6 @@ function UserTabLayout() {
         backBehavior="initialRoute"
         sceneContainerStyle={{ paddingBottom: 35 }}
         screenOptions={{
-          // headerShown: false,
-          // headerStyle: styles(theme).headerStyle,
           header: (props) => {
             return (
               <MyHeader
@@ -37,7 +43,7 @@ function UserTabLayout() {
         tabBar={(props) => {
           return (
             <MyTabBar
-              openModal={(value) => setVisible(value)}
+              openModal={openLoginModal}
               userType={params?.type!}
               {...props}
               theme={theme}
@@ -51,6 +57,7 @@ function UserTabLayout() {
             href: null,
           }}
         />
+
         <Tabs.Screen
           name="home"
           options={{
@@ -62,11 +69,11 @@ function UserTabLayout() {
         <Tabs.Screen
           name="projects"
           options={{
-            // headerShown: true,
             title: "Projects",
             href: `(user)/${params?.type!}/(tabs)/projects`,
           }}
         />
+
         <Tabs.Screen
           name="dashboard"
           options={{
@@ -75,11 +82,9 @@ function UserTabLayout() {
             href: `(user)/${params?.type!}/(tabs)/dashboard`,
           }}
         />
-
         <Tabs.Screen
           name="listings"
           options={{
-            // headerShown: true,
             title: "Listings",
             href: `(user)/${params?.type!}/(tabs)/listings`,
           }}
@@ -87,24 +92,15 @@ function UserTabLayout() {
         <Tabs.Screen
           name="profile"
           options={{
-            // headerShown: true,
             title: "Profile",
             href: `(user)/${params?.type!}/(tabs)/profile`,
           }}
         />
       </Tabs>
-      <LoginModal visible={visible} onClose={() => setVisible(false)} />
+
+      <LoginModal visible={visible} onClose={() => setVisible(false)} lastRoute={lastRoute} />
     </>
   );
 }
 
 export default memo(UserTabLayout);
-
-const styles = (theme: MyTheme) =>
-  StyleSheet.create({
-    headerStyle: {
-      height: 60,
-      borderBottomColor: theme.colors.border,
-      borderBottomWidth: 1,
-    },
-  });

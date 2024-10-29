@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
-import { MyTheme, UserType } from "@types";
+import { MyTheme, PropertyDetailScreenParams } from "@types";
 import { useTheme } from "@react-navigation/native";
 
 import {
@@ -15,11 +15,16 @@ import {
 } from "@components";
 import { LocationIcon } from "@assets/images/svg";
 import { router, useLocalSearchParams } from "expo-router";
+import { PropertyItem } from "./utils";
+import { isImageUrl } from "@utils/functions";
 
 const PropertyDetail = () => {
   const theme = useTheme() as MyTheme;
   const [isVisble, setIsVisible] = useState(false);
-  const params = useLocalSearchParams<{ type: UserType }>();
+
+  const { item, type } = useLocalSearchParams<PropertyDetailScreenParams>();
+
+  const productDetail: PropertyItem = JSON.parse(item ?? "{}");
 
   const images = [
     "https://picsum.photos/id/299/620",
@@ -30,19 +35,19 @@ const PropertyDetail = () => {
   const tableList = [
     {
       title: "Type",
-      value: "Residential Plot",
+      value: productDetail?.propertyType.typeName,
     },
     {
       title: "Location",
-      value: "Scheme 33, Karachi, Sindh",
+      value: productDetail?.propertyAddress,
     },
     {
       title: "Price",
-      value: "1.5 Crore",
+      value: productDetail?.propertyPrice,
     },
     {
       title: "Purpose",
-      value: "For Sale",
+      value: productDetail.purpose,
     },
     {
       title: "Bedroom",
@@ -59,21 +64,18 @@ const PropertyDetail = () => {
   ];
 
   const description = [
-    "Plot For sale Zeenatabad Society Scheme 33, Sector 19a",
-    "120 Sqyd West open corner 24 Feet road (Leased)",
-    "Corner Boundary Wall Society 150 Feet Road",
-    "All Utilities Available",
-    "K - Electric",
-    "Water Sewerage System",
+    // "Plot For sale Zeenatabad Society Scheme 33, Sector 19a",
+    // "120 Sqyd West open corner 24 Feet road (Leased)",
+    // "Corner Boundary Wall Society 150 Feet Road",
+    // "All Utilities Available",
+    // "K - Electric",
+    // "Water Sewerage System",
+    productDetail?.propertyDescription,
   ];
 
-  const amentiesList = [
-    "Park",
-    "Masjid",
-    "Playground",
-    "24 Hours CCTV Security Camera",
-    "24 Hour Water Supply",
-  ];
+  const amentiesList = productDetail?.amenities?.map(
+    (val) => val?.amenetiesName
+  );
 
   const colorDetector = (value: number) => {
     if (value % 2 === 0) {
@@ -88,20 +90,34 @@ const PropertyDetail = () => {
     }
     return 0;
   };
+
   return (
     <ScrollView>
       <View style={styles(theme).wrapper}>
-        <CustomSlider images={images} title={"4 BEDROOMS APARTMENT"} />
+        <CustomSlider
+          images={images}
+          title={productDetail?.propertyName ?? "4 BEDROOMS APARTMENT"}
+        />
         <Card style={styles(theme).cardWrapper}>
           <View>
             <MyAvatar
               size={70}
-              imageUrl={{ uri: "https://picsum.photos/id/151/130" }}
+              imageUrl={{
+                uri:
+                  productDetail.user?.profileImage &&
+                  isImageUrl(productDetail.user?.profileImage ?? "")
+                    ? productDetail.user?.profileImage
+                    : "https://picsum.photos/id/151/130",
+              }}
             />
           </View>
           <View style={styles(theme).textWrapper}>
             <MyText
-              text="Moin khan"
+              text={
+                productDetail.user?.firstName +
+                " " +
+                productDetail.user?.lastName
+              }
               size={16}
               weight="600"
               textColor={theme.colors.listText}
@@ -109,10 +125,11 @@ const PropertyDetail = () => {
             <View style={styles(theme).dFlex}>
               <LocationIcon />
               <MyText
-                text="Lahore-Pakistan"
+                text={productDetail.user?.address ?? "N/A"}
                 size={12}
                 textColor={theme.colors.listText}
                 weight="600"
+                style={{ marginHorizontal: 4 }}
               />
             </View>
             <View style={styles(theme).btnWrapper}>
@@ -122,9 +139,7 @@ const PropertyDetail = () => {
                 textColor="#ffffff"
                 width={100}
                 onPress={() =>
-                  router.push(
-                    `(user)/${params?.type!}/(tabs)/home/AgentProfile`
-                  )
+                  router.push(`(user)/${type!}/(tabs)/home/AgentProfile`)
                 }
                 btnStyle={{
                   paddingVertical: 10,
@@ -183,7 +198,7 @@ const PropertyDetail = () => {
                     style={styles(theme).columnOne}
                   />
                   <MyText
-                    text={item.value}
+                    text={item.value?.toString()}
                     size={13}
                     weight="400"
                     textColor={theme.colors.text}
@@ -220,11 +235,21 @@ const PropertyDetail = () => {
             </View>
             <View style={styles(theme).mt5}>
               <MyText text="Area" size={16} weight="600" />
-              <MyText text={"250000 sq.m"} size={14} weight="400" />
+              <MyText
+                text={(productDetail?.propertyArea ?? "250000") + " sq.m"}
+                size={14}
+                weight="400"
+              />
             </View>
             <View style={styles(theme).mt5}>
               <MyText text="Demand" size={16} weight="600" />
-              <MyText text={"1 Crore 50 lac"} size={14} weight="400" />
+              <MyText
+                text={
+                  productDetail?.propertyPrice?.toString() ?? "1 Crore 50 lac"
+                }
+                size={14}
+                weight="400"
+              />
             </View>
           </View>
         </Card>
@@ -315,7 +340,7 @@ const styles = (theme?: MyTheme) =>
     },
     descriptionWrapper: {
       marginTop: 10,
-      height: 165,
+      // height: 165,
       justifyContent: "space-between",
     },
     mt5: {
