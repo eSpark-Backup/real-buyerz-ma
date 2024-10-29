@@ -13,6 +13,7 @@ import { getLoggedInUserInfo } from "app/auth/utils/authUtils";
 import { showToast } from "@utils/showToast";
 import useSessionManagement from "hooks/useSessionManagement";
 import { storage } from "store/mmkv";
+import { PreferencesData } from "../../preferences/utils";
 
 export interface File extends Blob {
   uri: string;
@@ -39,7 +40,7 @@ interface ProfileState {
   profileImage: string;
   profileVisibility: boolean;
   role: string;
-  preferences: string | null;
+  preferences: PreferencesData | null;
 }
 
 const initialProfileState: ProfileState = {
@@ -414,7 +415,7 @@ export default function ProfileSettings() {
       profileImage: profileState.profileImage,
       profileVisibility: profileState.profileVisibility,
       role: profileState.role,
-      preferences: profileState.preferences || '{}',
+      preferences: profileState.preferences || null,
     };
   };
 

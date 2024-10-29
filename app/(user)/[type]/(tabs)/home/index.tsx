@@ -44,14 +44,14 @@ interface BrowseProps {
 
 export default function Home() {
   const theme = useTheme() as MyTheme;
-  const params = useLocalSearchParams<{ type: UserType }>();
-  const route = useRoute()
-  const isLoggedIn = checkLoggedInUser();
+  const params = useLocalSearchParams<{ type?: UserType }>();
   const dispatch: AppDispatch = useDispatch();
   const [visible, setVisible] = useState<boolean>(false)
   const { allProperties, propertyTypes } = useSelector<RootState, PropertySliceState>((state) => state.property);
   const { userData } = useSelector<RootState, UserState>((state) => state.user);
   
+  console.log(`Home: kiya hai ${params.type}`)
+
   useEffect(() => {
     fetchAllProperties()
     fetchAllPropertyTypes()

@@ -1,4 +1,4 @@
-import React, { memo, useState } from "react";
+import React, { memo, useEffect, useState } from "react";
 import { Tabs } from "expo-router/tabs";
 import { useLocalSearchParams } from "expo-router";
 import { useTheme } from "@react-navigation/native";
@@ -12,6 +12,11 @@ function UserTabLayout() {
   const [visible, setVisible] = useState(false);
   const [lastRoute, setLastRoute] = useState("");
 
+  useEffect(() => {
+    console.log('User type:', params.type);
+  });
+  
+  
   const openLoginModal = (routeName: string, isFromTab: boolean) => {
     setLastRoute(routeName);
     setVisible(true);
@@ -72,6 +77,7 @@ function UserTabLayout() {
         <Tabs.Screen
           name="dashboard"
           options={{
+            headerShown: false,
             title: "Dashboard",
             href: `(user)/${params?.type!}/(tabs)/dashboard`,
           }}

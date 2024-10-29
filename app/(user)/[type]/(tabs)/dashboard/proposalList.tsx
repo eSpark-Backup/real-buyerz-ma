@@ -237,10 +237,12 @@ const renderProposalsList = ({
       <View style={styles.ap_bot}>
         <MyButton
           label="View"
-          onPress={() =>
+          onPress={() =>{
+            console.log("proposallsit")
             router.push(
               `(user)/${params?.type!}/(tabs)/dashboard/proposalDetails`
             )
+          }
           }
           labelStyle={{
             color: "#ffffff",

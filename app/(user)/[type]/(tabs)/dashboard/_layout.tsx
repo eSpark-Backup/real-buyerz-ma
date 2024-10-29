@@ -14,7 +14,7 @@ export default function DashboardLayout() {
     <Stack
       initialRouteName="index"
       screenOptions={({ navigation, route }) => ({
-        headerShown: false,
+        headerShown: true,
         header: (props) => {
           return (
             <MyHeader

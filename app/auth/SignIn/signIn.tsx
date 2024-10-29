@@ -58,7 +58,7 @@ export default function SignIn() {
         setLoading(false)
         showToast('Login successfull', 'success')
         savingDataToSessionStorage(userInfo, response.data);
-        router.push(`/(user)/${userInfo.user.role}/home`);
+        router.push(`/(user)/${userInfo.user.role}/(tabs)/home`);
       }
     } catch (error) {
       showToast('User info not available', 'error');

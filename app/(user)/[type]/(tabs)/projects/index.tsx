@@ -138,6 +138,8 @@ export default function Projects() {
   const { propertyTypes, filter } = useSelector<RootState, PropertySliceState>((state) => state.property);
   const [loading, setLoading] = useState<boolean>(false)
   const [unappliedFilters, setUnappliedFilters] = useState<{ [key: string]: any }>({})
+  console.log(`Projects: kiya hai ${JSON.stringify(params)}`)
+
   const [dropdownData, setDropDownData] = useState([
     {
       data: ["Sell", "Buy", "Rent"],

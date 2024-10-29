@@ -26,11 +26,13 @@ export default function AdBox({
   btns,
   botPost,
   points,
+  botPostText
 }: {
   title: string;
   description: string;
   points: Points[];
   btns?: Btns[];
+  botPostText?:string
   botPost?: boolean;
 }) {
   const theme = useTheme() as MyTheme;
@@ -83,7 +85,7 @@ export default function AdBox({
           )}
           {botPost && (
             <MyText
-              text="Posted 39 min ago"
+              text={botPostText}
               size={10}
               style={{ alignSelf: "flex-end" }}
             />
@@ -94,7 +96,7 @@ export default function AdBox({
   );
 }
 
-const NormalBtn = ({
+export const NormalBtn = ({
   theme,
   label,
   outline,
@@ -141,6 +143,7 @@ const styles = StyleSheet.create({
     borderRadius: 4,
     backgroundColor: "#ffffff",
     marginRight: 10,
+    marginLeft:10
   },
   outlineLabel: {
     fontSize: 12,
