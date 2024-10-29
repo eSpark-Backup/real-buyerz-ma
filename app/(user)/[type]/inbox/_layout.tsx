@@ -9,6 +9,7 @@ import { MyTheme, UserType } from "@types";
 export default function InboxLayout() {
   const theme = useTheme() as MyTheme;
   const params = useLocalSearchParams<{ type: UserType }>();
+  console.log("🚀 ~ InboxLayout ~ params:", params);
 
   return (
     <>

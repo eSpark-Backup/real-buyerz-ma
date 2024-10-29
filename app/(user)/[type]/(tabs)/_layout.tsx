@@ -13,10 +13,9 @@ function UserTabLayout() {
   const [lastRoute, setLastRoute] = useState("");
 
   useEffect(() => {
-    console.log('User type:', params.type);
+    console.log("User type:", params.type);
   });
-  
-  
+
   const openLoginModal = (routeName: string, isFromTab: boolean) => {
     setLastRoute(routeName);
     setVisible(true);
@@ -72,6 +71,7 @@ function UserTabLayout() {
             title: "Projects",
             href: `(user)/${params?.type!}/(tabs)/projects`,
           }}
+          initialParams={{ type: params.type }}
         />
 
         <Tabs.Screen
@@ -98,7 +98,11 @@ function UserTabLayout() {
         />
       </Tabs>
 
-      <LoginModal visible={visible} onClose={() => setVisible(false)} lastRoute={lastRoute} />
+      <LoginModal
+        visible={visible}
+        onClose={() => setVisible(false)}
+        lastRoute={lastRoute}
+      />
     </>
   );
 }

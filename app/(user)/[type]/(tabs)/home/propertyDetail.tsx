@@ -22,10 +22,10 @@ const PropertyDetail = () => {
   const theme = useTheme() as MyTheme;
   const [isVisble, setIsVisible] = useState(false);
 
-  const { item, type} = useLocalSearchParams<PropertyDetailScreenParams>();
+  const { item, type } = useLocalSearchParams<PropertyDetailScreenParams>();
 
-  const productDetail: PropertyItem = JSON.parse(item ?? "{}")
-  
+  const productDetail: PropertyItem = JSON.parse(item ?? "{}");
+
   const images = [
     "https://picsum.photos/id/299/620",
     "https://picsum.photos/id/400/620",
@@ -70,10 +70,12 @@ const PropertyDetail = () => {
     // "All Utilities Available",
     // "K - Electric",
     // "Water Sewerage System",
-    productDetail?.propertyDescription
+    productDetail?.propertyDescription,
   ];
 
-  const amentiesList = productDetail?.amenities?.map(val => val?.amenetiesName)
+  const amentiesList = productDetail?.amenities?.map(
+    (val) => val?.amenetiesName
+  );
 
   const colorDetector = (value: number) => {
     if (value % 2 === 0) {
@@ -88,7 +90,7 @@ const PropertyDetail = () => {
     }
     return 0;
   };
-  
+
   return (
     <ScrollView>
       <View style={styles(theme).wrapper}>
@@ -101,9 +103,11 @@ const PropertyDetail = () => {
             <MyAvatar
               size={70}
               imageUrl={{
-                uri: (productDetail.user?.profileImage && isImageUrl(productDetail.user?.profileImage ?? ""))
-                  ? productDetail.user?.profileImage
-                  : "https://picsum.photos/id/151/130",
+                uri:
+                  productDetail.user?.profileImage &&
+                  isImageUrl(productDetail.user?.profileImage ?? "")
+                    ? productDetail.user?.profileImage
+                    : "https://picsum.photos/id/151/130",
               }}
             />
           </View>
@@ -313,7 +317,6 @@ const styles = (theme?: MyTheme) =>
       padding: 10,
       borderBottomWidth: 1, // Set the width of the bottom border
       borderBottomColor: theme?.colors.border, // Set the color of the bottom border
-      // borderBottomStyle: "solid", // Se
     },
     detailsWrapper: {
       padding: 15,
