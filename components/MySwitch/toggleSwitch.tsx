@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { StyleSheet, Animated, TouchableOpacity, View } from "react-native";
 
 interface IAnimatedButton {
@@ -18,6 +18,14 @@ export const ToggleSwtich = ({ value, onValueChange }: IAnimatedButton) => {
       onValueChange(!value);
     });
   };
+
+  useEffect(() => {
+    Animated.timing(animatedValue, {
+      toValue: value ? 1 : 0, // Move to 1 for true, 0 for false
+      duration: 300,
+      useNativeDriver: false,
+    }).start();
+  }, [value]);
 
   const translateX = animatedValue.interpolate({
     inputRange: [0, 1],

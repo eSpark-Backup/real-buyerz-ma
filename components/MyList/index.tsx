@@ -16,10 +16,19 @@ import { MyListItemProps, MyTheme } from "@types";
 import { dummyImage } from "@constants";
 import { isImageUrl } from "@utils/functions";
 import { useRouter } from "expo-router";
+import { addFavorite } from "./utils";
 
-const MyListItem: React.FC<MyListItemProps> = ({ item, index, theme, fav, params }) => {
+const MyListItem: React.FC<MyListItemProps> = ({ item, index, theme, fav, onFavClicked, params }) => {
   const images = item?.PropertyData?.filter(val => val.type == "image")
   const router = useRouter()
+
+  const handleFavClicked = () => {
+    addFavorite(item.id);
+    setTimeout(() => {
+      onFavClicked?.();
+    }, 100); 
+  };
+  
   return (
     <Pressable onPress={() => {
       router.navigate({
@@ -30,8 +39,8 @@ const MyListItem: React.FC<MyListItemProps> = ({ item, index, theme, fav, params
       });
     }} style={styles(theme).searchItem}>
       <View>
-        <Image source={{ uri: isImageUrl(images?.[0].url) ? images?.[0].url : dummyImage}} style={styles(theme).image} />
-        <TouchableOpacity activeOpacity={1} style={styles(theme).likeBtn}>
+        <Image source={{ uri: (images && images.length > 0 && isImageUrl(images[0].url)) ? images[0].url : dummyImage }} style={styles(theme).image} />
+        <TouchableOpacity activeOpacity={1} style={styles(theme).likeBtn} onPress={() => handleFavClicked()}>
           {fav ? <LikeActiveButton /> : <LikeButton />}
         </TouchableOpacity>
       </View>

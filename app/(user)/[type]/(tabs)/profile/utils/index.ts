@@ -1,6 +1,6 @@
-import Toast from 'react-native-toast-message';
 import { api } from 'api';
 import { File } from '..';
+import { PreferencesData } from 'app/(user)/[type]/preferences/utils';
 
 interface UserResponse {
   success: boolean;
@@ -28,7 +28,7 @@ export interface UserProfileData {
   profileImage: string;
   profileVisibility: boolean;
   role: string;
-  preferences: string;
+  preferences: PreferencesData | null;
 }
 
 export interface ChangePassword {
