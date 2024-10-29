@@ -8,12 +8,13 @@ import { MyTheme, UserType } from "@types";
 export default function ProjectsLayout() {
   const theme = useTheme() as MyTheme;
   const params = useLocalSearchParams<{ type: UserType }>();
-  console.log(`Project ${JSON.stringify(params)}`)
+
+  console.log(`Project ${JSON.stringify(params)}`);
+
   return (
     <Stack
       initialRouteName="index"
       screenOptions={({ navigation, route }) => ({
-        
         headerShown: false,
         header: (props) => {
           return (

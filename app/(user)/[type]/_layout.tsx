@@ -9,7 +9,7 @@ import {
 import { Drawer } from "expo-router/drawer";
 import { StatusBar } from "expo-status-bar";
 import { router, useLocalSearchParams } from "expo-router";
-import { useDispatch } from 'react-redux';
+import { useDispatch } from "react-redux";
 import { colors } from "@theme";
 import { MyTheme, UserType } from "@types";
 import {
@@ -49,9 +49,9 @@ const DrawerContent = (props: DrawerContentComponentProps) => {
 
   const handleLogout = () => {
     clearTheme();
-    clearSession(); 
-    dispatch(setUserToken(''));
-    dispatch(setUserData(''));
+    clearSession();
+    dispatch(setUserToken(""));
+    dispatch(setUserData(""));
     router.replace("/auth/SignIn/signIn"); // Redirect user to sign-in screen
   };
 
@@ -59,11 +59,18 @@ const DrawerContent = (props: DrawerContentComponentProps) => {
     <View style={{ ...styles.container }}>
       <View style={styles.header}>
         <View style={{ flexDirection: "row" }}>
-        <MyAvatar imageUrl={{ uri: userData?.profileImage || "https://i.pravatar.cc/300?img=68"}} size={35}/>
+          <MyAvatar
+            imageUrl={{
+              uri: userData?.profileImage || "https://i.pravatar.cc/300?img=68",
+            }}
+            size={35}
+          />
 
           <View style={{ marginLeft: 10 }}>
             <MyText
-              text={`${userData?.firstName} ${userData?.lastName}` || "Arman Khan"} // Use name from user data
+              text={
+                `${userData?.firstName} ${userData?.lastName}` || "Arman Khan"
+              } // Use name from user data
               size={16}
               weight="600"
               textColor="#ffffff"
@@ -122,7 +129,7 @@ const DrawerContent = (props: DrawerContentComponentProps) => {
           message="Are you sure you want to Log out?"
           onClose={() => setConfirmLogout(false)}
           onPress={() => {
-            handleLogout()
+            handleLogout();
           }}
         />
       </MyPopupModal>
@@ -133,6 +140,8 @@ const DrawerContent = (props: DrawerContentComponentProps) => {
 export default function MainLayout() {
   const theme = useTheme() as MyTheme;
   const params = useLocalSearchParams<{ type: UserType }>();
+
+  console.log("🚀 ~ MainLayout ~ params:", params);
 
   return (
     <>
@@ -195,6 +204,7 @@ export default function MainLayout() {
               <DrawerLabel label="Inbox" theme={theme} focused={focused} />
             ),
           }}
+          initialParams={{ type: params?.type }}
         />
         <Drawer.Screen
           name="myListings" // This is the name of the page and must match the url from root
