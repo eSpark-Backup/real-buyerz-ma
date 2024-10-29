@@ -17,7 +17,7 @@ function UserTabLayout() {
   return (
     <>
       <Tabs
-        initialRouteName="home"
+        initialRouteName="projects"
         backBehavior="initialRoute"
         sceneContainerStyle={{ paddingBottom: 35 }}
         screenOptions={{

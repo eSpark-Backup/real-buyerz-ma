@@ -292,7 +292,6 @@ const styles = (theme?: MyTheme) =>
       padding: 10,
       borderBottomWidth: 1, // Set the width of the bottom border
       borderBottomColor: theme?.colors.border, // Set the color of the bottom border
-      borderBottomStyle: "solid", // Se
     },
     detailsWrapper: {
       padding: 15,

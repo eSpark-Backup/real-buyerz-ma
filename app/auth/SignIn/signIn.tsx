@@ -4,13 +4,20 @@ import { TouchableOpacity } from "react-native-gesture-handler";
 import { MaterialIcons } from "@expo/vector-icons";
 import { Link, router } from "expo-router";
 import { Formik } from "formik";
-import { User, UserObject, handleLoginUser } from '../SignIn/utils';
-import { useDispatch } from 'react-redux';
-import { storage } from '../../redux/mmkv';
-import { setUserData, setUserToken } from '../../../features/user/userSlice';
+import { UserObject, handleLoginUser } from "../SignIn/utils";
+import { useDispatch } from "react-redux";
+import { storage } from "../../redux/mmkv";
+import { setUserData, setUserToken } from "../../../features/user/userSlice";
 import { GLogo, RLogo } from "@assets/images";
 import { DarkTheme, LightTheme } from "@theme";
-import { MyText, MyButton, MyCheckbox, MyInput, GapView, OverlayLoader } from "@components";
+import {
+  MyText,
+  MyButton,
+  MyCheckbox,
+  MyInput,
+  GapView,
+  OverlayLoader,
+} from "@components";
 import { UserSignInSchema } from "@validations/schema";
 import Toast from "react-native-toast-message";
 
@@ -20,45 +27,45 @@ export default function SignIn() {
   const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
 
-  const signInUser = async (values) => {
-    setLoading(true)
+  const signInUser = async (values: {
+    email: string;
+    password: string;
+    agreeToTerms?: boolean;
+  }) => {
+    setLoading(true);
 
     const { email, password } = values;
     const response = await handleLoginUser({ email, password });
     console.log("Submitting values:", response);
     if (response.status) {
-        setLoading(false)
-        const userInfo = response.userInfo;
-        if (userInfo) {
-          savingDataToSessionStorage(userInfo); 
-          router.push(`/(user)/${userInfo.user.role}/home`);
-        } else {
-          showToast('User info not available', 'error');
-        }
+      setLoading(false);
+      const userInfo = response.userInfo;
+      if (userInfo) {
+        savingDataToSessionStorage(userInfo);
+        router.push(`/(user)/${userInfo.user.role}/(tabs)/home`);
+      } else {
+        showToast("User info not available", "error");
+      }
     } else {
-      setLoading(false)
-      showToast(
-        response.message || 'Sign in failed',
-        'error',
-      )
-    };
-  }
+      setLoading(false);
+      showToast(response.message || "Sign in failed", "error");
+    }
+  };
 
   const savingDataToSessionStorage = (userInfo: UserObject) => {
-    storage.set('userToken', userInfo?.token as string);
-    storage.set('userData', JSON.stringify(userInfo?.user));
+    storage.set("userToken", userInfo?.token as string);
+    storage.set("userData", JSON.stringify(userInfo?.user));
     dispatch(setUserToken(userInfo?.token));
     dispatch(setUserData(userInfo?.user));
-    const userDataString = storage.getString('userData');
+    const userDataString = storage.getString("userData");
     const userData = userDataString ? JSON.parse(userDataString) : null; // Parse JSON if available
-    console.log(userData)
-  }
+    console.log(userData);
+  };
 
-
-  const showToast = (message: string, type?: 'success' | 'error') => {
+  const showToast = (message: string, type?: "success" | "error") => {
     Toast.show({
       type: type,
-      position: 'top',
+      position: "top",
       text1: message,
       topOffset: 0,
     });
@@ -97,12 +104,8 @@ export default function SignIn() {
           if (values.agreeToTerms) {
             await signInUser(values);
             resetForm();
-          }
-          else {
-            showToast(
-              'You must agree to the Terms and Conditions!',
-              'error',
-            )
+          } else {
+            showToast("You must agree to the Terms and Conditions!", "error");
           }
         }}
         validationSchema={UserSignInSchema.signInForm}
@@ -153,7 +156,10 @@ export default function SignIn() {
                 labelStyle={styles.label}
                 isAuth
               />
-              <Link href={"/auth/ForgotPassword/ForgotPassword"} style={styles.forgotPass}>
+              <Link
+                href={"/auth/ForgotPassword/ForgotPassword"}
+                style={styles.forgotPass}
+              >
                 <MyText text="Forgot Password?" textColor="#2e6fac" size={14} />
               </Link>
             </View>
@@ -310,10 +316,10 @@ const styles = StyleSheet.create({
   label: { color: "#FFFFFF", fontSize: 14 },
   bottom: { flexDirection: "row", marginTop: "22%" },
   errorText: {
-    color: 'red',
+    color: "red",
     fontSize: 12,
     marginTop: 5,
-    marginLeft: '5%',
-    width: '90%',
+    marginLeft: "5%",
+    width: "90%",
   },
 });
