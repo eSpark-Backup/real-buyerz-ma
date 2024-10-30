@@ -1,16 +1,19 @@
 import React, { useState } from "react";
 import { ScrollView, View, StyleSheet, TouchableOpacity } from "react-native";
-import { Link } from "expo-router";
+import { Link, useNavigation } from "expo-router";
 import { Formik } from "formik";
 import { StatusBar } from "expo-status-bar";
 import { useTheme } from "@react-navigation/native";
 
-import { MyButton, MyInput, MyText, MyPopupModal } from "@components";
+import { MyButton, MyInput, MyText, MyPopupModal, OverlayLoader } from "@components";
 import { OnRadioBtn, OffRadioBtn } from "@assets/images";
 import { ForgotPasswordSchema, ResetPasswordSchema } from "@validations/schema";
 import { MyTheme } from "@types";
 import { Back } from "@assets/images/svg";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { showToast } from "@utils/showToast";
+import { handlePasswordResetEmail, handleVerifyOTP, ReqVerifyOTP } from "./utils";
+import ToastConfig from "app/utils/toastConfig";
 
 type InputType = "email" | "phone number";
 
@@ -19,17 +22,76 @@ export default function ForgotPassword() {
   const insets = useSafeAreaInsets();
   const [formSubmitted, setFormSubmitted] = useState(false);
   const [inputValue, setInputValue] = useState("");
+  const [loading, setLoading] = useState(false);
   const [inputType, setInputType] = useState<InputType>("email");
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const [emailIsOn, setEmailIsOn] = useState(false);
-  const [phoneIsOn, setPhoneIsOn] = useState(true);
+  const [resetReq, setResetReq] = useState<ReqVerifyOTP>({ emailPhone: "", otp: "", hash: "", password: "" });
+  const [emailIsOn, setEmailIsOn] = useState(true);
+  const [phoneIsOn, setPhoneIsOn] = useState(false);
   const [isConfirm, setIsConfirm] = useState(false);
+  const navigation = useNavigation();
 
   const toggleModal = () => {
+    if (!emailIsOn) {
+      showToast("Please select an option", 'error')
+      console.log("Please select an option")
+      return;
+    }
     setIsModalVisible(!isModalVisible);
+    sendOtpToEmail()
   };
 
-  const handleConfirm = () => {
+
+  const sendOtpToEmail = async () => {
+    setLoading(true)
+    try {
+      let email = inputValue
+      const response = await handlePasswordResetEmail({ email });
+      setLoading(false)
+      if (response.data) {
+        showToast("OTP sent, Please check your email", 'success')
+        setResetReq((prev) => ({
+          ...prev,
+          emailPhone: email,
+          hash: response.data?.otphash || "",
+        }));
+        console.log("Reset Req " + JSON.stringify(resetReq))
+      }
+      console.log(`${JSON.stringify(response)}`)
+    } catch (error) {
+      setLoading(false)
+    }
+  };
+
+  const verifyOTP = async (password: String) => {
+    setLoading(true)
+    try {
+      const { emailPhone, otp, hash } = resetReq;
+      const response = await handleVerifyOTP({ emailPhone, otp, hash, password });
+      setLoading(false)
+      if (response.status) {
+        showToast("Reset Password successfully", 'success')
+        navigation.goBack();
+      }
+      else if (response.message == "Invalid OTP") {
+        showToast("Please enter correct OTP", 'success')
+        setIsModalVisible(!isModalVisible);
+      }
+      else {
+        showToast(response.message, 'success')
+      }
+      console.log(`${JSON.stringify(response)}`)
+    } catch (error) {
+      setLoading(false)
+    }
+  };
+
+  const handleConfirm = (otp: string) => {
+    setResetReq((prev) => ({
+      ...prev,
+      otp: otp
+    }));
+    console.log("Reset Req " + JSON.stringify(resetReq))
     setIsConfirm(true);
     setIsModalVisible(false);
   };
@@ -45,14 +107,13 @@ export default function ForgotPassword() {
         }}
       />
       <StatusBar backgroundColor={colors.secondary} style="light" />
-      {/* Todo: there is some space coming in between status bar and scroll view
-          needs to be edited
-          temporarily adjusted by negative margin */}
       <MyPopupModal bgDim visible={isModalVisible}>
         <MyPopupModal.Verify
-          onClose={toggleModal}
+          onClose={() => { setIsModalVisible(!isModalVisible) }}
           onPress={handleConfirm}
+          resendCode={sendOtpToEmail}
           type={emailIsOn ? "email" : "phone number"}
+          inputValue={inputValue}
           isAuth
         />
       </MyPopupModal>
@@ -62,6 +123,7 @@ export default function ForgotPassword() {
         style={styles.wrapper}
         contentContainerStyle={{ flex: 1 }}
       >
+        <OverlayLoader isShow={loading} />
         <Link href={"/auth/SignIn/signIn"} style={styles.link}>
           <Back />
         </Link>
@@ -75,6 +137,11 @@ export default function ForgotPassword() {
               }}
               onSubmit={async (values, { resetForm }) => {
                 console.log("Validation Success", values);
+                setResetReq((prev) => ({
+                  ...prev,
+                  password: values.confirmPassword,
+                }));
+                verifyOTP(values.password)
                 setFormSubmitted(true);
               }}
               validationSchema={ResetPasswordSchema.resetForm}
@@ -142,7 +209,7 @@ export default function ForgotPassword() {
                 should we reach you?
               </MyText>
               <>
-                <View style={styles.row}>
+                {/*    <View style={styles.row}>
                   <TouchableOpacity
                     activeOpacity={1}
                     onPress={() => {
@@ -155,7 +222,7 @@ export default function ForgotPassword() {
 
                   <MyText style={styles.plain}>Via text message</MyText>
                 </View>
-                <MyText style={styles.text}>03*******07</MyText>
+                <MyText style={styles.text}>03*******07</MyText> */}
               </>
               <>
                 <View style={styles.row}>
@@ -170,7 +237,7 @@ export default function ForgotPassword() {
                   </TouchableOpacity>
                   <MyText style={styles.plain}>Via email</MyText>
                 </View>
-                <MyText style={styles.text}>Du******65@gmail.com</MyText>
+                <MyText style={styles.text}>{inputValue}</MyText>
               </>
               <MyButton
                 label="Send Code"
@@ -208,10 +275,10 @@ export default function ForgotPassword() {
                 <MyText size={16} weight="600" style={styles.title}>
                   Forgot Password
                 </MyText>
-                <MyText textColor="#383838">Enter email or phone number</MyText>
+                <MyText textColor="#383838">Enter your email</MyText>
                 <View style={{ flexDirection: "row" }}>
                   <MyInput
-                    placeholder="Email or Phone number"
+                    placeholder="Enter an email"
                     width="90%"
                     style={styles.input}
                     onChange={handleChange("input")}
@@ -220,7 +287,7 @@ export default function ForgotPassword() {
                 <View style={styles.errorBox}>
                   {touched.input && errors.input ? (
                     <MyText size={10} style={styles.error}>
-                      Enter a valid email or phone number
+                      Enter a valid email
                     </MyText>
                   ) : null}
                 </View>
@@ -240,6 +307,7 @@ export default function ForgotPassword() {
             )}
           </Formik>
         )}
+        <ToastConfig />
       </ScrollView>
     </>
   );

@@ -207,7 +207,7 @@ function LoginModal({ visible, onClose, lastRoute }: LoginModalProps) {
                   }}
                   labelStyle={[styles.label, { color: theme.colors.text }]}
                 />
-                <Link href={"/auth/ForgotPassword/ForgotPassword"}>
+                <Link href={"/auth/ForgotPassword/forgotPassword"}>
                   <MyText
                     text="Forgot Password?"
                     textColor={theme.colors.secondary}
