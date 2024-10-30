@@ -14,7 +14,7 @@ import {
   RangeSlider,
 } from "@components";
 import { MyTheme, UserType } from "@types";
-import { useFocusEffect, useLocalSearchParams, useSegments } from "expo-router";
+import { useFocusEffect, useGlobalSearchParams, useLocalSearchParams, useSegments } from "expo-router";
 import { RootState } from "@store";
 import { PropertySliceState, setFilter } from "features/property/propertySlice";
 import { useSelector } from "react-redux";
@@ -132,7 +132,7 @@ export default function Projects() {
   const theme = useTheme() as MyTheme;
   const [visible, setVisible] = useState(false);
   const [properties, setProperties] = useState<PropertyItem[]>([]);
-  const params = useLocalSearchParams<{ type: UserType }>();
+  const params = useGlobalSearchParams<{ type: UserType }>();
 
   const { propertyType } = useLocalSearchParams();
   const { propertyTypes, filter } = useSelector<RootState, PropertySliceState>(
@@ -142,7 +142,6 @@ export default function Projects() {
   const [unappliedFilters, setUnappliedFilters] = useState<{
     [key: string]: any;
   }>({});
-  console.log(`Projects: kiya hai ${JSON.stringify(params)}`);
 
   const [dropdownData, setDropDownData] = useState([
     {

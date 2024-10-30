@@ -1,14 +1,14 @@
 import React from "react";
 import { StyleSheet } from "react-native";
 import { useTheme } from "@react-navigation/native";
-import { Stack, useLocalSearchParams } from "expo-router";
+import { Stack, useGlobalSearchParams, useLocalSearchParams } from "expo-router";
 
 import { MyTheme, UserType } from "@types";
 import { MyHeader } from "@components";
 
 export default function DashboardLayout() {
   const theme = useTheme() as MyTheme;
-  const params = useLocalSearchParams<{ type: UserType }>();
+  const params = useGlobalSearchParams<{ type: UserType }>();
 
   return (
     <Stack

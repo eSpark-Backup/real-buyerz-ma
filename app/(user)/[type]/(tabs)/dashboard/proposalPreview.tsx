@@ -7,10 +7,10 @@ import { MyTheme, PropertyDetailScreenParams, UserType } from "@types";
 import { LocationIcon } from "@assets/images";
 import { NormalBtn } from "@components/AdBox";
 import { Amenity, PropertyItem, SavedLeadsItem } from "../home/utils";
-import { useLocalSearchParams } from "expo-router";
+import { useGlobalSearchParams, useLocalSearchParams } from "expo-router";
 import { isSavedLeadsItem } from "@utils/functions";
 import { formatPrice } from "app/utils/priceConverter";
-import { handleGetFavorite, handleSaveFavoriteProperty, handleSavePropertyAgent } from "../../favourites/utils";
+import { handleSaveFavoriteProperty, handleSavePropertyAgent } from "../../favourites/utils";
 import { showToast } from "@utils/showToast";
 
 interface Preview {
@@ -33,23 +33,22 @@ interface Preview {
 
 function ProposalPreview() {
   const theme = useTheme() as MyTheme;
-  const { item, type } = useLocalSearchParams<PropertyDetailScreenParams>();
-  const params = useLocalSearchParams<{ type?: UserType }>();
+  const { item } = useLocalSearchParams<PropertyDetailScreenParams>();
+  const params = useGlobalSearchParams<{ type?: UserType }>();
   const productDetail: PropertyItem | SavedLeadsItem = JSON.parse(item ?? "{}");
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
 
-  
   const AvatarContainer = () => {
     const buttons = [
-      { label: "Apply Now", outline: false, onPress: () => console.log("Apply clicked") },
+      ...(params.type === 'agent' ? [
+        { label: "Apply Now", outline: false, onPress: () => console.log("Apply clicked") }
+      ] : []),
       ...(isSavedLeadsItem(productDetail) ? [] : [
         { label: "Save", outline: true, onPress: () => handleSaveLeads() }
       ]),
     ];
 
     const user = isSavedLeadsItem(productDetail) ? productDetail.property.user : productDetail.user;
-    const property = isSavedLeadsItem(productDetail) ? productDetail.property : productDetail;
 
     const createdAtLocal = productDetail.createdAt ? new Date(productDetail.createdAt).toLocaleString("en-US", {
       hour: "numeric",

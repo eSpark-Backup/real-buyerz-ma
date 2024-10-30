@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { FlatList, ScrollView, StyleSheet, View, ActivityIndicator, Text } from "react-native";
 import { useTheme } from "@react-navigation/native";
-import { router, useLocalSearchParams } from "expo-router";
+import { router, useGlobalSearchParams, useLocalSearchParams } from "expo-router";
 import { useDispatch, useSelector } from "react-redux";
 
 import { MyTheme, UserType } from "@types";
@@ -14,14 +14,13 @@ import { priceConversion } from "app/utils/priceConverter";
 
 export default function Bidding() {
   const theme = useTheme() as MyTheme;
-  const params = useLocalSearchParams<{ type?: UserType }>();
+  const params = useGlobalSearchParams<{ type?: UserType }>();
   const dispatch: AppDispatch = useDispatch();
   const { allProperties } = useSelector<RootState, PropertySliceState>((state) => state.property);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [selectedTab, setSelectedTab] = useState("Best Matches");
-  console.log(`Dashboard: kiya hai ${JSON.stringify(params)}`)
-
+  
   useEffect(() => {
     fetchAllProperties();
   }, []);

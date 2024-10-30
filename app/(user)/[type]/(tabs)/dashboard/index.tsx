@@ -7,7 +7,7 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { useTheme } from "@react-navigation/native";
-import { router, useLocalSearchParams } from "expo-router";
+import { router, useGlobalSearchParams, useLocalSearchParams } from "expo-router";
 
 import { Card, GapView, LabelValue, MyButton, MyText } from "@components";
 import { MyTheme, UserType } from "@types";
@@ -88,7 +88,7 @@ function timeAgo(date: Date, minutesAgo: number = 0): string {
 
 function Dashboard() {
   const theme = useTheme() as MyTheme;
-  const params = useLocalSearchParams<{ type: UserType }>();
+  const params = useGlobalSearchParams<{ type: UserType }>();
   return (
     <>
       <ScrollView

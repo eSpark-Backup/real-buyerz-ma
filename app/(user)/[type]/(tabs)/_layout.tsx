@@ -12,10 +12,6 @@ function UserTabLayout() {
   const [visible, setVisible] = useState(false);
   const [lastRoute, setLastRoute] = useState("");
 
-  useEffect(() => {
-    console.log("User type:", params.type);
-  });
-
   const openLoginModal = (routeName: string, isFromTab: boolean) => {
     setLastRoute(routeName);
     setVisible(true);
@@ -81,6 +77,7 @@ function UserTabLayout() {
             title: "Dashboard",
             href: `(user)/${params?.type!}/(tabs)/dashboard`,
           }}
+          initialParams={{ type: params.type }}
         />
         <Tabs.Screen
           name="listings"
@@ -88,6 +85,7 @@ function UserTabLayout() {
             title: "Listings",
             href: `(user)/${params?.type!}/(tabs)/listings`,
           }}
+          initialParams={{ type: params.type }}
         />
         <Tabs.Screen
           name="profile"
@@ -95,6 +93,7 @@ function UserTabLayout() {
             title: "Profile",
             href: `(user)/${params?.type!}/(tabs)/profile`,
           }}
+          initialParams={{ type: params.type }}
         />
       </Tabs>
 
