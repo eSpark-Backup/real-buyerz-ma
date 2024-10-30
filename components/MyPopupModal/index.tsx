@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { forwardRef, useEffect, useRef, useState } from "react";
 import {
   Image,
   View,
@@ -84,22 +84,41 @@ function Success({ message, onPress }: { message: string; onPress(): void }) {
 function Verify({
   type,
   onClose,
+  resendCode,
   onPress,
+  inputValue,
   isAuth,
 }: {
   type?: "email" | "phone number";
   onClose(): void;
-  onPress(): void;
+  resendCode(): void;
+  onPress(otpValue: string): void;
+  inputValue: string;
   isAuth?: boolean;
 }) {
   const theme = useTheme() as MyTheme;
+  const [otpCode, setOtpCode] = useState<string>("");
+  const inputRefs = useRef<Array<any>>([]);
+
+  const handleInputChange = (index: number, value: string) => {
+    const newOtpCode = otpCode.split("");
+    newOtpCode[index] = value;
+    setOtpCode(newOtpCode.join(""));
+  };
+
+  const focusNextInput = (index: number) => {
+    if (index < inputRefs.current.length - 1) {
+      inputRefs.current[index + 1].focus();
+    }
+  };
+
   return (
     <View
       style={[
         styles(theme).box,
         {
           backgroundColor: isAuth ? "#ffffff" : theme.colors.background,
-          borderColor: isAuth ? "#E9E9E9" : theme?.colors.border,
+          borderColor: isAuth ? "#E9E9E9" : theme.colors.border,
           elevation: isAuth ? 4 : 0,
         },
       ]}
@@ -117,31 +136,35 @@ function Verify({
         textColor={isAuth ? "#666666" : theme.colors.verificationText}
         style={styles(theme).text}
       >
-        Please enter the code we have sent to the {""}
-        {type}{" "}
-        <MyText
-          size={14}
-          textColor={isAuth ? "#666666" : theme.colors.verificationText}
-        >
-          {type === "email" ? "Du******65@gmail.com" : "03******163"}
+        Please enter the code we have sent to the {type}{" "}
+        <MyText size={14} textColor={isAuth ? "#666666" : theme.colors.verificationText}>
+          {inputValue}
         </MyText>
       </MyText>
-      <View style={styles(theme).boxes}>
-        <BoxInput isAuth={isAuth} />
-        <BoxInput isAuth={isAuth} />
-        <BoxInput isAuth={isAuth} />
-        <BoxInput isAuth={isAuth} />
+      <View style={[styles(theme).boxes, { flexDirection: "row", justifyContent: "space-between" }]}>
+        {[...Array(6)].map((_, index) => (
+          <BoxInput
+            key={index}
+            ref={(ref) => (inputRefs.current[index] = ref)} // Store ref for each input
+            isAuth={isAuth}
+            onChange={(value) => handleInputChange(index, value)}
+            onNext={() => focusNextInput(index)} // Call focusNextInput
+          />
+        ))}
       </View>
       <MyButton
         label="Confirm"
         labelStyle={styles(theme).label}
         style={styles(theme).button}
-        onPress={onPress}
+        onPress={() => {
+          onPress(otpCode);
+        }}
       />
       <MyText
         textColor={isAuth ? "#666666" : theme.colors.verificationText}
         size={10}
         style={styles(theme).resendText}
+        onPress={() =>{resendCode()}}
       >
         Resend Code
       </MyText>
@@ -378,33 +401,45 @@ MyPopupModal.OrderSummary = OrderSummary;
  * For the verification Code Input (Otp)
  * @returns JSX.Element
  */
-const BoxInput = ({ isAuth }: { isAuth?: boolean }) => {
-  const [inputValue, setInputValue] = useState(""); //to be used later
-  const theme = useTheme() as MyTheme;
-  return (
-    <View
-      style={[
-        styles(theme).container,
-        {
-          backgroundColor: isAuth
-            ? theme.dark
-              ? theme.colors.negative
-              : theme.colors.background
-            : "#D1EDFF",
-        },
-      ]}
-    >
-      <TextInput
-        placeholder="-"
-        placeholderTextColor={"#126FAA"}
-        style={[styles(theme).input]}
-        keyboardType="numeric"
-        textContentType="oneTimeCode"
-        maxLength={1}
-      />
-    </View>
-  );
-};
+const BoxInput = forwardRef<TextInput, { isAuth?: boolean; onChange: (value: string) => void; onNext: () => void; }>(
+  ({ isAuth, onChange, onNext }, ref) => {
+    const [inputValue, setInputValue] = useState(""); // State for input value
+    const theme = useTheme() as MyTheme;
+
+    const handleChange = (value: string) => {
+      setInputValue(value);
+      onChange(value);
+      if (value) onNext();
+    };
+
+    return (
+      <View
+        style={[
+          styles(theme).container,
+          {
+            backgroundColor: isAuth
+              ? theme.dark
+                ? theme.colors.negative
+                : theme.colors.background
+              : "#D1EDFF",
+          },
+        ]}
+      >
+        <TextInput
+          ref={ref}
+          placeholder="-"
+          placeholderTextColor={"#126FAA"}
+          style={styles(theme).input}
+          onChangeText={handleChange}
+          keyboardType="numeric"
+          textContentType="oneTimeCode"
+          maxLength={1}
+          value={inputValue}
+        />
+      </View>
+    );
+  }
+);
 
 const styles = (theme?: MyTheme) =>
   StyleSheet.create({
@@ -430,7 +465,12 @@ const styles = (theme?: MyTheme) =>
       elevation: 4,
       shadowOffset: { width: 0, height: 4 },
       alignItems: "center",
-      padding: 27,
+      paddingLeft: 8,
+      paddingRight: 8,
+      paddingBottom: 20,
+      paddingTop: 20,
+      maxWidth: '100%', // Set max width to prevent overflow
+      alignSelf: 'center'
     },
     closebtn: {
       position: "absolute",
@@ -440,7 +480,13 @@ const styles = (theme?: MyTheme) =>
     text: {
       paddingVertical: 20,
     },
-    boxes: { flexDirection: "row", columnGap: 15, paddingTop: 5 },
+
+    boxes: {
+      flex:1,
+      justifyContent: "space-between", // Space between boxes
+      alignItems: "center",
+      width: '100%', // Ensure the boxes take full width
+    },
     button: {
       width: 110,
       height: 35,

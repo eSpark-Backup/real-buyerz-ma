@@ -1,4 +1,3 @@
-import Toast from 'react-native-toast-message';
 import { api } from 'api';
 
 interface ApiResponse<T> {
@@ -11,23 +10,19 @@ interface ReqSendOtp {
   phoneNumber: string;
 }
 
-interface ReqVerifyOTP {
-  phoneNumber: string;
+export interface ReqVerifyOTP {
+  emailPhone: string;
   otp: string;
   hash: string;
+  password: String
 }
 
-interface PasswordResetEmailLink {
-  to: string;
-}
-
-interface ReqResetPassword {
-  password: string;
-  oldPassword: string;
+export interface PasswordResetEmailRequest {
+  email: string;
 }
 
 interface ResponseDataSendOtp {
-  phoneNumber: string;
+  otphash: string;
 }
 
 interface ResponseDataVerifyOTP {
@@ -37,13 +32,9 @@ interface ResponseDataVerifyOTP {
 interface ResponseDataResetLink {
   timestamp_ms: number;
   action: string;
-  data: null;
+  data: ResponseDataSendOtp;
 }
 
-interface ResponseDataResetPassword {
-  success: boolean;
-  message: string;
-}
 
 const handleApiError = (error: any): { status: boolean; message: string } => {
   if (error.response?.data?.message) {
@@ -55,11 +46,11 @@ const handleApiError = (error: any): { status: boolean; message: string } => {
 
 const handleSendOTP = async (
   req: ReqSendOtp
-): Promise<{ status: boolean; message: string }> => {
+): Promise<{ status: boolean; data?: ResponseDataSendOtp; message: string }> => {
   try {
     const response = await api.put<ApiResponse<ResponseDataSendOtp>>('user/send-otp', req);
     if (response.data?.success) {
-      return { status: true, message: response.data.message };
+      return { status: true, data: response.data.response, message: response.data.message };
     } else {
       return { status: false, message: response?.data?.message ?? 'An error occurred' };
     }
@@ -72,7 +63,7 @@ const handleVerifyOTP = async (
   req: ReqVerifyOTP
 ): Promise<{ status: boolean; message: string }> => {
   try {
-    const response = await api.put<ApiResponse<ResponseDataVerifyOTP>>('user/verify-otp', req);
+    const response = await api.post<ApiResponse<ResponseDataVerifyOTP>>('user/verify-otp', req);
     if (response.data?.success) {
       return { status: true, message: response.data.message };
     } else {
@@ -83,13 +74,13 @@ const handleVerifyOTP = async (
   }
 };
 
-const handlePasswordResetEmailLink = async (
-  req: PasswordResetEmailLink
-): Promise<{ status: boolean; message: string }> => {
+const handlePasswordResetEmail = async (
+  req: PasswordResetEmailRequest
+): Promise<{ status: boolean; data?:ResponseDataSendOtp, message: string }> => {
   try {
-    const response = await api.put<ApiResponse<ResponseDataResetLink>>('/user/password-reset-email-link', req);
+    const response = await api.post<ApiResponse<ResponseDataResetLink>>('/user/resetPassword', req);
     if (response.data?.success) {
-      return { status: true, message: response.data.message };
+      return { status: true, data:response.data.response.data, message: response.data.message };
     } else {
       return { status: false, message: response?.data?.message ?? 'An error occurred' };
     }
@@ -98,19 +89,4 @@ const handlePasswordResetEmailLink = async (
   }
 };
 
-const handleResetPass = async (
-  req: ReqResetPassword
-): Promise<{ status: boolean; message: string }> => {
-  try {
-    const response = await api.post<ApiResponse<ResponseDataResetPassword>>('user/reset-password', req);
-    if (response.data?.success) {
-      return { status: true, message: response.data.message };
-    } else {
-      return { status: false, message: response?.data?.message ?? 'An error occurred' };
-    }
-  } catch (error) {
-    return handleApiError(error);
-  }
-};
-
-export { handleSendOTP, handleVerifyOTP, handlePasswordResetEmailLink, handleResetPass };
+export { handleSendOTP, handleVerifyOTP, handlePasswordResetEmail };
