@@ -21,7 +21,10 @@ import {
 import { WINDOW_HEIGHT, WINDOW_WIDTH } from "@constants";
 import { customFonts } from "utils/customFonts";
 import { customImages } from "utils/customImages";
-import { checkLoggedInUser, getLoggedInUserInfo } from "app/auth/utils/authUtils";
+import {
+  checkLoggedInUser,
+  getLoggedInUserInfo,
+} from "app/auth/utils/authUtils";
 import { useDispatch } from "react-redux";
 import { setUserData, setUserToken } from "features/user/userSlice";
 import { storage } from "store/mmkv";
@@ -76,12 +79,21 @@ export default function App() {
     const isLoggedIn = checkLoggedInUser();
     if (isLoggedIn) {
       const userInfo = getLoggedInUserInfo();
-      const actualToken = userInfo?.token.replace(/\\+/g, '').replace(/^"|"$/g, '');
-      api.setHeader('Authorization', `Bearer ${actualToken}`);
-      dispatch(setUserData(userInfo?.user))
-      dispatch(setUserToken(userInfo?.token as string))
-      const role = userInfo && userInfo.user && userInfo.user.role ? userInfo.user.role : "user";
-      router.push(`(user)/${role}/home`);
+      const actualToken = userInfo?.token
+        .replace(/\\+/g, "")
+        .replace(/^"|"$/g, "");
+      api.setHeader("Authorization", `Bearer ${actualToken}`);
+      dispatch(setUserData(userInfo?.user));
+      dispatch(setUserToken(userInfo?.token as string));
+      const role =
+        userInfo && userInfo.user && userInfo.user.role
+          ? userInfo.user.role
+          : "user";
+      // router.push(`(user)/${role}/home`);
+      router.push({
+        pathname: "/(user)/[type]/(tabs)/home",
+        params: { type: role },
+      });
     } else {
       setTimeout(() => {
         router.push("/auth");
@@ -129,7 +141,6 @@ export default function App() {
       rotationAnimation.stop();
     };
   }, [translateY, scale]);
-
 
   useEffect(() => {
     sessionCheckLoggedIn();

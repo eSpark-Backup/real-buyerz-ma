@@ -12,17 +12,61 @@ interface FindAllPropertiesResponse {
 
 export interface AllPropertiesData {
   items: PropertyItem[];
+  savedLeadItems: SavedLeadsItem[];
   totalCount: number;
   currentPage: number;
   totalPages: number;
   itemsPerPage: number;
 }
 
-export interface PropertyItem {
+export interface SavedLeadsItem {
+  id: string;
+  userId: string;
+  propertyId: string;
+  createdAt: string;
+  updatedAt: string;
+  property: SaveLeadsProperty;
+  propertyType: PropertyType;
+}
+
+interface SaveLeadsProperty {
   id: string;
   userId: string;
   propertyName: string;
   propertyPrice: number | null;
+  propertyArea: string;
+  propertyImage?: string | null;
+  purpose: string;
+  propertyAddress: string;
+  propertyCity: string;
+  propertyZip: string | null;
+  propertyDescription: string;
+  longitude: string;
+  latitude: string;
+  propertyBy: string;
+  proposalCount: number;
+  propertyStatus: boolean;
+  isFeatured: boolean;
+  isDeleted: boolean;
+  propertyTypeId: string;
+  createdAt: string;
+  updatedAt: string;
+  amenities: Amenity[];
+  user?: {
+    id: string;
+    firstName?: string;
+    lastName?: string;
+    address?: string | null;
+    profileImage?: string | null;
+    socialId?: string | null;
+  };
+}
+
+export interface PropertyItem {
+  id: string;
+  userId: string;
+  propertyName: string;
+  propertyPrice: number | string | null;
   propertyArea: string;
   propertyImage?: string | null;
   purpose: string;

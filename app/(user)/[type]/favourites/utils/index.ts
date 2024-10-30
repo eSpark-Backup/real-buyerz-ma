@@ -82,4 +82,19 @@ const handleSaveFavoriteProperty = async (propertyId: string): Promise<{ status:
   }
 };
 
-export { handleGetFavorite, handleSaveFavoriteProperty };
+const handleSavePropertyAgent = async (propertyId: string): Promise<{ status: boolean; properties?: ApiResponse; message?: string }> => {
+  try {
+    const { data } = await api.post<ApiResponse>(`/property/${propertyId}`);
+    if (data?.response?.data) {
+      return {
+        status: true,
+        properties: data
+      };
+    }
+    return { status: false, message: data?.message };
+  } catch (error) {
+    return { status: false, message: 'An error occurred.' };
+  }
+};
+
+export { handleGetFavorite, handleSaveFavoriteProperty, handleSavePropertyAgent };

@@ -1,7 +1,11 @@
 import React, { useState } from "react";
 import { StyleSheet, TouchableOpacity, View, FlatList } from "react-native";
 import { useTheme } from "@react-navigation/native";
-import { router, useLocalSearchParams } from "expo-router";
+import {
+  router,
+  useLocalSearchParams,
+  useGlobalSearchParams,
+} from "expo-router";
 
 import { ReloadIcon } from "@assets/images";
 import { MyText, InboxList, Card } from "@components";
@@ -10,7 +14,9 @@ import { MyTheme, UserType } from "@types";
 const Inbox: React.FC = () => {
   const theme = useTheme() as MyTheme;
   const [tab, setTab] = useState("inbox");
-  const params = useLocalSearchParams<{ type: UserType }>();
+  const params = useGlobalSearchParams<{ type: UserType }>();
+
+  console.log("🚀 ~ Inbox params:", params);
 
   const handleTab = (buttonName: string) => {
     if (tab !== buttonName) {

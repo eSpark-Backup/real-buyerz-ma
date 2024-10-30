@@ -1,5 +1,5 @@
 import React from "react";
-import { ScrollView, StyleSheet, Text, View } from "react-native";
+import { ScrollView, StyleSheet, View, TouchableOpacity } from "react-native";
 import { useTheme } from "@react-navigation/native";
 
 import MyText from "@components/MyText";
@@ -10,14 +10,15 @@ interface TopTabsProps {
   data: { title: string; selected: boolean }[];
   list?: boolean;
   paddingH?: number;
+  onTabPress: (title: string) => void;
 }
 
-export default function MyTopTabs({ data, list, paddingH }: TopTabsProps) {
+export default function MyTopTabs({ data, list, paddingH, onTabPress }: TopTabsProps) {
   const theme = useTheme() as MyTheme;
 
   const Tab = ({ label, selected }: { label: string; selected: boolean }) => {
     return (
-      <View
+      <TouchableOpacity
         style={{
           height: "100%",
           borderBottomWidth: selected ? 2 : 0,
@@ -29,9 +30,10 @@ export default function MyTopTabs({ data, list, paddingH }: TopTabsProps) {
           paddingVertical: 15,
           borderColor: theme.colors.primary,
         }}
+        onPress={() => onTabPress(label)}
       >
         <MyText text={label} size={16} textColor={theme.colors.negative} />
-      </View>
+      </TouchableOpacity>
     );
   };
 

@@ -1,4 +1,4 @@
-import React, { memo, useState } from "react";
+import React, { memo, useEffect, useState } from "react";
 import { Tabs } from "expo-router/tabs";
 import { useLocalSearchParams } from "expo-router";
 import { useTheme } from "@react-navigation/native";
@@ -67,14 +67,17 @@ function UserTabLayout() {
             title: "Projects",
             href: `(user)/${params?.type!}/(tabs)/projects`,
           }}
+          initialParams={{ type: params.type }}
         />
 
         <Tabs.Screen
           name="dashboard"
           options={{
+            headerShown: false,
             title: "Dashboard",
             href: `(user)/${params?.type!}/(tabs)/dashboard`,
           }}
+          initialParams={{ type: params.type }}
         />
         <Tabs.Screen
           name="listings"
@@ -82,6 +85,7 @@ function UserTabLayout() {
             title: "Listings",
             href: `(user)/${params?.type!}/(tabs)/listings`,
           }}
+          initialParams={{ type: params.type }}
         />
         <Tabs.Screen
           name="profile"
@@ -89,10 +93,15 @@ function UserTabLayout() {
             title: "Profile",
             href: `(user)/${params?.type!}/(tabs)/profile`,
           }}
+          initialParams={{ type: params.type }}
         />
       </Tabs>
 
-      <LoginModal visible={visible} onClose={() => setVisible(false)} lastRoute={lastRoute} />
+      <LoginModal
+        visible={visible}
+        onClose={() => setVisible(false)}
+        lastRoute={lastRoute}
+      />
     </>
   );
 }

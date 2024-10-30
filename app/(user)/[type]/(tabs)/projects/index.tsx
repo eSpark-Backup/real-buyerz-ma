@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { FlatList, StyleProp, StyleSheet, View, ViewStyle } from "react-native";
 import { useTheme } from "@react-navigation/native";
 
@@ -14,7 +14,7 @@ import {
   RangeSlider,
 } from "@components";
 import { MyTheme, UserType } from "@types";
-import { useFocusEffect, useLocalSearchParams } from "expo-router";
+import { useFocusEffect, useGlobalSearchParams, useLocalSearchParams, useSegments } from "expo-router";
 import { RootState } from "@store";
 import { PropertySliceState, setFilter } from "features/property/propertySlice";
 import { useSelector } from "react-redux";
@@ -131,13 +131,18 @@ const testData: SearchList[] = [
 export default function Projects() {
   const theme = useTheme() as MyTheme;
   const [visible, setVisible] = useState(false);
-  const [properties, setProperties] = useState<PropertyItem[]>([])
-  const params = useLocalSearchParams<{ type: UserType }>();
+  const [properties, setProperties] = useState<PropertyItem[]>([]);
+  const params = useGlobalSearchParams<{ type: UserType }>();
 
   const { propertyType } = useLocalSearchParams();
-  const { propertyTypes, filter } = useSelector<RootState, PropertySliceState>((state) => state.property);
-  const [loading, setLoading] = useState<boolean>(false)
-  const [unappliedFilters, setUnappliedFilters] = useState<{ [key: string]: any }>({})
+  const { propertyTypes, filter } = useSelector<RootState, PropertySliceState>(
+    (state) => state.property
+  );
+  const [loading, setLoading] = useState<boolean>(false);
+  const [unappliedFilters, setUnappliedFilters] = useState<{
+    [key: string]: any;
+  }>({});
+
   const [dropdownData, setDropDownData] = useState([
     {
       data: ["Sell", "Buy", "Rent"],
@@ -147,61 +152,68 @@ export default function Projects() {
       placeholder: "Purpose",
       title: "Purpose",
       style: { width: "100%" },
-      id: 'purpose',
+      id: "purpose",
       selected: filter?.purpose ? [filter?.purpose] : null,
     },
     {
-      data: propertyTypes ? propertyTypes?.map(val => val?.typeName) : [],
+      data: propertyTypes ? propertyTypes?.map((val) => val?.typeName) : [],
       height: 40,
       zIndex: 4,
       onSelect: (val: string) => {},
       placeholder: "Type",
       title: "Property Type",
       style: { width: "100%" },
-      id: 'propertyType',
+      id: "propertyType",
       selected: filter?.propertyType ? [filter?.propertyType] : null,
     },
-  ]) 
-  const dispatch = useDispatch()
-  useFocusEffect(useCallback(() => {
-    const updatedDropdown = dropdownData.map(val => {
-      const id = Object.keys(filter).find(key => val.id == key) as 'propertyType' | 'purpose' 
-      return {
-        ...val,
-        selected: filter?.[id] ? [filter?.[id]] : null
-      }
-    })
-    setDropDownData(updatedDropdown)
-    fetchProperties()
-  }, [filter]))
-  
+  ]);
+  const dispatch = useDispatch();
+  useFocusEffect(
+    useCallback(() => {
+      const updatedDropdown = dropdownData.map((val) => {
+        const id = Object.keys(filter).find((key) => val.id == key) as
+          | "propertyType"
+          | "purpose";
+        return {
+          ...val,
+          selected: filter?.[id] ? [filter?.[id]] : null,
+        };
+      });
+      setDropDownData(updatedDropdown);
+      fetchProperties();
+    }, [filter])
+  );
+
   const fetchProperties = async () => {
     try {
-      setLoading(true)
-      const params = createUrlParams(filter)
+      setLoading(true);
+      const params = createUrlParams(filter);
       const response = await handleGetAllProperties(params);
-      if(response?.data?.totalCount && response.data.totalCount > 0) {
-        setProperties(response?.data.items)
+      if (response?.data?.totalCount && response.data.totalCount > 0) {
+        setProperties(response?.data.items);
       }
-      setLoading(false)
+      setLoading(false);
     } catch (error) {
-      setLoading(false)
+      setLoading(false);
     }
-  }
-  
+  };
+
   const onApplyFilter = () => {
-    const obj = Object.entries(unappliedFilters).reduce((prev, [key, value]) => {
-      prev[key] = value?.value?.[0] ?? null;
-      return prev;
-    }, {} as Record<string, unknown>);
-    dispatch(setFilter(obj))
-    fetchProperties()
-    setVisible(false)
-  }
+    const obj = Object.entries(unappliedFilters).reduce(
+      (prev, [key, value]) => {
+        prev[key] = value?.value?.[0] ?? null;
+        return prev;
+      },
+      {} as Record<string, unknown>
+    );
+    dispatch(setFilter(obj));
+    fetchProperties();
+    setVisible(false);
+  };
 
   return (
     <View style={{ flex: 1 }}>
-      <OverlayLoader isShow={loading}  />
+      <OverlayLoader isShow={loading} />
       <MyBottomSheet.Modal
         visible={visible}
         theme={theme}
@@ -214,8 +226,8 @@ export default function Projects() {
               data={item.data}
               placeholder={item.placeholder}
               onSelect={(val) => {
-                unappliedFilters[val.key] = val
-                setUnappliedFilters(unappliedFilters)
+                unappliedFilters[val.key] = val;
+                setUnappliedFilters(unappliedFilters);
               }}
               style={{ width: "100%" }}
               height={40}
@@ -256,20 +268,26 @@ export default function Projects() {
         style={styles.topFilter}
         applied={Boolean(createUrlParams(filter))}
         onReset={() => {
-          dispatch(setFilter({
-            propertyType: null,
-            purpose: null
-          }))
-          fetchProperties()
+          dispatch(
+            setFilter({
+              propertyType: null,
+              purpose: null,
+            })
+          );
+          fetchProperties();
         }}
-        
       />
       <MyTopTabs data={topTabsData} />
       <View style={styles.searchList}>
         <FlatList
           data={properties ?? []}
           renderItem={({ index, item }) => (
-            <MyListItem item={item} index={index} theme={theme} params={params} />
+            <MyListItem
+              item={item}
+              index={index}
+              theme={theme}
+              params={params}
+            />
           )}
           showsVerticalScrollIndicator={false}
           ItemSeparatorComponent={() => <GapView />}

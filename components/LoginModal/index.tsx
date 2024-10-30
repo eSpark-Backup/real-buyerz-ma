@@ -1,7 +1,13 @@
 import React, { useState, useEffect } from "react";
 import Modal from "react-native-modal";
 import { Link, useRouter } from "expo-router";
-import { View, StyleSheet, ScrollView, KeyboardAvoidingView, Platform } from "react-native";
+import {
+  View,
+  StyleSheet,
+  ScrollView,
+  KeyboardAvoidingView,
+  Platform,
+} from "react-native";
 import { useTheme } from "@react-navigation/native";
 import Toast from "react-native-toast-message";
 
@@ -11,13 +17,16 @@ import MyCheckbox from "../MyCheckbox";
 import MyInput from "../MyInput";
 import { LoginModalProps, MyTheme } from "@types";
 import { GLogo, PLogo } from "@assets/images";
-import { useDispatch } from 'react-redux';
-import { storage } from 'store/mmkv';
-import { handleLoginUser, UserObject } from 'app/auth/SignIn/utils';
+import { useDispatch } from "react-redux";
+import { storage } from "store/mmkv";
+import { handleLoginUser, UserObject } from "app/auth/SignIn/utils";
 import OverlayLoader from "@components/OverlayLoader";
 import { setUserData, setUserToken } from "features/user/userSlice";
 import useSessionManagement from "hooks/useSessionManagement";
-import { handleGetUserProfile, UserProfileData } from "app/(user)/[type]/(tabs)/profile/utils";
+import {
+  handleGetUserProfile,
+  UserProfileData,
+} from "app/(user)/[type]/(tabs)/profile/utils";
 import { showToast } from "@utils/showToast";
 
 function LoginModal({ visible, onClose, lastRoute }: LoginModalProps) {
@@ -30,8 +39,12 @@ function LoginModal({ visible, onClose, lastRoute }: LoginModalProps) {
   const dispatch = useDispatch();
   const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
-  const { updateUserInSession,updateUserIsLoggedInSession } = useSessionManagement();
-  const mergeUserRoleWithProfile = (profileData: UserProfileData, role: string): UserProfileData => {
+  const { updateUserInSession, updateUserIsLoggedInSession } =
+    useSessionManagement();
+  const mergeUserRoleWithProfile = (
+    profileData: UserProfileData,
+    role: string
+  ): UserProfileData => {
     return { ...profileData, role };
   };
 
@@ -49,45 +62,52 @@ function LoginModal({ visible, onClose, lastRoute }: LoginModalProps) {
       return;
     }
 
-    setLoading(true)
+    setLoading(true);
     const response = await handleLoginUser({ email, password });
     if (response.status) {
       const userInfo = response.userInfo;
       if (userInfo) {
-        fetchAllUserProfileData(userInfo)
-        showToast(response.message|| 'Login successfull', 'success')
+        fetchAllUserProfileData(userInfo);
+        showToast(response.message || "Login successfull", "success");
       } else {
-        showToast('User info not available', 'error');
+        showToast("User info not available", "error");
       }
     } else {
-      setLoading(false)
-      showToast(
-        response.message || 'Sign in failed',
-        'error',
-      )
-    };
+      setLoading(false);
+      showToast(response.message || "Sign in failed", "error");
+    }
   };
 
   const fetchAllUserProfileData = async (userInfo: UserObject) => {
     try {
-      const response = await handleGetUserProfile()
+      const response = await handleGetUserProfile();
       if (response.data) {
-        setLoading(false)
+        setLoading(false);
         savingDataToSessionStorage(userInfo, response.data);
-        router.push(`/(user)/${userInfo.user.role}/home`);
+        // router.push(`/(user)/${userInfo.user.role}/home`);
+        router.push({
+          pathname: "/(user)/[type]/(tabs)/home",
+          params: { type: userInfo.user.role },
+        });
       }
     } catch (error) {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
-  const savingDataToSessionStorage = (userInfo: UserObject, userProfileData: UserProfileData) => {
-    let userProfileInfo= mergeUserRoleWithProfile(userProfileData, userInfo.user.role || "user");
+  const savingDataToSessionStorage = (
+    userInfo: UserObject,
+    userProfileData: UserProfileData
+  ) => {
+    let userProfileInfo = mergeUserRoleWithProfile(
+      userProfileData,
+      userInfo.user.role || "user"
+    );
     updateUserInSession(userProfileInfo, userInfo?.token as string);
     updateUserIsLoggedInSession(isRememberedMe);
     dispatch(setUserToken(userInfo?.token));
     dispatch(setUserData(userProfileInfo));
-  }
+  };
 
   return (
     <Modal
@@ -180,7 +200,7 @@ function LoginModal({ visible, onClose, lastRoute }: LoginModalProps) {
                 <MyCheckbox
                   label="Remember"
                   onChange={(value) => {
-                    setRememberedMe(value)
+                    setRememberedMe(value);
                   }}
                   style={{
                     flexGrow: 1, // Allow checkbox to grow and take available space
@@ -198,7 +218,12 @@ function LoginModal({ visible, onClose, lastRoute }: LoginModalProps) {
               </View>
             </View>
 
-            <MyButton label="Log In" textColor="white" style={styles.button} onPress={onLoginPress} />
+            <MyButton
+              label="Log In"
+              textColor="white"
+              style={styles.button}
+              onPress={onLoginPress}
+            />
             <MyText
               text="Or"
               size={14}
@@ -270,17 +295,17 @@ const styles = StyleSheet.create({
     width: "100%",
     alignItems: "center", // Align items in the center vertically
   },
-  forgotPass: { 
-    textAlign: "right", 
+  forgotPass: {
+    textAlign: "right",
     marginLeft: "auto", // This ensures the text is pushed to the right
     marginTop: 5,
   },
   errorContainer: {
-    alignItems: 'flex-start',
-    marginTop: 5
+    alignItems: "flex-start",
+    marginTop: 5,
   },
   errorText: {
-    color: 'red',
+    color: "red",
     fontSize: 14,
   },
   label: { color: "#333333", fontSize: 14 },

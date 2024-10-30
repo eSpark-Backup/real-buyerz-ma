@@ -5,6 +5,7 @@ import { MyListItem, GapView, MyText, Card, OverlayLoader } from "@components";
 import { MyTheme } from "@types";
 import { handleGetFavorite, PropertyResponse } from "./utils";
 import { PropertyItem } from "../(tabs)/home/utils";
+import { priceConversion } from "app/utils/priceConverter";
 
 export default function Favourite() {
   const theme = useTheme() as MyTheme;
@@ -16,7 +17,7 @@ export default function Favourite() {
     id: property.propertyId,
     userId: property.userId,
     propertyName: property.property.propertyName,
-    propertyPrice: property.property.propertyPrice,
+    propertyPrice: priceConversion(property.property.propertyPrice)+" PKR",
     propertyArea: property.property.propertyArea,
     purpose: property.property.purpose,
     propertyAddress: property.property.propertyAddress,

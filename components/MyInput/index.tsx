@@ -15,7 +15,7 @@ export default function MyInput({
   inputStyle,
   rightIcon,
   placeholderColor,
-  keyboardType
+  keyboardType,
   editable = true,
 }: MyInputProps) {
   const [showPassword, setShowPassword] = useState(false);
