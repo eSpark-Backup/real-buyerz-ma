@@ -15,6 +15,7 @@ export default function MyInput({
   inputStyle,
   rightIcon,
   placeholderColor,
+  keyboardType,
   editable = true,
 }: MyInputProps) {
   const [showPassword, setShowPassword] = useState(false);
@@ -48,6 +49,7 @@ export default function MyInput({
         ]}
         value={text!}
         onChangeText={(val): void => onChange?.(val)}
+        keyboardType={keyboardType ? keyboardType : "default"}
       />
       {password && (
         <Ionicons

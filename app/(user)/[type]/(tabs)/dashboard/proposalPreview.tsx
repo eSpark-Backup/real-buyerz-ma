@@ -152,7 +152,7 @@ function ProposalPreview() {
   };
 
   const data = [getPropertyData(productDetail)];
-
+  
   return (
     <ScrollView
       style={{ flex: 1, backgroundColor: theme?.colors.background }}

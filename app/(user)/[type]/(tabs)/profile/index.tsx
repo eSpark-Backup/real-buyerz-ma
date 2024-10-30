@@ -428,7 +428,7 @@ export default function ProfileSettings() {
           onPress={handleUpdateProfilePic}
           style={styles(theme).avatarWrapper}
         >
-          <MyAvatar imageUrl={{ uri: profileImage }} size={85} edit={true} />
+          <MyAvatar imageUrl={{ uri: profileImage || "https://i.pravatar.cc/300?img=68" }} size={85} edit={true} />
         </TouchableOpacity>
         <View style={styles(theme).infoListWrapper}>
           <View>

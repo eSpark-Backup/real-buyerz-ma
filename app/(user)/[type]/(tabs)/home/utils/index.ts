@@ -115,7 +115,7 @@ export interface PropertyType {
   imageKey: string;
   createdAt: string;
   updatedAt: string;
-  subTypes?: PropertySubType | PropertySubType[];
+  subTypes?: PropertySubType & PropertySubType[];
 }
 
 interface PropertySubType {
@@ -187,4 +187,45 @@ const handleGetAllPropertType = async (): Promise<{
     return { status: false, message: "An error occurred." };
   }
 };
-export { handleGetAllProperties, handleGetAllPropertType };
+
+
+interface GetAllAmenitiesResponse {
+  success: boolean;
+  message: string;
+  response: {
+    timestamp_ms: number;
+    action: string;
+    data: IAmenity[];
+  };
+}
+
+interface IAmenity {
+  id: string;
+  amenetiesName: string;
+  otherFeatures: string;
+  createdAt: string;
+  updatedAt: string;
+  checked?: boolean
+  count?: number
+}
+
+const handleGetAllAmenities = async (): Promise<{
+  status: boolean;
+  message?: string;
+  data?: IAmenity[];
+}> => {
+  try {
+    const { data } = await api.get<GetAllAmenitiesResponse>("/admin/amenities");
+    if (data?.success) {
+      return {
+        status: true,
+        data: data.response.data,
+      };
+    }
+
+    return { status: false, message: data?.message };
+  } catch (error) {
+    return { status: false, message: "An error occurred." };
+  }
+};
+export { handleGetAllProperties, handleGetAllPropertType, handleGetAllAmenities, IAmenity };

@@ -1,6 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import {
   AllPropertiesData,
+  IAmenity,
   PropertyType,
 } from "app/(user)/[type]/(tabs)/home/utils";
 
@@ -11,6 +12,7 @@ export interface PropertySliceState {
     propertyType: string | null;
     purpose: string | null;
   };
+  amenities: IAmenity[]
 }
 
 const initialState: PropertySliceState = {
@@ -20,6 +22,7 @@ const initialState: PropertySliceState = {
     propertyType: null,
     purpose: null,
   },
+  amenities: []
 };
 
 const propertySlice = createSlice({
@@ -38,9 +41,13 @@ const propertySlice = createSlice({
         ...action.payload
       };
     },
+    setAmenities: (state, action) => {
+      state.amenities = action.payload;
+    },
   },
 });
 
-export const { setAllProperties, setPropertyType, setFilter } = propertySlice.actions;
+export const { setAllProperties, setPropertyType, setFilter, setAmenities } =
+  propertySlice.actions;
 
 export default propertySlice.reducer;
