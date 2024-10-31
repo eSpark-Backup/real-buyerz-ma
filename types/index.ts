@@ -41,17 +41,17 @@ export type MyTextProps = {
   textColor?: string;
   style?: TextStyle;
   weight?:
-    | "normal"
-    | "bold"
-    | "100"
-    | "200"
-    | "300"
-    | "400"
-    | "500"
-    | "600"
-    | "700"
-    | "800"
-    | "900";
+  | "normal"
+  | "bold"
+  | "100"
+  | "200"
+  | "300"
+  | "400"
+  | "500"
+  | "600"
+  | "700"
+  | "800"
+  | "900";
   size?: number;
   onPress?: () => void;
 };
@@ -113,17 +113,17 @@ export interface IPropsBtn {
   labelStyle?: TextStyle;
   paddingV?: number;
   weight?:
-    | "normal"
-    | "bold"
-    | "100"
-    | "200"
-    | "300"
-    | "400"
-    | "500"
-    | "600"
-    | "700"
-    | "800"
-    | "900";
+  | "normal"
+  | "bold"
+  | "100"
+  | "200"
+  | "300"
+  | "400"
+  | "500"
+  | "600"
+  | "700"
+  | "800"
+  | "900";
   children?: React.ReactNode;
   disabled?: boolean
 }
@@ -152,6 +152,7 @@ export type MyListItemProps = {
   index: number;
   theme: MyTheme;
   fav?: boolean;
+  isFavRed?: boolean;
   onFavClicked?: () => void;
   params?: {
     type: UserType
@@ -171,7 +172,7 @@ export interface DropdownProps {
   style?: StyleProp<ViewStyle>;
 }
 
-export type PropertyDetailScreenParams = { 
+export type PropertyDetailScreenParams = {
   type: UserType;
   item: string
 }

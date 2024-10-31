@@ -286,6 +286,9 @@ export default function Projects() {
               item={item}
               index={index}
               theme={theme}
+              onFavClicked={fetchProperties}
+              fav={item.isFavourite}
+              isFavRed={false}
               params={params}
             />
           )}

@@ -95,6 +95,7 @@ export interface PropertyItem {
     profileImage?: string | null;
     socialId?: string | null;
   };
+  isFavourite: boolean;
 }
 
 export interface Amenity {

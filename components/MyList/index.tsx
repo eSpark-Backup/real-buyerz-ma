@@ -18,7 +18,7 @@ import { isImageUrl } from "@utils/functions";
 import { useRouter } from "expo-router";
 import { addFavorite } from "./utils";
 
-const MyListItem: React.FC<MyListItemProps> = ({ item, index, theme, fav, onFavClicked, params }) => {
+const MyListItem: React.FC<MyListItemProps> = ({ item, index, theme, fav, isFavRed, onFavClicked, params }) => {
   const images = item?.PropertyData?.filter(val => val.type == "image")
   const router = useRouter()
 
@@ -26,7 +26,7 @@ const MyListItem: React.FC<MyListItemProps> = ({ item, index, theme, fav, onFavC
     addFavorite(item.id);
     setTimeout(() => {
       onFavClicked?.();
-    }, 100); 
+    }, 150); 
   };
   
   return (
@@ -107,7 +107,7 @@ const MyListItem: React.FC<MyListItemProps> = ({ item, index, theme, fav, onFavC
           </View>
         </View>
 
-        {fav ? (
+        {isFavRed ? (
           <View style={styles(theme).button_row}>
             <PrimaryBtn
               title="View"

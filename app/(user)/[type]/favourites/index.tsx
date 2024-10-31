@@ -5,7 +5,7 @@ import { MyListItem, GapView, MyText, Card, OverlayLoader } from "@components";
 import { MyTheme } from "@types";
 import { handleGetFavorite, PropertyResponse } from "./utils";
 import { PropertyItem } from "../(tabs)/home/utils";
-import { priceConversion } from "app/utils/priceConverter";
+import { formatPrice } from "app/utils/priceConverter";
 
 export default function Favourite() {
   const theme = useTheme() as MyTheme;
@@ -17,7 +17,7 @@ export default function Favourite() {
     id: property.propertyId,
     userId: property.userId,
     propertyName: property.property.propertyName,
-    propertyPrice: priceConversion(property.property.propertyPrice)+" PKR",
+    propertyPrice: formatPrice(property.property.propertyPrice)+" PKR",
     propertyArea: property.property.propertyArea,
     purpose: property.property.purpose,
     propertyAddress: property.property.propertyAddress,
@@ -43,6 +43,7 @@ export default function Favourite() {
     user: {
       id: property.userId,
     },
+    isFavourite: true
   });
 
   const fetchFavorites = async () => {
@@ -75,7 +76,8 @@ export default function Favourite() {
       item={item}
       index={index}
       theme={theme}
-      fav
+      fav={item.isFavourite}
+      isFavRed={true}
       onFavClicked={() => fetchFavorites()}
     />
   );
