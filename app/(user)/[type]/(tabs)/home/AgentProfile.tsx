@@ -23,45 +23,73 @@ import {
   KeySmallIcon,
   MiniArrow,
 } from "@assets/images";
-import { MyTheme } from "@types";
-
-const data = {
-  name: "Arman Khan",
-  avatarURL: "https://picsum.photos/id/151/130",
-  desc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborumAt vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique sunt in culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga. Et harum quidem rerum facilis est et expedita distinctio. Nam libero tempore, cum soluta nobis est eligendi optio cumque nihil impedit quo minus id quod maxime placeat facere possimus, omnis voluptas assumenda est, omnis dolor repellendus. Temporibus autem quibusdam et aut officiis debitis aut rerum necessitatibus saepe eveniet ut et voluptates repudiandae sint et molestiae non recusandae. Itaque earum rerum hic tenetur a sapiente delectus, ut aut reiciendis voluptatibus maiores alias consequatur aut perferendis doloribus asperiores repellat",
-  location: "Karachi",
-  sale: {
-    plots: 34,
-    houses: 7,
-    commercials: 5,
-  },
-  rent: {
-    plots: 34,
-    houses: 7,
-    commercials: 5,
-  },
-};
+import { MyTheme, PropertyDetailScreenParams } from "@types";
+import { AgentData, handleGetAdminProfile, OrganizedProperties, PropertyItem } from "./utils";
+import { useLocalSearchParams } from "expo-router";
 
 interface PropertriesCardProps {
   sale?: boolean;
-  plots: number;
-  houses: number;
-  commercials: number;
+  categories: { [key: string]: number };
+  totalCount: number;
   style?: ViewStyle;
 }
 
 const AgentProfile = () => {
   const theme = useTheme() as MyTheme;
   const [title, setTitle] = useState("Recent Properties");
+  const { item } = useLocalSearchParams<PropertyDetailScreenParams>();
+  const [agentData, setAgentData] = useState<AgentData|null>();
+  const [organizedProperties, setOrganizedProperties] = useState<OrganizedProperties | null>(null);
+  const [recentProperties, setRecentProperties] = useState<PropertyItem[] | null>(null);
+  const agencyID: string = JSON.parse(item ?? "");
 
-  useEffect(() => setTitle("Recent Properties By " + data.name), []);
+  useEffect(() => {
+    fetchAgentProfile();
+  }, []);
+
+  const fetchAgentProfile = async () => {
+    const response = await handleGetAdminProfile(agencyID);
+    if (response.status && response.data) {
+      const { agent, organizedProperties,recentProperties } = response.data.response.data;
+      setAgentData(agent);
+      setOrganizedProperties(organizedProperties);
+      setRecentProperties(recentProperties)
+      setTitle("Recent Properties By " + agent?.firstName);
+    }
+  };
+
+  const processCategories = (type: "Sale" | "Rent") => {
+    if (!organizedProperties || !organizedProperties[type]) return { categories: {}, total: 0 };
+    
+    const categories: { [key: string]: number } = {};
+    let total = 0;
+
+    Object.entries(organizedProperties[type]).forEach(([category, data]) => {
+      if (category !== "count") {
+        Object.entries(data).forEach(([subType, subData]) => {
+          if (subType !== "count") {
+            categories[subType] = subData.count;
+            total += subData.count;
+          }
+        });
+      }
+    });
+
+    return { categories, total };
+  };
+
+  const saleData = processCategories("Sale");
+  const rentData = processCategories("Rent");
   return (
     <ScrollView contentContainerStyle={styles(theme).main}>
-      <MyAvatar imageUrl={{ uri: data.avatarURL }} size={100} />
+      <MyAvatar 
+        imageUrl={{ uri: agentData?.profileImage || "https://picsum.photos/id/151/130" }} 
+        size={100} 
+      />
       <MyText
         size={16}
         weight="500"
-        text="Arman Khan"
+        text={`${agentData?.firstName || ''} ${agentData?.lastName || ''}`}
         textColor={theme.colors.secondary}
         style={{ paddingVertical: 10 }}
       />
@@ -71,35 +99,32 @@ const AgentProfile = () => {
         labelStyle={styles(theme).label}
       />
       <CustomCard
-        location={data.location}
-        forSale={data.sale.commercials + data.sale.houses + data.sale.plots}
-        forRent={data.rent.commercials + data.rent.houses + data.rent.plots}
+        location={agentData?.address || "Karachi"}
+        forSale={saleData.total}
+        forRent={rentData.total}
       />
-      {/* custom cards */}
       <MyText size={16} weight="500" style={styles(theme).name}>
-        Properties By {data.name}
+        Properties By {agentData?.firstName}
       </MyText>
 
       <PropertriesCard
-        plots={data.sale.plots}
-        houses={data.sale.houses}
-        commercials={data.sale.commercials}
+        categories={saleData.categories}
+        totalCount={saleData.total}
         sale
       />
       <GapView length={10} />
       <PropertriesCard
-        plots={data.rent.plots}
-        houses={data.rent.houses}
-        commercials={data.rent.commercials}
+        categories={rentData.categories}
+        totalCount={rentData.total}
       />
       <MyText size={16} weight="500" style={styles(theme).about}>
-        About {data.name}
+        About {agentData?.firstName}
       </MyText>
       <MyText size={12} textColor={theme.colors.listText}>
-        {data.desc}
+        {agentData?.bio || ""}
       </MyText>
       <View style={{ width: "100%" }}>
-        <PropertyList theme={theme} title={title} />
+        <PropertyList theme={theme} data={recentProperties||null} title={title} />
       </View>
       <GapView length={20} />
     </ScrollView>
@@ -107,9 +132,8 @@ const AgentProfile = () => {
 };
 
 const PropertriesCard = ({
-  plots,
-  houses,
-  commercials,
+  categories,
+  totalCount,
   sale,
   style,
 }: PropertriesCardProps) => {
@@ -123,34 +147,24 @@ const PropertriesCard = ({
           <HomeSmall />
           <GapView mode="horizontal" length={5} />
           <MyText size={12}>
-            {plots + houses + commercials} Properties for{" "}
-            {sale ? "sale" : "rent"}
+            {totalCount} Properties for {sale ? "sale" : "rent"}
           </MyText>
         </View>
-        <TouchableOpacity activeOpacity={1} style={styles(theme).viewAll}>
+        {/* Adjusting the View All section to align to the right */}
+        <TouchableOpacity activeOpacity={1} style={styles(theme).viewAllRight}>
           <MyText size={12} textColor={theme.colors.primary} text="View All" />
           <MiniArrow />
         </TouchableOpacity>
       </View>
       <View style={styles(theme).cardContainer}>
-        <Card style={styles(theme).card}>
-          <MyText size={16} textColor={theme.colors.secondary} weight="700">
-            {plots}
-          </MyText>
-          <MyText>Plots</MyText>
-        </Card>
-        <Card style={styles(theme).card}>
-          <MyText size={16} textColor={theme.colors.secondary} weight="700">
-            {houses}
-          </MyText>
-          <MyText>Houses</MyText>
-        </Card>
-        <Card style={styles(theme).card}>
-          <MyText size={16} textColor={theme.colors.secondary} weight="700">
-            {commercials}
-          </MyText>
-          <MyText>Commercials</MyText>
-        </Card>
+        {Object.entries(categories).map(([type, count], index) => (
+          <Card key={index} style={styles(theme).card}>
+            <MyText size={16} textColor={theme.colors.secondary} weight="700">
+              {count}
+            </MyText>
+            <MyText>{type}</MyText>
+          </Card>
+        ))}
       </View>
     </>
   );
@@ -217,13 +231,16 @@ const styles = (theme?: MyTheme) =>
       flexDirection: "row",
       width: "100%",
       alignItems: "center",
-      justifyContent: "space-between",
+      justifyContent: "flex-start", 
+      flexWrap: "wrap", 
     },
     card: {
       width: "30%",
-      height: 50,
+      height: 55,
       alignItems: "center",
       justifyContent: "center",
+      marginRight: "5%",
+      marginBottom: 10,
     },
     button: {
       backgroundColor: theme?.colors.background,
@@ -238,8 +255,17 @@ const styles = (theme?: MyTheme) =>
     },
     name: { alignSelf: "flex-start", paddingTop: 53, paddingBottom: 5 },
     about: { alignSelf: "flex-start", marginTop: 25, paddingBottom: 15 },
-    viewAll: { flexDirection: "row", alignItems: "center" },
-    customCardContainer: {
+    viewAll: { 
+      flexDirection: "row", 
+      alignItems: "center" 
+    },
+    viewAllRight: { 
+      position: "absolute",
+      right: 0, 
+      flexDirection: "row", 
+      alignItems: "center" 
+    },
+        customCardContainer: {
       flexDirection: "row",
       backgroundColor: theme?.dark ? theme.colors.card : "#F6F6F6",
       height: 60,

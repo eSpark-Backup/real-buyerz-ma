@@ -50,7 +50,7 @@ const handleGetUserProfile = async (): Promise<{
         data: data.response.data,
       };
     }
-
+    
     return { status: false, message: data?.message };
   } catch (error) {
     return { status: false, message: "An error occurred." };

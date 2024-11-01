@@ -4,38 +4,17 @@ import { MyTheme } from "@types";
 import Card from "../Card";
 import GapView from "../GapView";
 import MyText from "../MyText";
-import { useTheme } from "@react-navigation/native";
+import { PropertyItem } from "app/(user)/[type]/(tabs)/home/utils";
 
 const PropertyListing = ({
   title,
+  data,
   theme,
 }: {
   title?: string;
+  data:PropertyItem[] | null
   theme?: MyTheme;
 }) => {
-  const data = [
-    {
-      id: 0,
-      name: "Mount Khalid",
-      location: "Gulberg",
-      image: "https://picsum.photos/id/151/130",
-      size: "1155 sqft to 2684 sqft",
-    },
-    {
-      id: 1,
-      name: "Mount Khalid",
-      location: "Gulberg",
-      image: "https://picsum.photos/id/153/130",
-      size: "1155 sqft to 2684 sqft",
-    },
-    {
-      id: 2,
-      name: "Mount Khalid",
-      location: "Gulberg",
-      image: "https://picsum.photos/id/162/130",
-      size: "1155 sqft to 2684 sqft",
-    },
-  ];
 
   function renderList({ item, index }: { item: any; index: number }) {
     return (
@@ -47,7 +26,7 @@ const PropertyListing = ({
       >
         <Card radius={2} style={{ height: 180, width: 130 }}>
           <Image
-            source={{ uri: item?.image }}
+            source={{ uri: item?.propertyImage || "https://picsum.photos/id/299/620" }}
             style={{ height: 80, borderRadius: 2 }}
           />
           <View style={{ padding: 8 }}>
@@ -59,20 +38,22 @@ const PropertyListing = ({
               style={{ marginBottom: 8 }}
             />
             <MyText
-              text={item.name}
+              text={item.propertyName}
+              numberOfLines={1}
               size={10}
               textColor={theme?.colors.text}
               style={{ marginBottom: 8 }}
             />
             <MyText
-              text={item.location}
+              text={item.propertyAddress}
               size={10}
+              numberOfLines={1}
               weight="500"
               textColor={theme?.colors.listText}
               style={{ marginBottom: 8 }}
             />
             <MyText
-              text={item.size}
+              text={item.propertyArea+" Sq .ft"}
               size={10}
               textColor={theme?.colors.listText}
               style={{ marginBottom: 8 }}
