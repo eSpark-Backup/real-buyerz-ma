@@ -95,7 +95,10 @@ const PropertyDetail = () => {
     <ScrollView>
       <View style={styles(theme).wrapper}>
         <CustomSlider
-          images={images}
+          images={productDetail.PropertyData.map((item) => ({
+            uri: item.url, 
+            type: item.type,
+          }))}
           title={productDetail?.propertyName ?? "4 BEDROOMS APARTMENT"}
         />
         <Card style={styles(theme).cardWrapper}>

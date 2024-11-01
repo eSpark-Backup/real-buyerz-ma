@@ -1,42 +1,38 @@
-import React from "react";
-import { Modal, StyleSheet, Text, View } from "react-native";
-import { Video, ResizeMode } from "expo-av";
-import { Ionicons } from "@expo/vector-icons";
+import MyText from '@components/MyText';
+import React from 'react';
+import { StyleSheet, View, Dimensions, Modal, TouchableOpacity } from 'react-native';
+import { WebView } from 'react-native-webview';
 
-interface Props {
-  url: string;
+export interface VideoViewerProps {
+  videoUri: string;
   visible: boolean;
-  onRequestClose?(): void;
+  onClose: () => void;
 }
 
-export default function VideoView({ url, visible, onRequestClose }: Props) {
-  const video = React.useRef(null);
-  const [status, setStatus] = React.useState({});
-  console.log("status", status);
-
+export default function VideoViewer({
+  videoUri,
+  visible,
+  onClose,
+}: VideoViewerProps) {
   return (
-    <Modal visible={visible} onRequestClose={onRequestClose}>
+    <Modal
+      visible={visible}
+      animationType="fade"
+      transparent={false} 
+      onRequestClose={onClose}
+    >
       <View style={styles.container}>
-        <Ionicons
-          name="close-outline"
-          color={"#ffffff"}
-          size={26}
-          style={{ alignSelf: "flex-end", marginRight: 15, marginTop: 15 }}
-          onPress={onRequestClose}
+        <WebView
+          source={{ uri: videoUri }}
+          style={styles.webView}
+          javaScriptEnabled={true}
+          domStorageEnabled={true}
+          scalesPageToFit={true}
+          allowsFullscreenVideo={true} 
         />
-        <View style={styles.vidContainer}>
-          <Video
-            ref={video}
-            style={styles.video}
-            source={{
-              uri: url,
-            }}
-            shouldPlay={true}
-            useNativeControls
-            resizeMode={ResizeMode.CONTAIN}
-            onPlaybackStatusUpdate={(status) => setStatus(() => status)}
-          />
-        </View>
+        <TouchableOpacity style={styles.closeButton} onPress={onClose}>
+          <MyText style={styles.closeButtonText}>Close</MyText>
+        </TouchableOpacity>
       </View>
     </Modal>
   );
@@ -45,15 +41,22 @@ export default function VideoView({ url, visible, onRequestClose }: Props) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#000000",
+    backgroundColor: '#000',
   },
-  vidContainer: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
+  webView: {
+    flex: 1
   },
-  video: {
-    height: 300,
-    width: "100%",
+  closeButton: {
+    position: 'absolute',
+    top: 40, 
+    right: 20,
+    padding: 10,
+    backgroundColor: 'rgba(255, 255, 255, 0.8)', 
+    borderRadius: 5,
+    zIndex: 1,
+  },
+  closeButtonText: {
+    color: '#000',
+    fontWeight: 'bold',
   },
 });

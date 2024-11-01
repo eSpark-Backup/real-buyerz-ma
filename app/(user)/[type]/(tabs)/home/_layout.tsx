@@ -9,7 +9,6 @@ import { MyHeader } from "@components";
 export default function HomeLayout() {
   const theme = useTheme() as MyTheme;
   const params = useLocalSearchParams<{ type: UserType }>();
-  console.log("🚀 ~ HomeLayout ~ params:", JSON.stringify(params));
 
   return (
     <Stack
