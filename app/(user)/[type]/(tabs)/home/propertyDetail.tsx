@@ -95,7 +95,10 @@ const PropertyDetail = () => {
     <ScrollView>
       <View style={styles(theme).wrapper}>
         <CustomSlider
-          images={images}
+          images={productDetail.PropertyData.map((item) => ({
+            uri: item.url, 
+            type: item.type,
+          }))}
           title={productDetail?.propertyName ?? "4 BEDROOMS APARTMENT"}
         />
         <Card style={styles(theme).cardWrapper}>
@@ -105,7 +108,7 @@ const PropertyDetail = () => {
               imageUrl={{
                 uri:
                   productDetail.user?.profileImage &&
-                  isImageUrl(productDetail.user?.profileImage ?? "")
+                    isImageUrl(productDetail.user?.profileImage ?? "")
                     ? productDetail.user?.profileImage
                     : "https://picsum.photos/id/151/130",
               }}
@@ -139,7 +142,12 @@ const PropertyDetail = () => {
                 textColor="#ffffff"
                 width={100}
                 onPress={() =>
-                  router.push(`(user)/${type!}/(tabs)/home/AgentProfile`)
+                  router.navigate({
+                    pathname: `(user)/${type!}/(tabs)/home/AgentProfile`,
+                    params: {
+                      item: JSON.stringify(productDetail.userId)
+                    }
+                  })
                 }
                 btnStyle={{
                   paddingVertical: 10,

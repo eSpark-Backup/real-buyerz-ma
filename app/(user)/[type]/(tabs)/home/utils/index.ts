@@ -95,6 +95,7 @@ export interface PropertyItem {
     profileImage?: string | null;
     socialId?: string | null;
   };
+  isFavourite: boolean;
 }
 
 export interface Amenity {
@@ -119,12 +120,12 @@ export interface PropertyType {
 }
 
 interface PropertySubType {
-    id: string;
-    typeName: string;
-    url: string;
-    imageKey?: string;
-    createdAt: string;
-    updatedAt: string;
+  id: string;
+  typeName: string;
+  url: string;
+  imageKey?: string;
+  createdAt: string;
+  updatedAt: string;
 
 }
 export interface PropertyDataItem {
@@ -135,6 +136,52 @@ export interface PropertyDataItem {
   type: "image" | "video";
   createdAt: string;
   updatedAt: string;
+}
+
+interface findAgentProfileData {
+  success: boolean;
+  message: string;
+  response: {
+    timestamp_ms: number;
+    action: string;
+    data: AgentProfileData;
+  };
+}
+
+interface AgentProfileData {
+  agent: AgentData;
+  organizedProperties: OrganizedProperties;
+  recentProperties: PropertyItem[];
+}
+
+export interface AgentData {
+  id: string;
+  firstName: string;
+  lastName: string;
+  address: string;
+  email: string;
+  bio: string;
+  profileImage: string;
+}
+
+export interface OrganizedProperties {
+  Rent?: {
+    count:number;
+    Residential?: OrganizedCategory;
+    Commercial?: OrganizedCategory;
+  };
+  Sale?: {
+    count:number;
+    Residential?: OrganizedCategory;
+    Commercial?: OrganizedCategory;
+  };
+}
+
+export interface OrganizedCategory {
+  [propertyType: string]: {
+    count: number;
+    properties: PropertyItem[];
+  };
 }
 
 const handleGetAllProperties = async (params?: string): Promise<{
@@ -158,13 +205,13 @@ const handleGetAllProperties = async (params?: string): Promise<{
 };
 
 interface GetAllPropertTypeResponse {
-    success: boolean;
-    message: string;
-    response: {
-      timestamp_ms: number;
-      action: string;
-      data: PropertyType[]  ;
-    };
+  success: boolean;
+  message: string;
+  response: {
+    timestamp_ms: number;
+    action: string;
+    data: PropertyType[];
+  };
 }
 
 
@@ -228,4 +275,28 @@ const handleGetAllAmenities = async (): Promise<{
     return { status: false, message: "An error occurred." };
   }
 };
-export { handleGetAllProperties, handleGetAllPropertType, handleGetAllAmenities, IAmenity };
+
+const handleGetAdminProfile = async (agentId: string): Promise<{
+  status: boolean;
+  message?: string;
+  data?: findAgentProfileData;
+}> => {
+  try {
+    console.log("agentID "+agentId)
+    const { data } = await api.get<findAgentProfileData>(`/property/agent/${agentId}`);
+    console.log("organizedProperties"+ JSON.stringify(data))
+    if (data?.success) {
+      return {
+        status: true,
+        data: data,
+      };
+    }
+
+    return { status: false, message: data?.message };
+  } catch (error) {
+    console.log("organizedProperties"+ JSON.stringify(error))
+    return { status: false, message: "An error occurred." };
+  }
+};
+
+export { handleGetAllProperties, handleGetAllPropertType, handleGetAllAmenities, IAmenity,handleGetAdminProfile };
