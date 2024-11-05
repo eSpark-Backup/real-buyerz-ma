@@ -17,7 +17,6 @@ import {
   MyAvatar,
   MyButton,
   MyText,
-  VideoView,
 } from "@components";
 import { MyTheme } from "@types";
 import { LocationIcon } from "@assets/images";
@@ -93,11 +92,11 @@ export default function ProposalDetails() {
       }}
       contentContainerStyle={{ paddingTop: 20 }}
     >
-      <VideoView
+      {/* <VideoView
         url={"https://d23dyxeqlo5psv.cloudfront.net/big_buck_bunny.mp4"}
         visible={visibleVid}
         onRequestClose={() => setVisibleVid(false)}
-      />
+      /> */}
       <ImageView
         images={data.imageMedia.map((item) => {
           return { uri: item };
