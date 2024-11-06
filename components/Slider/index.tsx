@@ -15,8 +15,7 @@ import MyText from "../MyText";
 import { LeftIconCarousel, RightIconCarousel } from "@assets/images/svg";
 import { MyTheme } from "@types";
 import { useTheme } from "@react-navigation/native";
-import { ImageViewer } from "@components";
-import YouTubeRedirect from "@components/VideoView/YoutubeRedirect";
+import { ImageViewer,YoutubeRedirect } from "@components";
 
 interface MediaItem {
   uri: string;
@@ -193,7 +192,7 @@ const CustomSlider = ({ images, title }: ICustomSlider) => {
       )}
 
       {showVideoViewer && (
-        <YouTubeRedirect url={currentMedia.uri} />
+        <YoutubeRedirect url={currentMedia.uri} />
       )}
     </Card>
   );

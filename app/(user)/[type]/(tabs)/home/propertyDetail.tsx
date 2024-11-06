@@ -9,7 +9,6 @@ import {
   MyText,
   PropertyList,
   MyAvatar,
-  CustomSlider,
   PrimaryBtn,
   MyPopupModal,
 } from "@components";
@@ -17,6 +16,7 @@ import { LocationIcon } from "@assets/images/svg";
 import { router, useLocalSearchParams } from "expo-router";
 import { PropertyItem } from "./utils";
 import { isImageUrl } from "@utils/functions";
+import CustomSlider from "@components/Slider";
 
 const PropertyDetail = () => {
   const theme = useTheme() as MyTheme;

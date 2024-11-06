@@ -25,6 +25,7 @@ import {
   ToggleSwitch,
   MyPopupModal,
   MyButton,
+  OverlayLoader,
 } from "@components";
 import {
   AddIcon,
@@ -62,7 +63,7 @@ import {
   Washing,
   Well,
 } from "@assets/images";
-import { WINDOW_WIDTH, data, testData } from "@constants";
+import { WINDOW_WIDTH } from "@constants";
 import { MyTheme, UserType } from "@types";
 import { requestPermissionsMedia } from "utils/functions";
 import { useSelector } from "react-redux";
@@ -70,12 +71,21 @@ import { PropertySliceState } from "features/property/propertySlice";
 import { RootState } from "@store";
 import { IAmenity } from "../home/utils";
 import { useLocalSearchParams, useRouter } from "expo-router";
+import MapView, { Marker, Region } from 'react-native-maps';
+import * as Location from 'expo-location';
+import { Amenity, handleCreateProperties, ImageFile, ReqPropertyData } from "../../myListings/utils";
+import { showToast } from "@utils/showToast";
 
 interface CustomTableProps {
   children?: React.ReactNode;
   title?: string;
   indexIcon: number;
 }
+
+interface PropertyImagesAndVideoProps {
+  onChange?: (images: ImageFile[]) => void;
+}
+
 interface SvgIcon {
   [key: number]: any;
 }
@@ -93,12 +103,28 @@ export default function Listing() {
   const theme = useTheme() as MyTheme;
   const params = useLocalSearchParams<{ type: UserType }>();
   const router = useRouter()
-
   const [visible, setVisible] = useState(false);
-  const { propertyTypes } = useSelector<RootState, PropertySliceState>(state => state.property)
-  const [data, setData] = useState({
+  const [loading, setLoading] = useState(false);
+  const [propertyData, setPropertyData] = useState<{
+    propertyName: string;
+    propertySubTypeId: string;
+    propertyPrice: string;
+    propertyArea: string;
+    purpose: string;
+    propertyAddress: string;
+    propertyCity: string;
+    propertyZip: string;
+    propertyDescription: string;
+    longitude: string;
+    latitude: string;
+    image: ImageFile[];
+    amenity: Amenity[];
+    video: any[];
+    amenities: string;
+    propertyStatus: string;
+  }>({
     propertyName: "",
-    propertySubTypeId: "",
+    propertySubTypeId: "22",
     propertyPrice: "",
     propertyArea: "",
     purpose: "",
@@ -106,19 +132,46 @@ export default function Listing() {
     propertyCity: "",
     propertyZip: "",
     propertyDescription: "",
-    longitude: "231",
-    latitude: "213",
-    amenities: {},
+    longitude: "",
+    latitude: "",
+    image: [],
+    amenity: [],
+    video: ["https://www.youtube.com/watch?v=HcQ5kspSi0I"],
+    amenities: "",
     propertyStatus: "true",
   });
 
-  
+  const concatData = {
+    ...propertyData,
+    propertyPrice: `PKR ${propertyData.propertyPrice}`,
+    propertyArea: `${propertyData.propertyArea} Sq. ft`
+  };
+
+  const createProperties = async () => {
+    setLoading(true);
+    try {
+      const response = await handleCreateProperties(concatData as ReqPropertyData);
+      setLoading(false);
+      if (response.data) {
+        setVisible(true)
+      }
+      else {
+        showToast(response.message || 'Failed to create property', 'error')
+      }
+    } catch (error) {
+      showToast('Failed to create property', 'error')
+      setLoading(false);
+    }
+  };
+
+
   return (
     <ScrollView
       style={styles(theme).conatiner}
       contentContainerStyle={{ alignItems: "center" }}
       showsVerticalScrollIndicator={false}
     >
+      <OverlayLoader isShow={loading} />
       <MyText
         text="Reach Millions of Buyers on our Platforms"
         textColor={theme.colors.negative}
@@ -133,58 +186,65 @@ export default function Listing() {
       <GapView length={20} />
       <AdInformation
         onChange={(data) => {
-          setData((prev) => {
-            return {
-              ...prev,
-              ...data,
-            };
-          });
+          setPropertyData(prev => ({
+            ...prev,
+            propertyName: data.propertyName || prev.propertyName,
+            propertyDescription: data.propertyDescription || prev.propertyDescription,
+          }));
         }}
       />
       <GapView length={20} />
       <LocationAndPurpose
         onChange={(data) => {
-          setData((prev) => {
-            return {
-              ...prev,
-              ...data,
-            };
-          });
+          setPropertyData(prev => ({
+            ...prev,
+            purpose: data.purpose || prev.purpose,
+            propertyCity: data.propertyCity || prev.propertyCity,
+            propertySubTypeId: data.propertySubTypeId || prev.propertySubTypeId,
+            propertyAddress: data.propertyAddress || prev.propertyAddress,
+            propertyZip: data.propertyZip || prev.propertyZip,
+            longitude: data.longitude || prev.longitude,
+            latitude: data.latitude || prev.latitude,
+          }));
         }}
       />
       <GapView length={20} />
       <PropertySizeandPricing
         onChange={(data) => {
-          setData((prev) => {
-            return {
-              ...prev,
-              ...data,
-            };
-          });
+          setPropertyData(prev => ({
+            ...prev,
+            propertyArea: data.propertyArea || prev.propertyArea,
+            propertyPrice: data.propertyPrice || prev.propertyPrice,
+          }));
         }}
       />
       <GapView length={20} />
       <FeaturesAndAmenities
         onChange={(data) => {
-          setData((prev) => {
-            return {
-              ...prev,
-              ...data,
-            };
-          });
+          setPropertyData(prev => ({
+            ...prev,
+            amenities: data.amenities || prev.amenities,
+            amenity: data.amenity || prev.amenity,
+          }));
         }}
       />
-      {/* <GapView length={20} /> */}
-      {/* <PropertyImagesAndVideo /> */}
+      <GapView length={20} />
+      <PropertyImagesAndVideo
+        onChange={(images: ImageFile[]) => {
+          setPropertyData(prev => ({
+            ...prev,
+            image: images,
+          }));
+        }}
+      />
       <View style={styles(theme).footerButtons}>
         <PrimaryBtn
-          disabled={Object.values(data)?.some(val => Boolean(val) == false)}
+          disabled={Object.values(propertyData)?.some(val => Boolean(val) == false)}
           onPress={() => {
-            console.log("data", data);
             router.push({
               pathname: `(user)/${params.type}/(tabs)/dashboard/proposalPreview`,
               params: {
-                data: JSON.stringify(data),
+                data: JSON.stringify(propertyData),
               },
             });
           }}
@@ -193,18 +253,21 @@ export default function Listing() {
           <Ionicons name="eye" color={theme.colors.primary} size={20} />
         </PrimaryBtn>
         <PrimaryBtn
-          disabled={Object.values(data)?.some(val => Boolean(val) == false)}
+          disabled={Object.values(propertyData)?.some(val => Boolean(val) == false)}
           title="Save as draft"
           btnStyle={styles(theme).draft}
           textColor={theme.colors.primary}
           weight="500"
         />
         <PrimaryBtn
-          disabled={Object.values(data)?.some(val => Boolean(val) == false)}
+          disabled={Object.values(propertyData)?.some(val => Boolean(val) == false)}
           title="Submit Ad"
           weight="500"
           width={100}
-          onPress={() => setVisible(true)}
+          onPress={() => {
+            createProperties()
+          }
+          }
         />
       </View>
       <MyPopupModal visible={visible} bgDim>
@@ -291,26 +354,71 @@ function AdInformation({
 function LocationAndPurpose({
   onChange,
 }: {
-  onChange?: (e: { purpose?: string; propertyCity?: string, propertySubTypeId?: string, propertyAddress?: string, propertyZip?: string }) => void;
+  onChange?: (e: { purpose?: string; propertyCity?: string, propertySubTypeId?: string, propertyAddress?: string, propertyZip?: string, longitude?: string; latitude?: string; }) => void;
 }) {
   const theme = useTheme() as MyTheme;
   const [selected, setSelected] = useState("");
   const { propertyTypes } = useSelector<RootState, PropertySliceState>(state => state.property)
+  const [location, setLocation] = useState<{
+    latitude: number;
+    longitude: number;
+  } | null>(null);
+  useEffect(() => {
+    (async () => {
+      const { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== 'granted') {
+        return;
+      }
+
+      const currentLocation = await Location.getCurrentPositionAsync({});
+      setLocation({
+        latitude: currentLocation.coords.latitude,
+        longitude: currentLocation.coords.longitude,
+      });
+
+      onChange?.({
+        longitude: currentLocation.coords.longitude.toString(),
+        latitude: currentLocation.coords.latitude.toString()
+      });
+    })();
+  }, []);
+  const onMarkerDragEnd = (e: any) => {
+    const newCoords = e.nativeEvent.coordinate;
+    setLocation({
+      latitude: newCoords.latitude,
+      longitude: newCoords.longitude
+    });
+    onChange?.({
+      longitude: newCoords.longitude.toString(),
+      latitude: newCoords.latitude.toString()
+    });
+  };
+
+  const onRegionChange = (region: Region) => {
+    setLocation({
+      latitude: region.latitude,
+      longitude: region.longitude
+    });
+    onChange?.({
+      longitude: region.longitude.toString(),
+      latitude: region.latitude.toString()
+    });
+  };
 
   const types = propertyTypes?.map(val => {
     return {
       id: val.id,
       title: val.typeName,
-      list: !!val?.subTypes?.length ? 
-       val?.subTypes?.map?.(val => {
-        return {
-          id: val?.id,
-          label: val?.typeName,
-        };
-      }) : []
+      list: !!val?.subTypes?.length ?
+        val?.subTypes?.map?.(val => {
+          return {
+            id: val?.id,
+            label: val?.typeName,
+          };
+        }) : []
     }
-  }) ?? [] 
-  
+  }) ?? []
+
   return (
     <CustomTable title="Location & Purpose" indexIcon={3}>
       <View style={styles().AdInfo}>
@@ -410,7 +518,31 @@ function LocationAndPurpose({
         <ListingIcon iconIndex={7} />
         <View style={styles().AdField}>
           <RequiredText text="Select Location" />
-          <View style={{ backgroundColor: "pink", width: "90%", height: 50 }} />
+          {location ? (
+            <MapView
+              style={{ width: "90%", height: 150 }}
+              initialRegion={{
+                latitude: location.latitude,
+                longitude: location.longitude,
+                latitudeDelta: 0.005,
+                longitudeDelta: 0.005,
+              }}
+              onRegionChangeComplete={onRegionChange}
+            >
+              <Marker
+                coordinate={{
+                  latitude: location.latitude,
+                  longitude: location.longitude,
+                }}
+                draggable
+                onDragEnd={onMarkerDragEnd}
+              />
+            </MapView>
+          ) : (
+            <View style={{ width: "90%", height: 150, justifyContent: 'center', alignItems: 'center' }}>
+              <MyText text="Loading map..." textColor={theme.colors.placeholderText} />
+            </View>
+          )}
         </View>
       </View>
       <View style={styles().AdInfo}>
@@ -478,7 +610,7 @@ function PropertySizeandPricing({
             id="unit"
             data={[]}
             placeholder="sq ft"
-            onSelect={() => {}}
+            onSelect={() => { }}
             theme={theme}
           />
         </View>
@@ -499,7 +631,7 @@ function PropertySizeandPricing({
             id="currency"
             data={[]}
             placeholder="PKR"
-            onSelect={() => {}}
+            onSelect={() => { }}
             theme={theme}
           />
         </View>
@@ -555,7 +687,7 @@ function PropertySizeandPricing({
 function FeaturesAndAmenities({
   onChange,
 }: {
-  onChange?: (e: { amenities?: {name: string, count: number}[];}) => void;
+  onChange?: (e: { amenities?: string; amenity?: Amenity[] }) => void;
 }) {
   const theme = useTheme() as MyTheme;
   const [visible, setVisible] = useState(false);
@@ -565,12 +697,18 @@ function FeaturesAndAmenities({
   const [selected, setSelected] = useState<IAmenity[]>([]);
 
   useEffect(() => {
-    onChange?.({ amenities: selected?.map((e) => {
-      return {
-        name: e.amenetiesName,
-        count: e.count ?? 1
-      }
-    }) });
+    const amenityArray = selected?.map((e) => ({
+      name: e.amenetiesName,
+      count: e.count ?? 1,
+      imageUrl: ''
+    }));
+
+    const amenityIds = selected?.map(e => e.id).join(',');
+
+    onChange?.({
+      amenities: amenityIds,
+      amenity: amenityArray
+    });
   }, [selected]);
 
   return (
@@ -730,7 +868,7 @@ const renderListItem = ({
             borderColor: theme.colors.secondary,
           }}
           isChecked={item.checked}
-          onChange={(bool) => onSelect({...item, checked: bool})}
+          onChange={(bool) => onSelect({ ...item, checked: bool })}
         />
         {/* {svgIcons[item.iconIndex]} */}
       </View>
@@ -771,11 +909,28 @@ function Counter({ type, icon, onChange }: { type: string, icon?: string, onChan
   );
 }
 
-function PropertyImagesAndVideo() {
+const PropertyImagesAndVideo: React.FC<PropertyImagesAndVideoProps> = ({ onChange }) => {
   const theme = useTheme() as MyTheme;
-  const [statusMedia, requestPermissionMedia] =
-    ImagePicker.useMediaLibraryPermissions();
+  const [statusMedia, requestPermissionMedia] = ImagePicker.useMediaLibraryPermissions();
   const [media, setMedia] = useState<ImagePicker.ImagePickerAsset[]>([]);
+
+  useEffect(() => {
+    const formDataImages = media.map(image => {
+      const imageFile: ImageFile = {
+        uri: image.uri,
+        type: `image/${image.uri.split('.').pop()}`,
+        name: `image-${Date.now()}.${image.uri.split('.').pop()}`,
+        size: image.fileSize || 0,
+        arrayBuffer: async () => new ArrayBuffer(0),
+        slice: () => new Blob(),
+        stream: () => new ReadableStream(),
+        text: async () => '',
+      };
+      return imageFile;
+    });
+
+    onChange?.(formDataImages);
+  }, [media]);
 
   const handleGetMedia = async () => {
     const data = await requestPermissionsMedia(
@@ -860,7 +1015,9 @@ function PropertyImagesAndVideo() {
       </View>
     );
   };
+
   const mediaStyles = media.length > 0 ? styles().mediaStyles : {};
+
   return (
     <CustomTable title="Property Images and Video" indexIcon={16}>
       <View style={styles().AdInfo}>
@@ -914,15 +1071,6 @@ function PropertyImagesAndVideo() {
                 width="100%"
                 onPress={() => handleGetMedia()}
               />
-              <PrimaryBtn
-                title="Add Video"
-                btnStyle={[
-                  styles().draft,
-                  { borderColor: theme.colors.primary },
-                ]}
-                textColor={theme.colors.primary}
-                width="100%"
-              />
             </View>
             <GapView length={10} mode="horizontal" />
             <View style={styles().list}>
@@ -937,7 +1085,7 @@ function PropertyImagesAndVideo() {
       </View>
     </CustomTable>
   );
-}
+};
 
 function Ticktext({ text }: { text: string }) {
   const theme = useTheme() as MyTheme;
