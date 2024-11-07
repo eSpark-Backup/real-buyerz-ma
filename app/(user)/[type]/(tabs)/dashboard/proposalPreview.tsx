@@ -7,7 +7,7 @@ import { MyTheme, PropertyDetailScreenParams, UserType } from "@types";
 import { LocationIcon } from "@assets/images";
 import { NormalBtn } from "@components/AdBox";
 import { Amenity, PropertyItem, SavedLeadsItem } from "../home/utils";
-import { useGlobalSearchParams, useLocalSearchParams } from "expo-router";
+import { router, useGlobalSearchParams, useLocalSearchParams } from "expo-router";
 import { isSavedLeadsItem } from "@utils/functions";
 import { formatPrice } from "app/utils/priceConverter";
 import { handleSaveFavoriteProperty, handleSavePropertyAgent } from "../../favourites/utils";
@@ -33,7 +33,7 @@ interface Preview {
 
 function ProposalPreview() {
   const theme = useTheme() as MyTheme;
-  const { item } = useLocalSearchParams<PropertyDetailScreenParams>();
+  const { item, redirectionFrom } = useLocalSearchParams<PropertyDetailScreenParams>();
   const params = useGlobalSearchParams<{ type?: UserType }>();
   const productDetail: PropertyItem | SavedLeadsItem = JSON.parse(item ?? "{}");
   const [isLoading, setIsLoading] = useState(false);
@@ -41,7 +41,15 @@ function ProposalPreview() {
   const AvatarContainer = () => {
     const buttons = [
       ...(params.type === 'agent' ? [
-        { label: "Apply Now", outline: false, onPress: () => console.log("Apply clicked") }
+        { label: "Apply Now", outline: false, onPress: () =>{
+          router.navigate({
+            pathname: `(user)/${params.type}/(tabs)/listings`,
+            params: {
+              item: item,
+              redirectionFrom: 'proposalPreview'
+            }
+          });
+        } }
       ] : []),
       ...(isSavedLeadsItem(productDetail) ? [] : [
         { label: "Save", outline: true, onPress: () => handleSaveLeads() }
@@ -54,7 +62,7 @@ function ProposalPreview() {
       hour: "numeric",
       minute: "numeric",
       hour12: true,
-    }): "Unknown Time";
+    }) : "Unknown Time";
 
 
     const handleSaveLeads = async () => {
@@ -101,20 +109,20 @@ function ProposalPreview() {
             </View>
           </View>
         </View>
-          <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center", marginTop: 10, marginEnd: 10 }}>
-            <View style={{ flex: 1 }} />
-            <View style={{ flexDirection: "row" }}>
-              {buttons.map((bitem, bindex) => (
-                <NormalBtn
-                  key={bindex}
-                  label={bitem.label}
-                  theme={theme}
-                  outline={bitem.outline}
-                  onPress={bitem.onPress}
-                />
-              ))}
-            </View>
+        <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center", marginTop: 10, marginEnd: 10 }}>
+          <View style={{ flex: 1 }} />
+          <View style={{ flexDirection: "row" }}>
+            {redirectionFrom === 'dashboard' && buttons.map((bitem, bindex) => (
+              <NormalBtn
+                key={bindex}
+                label={bitem.label}
+                theme={theme}
+                outline={bitem.outline}
+                onPress={bitem.onPress}
+              />
+            ))}
           </View>
+        </View>
       </View>
     );
   };
@@ -152,7 +160,7 @@ function ProposalPreview() {
   };
 
   const data = [getPropertyData(productDetail)];
-  
+
   return (
     <ScrollView
       style={{ flex: 1, backgroundColor: theme?.colors.background }}

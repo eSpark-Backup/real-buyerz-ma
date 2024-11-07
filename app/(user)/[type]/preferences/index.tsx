@@ -30,14 +30,15 @@ export default function Preferences() {
   });
 
   useEffect(() => {
+    console.log(`userData ${JSON.stringify(userData)}`)
     if (userData) {
-      const { emailNotification, newsLetter, automatedReport, currency, areaUnit } = userData.preferences as PreferencesData;
+      const { emailNotification = false, newsLetter = false, automatedReport = false, currency = "PKR", areaUnit = "Sq. Ft." } = userData.preferences as PreferencesData || preferences;
       setPreferences({
-        emailNotification: emailNotification,
-        newsLetter: newsLetter,
-        automatedReport: automatedReport,
-        currency: currency,
-        areaUnit: areaUnit,
+        emailNotification,
+        newsLetter,
+        automatedReport,
+        currency,
+        areaUnit,
       });
       console.log(`preferences ${JSON.stringify(userData)}`)
     }

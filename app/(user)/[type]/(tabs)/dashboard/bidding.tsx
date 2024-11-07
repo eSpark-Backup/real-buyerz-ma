@@ -11,6 +11,8 @@ import { PropertySliceState, setAllProperties } from "features/property/property
 import { AppDispatch, RootState } from "@store";
 import { dateConverter } from "app/utils/dateConverter";
 import { priceConversion } from "app/utils/priceConverter";
+import { handleDeletePropertyProposal } from "../../myProposals/utils";
+import { showToast } from "@utils/showToast";
 
 export default function Bidding() {
   const theme = useTheme() as MyTheme;
@@ -40,6 +42,23 @@ export default function Bidding() {
     }
   };
 
+  const deleteProperties = async (proposalID: string) => {
+    setIsLoading(true);
+    try {
+      const response = await handleDeletePropertyProposal(proposalID);
+      if (response.status) {
+        fetchAllProperties()
+      }
+      else {
+        setIsLoading(false);
+      }
+    } catch (error) {
+      showToast('Failed to delete proposal', 'error')
+      setIsLoading(false);
+    }
+  };
+
+
   const topTabsData = [
     { title: "Best Matches", selected: selectedTab === "Best Matches" },
     { title: "Saved Leads", selected: selectedTab === "Saved Leads" },
@@ -47,14 +66,18 @@ export default function Bidding() {
 
 
   const btnsData = (item: any) => [
-    // { label: "Trash", onPress: () => console.log("trash"), outline: true },
+    // { label: "Trash", onPress: () => {
+    //   console.log(`item ${JSON.stringify(item)}`)
+    //   deleteProperties(item.id)
+    // }, outline: true },
     {
       label: "View",
       onPress: () => {
         router.navigate({
           pathname: `(user)/${params.type}/(tabs)/dashboard/proposalPreview`,
           params: {
-            item: JSON.stringify(item)
+            item: JSON.stringify(item),
+            redirectionFrom: 'dashboard'
           }
         });
       },

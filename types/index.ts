@@ -174,5 +174,6 @@ export interface DropdownProps {
 
 export type PropertyDetailScreenParams = {
   type: UserType;
-  item: string
+  item: string;
+  redirectionFrom:string
 }
