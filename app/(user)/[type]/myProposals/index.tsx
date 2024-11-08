@@ -22,7 +22,7 @@ import {
   OverlayLoader,
 } from "@components";
 import { Feather } from "@expo/vector-icons";
-import { handleDeletePropertyProposal, handleGetAllProposals, ProposalData } from "./utils";
+import { handleDeletePropertyProposal, handleGetAllPropertyProposals, ProposalData } from "./utils";
 import { PropertyItem } from "../(tabs)/home/utils";
 import { showToast } from "@utils/showToast";
 
@@ -111,7 +111,7 @@ export default function MyProposals() {
   const fetchProposals = async () => {
     setLoading(true);
     try {
-      const response = await handleGetAllProposals();
+      const response = await handleGetAllPropertyProposals(true);
       setLoading(false);
       if (response.status && response.proposalData) {
         setProposalData(response.proposalData);
@@ -294,16 +294,13 @@ export default function MyProposals() {
               style={{ marginVertical: 20 }}
               textColor={theme.colors.negative}
             />
-            <FlatList
-              horizontal
-              data={submitted}
-              showsHorizontalScrollIndicator={false}
-              renderItem={({ item }) => renderProposalItem({ item, isHorizontal: true })}
-              ItemSeparatorComponent={() => <GapView mode="horizontal" length={15} />}
-              keyExtractor={(item) => item.id}
-              snapToInterval={SCREEN_WIDTH - 40}
-              decelerationRate="fast"
-            />
+               <FlatList
+                data={submitted}
+                showsVerticalScrollIndicator={false}
+                renderItem={({ item }) => renderProposalItem({ item })}
+                ItemSeparatorComponent={() => <GapView length={15} />}
+                keyExtractor={(item) => item.id}
+              />
           </>
         )}
       </View>

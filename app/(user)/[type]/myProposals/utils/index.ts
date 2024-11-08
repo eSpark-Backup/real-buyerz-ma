@@ -18,6 +18,9 @@ export interface ProposalData {
   rejectedProposals: PropertyItem[];
   submittedProposals: PropertyItem[];
   trashProperties: PropertyItem[];
+  active: PropertyItem[];
+  draft: PropertyItem[];
+  trash: PropertyItem[];
   totalCount: number;
   currentPage: number;
   totalPages: number;
@@ -25,9 +28,9 @@ export interface ProposalData {
 }
 
 
-const handleGetAllProposals = async (): Promise<{ status: boolean; proposalData?: ProposalData; message?: string }> => {
+const handleGetAllPropertyProposals = async (isProposal:boolean): Promise<{ status: boolean; proposalData?: ProposalData; message?: string }> => {
   try {
-    const { data } = await api.get<ApiResponse>('/property/agent?page=1&pageSize=20&proposals=true');
+    const { data } = await api.get<ApiResponse>(`/property/agent?page=1&pageSize=20&proposals=${isProposal}`);
     if (data?.response?.data) {
       return {
         status: true,
@@ -60,4 +63,4 @@ const handleDeletePropertyProposal = async (proposalID:string): Promise<{ status
 };
 
 
-export { handleGetAllProposals, handleDeletePropertyProposal};
+export { handleGetAllPropertyProposals, handleDeletePropertyProposal};

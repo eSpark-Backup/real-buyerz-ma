@@ -147,7 +147,6 @@ export default function Listing() {
     };
   });
 
-
   const previewData = {
     propertyID: propertyData.propertyID,
     propertyName: propertyData.propertyName,

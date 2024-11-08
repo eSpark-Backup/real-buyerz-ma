@@ -103,4 +103,26 @@ const handleCreatePropertiesAndProposal = async (reqPropertyData: ReqPropertyDat
   }
 };
 
-export { handleCreatePropertiesAndProposal };
+
+const handleDraftProperty = async (propertyId: string): Promise<{ status: boolean; properties?: PropertyResponse; message?: string }> => {
+  try {
+    const formData = new FormData();
+    formData.append('propertyStatus', 'false');
+    const { data } = await api.put<PropertyResponse>(`/property/${propertyId}`,formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+    if (data?.response?.data) {
+      return {
+        status: true,
+        properties: data
+      };
+    }
+    return { status: false, message: data?.message };
+  } catch (error) {
+    return { status: false, message: 'An error occurred.' };
+  }
+};
+
+export { handleCreatePropertiesAndProposal, handleDraftProperty };
