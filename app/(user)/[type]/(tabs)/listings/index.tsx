@@ -64,16 +64,16 @@ import {
   Well,
 } from "@assets/images";
 import { WINDOW_WIDTH } from "@constants";
-import { MyTheme, UserType } from "@types";
-import { requestPermissionsMedia } from "utils/functions";
+import { MyTheme, PropertyDetailScreenParams, UserType } from "@types";
+import { isSavedLeadsItem, requestPermissionsMedia } from "utils/functions";
 import { useSelector } from "react-redux";
 import { PropertySliceState } from "features/property/propertySlice";
 import { RootState } from "@store";
-import { IAmenity } from "../home/utils";
+import { IAmenity, PropertyItem, SavedLeadsItem } from "../home/utils";
 import { useLocalSearchParams, useRouter } from "expo-router";
-import MapView, { Marker, Region } from 'react-native-maps';
+import MapView, { Marker, PROVIDER_GOOGLE, Region } from 'react-native-maps';
 import * as Location from 'expo-location';
-import { Amenity, handleCreateProperties, ImageFile, ReqPropertyData } from "../../myListings/utils";
+import { Amenity, handleCreatePropertiesAndProposal, ImageFile, ReqPropertyData } from "../../myListings/utils";
 import { showToast } from "@utils/showToast";
 
 interface CustomTableProps {
@@ -103,9 +103,12 @@ export default function Listing() {
   const theme = useTheme() as MyTheme;
   const params = useLocalSearchParams<{ type: UserType }>();
   const router = useRouter()
+  const { item, redirectionFrom } = useLocalSearchParams<PropertyDetailScreenParams>();
+  const productDetail: PropertyItem | SavedLeadsItem = JSON.parse(item ?? "{}");
   const [visible, setVisible] = useState(false);
   const [loading, setLoading] = useState(false);
   const [propertyData, setPropertyData] = useState<{
+    propertyID: string;
     propertyName: string;
     propertySubTypeId: string;
     propertyPrice: string;
@@ -119,51 +122,81 @@ export default function Listing() {
     latitude: string;
     image: ImageFile[];
     amenity: Amenity[];
-    video: any[];
+    video: string[];
     amenities: string;
-    propertyStatus: string;
-  }>({
-    propertyName: "",
-    propertySubTypeId: "22",
-    propertyPrice: "",
-    propertyArea: "",
-    purpose: "",
-    propertyAddress: "",
-    propertyCity: "",
-    propertyZip: "",
-    propertyDescription: "",
-    longitude: "",
-    latitude: "",
-    image: [],
-    amenity: [],
-    video: ["https://www.youtube.com/watch?v=HcQ5kspSi0I"],
-    amenities: "",
-    propertyStatus: "true",
+    propertyStatus: boolean;
+  }>(() => {
+    return {
+      propertyID: isSavedLeadsItem(productDetail) ? productDetail?.property?.id : productDetail?.id || "",
+      propertyName: "",
+      propertySubTypeId: "",
+      propertyPrice: "",
+      propertyArea: "",
+      purpose: "",
+      propertyAddress: "",
+      propertyCity: "",
+      propertyZip: "",
+      propertyDescription: "",
+      longitude: "",
+      latitude: "",
+      image: [],
+      amenity: [],
+      video: ["https://www.youtube.com/watch?v=HcQ5kspSi0I"],
+      amenities: "",
+      propertyStatus: true
+    };
   });
 
-  const concatData = {
-    ...propertyData,
-    propertyPrice: `PKR ${propertyData.propertyPrice}`,
-    propertyArea: `${propertyData.propertyArea} Sq. ft`
-  };
 
-  const createProperties = async () => {
+  const previewData = {
+    propertyID: propertyData.propertyID,
+    propertyName: propertyData.propertyName,
+    propertySubTypeId: propertyData.propertySubTypeId,
+    propertyPrice: propertyData.propertyPrice,
+    propertyArea: propertyData.propertyArea,
+    purpose: propertyData.purpose,
+    propertyAddress: propertyData.propertyAddress,
+    propertyCity: propertyData.propertyCity,
+    propertyZip: propertyData.propertyZip,
+    propertyDescription: propertyData.propertyDescription,
+    longitude: propertyData.longitude,
+    latitude: propertyData.latitude,
+    image: propertyData.image,
+    video: propertyData.video,
+    amenities: propertyData.amenity,
+    propertyStatus: propertyData.propertyStatus,
+    user: isSavedLeadsItem(productDetail) ? productDetail?.property?.user : productDetail?.user
+  } as const;
+
+  const createPropertyOrProposal = async (isSaveDraft: boolean) => {
+    setPropertyData(prevData => ({
+      ...prevData,
+      propertyStatus: isSaveDraft ? false : true
+    }));
+
+    console.log(JSON.stringify(propertyData))
+    console.log(propertyData.propertyStatus)
+    console.log(isSaveDraft)
     setLoading(true);
     try {
-      const response = await handleCreateProperties(concatData as ReqPropertyData);
+      const response = await handleCreatePropertiesAndProposal(propertyData as ReqPropertyData);
       setLoading(false);
       if (response.data) {
-        setVisible(true)
+        if (isSaveDraft) {
+          showToast('Saved in Draft', 'success')
+        }
+        else {
+          setVisible(true)
+        }
       }
       else {
-        showToast(response.message || 'Failed to create property', 'error')
+        showToast(response.message || 'Failed to create', 'error')
       }
     } catch (error) {
-      showToast('Failed to create property', 'error')
+      showToast('Failed to create', 'error')
       setLoading(false);
     }
   };
-
 
   return (
     <ScrollView
@@ -211,6 +244,7 @@ export default function Listing() {
       <GapView length={20} />
       <PropertySizeandPricing
         onChange={(data) => {
+          console.log(`data ${JSON.stringify(propertyData)}`)
           setPropertyData(prev => ({
             ...prev,
             propertyArea: data.propertyArea || prev.propertyArea,
@@ -234,17 +268,20 @@ export default function Listing() {
           setPropertyData(prev => ({
             ...prev,
             image: images,
+            video: ["https://www.youtube.com/watch?v=HcQ5kspSi0I"],
           }));
         }}
       />
       <View style={styles(theme).footerButtons}>
+
         <PrimaryBtn
-          disabled={Object.values(propertyData)?.some(val => Boolean(val) == false)}
+          disabled={Object.entries(propertyData).filter(([key]) => key !== 'propertyID').some(([_, value]) => !value || value.length === 0)}
           onPress={() => {
             router.push({
               pathname: `(user)/${params.type}/(tabs)/dashboard/proposalPreview`,
               params: {
-                data: JSON.stringify(propertyData),
+                item: JSON.stringify(previewData),
+                redirectionFrom: 'listing'
               },
             });
           }}
@@ -252,23 +289,28 @@ export default function Listing() {
         >
           <Ionicons name="eye" color={theme.colors.primary} size={20} />
         </PrimaryBtn>
+        {redirectionFrom != "proposalPreview" && (
+          <PrimaryBtn
+            // disabled={Object.entries(propertyData).filter(([key]) => key !== 'propertyID').some(([_, value]) => !value || value.length === 0)}
+            title="Save as draft"
+            btnStyle={styles(theme).draft}
+            textColor={theme.colors.primary}
+            weight="500"
+            onPress={() => {
+              createPropertyOrProposal(true)
+            }}
+          />
+        )}
         <PrimaryBtn
-          disabled={Object.values(propertyData)?.some(val => Boolean(val) == false)}
-          title="Save as draft"
-          btnStyle={styles(theme).draft}
-          textColor={theme.colors.primary}
-          weight="500"
-        />
-        <PrimaryBtn
-          disabled={Object.values(propertyData)?.some(val => Boolean(val) == false)}
-          title="Submit Ad"
+          disabled={Object.entries(propertyData).filter(([key]) => key !== 'propertyID').some(([_, value]) => !value || value.length === 0)}
+          title={redirectionFrom === "proposalPreview" ? "Submit Proposal" : "Submit Ad"}
           weight="500"
           width={100}
           onPress={() => {
-            createProperties()
-          }
-          }
+            createPropertyOrProposal(false)
+          }}
         />
+
       </View>
       <MyPopupModal visible={visible} bgDim>
         <MyPopupModal.Success
@@ -520,6 +562,7 @@ function LocationAndPurpose({
           <RequiredText text="Select Location" />
           {location ? (
             <MapView
+              provider={PROVIDER_GOOGLE}
               style={{ width: "90%", height: 150 }}
               initialRegion={{
                 latitude: location.latitude,
@@ -530,6 +573,7 @@ function LocationAndPurpose({
               onRegionChangeComplete={onRegionChange}
             >
               <Marker
+                identifier="mainMarker"
                 coordinate={{
                   latitude: location.latitude,
                   longitude: location.longitude,
@@ -598,7 +642,7 @@ function PropertySizeandPricing({
       <View style={styles().AdInfo}>
         <ListingIcon iconIndex={1} />
         <View style={styles().AdField}>
-          <RequiredText text="Select Purpose" />
+          <RequiredText text="Select Area" />
           <MyInput
             placeholder={"Enter Unit"}
             style={styles(theme).singleInputStyle}
@@ -877,9 +921,16 @@ const renderListItem = ({
   );
 };
 
-function Counter({ type, icon, onChange }: { type: string, icon?: string, onChange: (e: number) => void }) {
+interface CounterProps {
+  type: string;
+  icon?: string;
+  onChange: (e: number) => void;
+  initialCount?: number;
+}
+
+function Counter({ type, icon, onChange, initialCount = 1 }: CounterProps) {
   const theme = useTheme() as MyTheme;
-  const [value, setValue] = useState(1);
+  const [value, setValue] = useState(initialCount);
 
   useEffect(() => {
     onChange(value);
@@ -887,7 +938,7 @@ function Counter({ type, icon, onChange }: { type: string, icon?: string, onChan
 
   return (
     <View style={styles().counter}>
-      {<AmenitiesBed />}
+      {icon ? icon : <AmenitiesBed />}
       <View style={styles(theme).innerCounter}>
         <Pressable
           onPress={() => {
@@ -909,9 +960,16 @@ function Counter({ type, icon, onChange }: { type: string, icon?: string, onChan
   );
 }
 
-const PropertyImagesAndVideo: React.FC<PropertyImagesAndVideoProps> = ({ onChange }) => {
+interface PropertyImagesAndVideoProps {
+  onChange?: (images: ImageFile[]) => void;
+}
+
+const PropertyImagesAndVideo: React.FC<PropertyImagesAndVideoProps> = ({
+  onChange,
+}) => {
   const theme = useTheme() as MyTheme;
   const [statusMedia, requestPermissionMedia] = ImagePicker.useMediaLibraryPermissions();
+
   const [media, setMedia] = useState<ImagePicker.ImagePickerAsset[]>([]);
 
   useEffect(() => {
@@ -928,7 +986,6 @@ const PropertyImagesAndVideo: React.FC<PropertyImagesAndVideoProps> = ({ onChang
       };
       return imageFile;
     });
-
     onChange?.(formDataImages);
   }, [media]);
 
@@ -989,16 +1046,31 @@ const PropertyImagesAndVideo: React.FC<PropertyImagesAndVideoProps> = ({ onChang
         >
           <Ionicons name="close" color={theme.colors.primary} size={15} />
         </PrimaryBtn>
-        <Image
-          source={{ uri: item.uri }}
-          style={{
-            borderRadius: 4,
-          }}
-          height={WINDOW_WIDTH / 3 - 45}
-          width={WINDOW_WIDTH / 3 - 45}
-          resizeMethod="auto"
-          resizeMode="cover"
-        />
+        {item.type === 'video' ? (
+          <View
+            style={{
+              height: WINDOW_WIDTH / 3 - 45,
+              width: WINDOW_WIDTH / 3 - 45,
+              justifyContent: 'center',
+              alignItems: 'center',
+              backgroundColor: theme.colors.cardBg,
+              borderRadius: 4,
+            }}
+          >
+            <Ionicons name="film-outline" size={24} color={theme.colors.primary} />
+          </View>
+        ) : (
+          <Image
+            source={{ uri: item.uri }}
+            style={{
+              borderRadius: 4,
+            }}
+            height={WINDOW_WIDTH / 3 - 45}
+            width={WINDOW_WIDTH / 3 - 45}
+            resizeMethod="auto"
+            resizeMode="cover"
+          />
+        )}
         <Ionicons
           name={item.type === "image" ? "image-outline" : "film-outline"}
           color={theme.colors.primary}

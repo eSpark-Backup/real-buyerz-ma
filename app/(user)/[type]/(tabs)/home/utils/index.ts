@@ -27,6 +27,7 @@ export interface SavedLeadsItem {
   updatedAt: string;
   property: SaveLeadsProperty;
   propertyType: PropertyType;
+  PropertyData: PropertyDataItem[];
 }
 
 interface SaveLeadsProperty {
@@ -116,7 +117,7 @@ export interface PropertyType {
   imageKey: string;
   createdAt: string;
   updatedAt: string;
-  subTypes?: PropertySubType & PropertySubType[];
+  subTypes?: PropertySubType[];
 }
 
 interface PropertySubType {
@@ -190,7 +191,8 @@ const handleGetAllProperties = async (params?: string): Promise<{
   message?: string;
 }> => {
   try {
-    const { data } = await api.get<FindAllPropertiesResponse>("/userProperty" + (params ?? ""));
+    const endpoint = params?.trim() === 'agent'? `/property`: '/userProperty';
+    const { data } = await api.get<FindAllPropertiesResponse>(endpoint);
     if (data?.success) {
       return {
         status: true,
@@ -201,6 +203,21 @@ const handleGetAllProperties = async (params?: string): Promise<{
     return { status: false, message: data?.message };
   } catch (error) {
     return { status: false, message: "An error occurred." };
+  }
+};
+
+const handleDeleteProperty = async (propertyID:string): Promise<{ status: boolean; message?: string }> => {
+  try {
+    const { data } = await api.delete<FindAllPropertiesResponse>(`/userProperty/${propertyID}`);
+    if (data?.success) {
+      return {
+        status: true
+      };
+    }
+    return { status: false, message: data?.message || 'No data found.' };
+  } catch (error: any) {
+    const errorMessage = error.response?.data?.message || 'An error occurred while fetching favorites.';
+    return { status: false, message: errorMessage };
   }
 };
 
@@ -299,4 +316,4 @@ const handleGetAdminProfile = async (agentId: string): Promise<{
   }
 };
 
-export { handleGetAllProperties, handleGetAllPropertType, handleGetAllAmenities, IAmenity,handleGetAdminProfile };
+export { handleGetAllProperties, handleGetAllPropertType,handleDeleteProperty, handleGetAllAmenities, IAmenity,handleGetAdminProfile };

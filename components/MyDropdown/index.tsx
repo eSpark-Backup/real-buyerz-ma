@@ -12,7 +12,6 @@ import { ScrollView } from "react-native-gesture-handler"; //? for scrolling ins
 
 import MyText from "@components/MyText";
 import { MyTheme } from "@types";
-import { useFocusEffect } from "expo-router";
 
 interface DropdownProps {
   data: string[];
