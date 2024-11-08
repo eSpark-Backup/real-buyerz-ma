@@ -31,7 +31,7 @@ export default function Bidding() {
     setIsLoading(true);
     setError(null);
     try {
-      const response = await handleGetAllProperties();
+      const response = await handleGetAllProperties(params.type);
       if (response.data) {
         dispatch(setAllProperties(response.data));
       }

@@ -139,7 +139,7 @@ export default function Home() {
             btnLabel="Go to Dashboard"
             theme={theme}
             onPress={() =>
-              Boolean(userData) ? router.push(`(user)/${params?.type!}/(tabs)/dashboard`) : setVisible(true)
+              Boolean(userData) ? router.push(`(user)/${params?.type!}/(tabs)/dashboard/bidding`) : setVisible(true)
             }
           />
           <GapView length={30} />
@@ -315,7 +315,7 @@ const ImageCard = () => {
             borderRadius: 3,
           }}
           onPress={() =>
-            router.push(`(user)/${params?.type!}/(tabs)/dashboard`)
+            router.push(`(user)/${params?.type!}/(tabs)/dashboard/bidding`)
           }
         >
           <MyText textColor="#ffffff" size={10} weight="600">

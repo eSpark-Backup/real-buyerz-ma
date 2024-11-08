@@ -191,7 +191,8 @@ const handleGetAllProperties = async (params?: string): Promise<{
   message?: string;
 }> => {
   try {
-    const { data } = await api.get<FindAllPropertiesResponse>("/userProperty" + (params ?? ""));
+    const endpoint = params?.trim() === 'agent'? `/property`: '/userProperty';
+    const { data } = await api.get<FindAllPropertiesResponse>(endpoint);
     if (data?.success) {
       return {
         status: true,

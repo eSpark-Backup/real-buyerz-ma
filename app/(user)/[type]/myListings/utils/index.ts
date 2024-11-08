@@ -65,7 +65,11 @@ const handleCreatePropertiesAndProposal = async (reqPropertyData: ReqPropertyDat
       } else if (key === 'propertyID' && reqPropertyData?.propertyID) {
         const userPropertyId = value as string;
         formData.append('userPropertyId', userPropertyId as string);
-      } else if (Array.isArray(value)) {
+      }
+      else if(key === 'propertyID'){
+        return
+      }
+      else if (Array.isArray(value)) {
         value.forEach((item) => {
           formData.append(`${key}`, item);
         });

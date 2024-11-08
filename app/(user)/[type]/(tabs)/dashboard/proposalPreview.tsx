@@ -12,6 +12,7 @@ import { isSavedLeadsItem } from "@utils/functions";
 import { formatPrice } from "app/utils/priceConverter";
 import { handleSaveFavoriteProperty, handleSavePropertyAgent } from "../../favourites/utils";
 import { showToast } from "@utils/showToast";
+import MapView, { Marker, PROVIDER_GOOGLE, Region } from 'react-native-maps';
 
 interface Preview {
   title: string;
@@ -22,6 +23,8 @@ interface Preview {
   city: string;
   size: string;
   range: number | string;
+  latitude: number;
+  longitude: number;
   installments: string;
   readyFor: string;
   map?: string;
@@ -37,6 +40,7 @@ function ProposalPreview() {
   const params = useGlobalSearchParams<{ type?: UserType }>();
   const productDetail: PropertyItem | SavedLeadsItem = JSON.parse(item ?? "{}");
   const [isLoading, setIsLoading] = useState(false);
+
 
   const AvatarContainer = () => {
     const buttons = [
@@ -137,6 +141,8 @@ function ProposalPreview() {
         city: detail.property.propertyCity || "Unknown City",
         location: detail.property.propertyAddress || "Unknown Location",
         size: "N/A",
+        latitude: parseFloat(detail.property.latitude),
+        longitude: parseFloat(detail.property.longitude),
         range: detail.property.propertyPrice || 0,
         installments: "N/A",
         readyFor: "N/A",
@@ -150,6 +156,8 @@ function ProposalPreview() {
         type: detail.propertyType?.typeName || "Commercial",
         city: detail.propertyCity || "Unknown City",
         location: detail.propertyAddress || "Unknown Location",
+        latitude: parseFloat(detail.latitude),
+        longitude: parseFloat(detail.longitude),
         size: "N/A",
         range: detail.propertyPrice || 0,
         installments: "N/A",
@@ -180,14 +188,30 @@ function ProposalPreview() {
               <LabelValue label="Property Type" value={item.type} />
               <LabelValue label="City" value={item.city} />
               <LabelValue label="Location" value={item.location} />
-              <View
-                style={{
-                  width: "100%",
-                  height: 116,
-                  backgroundColor: "#947971",
-                  alignSelf: "center",
+              {item.latitude && item.longitude ? (
+            <MapView
+              provider={PROVIDER_GOOGLE}
+              style={{ width: "100%", height: 150 }}
+              initialRegion={{
+                latitude: item.latitude,
+                longitude: item.longitude,
+                latitudeDelta: 0.005,
+                longitudeDelta: 0.005,
+              }}
+            >
+              <Marker
+                identifier="mainMarker"
+                coordinate={{
+                  latitude: item.latitude,
+                  longitude: item.longitude,
                 }}
               />
+            </MapView>
+          ) : (
+            <View style={{ width: "90%", height: 150, justifyContent: 'center', alignItems: 'center' }}>
+              <MyText text="Loading map..." textColor={theme.colors.placeholderText} />
+            </View>
+          )}
             </View>
             <View style={styles(theme).part1}>
               <MyText text={"Amount"} size={16} weight="500" />

@@ -75,9 +75,9 @@ function UserTabLayout() {
           options={{
             headerShown: false,
             title: "Dashboard",
-            href: `(user)/${params?.type!}/(tabs)/dashboard`,
+            href: `(user)/${params?.type!}/(tabs)/dashboard/bidding`,
           }}
-          initialParams={{ type: params.type }}
+          initialParams={{ userType: params.type }}
         />
         <Tabs.Screen
           name="listings"

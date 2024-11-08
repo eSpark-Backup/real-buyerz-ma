@@ -171,14 +171,23 @@ export default function Listing() {
   const createPropertyOrProposal = async (isSaveDraft: boolean) => {
     setPropertyData(prevData => ({
       ...prevData,
-      propertyStatus: !isSaveDraft
+      propertyStatus: isSaveDraft ? false : true
     }));
+
+    console.log(JSON.stringify(propertyData))
+    console.log(propertyData.propertyStatus)
+    console.log(isSaveDraft)
     setLoading(true);
     try {
       const response = await handleCreatePropertiesAndProposal(propertyData as ReqPropertyData);
       setLoading(false);
       if (response.data) {
-        setVisible(true)
+        if (isSaveDraft) {
+          showToast('Saved in Draft', 'success')
+        }
+        else {
+          setVisible(true)
+        }
       }
       else {
         showToast(response.message || 'Failed to create', 'error')
@@ -282,7 +291,7 @@ export default function Listing() {
         </PrimaryBtn>
         {redirectionFrom != "proposalPreview" && (
           <PrimaryBtn
-            disabled={Object.entries(propertyData).filter(([key]) => key !== 'propertyID').some(([_, value]) => !value || value.length === 0)}
+            // disabled={Object.entries(propertyData).filter(([key]) => key !== 'propertyID').some(([_, value]) => !value || value.length === 0)}
             title="Save as draft"
             btnStyle={styles(theme).draft}
             textColor={theme.colors.primary}
@@ -633,7 +642,7 @@ function PropertySizeandPricing({
       <View style={styles().AdInfo}>
         <ListingIcon iconIndex={1} />
         <View style={styles().AdField}>
-          <RequiredText text="Select Purpose" />
+          <RequiredText text="Select Area" />
           <MyInput
             placeholder={"Enter Unit"}
             style={styles(theme).singleInputStyle}
