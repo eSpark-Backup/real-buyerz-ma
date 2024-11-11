@@ -1,7 +1,7 @@
 import React from "react";
 import { StyleSheet } from "react-native";
 import { useTheme } from "@react-navigation/native";
-import { Stack, useGlobalSearchParams, useLocalSearchParams } from "expo-router";
+import { Stack, useGlobalSearchParams } from "expo-router";
 
 import { MyTheme, UserType } from "@types";
 import { MyHeader } from "@components";

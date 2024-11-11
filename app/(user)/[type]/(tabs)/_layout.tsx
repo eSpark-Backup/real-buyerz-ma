@@ -82,6 +82,7 @@ function UserTabLayout() {
         <Tabs.Screen
           name="listings"
           options={{
+            headerShown: false,
             title: "Listings",
             href: `(user)/${params?.type!}/(tabs)/listings`,
           }}

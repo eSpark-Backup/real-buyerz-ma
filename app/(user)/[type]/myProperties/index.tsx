@@ -123,6 +123,7 @@ export default function MyProperties() {
     try {
       const response = await handleGetAllPropertyProposals(false);
       setLoading(false);
+      console()
       if (response.status && response.proposalData) {
         setPropertiesData(response.proposalData);
       }

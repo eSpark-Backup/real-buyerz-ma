@@ -1,4 +1,5 @@
 import { api } from "api";
+import { ImageFile } from "app/(user)/[type]/myListings/utils";
 
 interface FindAllPropertiesResponse {
   success: boolean;
@@ -83,6 +84,7 @@ export interface PropertyItem {
   isFeatured: boolean;
   isDeleted: boolean;
   propertyTypeId: string;
+  image:ImageFile[]
   createdAt: string;
   updatedAt: string;
   amenities: Amenity[];
@@ -101,6 +103,7 @@ export interface PropertyItem {
 
 export interface Amenity {
   id: string;
+  name: string;
   amenetiesName: string;
   count: number | null;
   otherFeatures: string;
