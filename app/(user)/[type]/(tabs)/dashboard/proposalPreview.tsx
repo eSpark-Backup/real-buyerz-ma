@@ -10,7 +10,7 @@ import { Amenity, PropertyDataItem, PropertyItem, SavedLeadsItem } from "../home
 import { router, useGlobalSearchParams, useLocalSearchParams } from "expo-router";
 import { isSavedLeadsItem } from "@utils/functions";
 import { formatPrice } from "app/utils/priceConverter";
-import { handleSaveFavoriteProperty, handleSavePropertyAgent } from "../../favourites/utils";
+import { handleSaveFavoriteProperty} from "../../favourites/utils";
 import { showToast } from "@utils/showToast";
 import MapView, { Marker, PROVIDER_GOOGLE, Region } from 'react-native-maps';
 import { ImageFile } from "../../myListings/utils";
@@ -75,7 +75,7 @@ function ProposalPreview() {
     const handleSaveLeads = async () => {
       setIsLoading(true);
       try {
-        const response = await (params.type === "user" ? handleSaveFavoriteProperty(productDetail.id) : handleSavePropertyAgent(productDetail.id));
+        const response = await handleSaveFavoriteProperty(productDetail.id, params.type)
         setIsLoading(false);
         if (response.properties?.response) {
           showToast("Successfully Saved Leads", 'success')
@@ -172,7 +172,7 @@ function ProposalPreview() {
   };
 
   function getImageFromPropertyData(propertyData: PropertyDataItem[]): ImageFile[] {
-    const imageItem = propertyData.find(item => item.type === "image");
+    const imageItem = propertyData?.find(item => item.type === "image");
     if (imageItem) {
       const blob = new Blob();
 

@@ -1,9 +1,9 @@
 import { showToast } from "@utils/showToast";
 import { handleSaveFavoriteProperty } from "app/(user)/[type]/favourites/utils";
 
-export const addFavorite = async (propertyId: string) => {
+export const addFavorite = async (propertyId: string, type:string) => {
     try {
-        const result = await handleSaveFavoriteProperty(propertyId);
+        const result = await handleSaveFavoriteProperty(propertyId, type);
         if (result.status) {
             showToast(result.message || "Added to Favorite")
         } else {

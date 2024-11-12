@@ -120,7 +120,7 @@ export interface PropertyType {
   imageKey: string;
   createdAt: string;
   updatedAt: string;
-  subTypes?: PropertySubType[];
+  subTypes?: PropertySubType;
 }
 
 interface PropertySubType {

@@ -113,6 +113,8 @@ const handleDraftProperty = async (propertyId: string): Promise<{ status: boolea
         'Content-Type': 'multipart/form-data',
       },
     });
+    console.log("Draft  "+JSON.stringify(formData))
+
     if (data?.response?.data) {
       return {
         status: true,

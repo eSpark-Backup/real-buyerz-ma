@@ -22,13 +22,15 @@ const MyListItem: React.FC<MyListItemProps> = ({ item, index, theme, fav, isFavR
   const images = item?.PropertyData?.filter(val => val.type == "image")
   const router = useRouter()
 
+  console.log("Favorite user type "+JSON.stringify(params))
+
   const handleFavClicked = () => {
-    addFavorite(item.id);
+    addFavorite(item.id, params?.type!);
     setTimeout(() => {
       onFavClicked?.();
-    }, 150); 
+    }, 200); 
   };
-  
+
   return (
     <Pressable onPress={() => {
       router.navigate({
@@ -115,14 +117,28 @@ const MyListItem: React.FC<MyListItemProps> = ({ item, index, theme, fav, isFavR
               width="47%"
               weight="500"
               paddingV={6}
-              onPress={() => console.log("asd")}
+              onPress={() => router.navigate({
+                pathname: `(user)/${params?.type!}/(tabs)/dashboard/proposalPreview`,
+                params: {
+                  item: JSON.stringify(item),
+                  redirectionFrom: 'dashboard'
+                }
+              })
+            }
             />
             <PrimaryBtn
               title="Agent"
               textColor="#ffffff"
               width="47%"
               paddingV={6}
-              onPress={() => console.log("asd")}
+              onPress={() =>
+                router.navigate({
+                  pathname: `(user)/${params?.type!}/(tabs)/home/AgentProfile`,
+                  params: {
+                    item: JSON.stringify(item.userId)
+                  }
+                })
+              }
             />
           </View>
         ) : (

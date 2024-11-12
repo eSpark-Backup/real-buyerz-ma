@@ -1,3 +1,4 @@
+import React from 'react';
 import { Platform, StyleSheet, View } from "react-native";
 import { useTheme } from "@react-navigation/native";
 import {
@@ -207,26 +208,6 @@ export default function MainLayout() {
           initialParams={{ type: params?.type }}
         />
         <Drawer.Screen
-          name="myListings" // This is the name of the page and must match the url from root
-          options={{
-            drawerActiveBackgroundColor: "#DCEAF2",
-            drawerIcon: ({ focused }) => (
-              <Draw_Proposals
-                style={{
-                  color: focused ? theme.colors.secondary : theme.colors.text,
-                }}
-              />
-            ),
-            drawerLabel: ({ focused }) => (
-              <DrawerLabel
-                label="My Listings"
-                theme={theme}
-                focused={focused}
-              />
-            ),
-          }}
-        />
-        <Drawer.Screen
           name="myProposals" // This is the name of the page and must match the url from root
           options={{
             drawerActiveBackgroundColor: "#DCEAF2",
@@ -247,7 +228,7 @@ export default function MainLayout() {
           }}
         />
         <Drawer.Screen
-          name="myProperties" // This is the name of the page and must match the url from root
+          name="myProperties"
           options={{
             drawerActiveBackgroundColor: "#DCEAF2",
             drawerIcon: ({ focused }) => (
@@ -259,7 +240,7 @@ export default function MainLayout() {
             ),
             drawerLabel: ({ focused }) => (
               <DrawerLabel
-                label="My Properties"
+                label={params.type === "user" ? "My Listings" : "My Properties"}
                 theme={theme}
                 focused={focused}
               />
@@ -403,12 +384,14 @@ export default function MainLayout() {
             ),
           }}
         />
-        {/* <Drawer.Screen
-        name="listings" // This is the name of the page and must match the url from root
-        options={{
-          drawerLabel: "My Listings",
-        }}
-      /> */}
+        <Drawer.Screen
+          name="myListings"
+          options={({ route }) => ({
+            drawerItemStyle: { display: params.type === "agent" ? "flex" : "none" }, // Hide for non-agent types
+            drawerLabel: () => null, // Remove the label
+            drawerIcon: () => null, // Optionally remove the icon
+          })}
+        />
       </Drawer>
     </>
   );
