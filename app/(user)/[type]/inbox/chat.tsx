@@ -137,7 +137,6 @@ const renderList = ({
   index: number;
   theme?: MyTheme;
 }) => {
-  console.log("tag", testData[index - 1]?.sender?.tag === item.sender.tag);
   const isPreviousMsgSame =
     testData[index - 1]?.sender?.tag === item.sender.tag;
   return (

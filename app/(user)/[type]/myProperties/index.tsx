@@ -17,6 +17,7 @@ import {
   MyBottomSheet,
   MyButton,
   MyDropdown,
+  MyText,
   MyTopFilter,
   MyTopTabs,
   OverlayLoader,
@@ -25,6 +26,7 @@ import { handleGetAllPropertyProposals, ProposalData } from "../myProposals/util
 import { showToast } from "@utils/showToast";
 import { PropertyItem } from "../(tabs)/home/utils";
 import { handleCreatePropertiesAndProposal, handleDraftProperty, ImageFile, ReqPropertyData } from "../myListings/utils";
+import { TouchableOpacity } from "react-native-gesture-handler";
 
 interface DropDownList {
   data: string[];
@@ -116,6 +118,11 @@ export default function MyProperties() {
       title: `Drafts (${propertiesData?.draft?.length || 0})`,
       selected: currentTab === "Drafts"
     },
+            //// It will show for user
+    // {
+    //   title: `Trash (${propertiesData?.trash?.length || 0})`,
+    //   selected: currentTab === "Trash"
+    // },
   ];
 
   const fetchProperties = async () => {
@@ -123,7 +130,6 @@ export default function MyProperties() {
     try {
       const response = await handleGetAllPropertyProposals(false);
       setLoading(false);
-      console()
       if (response.status && response.proposalData) {
         setPropertiesData(response.proposalData);
       }
@@ -186,6 +192,13 @@ export default function MyProperties() {
         return {
           data: propertiesData.draft,
         };
+
+        //// It will show for user
+
+      // case "Trash":
+      //   return {
+      //     data: propertiesData.draft,
+      //   };
       default:
         return { data: [] };
     }
@@ -265,20 +278,28 @@ export default function MyProperties() {
           marginBottom: 10,
         }}
       />
-        <MyTopTabs
+      <MyTopTabs
         data={topTabsData}
-        paddingH={15}
         onTabPress={(title: string) => setCurrentTab(title.split(" ")[0])}
       />
 
       <View style={styles.content}>
-        <FlatList
-          data={data}
-          showsVerticalScrollIndicator={false}
-          renderItem={({ item }) => renderPropertiesItem({ item })}
-          ItemSeparatorComponent={() => <GapView length={15} />}
-          keyExtractor={(item) => item.id}
-        />
+        {data.length > 0 ? (
+          <FlatList
+            data={data}
+            showsVerticalScrollIndicator={false}
+            renderItem={({ item }) => renderPropertiesItem({ item })}
+            ItemSeparatorComponent={() => <GapView length={15} />}
+            keyExtractor={(item) => item.id}
+          />
+        ) : (
+          <View style={styles.errorContainer}>
+            <MyText text="No Data found" size={16} textColor="red" />
+            <TouchableOpacity onPress={fetchProperties}>
+              <MyText text="Retry" size={16} textColor={theme.colors.primary} />
+            </TouchableOpacity>
+          </View>
+        )}
       </View>
     </View>
   );
@@ -287,6 +308,11 @@ export default function MyProperties() {
 const styles = StyleSheet.create({
   container: {
     paddingTop: 26,
+  },
+  errorContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   top_filter: {
     flexDirection: "row",

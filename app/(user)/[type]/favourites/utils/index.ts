@@ -49,9 +49,10 @@ export interface PropertyDetails {
 }
 
 
-const handleGetFavorite = async (): Promise<{ status: boolean; properties?: PropertyResponse[]; message?: string }> => {
+const handleGetFavorite = async (type?: string): Promise<{ status: boolean; properties?: PropertyResponse[]; message?: string }> => {
   try {
-    const { data } = await api.get<ApiResponse>('/userProperty/request');
+    const endpoint = type?.trim() === 'agent'? `/property/request`: '/userProperty/request';
+    const { data } = await api.get<ApiResponse>(endpoint);
     if (data?.response?.data) {
       console.log(`Idhar: ${JSON.stringify(data)}`);
       return {
@@ -67,34 +68,22 @@ const handleGetFavorite = async (): Promise<{ status: boolean; properties?: Prop
   }
 };
 
-const handleSaveFavoriteProperty = async (propertyId: string): Promise<{ status: boolean; properties?: ApiResponse; message?: string }> => {
+const handleSaveFavoriteProperty = async (propertyId: string,type?: string): Promise<{ status: boolean; properties?: ApiResponse; message?: string }> => {
   try {
-    const { data } = await api.post<ApiResponse>(`/userProperty/${propertyId}`);
+    console.log("User type "+ type)
+    const endpoint = type?.trim() === 'agent'? `/property/${propertyId}`: `/userProperty/${propertyId}`;
+    const { data } = await api.post<ApiResponse>(endpoint);
     if (data?.response?.data) {
       return {
         status: true,
         properties: data
       };
     }
+    console.log("Save Favorite "+JSON.stringify(data))
     return { status: false, message: data?.message };
   } catch (error) {
     return { status: false, message: 'An error occurred.' };
   }
 };
 
-const handleSavePropertyAgent = async (propertyId: string): Promise<{ status: boolean; properties?: ApiResponse; message?: string }> => {
-  try {
-    const { data } = await api.post<ApiResponse>(`/property/${propertyId}`);
-    if (data?.response?.data) {
-      return {
-        status: true,
-        properties: data
-      };
-    }
-    return { status: false, message: data?.message };
-  } catch (error) {
-    return { status: false, message: 'An error occurred.' };
-  }
-};
-
-export { handleGetFavorite, handleSaveFavoriteProperty, handleSavePropertyAgent };
+export { handleGetFavorite, handleSaveFavoriteProperty };

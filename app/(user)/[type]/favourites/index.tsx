@@ -2,16 +2,18 @@ import React, { useEffect, useState } from "react";
 import { StyleSheet, View, FlatList, ActivityIndicator, TouchableOpacity } from "react-native";
 import { useTheme } from "@react-navigation/native";
 import { MyListItem, GapView, MyText, Card, OverlayLoader } from "@components";
-import { MyTheme } from "@types";
+import { MyTheme, UserType } from "@types";
 import { handleGetFavorite, PropertyResponse } from "./utils";
 import { PropertyItem } from "../(tabs)/home/utils";
 import { formatPrice } from "app/utils/priceConverter";
+import { useGlobalSearchParams } from "expo-router";
 
 export default function Favourite() {
   const theme = useTheme() as MyTheme;
   const [favorites, setFavorites] = useState<PropertyItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const params = useGlobalSearchParams<{ type: UserType }>();
 
   const mapPropertyToItem = (property: PropertyResponse): PropertyItem => ({
     id: property.propertyId,
@@ -32,6 +34,7 @@ export default function Favourite() {
     isFeatured: property.property.isFeatured,
     isDeleted: property.property.isDeleted,
     propertyTypeId: property.property.propertyTypeId,
+    image:[],
     createdAt: property.property.createdAt,
     updatedAt: property.property.updatedAt,
     amenities: property.property.amenities || [],
@@ -50,7 +53,7 @@ export default function Favourite() {
     setLoading(true);
     setError(null);
     try {
-      const result = await handleGetFavorite();
+      const result = await handleGetFavorite(params.type);
       setLoading(true);
       if (result.status) {
         const mappedFavorites = result.properties?.map(mapPropertyToItem) || [];
@@ -76,6 +79,7 @@ export default function Favourite() {
       item={item}
       index={index}
       theme={theme}
+      params={params}
       fav={item.isFavourite}
       isFavRed={true}
       onFavClicked={() => fetchFavorites()}

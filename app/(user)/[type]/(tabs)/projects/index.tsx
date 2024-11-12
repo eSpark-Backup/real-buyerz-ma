@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useState } from "react";
 import { FlatList, StyleProp, StyleSheet, View, ViewStyle } from "react-native";
 import { useTheme } from "@react-navigation/native";
 
@@ -14,7 +14,7 @@ import {
   RangeSlider,
 } from "@components";
 import { MyTheme, UserType } from "@types";
-import { useFocusEffect, useGlobalSearchParams, useLocalSearchParams, useSegments } from "expo-router";
+import { useFocusEffect, useGlobalSearchParams } from "expo-router";
 import { RootState } from "@store";
 import { PropertySliceState, setFilter } from "features/property/propertySlice";
 import { useSelector } from "react-redux";
@@ -22,133 +22,22 @@ import { handleGetAllProperties, PropertyItem } from "../home/utils";
 import { createUrlParams } from "@utils/functions";
 import { useDispatch } from "react-redux";
 
-interface SearchList {
-  id: string;
-  title: string;
-  cost: string;
-  address: string;
-  beds: number;
-  bathroom: number;
-  parking: number;
-  sqft: number;
-  image: string;
-}
-interface DropDownList {
-  data: string[];
-  placeholder: string;
-  title: string;
-  height: number;
-  zIndex: number;
-  style?: StyleProp<ViewStyle>;
-  onSelect: (val: string) => void;
-}
-
-const topTabsData = [
-  { title: "Houses", selected: true },
-  { title: "Plots", selected: false },
-  { title: "Commercial", selected: false },
-];
-
-const testData: SearchList[] = [
-  {
-    id: "1",
-    title: "Residential Plot for Sale",
-    cost: "13 Lac",
-    address: "Bahria Greens Bahria Town Karachi",
-    beds: 5,
-    bathroom: 3,
-    parking: 2,
-    sqft: 1080,
-    image: "https://picsum.photos/id/58/200",
-  },
-  {
-    id: "2",
-    title: "Residential Plot for Sale",
-    cost: "13 Lac",
-    address: "Bahria Greens Bahria Town Karachi",
-    beds: 5,
-    bathroom: 3,
-    parking: 2,
-    sqft: 1080,
-    image: "https://picsum.photos/id/90/200",
-  },
-  {
-    id: "3",
-    title: "Residential Plot for Sale",
-    cost: "13 Lac",
-    address: "Bahria Greens Bahria Town Karachi",
-    beds: 5,
-    bathroom: 3,
-    parking: 2,
-    sqft: 1080,
-    image: "https://picsum.photos/id/99/200",
-  },
-  {
-    id: "4",
-    title: "Residential Plot for Sale",
-    cost: "13 Lac",
-    address: "Bahria Greens Bahria Town Karachi",
-    beds: 5,
-    bathroom: 3,
-    parking: 2,
-    sqft: 1080,
-    image: "https://picsum.photos/id/200/200",
-  },
-  {
-    id: "5",
-    title: "Residential Plot for Sale",
-    cost: "13 Lac",
-    address: "Bahria Greens Bahria Town Karachi",
-    beds: 5,
-    bathroom: 3,
-    parking: 2,
-    sqft: 1080,
-    image: "https://picsum.photos/id/212/200",
-  },
-];
-
-// const dropdownData: DropDownList[] = [
-//   {
-//     data: ["Sell", "Buy", "Rent"],
-//     height: 40,
-//     zIndex: 4,
-//     onSelect: (val: string) => {},
-//     placeholder: "Purpose",
-//     title: "Purpose",
-//     style: { width: "100%" },
-//   },
-//   {
-//     data: ["House", "Plot", "Commercial"],
-//     height: 40,
-//     zIndex: 4,
-//     onSelect: (val: string) => {},
-//     placeholder: "Type",
-//     title: "Property Type",
-//     style: { width: "100%" },
-//   },
-// ];
-
 export default function Projects() {
   const theme = useTheme() as MyTheme;
   const [visible, setVisible] = useState(false);
   const [properties, setProperties] = useState<PropertyItem[]>([]);
   const params = useGlobalSearchParams<{ type: UserType }>();
-
-  const { propertyType } = useLocalSearchParams();
   const { propertyTypes, filter } = useSelector<RootState, PropertySliceState>(
     (state) => state.property
   );
   const [loading, setLoading] = useState<boolean>(false);
-  const [unappliedFilters, setUnappliedFilters] = useState<{
-    [key: string]: any;
-  }>({});
-
+  const [unappliedFilters, setUnappliedFilters] = useState<{ [key: string]: any }>({});
   const [dropdownData, setDropDownData] = useState([
     {
       data: ["Sell", "Buy", "Rent"],
       height: 40,
       zIndex: 4,
-      onSelect: (val: string) => {},
+      onSelect: (val: string) => { },
       placeholder: "Purpose",
       title: "Purpose",
       style: { width: "100%" },
@@ -159,7 +48,7 @@ export default function Projects() {
       data: propertyTypes ? propertyTypes?.map((val) => val?.typeName) : [],
       height: 40,
       zIndex: 4,
-      onSelect: (val: string) => {},
+      onSelect: (val: string) => { },
       placeholder: "Type",
       title: "Property Type",
       style: { width: "100%" },
@@ -167,13 +56,15 @@ export default function Projects() {
       selected: filter?.propertyType ? [filter?.propertyType] : null,
     },
   ]);
+  const [tabsData, setTabsData] = useState<{ title: string; selected: boolean }[]>([]);
+  const [selectedTab, setSelectedTab] = useState<string>("");
+
   const dispatch = useDispatch();
+
   useFocusEffect(
     useCallback(() => {
       const updatedDropdown = dropdownData.map((val) => {
-        const id = Object.keys(filter).find((key) => val.id == key) as
-          | "propertyType"
-          | "purpose";
+        const id = Object.keys(filter).find((key) => val.id === key) as "propertyType" | "purpose";
         return {
           ...val,
           selected: filter?.[id] ? [filter?.[id]] : null,
@@ -191,11 +82,79 @@ export default function Projects() {
       const response = await handleGetAllProperties(params);
       if (response?.data?.totalCount && response.data.totalCount > 0) {
         setProperties(response?.data.items);
+        updateTabs(response.data.items);
       }
       setLoading(false);
     } catch (error) {
+      console.error("Error fetching properties:", error); // Log any errors
       setLoading(false);
     }
+  };
+
+  const updateTabs = (items: PropertyItem[]) => {
+    const uniqueTabs = new Set<string>();
+
+    items.forEach(item => {
+        const propertyType = item.propertyType?.typeName;
+
+        // If the property type is Residential, add its subtype
+        if (propertyType === "Residential" && item.propertyType.subTypes) {
+            const subType = item.propertyType.subTypes.typeName;
+            if (subType) {
+                uniqueTabs.add(subType);
+            }
+        }
+
+        // If the property type is Commercial, add it
+        if (propertyType === "Commercial") {
+            uniqueTabs.add(propertyType);
+        }
+    });
+
+    // Create an array from the Set and prioritize Residential tabs first
+    const newTabsData: { title: string; selected: boolean }[] = Array.from(uniqueTabs)
+        .filter(tab => tab !== "Commercial")
+        .map(type => ({ title: type, selected: false }))
+        .concat(
+            Array.from(uniqueTabs)
+                .filter(tab => tab === "Commercial")
+                .map(type => ({ title: type, selected: false }))
+        );
+
+    setTabsData(newTabsData);
+    if (newTabsData.length > 0) {
+        setSelectedTab(newTabsData[0].title);
+    }
+};
+
+  const renderTabContent = () => {
+    const filteredProperties = properties.filter(item => {
+      if (selectedTab === "Commercial") {
+        return item.propertyType.typeName === "Commercial";
+      }
+      const isResidential = item.propertyType.typeName === "Residential" && item.propertyType.subTypes?.typeName === selectedTab;
+      return isResidential;
+    });
+
+    return (
+      <FlatList
+        data={filteredProperties}
+        renderItem={({ index, item }) => (
+          <MyListItem
+            item={item}
+            index={index}
+            theme={theme}
+            onFavClicked={fetchProperties}
+            fav={item.isFavourite}
+            isFavRed={false}
+            params={params}
+          />
+        )}
+        showsVerticalScrollIndicator={false}
+        ItemSeparatorComponent={() => <GapView />}
+        keyExtractor={(item) => item.id}
+      />
+    );
   };
 
   const onApplyFilter = () => {
@@ -226,8 +185,8 @@ export default function Projects() {
               data={item.data}
               placeholder={item.placeholder}
               onSelect={(val) => {
-                unappliedFilters[val.key] = val;
-                setUnappliedFilters(unappliedFilters);
+                unappliedFilters[item.id] = val;
+                setUnappliedFilters({ ...unappliedFilters });
               }}
               style={{ width: "100%" }}
               height={40}
@@ -277,25 +236,19 @@ export default function Projects() {
           fetchProperties();
         }}
       />
-      <MyTopTabs data={topTabsData} />
+      <MyTopTabs
+        data={tabsData.map((tab) => ({
+          ...tab,
+          selected: tab.title === selectedTab,
+        }))}
+        onTabPress={(title) => {
+          setSelectedTab(title);
+          const updatedTabs = tabsData.map(t => ({ ...t, selected: t.title === title }));
+          setTabsData(updatedTabs);
+        }}
+      />
       <View style={styles.searchList}>
-        <FlatList
-          data={properties ?? []}
-          renderItem={({ index, item }) => (
-            <MyListItem
-              item={item}
-              index={index}
-              theme={theme}
-              onFavClicked={fetchProperties}
-              fav={item.isFavourite}
-              isFavRed={false}
-              params={params}
-            />
-          )}
-          showsVerticalScrollIndicator={false}
-          ItemSeparatorComponent={() => <GapView />}
-          keyExtractor={(item) => item.id}
-        />
+        {renderTabContent()}
       </View>
     </View>
   );

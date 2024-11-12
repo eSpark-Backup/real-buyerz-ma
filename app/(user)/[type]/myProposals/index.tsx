@@ -25,6 +25,7 @@ import { Feather } from "@expo/vector-icons";
 import { handleDeletePropertyProposal, handleGetAllPropertyProposals, ProposalData } from "./utils";
 import { PropertyItem } from "../(tabs)/home/utils";
 import { showToast } from "@utils/showToast";
+import { TouchableOpacity } from "react-native-gesture-handler";
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 
@@ -91,7 +92,7 @@ export default function MyProposals() {
 
   const topTabsData = [
     {
-      title: `Active (${proposalData?.activeProposals.length || 0})`,
+      title: `Active (${(proposalData?.activeProposals?.length || 0) + (proposalData?.submittedProposals?.length || 0)})`,
       selected: activeTab === "Active"
     },
     {
@@ -146,7 +147,6 @@ export default function MyProposals() {
     { label: "Trash", onPress: () => deleteProposal(item.id), outline: true },
     {
       label: "View", onPress: () => {
-        console.log(`Type ${params.type} item ${JSON.stringify(item)}`)
         router.navigate({
           pathname: `(user)/${params.type}/(tabs)/dashboard/proposalPreview`,
           params: {
@@ -192,7 +192,7 @@ export default function MyProposals() {
   };
 
   const renderProposalItem = ({ item, isHorizontal = false }: { item: PropertyItem; isHorizontal?: boolean }) => (
-    <View style={isHorizontal ? styles.horizontalItem : styles.verticalItem}>
+    <View style={isHorizontal ? styles(theme).horizontalItem : styles(theme).verticalItem}>
       <AdBox
         title={item.propertyName}
         description={item.propertyDescription}
@@ -211,7 +211,7 @@ export default function MyProposals() {
   const { data, title, submitted } = getActiveData();
 
   return (
-    <View style={[styles.container, { flex: 1 }]}>
+    <View style={[styles(theme).container, { flex: 1 }]}>
       <OverlayLoader isShow={loading} />
       <MyBottomSheet.Modal
         visible={visible}
@@ -237,18 +237,18 @@ export default function MyProposals() {
         <GapView length={60} />
         <MyButton
           label="Save"
-          labelStyle={styles.saveButtonLabel}
-          style={[styles.saveButton, { backgroundColor: theme.colors.primary }]}
+          labelStyle={styles(theme).saveButtonLabel}
+          style={[styles(theme).saveButton, { backgroundColor: theme.colors.primary }]}
         />
       </MyBottomSheet.Modal>
 
-      <View style={styles.headerContainer}>
+      <View style={styles(theme).headerContainer}>
         <MyButton
           leftIcon={<Feather name="plus" color="#ffffff" size={14} />}
           label="Post Listing"
-          labelStyle={styles.postButtonLabel}
-          style={[styles.postButton, { backgroundColor: theme.colors.primary }]}
-          onPress={() => router.push("/create-proposal")}
+          labelStyle={styles(theme).postButtonLabel}
+          style={[styles(theme).postButton, { backgroundColor: theme.colors.primary }]}
+          onPress={() => router.push(`(user)/${params?.type!}/(tabs)/listings`)}
         />
         <MyTopFilter
           theme={theme}
@@ -259,21 +259,69 @@ export default function MyProposals() {
 
       <MyTopTabs
         data={topTabsData}
-        paddingH={15}
         onTabPress={(title: string) => setActiveTab(title.split(" ")[0])}
       />
 
-      <View style={styles.content}>
-        {data.length > 0 && (
-          <>
-            <MyText
-              text={title}
-              size={18}
-              weight="500"
-              style={{ marginBottom: 20 }}
-              textColor={theme.colors.negative}
-            />
-            {
+      <View style={styles(theme).content}>
+        {activeTab === "Active" ? (
+          data.length > 0 || submitted.length > 0 ? (
+            <>
+              {data.length > 0 && (
+                <>
+                  <MyText
+                    text={title}
+                    size={18}
+                    weight="500"
+                    style={{ marginBottom: 20 }}
+                    textColor={theme.colors.negative}
+                  />
+                  <FlatList
+                    data={data}
+                    showsVerticalScrollIndicator={false}
+                    renderItem={({ item }) => renderProposalItem({ item })}
+                    ItemSeparatorComponent={() => <GapView length={15} />}
+                    keyExtractor={(item) => item.id}
+                  />
+                </>
+              )}
+
+              {submitted.length > 0 && (
+                <>
+                  <MyText
+                    text="Submitted Proposals"
+                    size={18}
+                    weight="500"
+                    style={{ marginVertical: 20 }}
+                    textColor={theme.colors.negative}
+                  />
+                  <FlatList
+                    data={submitted}
+                    showsVerticalScrollIndicator={false}
+                    renderItem={({ item }) => renderProposalItem({ item })}
+                    ItemSeparatorComponent={() => <GapView length={15} />}
+                    keyExtractor={(item) => item.id}
+                  />
+                </>
+              )}
+            </>
+          ) : (
+            <View style={styles(theme).errorContainer}>
+              <MyText text="No Data found" size={16} textColor="red" />
+              <TouchableOpacity onPress={fetchProposals}>
+                <MyText text="Retry" size={16} textColor={theme.colors.primary} />
+              </TouchableOpacity>
+            </View>
+          )
+        ) : activeTab === "Archive" || activeTab === "Rejected" ? (
+          data.length > 0 ? (
+            <>
+              <MyText
+                text={title}
+                size={18}
+                weight="500"
+                style={{ marginBottom: 20 }}
+                textColor={theme.colors.negative}
+              />
               <FlatList
                 data={data}
                 showsVerticalScrollIndicator={false}
@@ -281,34 +329,22 @@ export default function MyProposals() {
                 ItemSeparatorComponent={() => <GapView length={15} />}
                 keyExtractor={(item) => item.id}
               />
-            }
-          </>
-        )}
-
-        {submitted.length > 0 && activeTab === "Active" && (
-          <>
-            <MyText
-              text="Submitted Proposals"
-              size={18}
-              weight="500"
-              style={{ marginVertical: 20 }}
-              textColor={theme.colors.negative}
-            />
-               <FlatList
-                data={submitted}
-                showsVerticalScrollIndicator={false}
-                renderItem={({ item }) => renderProposalItem({ item })}
-                ItemSeparatorComponent={() => <GapView length={15} />}
-                keyExtractor={(item) => item.id}
-              />
-          </>
-        )}
+            </>
+          ) : (
+            <View style={styles(theme).errorContainer}>
+              <MyText text="No Data found" size={16} textColor="red" />
+              <TouchableOpacity onPress={fetchProposals}>
+                <MyText text="Retry" size={16} textColor={theme.colors.primary} />
+              </TouchableOpacity>
+            </View>
+          )
+        ) : null}
       </View>
     </View>
   );
 }
 
-const styles = StyleSheet.create({
+const styles = (theme?: MyTheme) => StyleSheet.create({
   container: {
     paddingTop: 26,
   },
@@ -337,6 +373,11 @@ const styles = StyleSheet.create({
     width: 100,
     height: 30,
     borderRadius: 4,
+  },
+  errorContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   saveButtonLabel: {
     color: "#ffffff",
