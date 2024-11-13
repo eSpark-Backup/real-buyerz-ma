@@ -25,7 +25,7 @@ import {
 import { handleGetAllPropertyProposals, ProposalData } from "../myProposals/utils";
 import { showToast } from "@utils/showToast";
 import { PropertyItem } from "../(tabs)/home/utils";
-import { handleCreatePropertiesAndProposal, handleDraftProperty, ImageFile, ReqPropertyData } from "../myListings/utils";
+import { handleDraftProperty  } from "../myListings/utils";
 import { TouchableOpacity } from "react-native-gesture-handler";
 
 interface DropDownList {

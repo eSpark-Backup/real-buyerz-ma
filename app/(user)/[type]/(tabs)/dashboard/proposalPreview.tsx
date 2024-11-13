@@ -249,7 +249,7 @@ function ProposalPreview() {
                 />
               ))}
             </View>
-            {redirectionFrom !== "dashboard" && (
+            {redirectionFrom !== "dashboard" && item.image && item.image.length > 0 && (
               <>
                 <View style={styles(theme).part1}>
                   <MyText text="Property Images" size={16} weight="500" />
