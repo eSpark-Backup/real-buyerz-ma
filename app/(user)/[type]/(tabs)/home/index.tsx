@@ -50,8 +50,6 @@ export default function Home() {
   const { allProperties, propertyTypes } = useSelector<RootState, PropertySliceState>((state) => state.property);
   const { userData } = useSelector<RootState, UserState>((state) => state.user);
   
-  console.log(`Home: kiya hai ${params.type}`)
-
   useEffect(() => {
     fetchAllProperties()
     fetchAllPropertyTypes()

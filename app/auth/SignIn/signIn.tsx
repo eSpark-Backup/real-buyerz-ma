@@ -68,7 +68,6 @@ export default function SignIn() {
 
   const savingDataToSessionStorage = (userInfo: UserObject, userProfileData: UserProfileData) => {
     let userProfileInfo = mergeUserRoleWithProfile(userProfileData, userInfo.user.role || "user");
-    console.log(`Milgaya token ${userInfo?.token as string}`)
     updateUserInSession(userProfileInfo, userInfo?.token as string);
     updateUserIsLoggedInSession(isRememberedMe);
     dispatch(setUserToken(userInfo?.token));

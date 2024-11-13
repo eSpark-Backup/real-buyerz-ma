@@ -70,7 +70,7 @@ import { useSelector } from "react-redux";
 import { PropertySliceState } from "features/property/propertySlice";
 import { RootState } from "@store";
 import { IAmenity, PropertyItem, SavedLeadsItem } from "../home/utils";
-import { useLocalSearchParams, useRouter } from "expo-router";
+import { useGlobalSearchParams, useLocalSearchParams, useRouter } from "expo-router";
 import MapView, { Marker, PROVIDER_GOOGLE, Region } from 'react-native-maps';
 import * as Location from 'expo-location';
 import { Amenity, handleCreatePropertiesAndProposal, ImageFile, ReqPropertyData } from "../../myListings/utils";
@@ -101,7 +101,7 @@ interface AmenitiesPopupProps {
 
 export default function Listing() {
   const theme = useTheme() as MyTheme;
-  const params = useLocalSearchParams<{ type: UserType }>();
+  const params = useGlobalSearchParams<{ type: UserType }>();
   const router = useRouter()
   const { item, redirectionFrom } = useLocalSearchParams<PropertyDetailScreenParams>();
   const productDetail: PropertyItem | SavedLeadsItem = JSON.parse(item ?? "{}");
@@ -147,7 +147,6 @@ export default function Listing() {
     };
   });
 
-
   const previewData = {
     propertyID: propertyData.propertyID,
     propertyName: propertyData.propertyName,
@@ -169,17 +168,10 @@ export default function Listing() {
   } as const;
 
   const createPropertyOrProposal = async (isSaveDraft: boolean) => {
-    setPropertyData(prevData => ({
-      ...prevData,
-      propertyStatus: isSaveDraft ? false : true
-    }));
-
-    console.log(JSON.stringify(propertyData))
-    console.log(propertyData.propertyStatus)
-    console.log(isSaveDraft)
+    const updatedPropertyData = { ...propertyData, propertyStatus: isSaveDraft ? false : true };
     setLoading(true);
     try {
-      const response = await handleCreatePropertiesAndProposal(propertyData as ReqPropertyData);
+      const response = await handleCreatePropertiesAndProposal(updatedPropertyData as ReqPropertyData, params.type);
       setLoading(false);
       if (response.data) {
         if (isSaveDraft) {
@@ -188,6 +180,7 @@ export default function Listing() {
         else {
           setVisible(true)
         }
+        resetData()
       }
       else {
         showToast(response.message || 'Failed to create', 'error')
@@ -197,6 +190,30 @@ export default function Listing() {
       setLoading(false);
     }
   };
+
+  const resetData = () => {
+    setPropertyData({
+      propertyID: isSavedLeadsItem(productDetail) ? productDetail?.property?.id : productDetail?.id || "",
+      propertyName: "",
+      propertySubTypeId: "",
+      propertyPrice: "",
+      propertyArea: "",
+      purpose: "",
+      propertyAddress: "",
+      propertyCity: "",
+      propertyZip: "",
+      propertyDescription: "",
+      longitude: "",
+      latitude: "",
+      image: [],
+      amenity: [],
+      video: ["https://www.youtube.com/watch?v=HcQ5kspSi0I"],
+      amenities: "",
+      propertyStatus: true
+    });
+    setVisible(false);
+    setLoading(false);
+  }
 
   return (
     <ScrollView
@@ -218,6 +235,8 @@ export default function Listing() {
       />
       <GapView length={20} />
       <AdInformation
+        title={propertyData.propertyName}
+        description={propertyData.propertyDescription}
         onChange={(data) => {
           setPropertyData(prev => ({
             ...prev,
@@ -228,6 +247,9 @@ export default function Listing() {
       />
       <GapView length={20} />
       <LocationAndPurpose
+        city={propertyData.propertyCity}
+        zipCode={propertyData.propertyZip}
+        address={propertyData.propertyAddress}
         onChange={(data) => {
           setPropertyData(prev => ({
             ...prev,
@@ -243,6 +265,8 @@ export default function Listing() {
       />
       <GapView length={20} />
       <PropertySizeandPricing
+        price={propertyData.propertyPrice}
+        size={propertyData.propertyArea}
         onChange={(data) => {
           console.log(`data ${JSON.stringify(propertyData)}`)
           setPropertyData(prev => ({
@@ -263,19 +287,26 @@ export default function Listing() {
         }}
       />
       <GapView length={20} />
-      <PropertyImagesAndVideo
-        onChange={(images: ImageFile[]) => {
-          setPropertyData(prev => ({
-            ...prev,
-            image: images,
-            video: ["https://www.youtube.com/watch?v=HcQ5kspSi0I"],
-          }));
-        }}
-      />
+      {params.type === 'agent' && (
+        <PropertyImagesAndVideo
+          onChange={(images: ImageFile[]) => {
+            setPropertyData(prev => ({
+              ...prev,
+              image: images,
+              video: ["https://www.youtube.com/watch?v=HcQ5kspSi0I"],
+            }));
+          }}
+        />
+      )}
       <View style={styles(theme).footerButtons}>
 
         <PrimaryBtn
-          disabled={Object.entries(propertyData).filter(([key]) => key !== 'propertyID').some(([_, value]) => !value || value.length === 0)}
+          disabled={Object.entries(propertyData).filter(([key]) => {
+            if (params.type === "user" && (key === 'image' || key === 'video' || key === 'propertyID')) {
+              return false;
+            }
+            return key !== 'propertyID';
+          }).some(([_, value]) => !value || value.length === 0)}
           onPress={() => {
             router.push({
               pathname: `(user)/${params.type}/(tabs)/dashboard/proposalPreview`,
@@ -291,7 +322,12 @@ export default function Listing() {
         </PrimaryBtn>
         {redirectionFrom != "proposalPreview" && (
           <PrimaryBtn
-            // disabled={Object.entries(propertyData).filter(([key]) => key !== 'propertyID').some(([_, value]) => !value || value.length === 0)}
+            disabled={Object.entries(propertyData).filter(([key]) => {
+              if (params.type === "user" && (key === 'image' || key === 'video' || key === 'propertyID')) {
+                return false;
+              }
+              return key !== 'propertyID';
+            }).some(([_, value]) => !value || value.length === 0)}
             title="Save as draft"
             btnStyle={styles(theme).draft}
             textColor={theme.colors.primary}
@@ -302,8 +338,12 @@ export default function Listing() {
           />
         )}
         <PrimaryBtn
-          disabled={Object.entries(propertyData).filter(([key]) => key !== 'propertyID').some(([_, value]) => !value || value.length === 0)}
-          title={redirectionFrom === "proposalPreview" ? "Submit Proposal" : "Submit Ad"}
+          disabled={Object.entries(propertyData).filter(([key]) => {
+            if (params.type === "user" && (key === 'image' || key === 'video' || key === 'propertyID')) {
+              return false;
+            }
+            return key !== 'propertyID';
+          }).some(([_, value]) => !value || value.length === 0)} title={redirectionFrom === "proposalPreview" ? "Submit Proposal" : "Submit Ad"}
           weight="500"
           width={100}
           onPress={() => {
@@ -314,7 +354,7 @@ export default function Listing() {
       </View>
       <MyPopupModal visible={visible} bgDim>
         <MyPopupModal.Success
-          message="Your Ad is submitted successfully"
+          message={params.type==='user'?"Your Ad is submitted successfully":"Your Proposal is submitted successfully"}
           onPress={() => {
             setVisible(false);
           }}
@@ -348,8 +388,12 @@ function CustomTable({ title, indexIcon, children }: CustomTableProps) {
 
 function AdInformation({
   onChange,
+  title,
+  description
 }: {
   onChange: (e: { propertyName?: string; propertyDescription?: string }) => void;
+  title: string;
+  description: string;
 }) {
   const theme = useTheme() as MyTheme;
   return (
@@ -362,6 +406,7 @@ function AdInformation({
             placeholder={
               "Enter property title e.g. Beautiful House in DHA Phase 5"
             }
+            text={title}
             style={styles(theme).titleInputStyle}
             inputStyle={[styles(theme).inputInnerStyle]}
             placeholderColor={theme.colors.placeholderText}
@@ -381,6 +426,7 @@ function AdInformation({
             placeholder={
               "Describe your property, it’s features, & your area it is in etc."
             }
+            text={description}
             style={[styles(theme).titleInputStyle, { height: 83 }]}
             inputStyle={[styles(theme).inputInnerStyle, {}]}
             placeholderColor={theme.colors.placeholderText}
@@ -395,8 +441,14 @@ function AdInformation({
 
 function LocationAndPurpose({
   onChange,
+  zipCode,
+  address,
+  city
 }: {
   onChange?: (e: { purpose?: string; propertyCity?: string, propertySubTypeId?: string, propertyAddress?: string, propertyZip?: string, longitude?: string; latitude?: string; }) => void;
+  city: string,
+  zipCode: string,
+  address: string
 }) {
   const theme = useTheme() as MyTheme;
   const [selected, setSelected] = useState("");
@@ -548,6 +600,7 @@ function LocationAndPurpose({
             onSelect={(val) => {
               onChange?.({ propertyCity: val.value?.[0] });
             }}
+            selected={[city]}
             style={{ width: "90%" }}
             placeholder="Select city"
             zIndex={10}
@@ -597,6 +650,7 @@ function LocationAndPurpose({
             placeholder={
               "Enter Zipcode"
             }
+            text={zipCode}
             style={styles(theme).titleInputStyle}
             inputStyle={[styles(theme).inputInnerStyle]}
             placeholderColor={theme.colors.placeholderText}
@@ -615,6 +669,7 @@ function LocationAndPurpose({
             placeholder={
               "Enter Address"
             }
+            text={address}
             style={styles(theme).titleInputStyle}
             inputStyle={[styles(theme).inputInnerStyle]}
             placeholderColor={theme.colors.placeholderText}
@@ -630,8 +685,12 @@ function LocationAndPurpose({
 
 function PropertySizeandPricing({
   onChange,
+  size,
+  price
 }: {
   onChange?: (e: { propertyArea?: string; propertyPrice?: string }) => void;
+  price: string;
+  size: string;
 }) {
   const theme = useTheme() as MyTheme;
   const [n1, setn1] = useState(false);
@@ -645,6 +704,7 @@ function PropertySizeandPricing({
           <RequiredText text="Select Area" />
           <MyInput
             placeholder={"Enter Unit"}
+            text={size}
             style={styles(theme).singleInputStyle}
             inputStyle={styles(theme).inputInnerStyle}
             placeholderColor={theme.colors.placeholderText}
@@ -666,6 +726,7 @@ function PropertySizeandPricing({
           <RequiredText text="Amount" />
           <MyInput
             placeholder={"Enter Amount"}
+            text={price}
             style={styles(theme).singleInputStyle}
             inputStyle={styles(theme).inputInnerStyle}
             placeholderColor={theme.colors.placeholderText}
@@ -686,7 +747,7 @@ function PropertySizeandPricing({
         <View style={styles().AdField}>
           <View style={styles().align}>
             <MyText textColor={theme.colors.negative}>
-              Instalment available
+              Installment available
             </MyText>
             <ToggleSwitch
               value={n1}
@@ -696,7 +757,7 @@ function PropertySizeandPricing({
             />
           </View>
           <MyText
-            text="Enable if listing is available on instalments"
+            text="Enable if listing is available on installments"
             size={11}
             textColor={theme.colors.verificationText}
           />

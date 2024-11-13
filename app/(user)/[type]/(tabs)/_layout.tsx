@@ -1,6 +1,6 @@
 import React, { memo, useEffect, useState } from "react";
 import { Tabs } from "expo-router/tabs";
-import { useLocalSearchParams } from "expo-router";
+import { useGlobalSearchParams, useLocalSearchParams } from "expo-router";
 import { useTheme } from "@react-navigation/native";
 
 import { MyTabBar, MyHeader, LoginModal } from "@components";
@@ -8,9 +8,11 @@ import { MyTheme, UserType } from "@types";
 
 function UserTabLayout() {
   const theme = useTheme() as MyTheme;
-  const params = useLocalSearchParams<{ type: UserType }>();
+  const params = useGlobalSearchParams<{ type: UserType }>();
   const [visible, setVisible] = useState(false);
   const [lastRoute, setLastRoute] = useState("");
+
+  console.log("params "+JSON.stringify(params))
 
   const openLoginModal = (routeName: string, isFromTab: boolean) => {
     setLastRoute(routeName);
@@ -82,7 +84,8 @@ function UserTabLayout() {
         <Tabs.Screen
           name="listings"
           options={{
-            title: "Listings",
+            headerShown: false,
+            title: params.type === "user" ? "Post Request" : "Listings",
             href: `(user)/${params?.type!}/(tabs)/listings`,
           }}
           initialParams={{ type: params.type }}

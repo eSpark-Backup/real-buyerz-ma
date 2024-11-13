@@ -20,7 +20,6 @@ const ImageViewer: React.FC<ImageViewerProps> = ({
 }) => {
   const theme = useTheme() as MyTheme;
   const images = [{ uri: imageUri }];
-  console.log("abay bhai"+images)
   return (
     <View style={styles.container}>
       <StatusBar backgroundColor="black" barStyle="light-content" />

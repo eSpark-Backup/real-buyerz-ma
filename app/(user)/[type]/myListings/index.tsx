@@ -161,8 +161,6 @@ export default function MyListings() {
   const theme = useTheme() as MyTheme;
   const [visible, setVisible] = useState(false);
 
-  console.log("listings; theme dark? ", theme.dark);
-
   return (
     <View style={{ flex: 1, ...styles.container }}>
       <MyBottomSheet.Modal

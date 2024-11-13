@@ -21,7 +21,6 @@ const PropertyListing = ({
       <TouchableOpacity
         activeOpacity={1}
         onPress={() => {
-          console.log("Hello world");
         }}
       >
         <Card radius={2} style={{ height: 180, width: 130 }}>
