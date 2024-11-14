@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { StyleSheet, View, FlatList, ScrollView, Image } from "react-native";
 import { useTheme } from "@react-navigation/native";
 import { router, useLocalSearchParams } from "expo-router";
@@ -10,10 +10,13 @@ import {
   MyAvatar,
   MyButton,
   MyText,
+  OverlayLoader,
   SearchBar,
 } from "@components";
 import { MyTheme, UserType } from "@types";
 import { MiFilter } from "@assets/images";
+import { handleGetAllProposalList } from "./utils";
+import { showToast } from "@utils/showToast";
 
 interface Posting {
   id: number;
@@ -89,7 +92,30 @@ function timeAgo(date: Date, minutesAgo: number = 0): string {
 
 export default function ProposalsList() {
   const theme = useTheme() as MyTheme;
-  const params = useLocalSearchParams<{ type: UserType }>();
+  const params = useLocalSearchParams<{ type: UserType, userPropertyId: string }>();
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchAllProposals();
+  }, []);
+
+  const fetchAllProposals = async () => {
+    setLoading(true);
+    try {
+      const response = await handleGetAllProposalList(params.userPropertyId);
+      setLoading(false);
+      if (response.status && response.proposalData) {
+        // setPropertiesData(response.proposalData);
+        console.log("Proposal List Data"+ JSON.stringify(response))
+
+      } else {
+        showToast(response.message || "Proposal list not found", 'error');
+      }
+    } catch (error) {
+      showToast('Failed to fetch Proposal list', 'error');
+      setLoading(false);
+    }
+  };
 
   return (
     <>
@@ -98,6 +124,7 @@ export default function ProposalsList() {
         contentContainerStyle={{ flexGrow: 1 }}
         showsVerticalScrollIndicator={false}
       >
+        <OverlayLoader isShow={loading} />
         <View style={styles.container}>
           <View style={styles.top}>
             <MyText
@@ -237,7 +264,7 @@ const renderProposalsList = ({
       <View style={styles.ap_bot}>
         <MyButton
           label="View"
-          onPress={() =>{
+          onPress={() => {
             console.log("proposallsit")
             router.push(
               `(user)/${params?.type!}/(tabs)/dashboard/proposalDetails`

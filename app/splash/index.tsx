@@ -27,7 +27,6 @@ import {
 } from "app/auth/utils/authUtils";
 import { useDispatch } from "react-redux";
 import { setUserData, setUserToken } from "features/user/userSlice";
-import { storage } from "store/mmkv";
 import { api } from "api";
 
 SplashScreen.preventAutoHideAsync(); //? Disable Auto Hide
