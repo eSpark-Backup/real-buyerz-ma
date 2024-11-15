@@ -1,5 +1,6 @@
 import { api } from "api";
 import { ProposalData } from "app/(user)/[type]/myProposals/utils";
+import { PropertyItem } from "../../home/utils";
 
 interface FindAllProposalResponse {
   success: boolean;
@@ -7,8 +8,24 @@ interface FindAllProposalResponse {
   response: {
     timestamp_ms: number;
     action: string;
-    data: ProposalData;
+    data?: ProposalData|ProposalViewData;
   };
+}
+
+interface ProposalViewData {
+  items:ProposalDataItem[]
+  userProperty:PropertyItem
+}
+
+export interface ProposalDataItem {
+  id: string;
+  userPropertyId: string;
+  agentPropertyId: string;
+  agentStatus: string;
+  userStatus: string;
+  createdAt: string;
+  updatedAt: string;
+  agentProperty: PropertyItem;
 }
 
 const handleGetAllProposals = async (): Promise<{
@@ -21,7 +38,7 @@ const handleGetAllProposals = async (): Promise<{
     if (data?.success) {
       return {
         status: true,
-        proposalData: data.response.data,
+        proposalData: data.response.data as ProposalData
       };
     }
 
@@ -33,7 +50,7 @@ const handleGetAllProposals = async (): Promise<{
 
 const handleGetAllProposalList = async (userPropertyID:string): Promise<{
   status: boolean;
-  proposalData?: ProposalData;
+  proposalViewData?: ProposalViewData;
   message?: string;
 }> => {
   try {
@@ -41,7 +58,7 @@ const handleGetAllProposalList = async (userPropertyID:string): Promise<{
     if (data?.success) {
       return {
         status: true,
-        proposalData: data.response.data,
+        proposalViewData: data.response.data as ProposalViewData
       };
     }
 
@@ -51,4 +68,40 @@ const handleGetAllProposalList = async (userPropertyID:string): Promise<{
   }
 };
 
-export { handleGetAllProposals,handleGetAllProposalList };
+const handleAcceptProposal = async (id:string): Promise<{
+  status: boolean;
+  message?: string;
+}> => {
+  try {
+    const { data } = await api.post<FindAllProposalResponse>(`/bidding/acceptProposal/${id}`);
+    if (data?.success) {
+      return {
+        status: true
+      };
+    }
+    console.log("accept data" +JSON.stringify(data))
+    return { status: false, message: data?.message };
+  } catch (error) {
+    return { status: false, message: "An error occurred." };
+  }
+};
+
+const handleRejectProposal = async (id:string): Promise<{
+  status: boolean;
+  message?: string;
+}> => {
+  try {
+    const { data } = await api.post<FindAllProposalResponse>(`/bidding/rejectProposal/${id}`);
+    if (data?.success) {
+      return {
+        status: true
+      };
+    }
+    console.log("reject data" +JSON.stringify(data))
+    return { status: false, message: data?.message };
+  } catch (error) {
+    return { status: false, message: "An error occurred." };
+  }
+};
+
+export { handleGetAllProposals,handleGetAllProposalList, handleAcceptProposal, handleRejectProposal };

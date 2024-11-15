@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { StyleSheet, View, FlatList, ScrollView, Image } from "react-native";
 import { useTheme } from "@react-navigation/native";
-import { router, useLocalSearchParams } from "expo-router";
+import { router, useGlobalSearchParams, useLocalSearchParams } from "expo-router";
 
 import {
   Card,
@@ -13,87 +13,41 @@ import {
   OverlayLoader,
   SearchBar,
 } from "@components";
-import { MyTheme, UserType } from "@types";
+import { MyTheme, PropertyDetailScreenParams, UserType } from "@types";
 import { MiFilter } from "@assets/images";
-import { handleGetAllProposalList } from "./utils";
+import { handleGetAllProposalList, ProposalDataItem } from "./utils";
 import { showToast } from "@utils/showToast";
-
-interface Posting {
-  id: number;
-  title: string;
-  estRange: string;
-  postedTime: Date;
-  description: string;
-  status: "Buying" | "Selling";
-  city: string;
-  area: string;
-  proposal: number;
-}
-
-interface Proposals {
-  id: number;
-  name: string;
-  region: string;
-  price: number; // 0.00 decimals
-  image: string;
-  description: string;
-}
+import { PropertyItem } from "../home/utils";
+import { formatPrice } from "app/utils/priceConverter";
 
 const minutesAgo: number = 30;
-const pastDate: Date = new Date(new Date().getTime() - minutesAgo * 60000);
+function timeAgo(date: string): string {
+  const dateObj = new Date(date);
+  const now = new Date();
+  const diffInSeconds = Math.floor((now.getTime() - dateObj.getTime()) / 1000);
 
-const testPostingData: Posting = {
-  id: 1,
-  title: "Need 4 Room Apartments",
-  estRange: "80M",
-  postedTime: pastDate,
-  description:
-    "Sunt exercitation enim magna exercitation fugiat fugiat excepteur. Est dolor commodo commodo reprehenderit eiusmod dolore culpa.",
-  status: "Buying",
-  city: "karachi",
-  area: "Gulshan-e-Iqbal",
-  proposal: 5,
-};
-const testProposalsData: Proposals[] = [
-  {
-    id: 1,
-    name: "John Doe",
-    image: "https://picsum.photos/id/212/200",
-    region: "Pakistan",
-    description:
-      "Enim eiusmod nisi commodo sunt officia dolore officia ut veniam elit reprehe. Exercitation quis id aliqua ullamco aute laborum cupidatat excepteur elit id",
-    price: 100.0,
-  },
-  {
-    id: 2,
-    name: "John Depp",
-    image: "https://picsum.photos/id/312/200",
-    region: "Pakistan",
-    description:
-      "Enim eiusmod nisi commodo sunt officia dolore officia ut veniam elit reprehe. Exercitation quis id aliqua ullamco aute laborum cupidatat excepteur elit id",
-    price: 100.0,
-  },
-  {
-    id: 3,
-    name: "John Bravo",
-    image: "https://picsum.photos/id/315/200",
-    region: "Pakistan",
-    description:
-      "Enim eiusmod nisi commodo sunt officia dolore officia ut veniam elit reprehe. Exercitation quis id aliqua ullamco aute laborum cupidatat excepteur elit id",
-    price: 100.0,
-  },
-];
+  const minutes = Math.floor(diffInSeconds / 60);
+  const hours = Math.floor(diffInSeconds / 3600);
+  const days = Math.floor(diffInSeconds / 86400);
 
-function timeAgo(date: Date, minutesAgo: number = 0): string {
-  const diff: number =
-    Math.floor((new Date().getTime() - date.getTime()) / 60000) - minutesAgo;
-  return `${diff} mins ago`;
+  if (days > 0) {
+    return `${days} day${days > 1 ? 's' : ''} ago`;
+  } else if (hours > 0) {
+    return `${hours} hour${hours > 1 ? 's' : ''} ago`;
+  } else if (minutes > 0) {
+    return `${minutes} minute${minutes > 1 ? 's' : ''} ago`;
+  } else {
+    return 'just now';
+  }
 }
 
 export default function ProposalsList() {
   const theme = useTheme() as MyTheme;
-  const params = useLocalSearchParams<{ type: UserType, userPropertyId: string }>();
+  const { item } = useLocalSearchParams<PropertyDetailScreenParams>();
+  const params = useGlobalSearchParams<{ type: UserType }>();
+  const proposalItem: PropertyItem = JSON.parse(item ?? "{}");
   const [loading, setLoading] = useState(true);
+  const [proposalData, setProposalData] = useState<ProposalDataItem[] | null>(null);
 
   useEffect(() => {
     fetchAllProposals();
@@ -102,11 +56,11 @@ export default function ProposalsList() {
   const fetchAllProposals = async () => {
     setLoading(true);
     try {
-      const response = await handleGetAllProposalList(params.userPropertyId);
+      const response = await handleGetAllProposalList(proposalItem.id);
       setLoading(false);
-      if (response.status && response.proposalData) {
-        // setPropertiesData(response.proposalData);
-        console.log("Proposal List Data"+ JSON.stringify(response))
+      if (response.status && response.proposalViewData) {
+        setProposalData(response.proposalViewData.items);
+        console.log("Proposal List Data" + JSON.stringify(response))
 
       } else {
         showToast(response.message || "Proposal list not found", 'error');
@@ -136,7 +90,7 @@ export default function ProposalsList() {
           </View>
           <View style={styles.content}>
             <Card>
-              {renderPosting({ item: testPostingData, theme })}
+              {renderPosting({ item: proposalItem, theme })}
               <View
                 style={{
                   borderTopWidth: 1,
@@ -144,7 +98,7 @@ export default function ProposalsList() {
                 }}
               >
                 <FlatList
-                  data={testProposalsData}
+                  data={proposalData}
                   scrollEnabled={false}
                   renderItem={({ item, index }) =>
                     renderProposalsList({ item, index, theme, params })
@@ -163,11 +117,11 @@ export default function ProposalsList() {
   );
 }
 
-const renderPosting = ({ item, theme }: { item: Posting; theme: MyTheme }) => {
+const renderPosting = ({ item, theme }: { item: PropertyItem; theme: MyTheme }) => {
   return (
     <View style={{ padding: 20 }}>
       <View>
-        <MyText text={item.title} weight="500" size={16} />
+        <MyText text={item.propertyName} weight="500" size={16} />
       </View>
       <View
         style={{
@@ -179,30 +133,30 @@ const renderPosting = ({ item, theme }: { item: Posting; theme: MyTheme }) => {
       >
         <LabelValue
           label="Est. Range"
-          value={"80M"}
+          value={formatPrice(item.propertyPrice || 0)}
           valueStyle={{ color: theme.colors.negative }}
         />
         <MyText
-          text={`Posted ${timeAgo(item.postedTime, minutesAgo)}`}
+          text={`Posted ${timeAgo(item.createdAt)}`}
           weight="400"
           size={12}
         />
       </View>
       <View style={{ marginBottom: 20 }}>
         <MyText
-          text={item.description}
+          text={item.propertyDescription}
           numberOfLines={3}
           size={12}
           weight="300"
         />
       </View>
       <View>
-        <LabelValue label="Status" value={item.status!} />
-        <LabelValue label="City" value={item.city!} />
-        <LabelValue label="Area" value={item.area!} />
+        <LabelValue label="Status" value={item.purpose!} />
+        <LabelValue label="City" value={item.propertyCity!} />
+        <LabelValue label="Area" value={item.propertyAddress!} />
         <LabelValue
           label="Proposal"
-          value={item.proposal!.toString() + " to 10"}
+          value={item.proposalCount!.toString()}
         />
       </View>
     </View>
@@ -215,29 +169,29 @@ const renderProposalsList = ({
   theme,
   params,
 }: {
-  item: Proposals;
+  item: ProposalDataItem;
   index: number;
   theme: MyTheme;
-  params: { type?: UserType };
+  params: { type: UserType }
 }) => {
   return (
     <View style={{ paddingHorizontal: 20, paddingVertical: 15 }}>
       <View style={styles.ap_top}>
         <View style={styles.ap_top1}>
           <MyAvatar
-            imageUrl={{ uri: "https://i.pravatar.cc/150?img=68" }}
+            imageUrl={{ uri: item.agentProperty.user?.profileImage || "https://i.pravatar.cc/150?img=68" }}
             size={40}
             status="online"
           />
           <View style={{ marginLeft: 6 }}>
             <MyText
-              text={item.name}
+              text={`${item.agentProperty.user?.firstName} ${item.agentProperty.user?.lastName}`}
               size={12}
               weight="600"
               textColor={theme.colors.secondary}
             />
             <MyText
-              text={item.region}
+              text={item.agentProperty.propertyCity}
               size={10}
               weight="400"
               textColor={theme.colors.text + "77"}
@@ -245,7 +199,7 @@ const renderProposalsList = ({
           </View>
         </View>
         <MyText
-          text={"Rs " + item.price.toString() + "M"}
+          text={"PKR " + formatPrice(item.agentProperty.propertyPrice || 0)}
           style={{ alignSelf: "flex-start", rowGap: 10 }}
           size={12}
           weight="600"
@@ -254,7 +208,7 @@ const renderProposalsList = ({
       </View>
       <View style={styles.ap_mid}>
         <MyText
-          text={item.description}
+          text={item.agentProperty.propertyDescription}
           numberOfLines={3}
           weight="300"
           size={12}
@@ -265,10 +219,12 @@ const renderProposalsList = ({
         <MyButton
           label="View"
           onPress={() => {
-            console.log("proposallsit")
-            router.push(
-              `(user)/${params?.type!}/(tabs)/dashboard/proposalDetails`
-            )
+            router.navigate({
+              pathname: `(user)/${params.type}/(tabs)/dashboard/proposalDetails`,
+              params: {
+                item: JSON.stringify(item),
+              }
+            })
           }
           }
           labelStyle={{
@@ -310,8 +266,8 @@ const styles = StyleSheet.create({
     flexDirection: "row",
   },
   ap_mid: {
-    marginTop: 20,
-    marginBottom: 10,
+    marginTop: 15,
+    marginBottom: 15,
   },
   ap_bot: {
     alignItems: "flex-start",

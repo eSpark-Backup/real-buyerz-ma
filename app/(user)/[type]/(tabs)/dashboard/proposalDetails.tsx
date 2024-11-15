@@ -17,9 +17,16 @@ import {
   MyAvatar,
   MyButton,
   MyText,
+  OverlayLoader,
 } from "@components";
-import { MyTheme } from "@types";
+import { MyTheme, PropertyDetailScreenParams, UserType } from "@types";
 import { LocationIcon } from "@assets/images";
+import { handleAcceptProposal, handleRejectProposal, ProposalDataItem } from "./utils";
+import { showToast } from "@utils/showToast";
+import { router, useGlobalSearchParams, useLocalSearchParams } from "expo-router";
+import { PropertyDataItem } from "../home/utils";
+import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps";
+import { formatPrice } from "app/utils/priceConverter";
 
 interface MediaGalleryProps {
   media: string[]; // Array of image or video URLs
@@ -51,6 +58,7 @@ const MediaGallery: React.FC<MediaGalleryProps> = ({
               <Image
                 source={{ uri: url }}
                 style={{ flex: 1, width: "100%", height: "100%" }}
+                onError={() => console.log('Image loading error for URL:', url)}
               />
             </TouchableWithoutFeedback>
           )}
@@ -66,7 +74,6 @@ const data = {
     "https://picsum.photos/90/130",
     "https://picsum.photos/89/130",
     "https://picsum.photos/77/130",
-    // Add more URLs as needed
   ],
   videoMedia: [
     "https://picsum.photos/id/151/130",
@@ -79,10 +86,51 @@ const data = {
 
 export default function ProposalDetails() {
   const theme = useTheme() as MyTheme;
-
   const [visibleImg, setVisibleImg] = useState(false);
   const [visibleVid, setVisibleVid] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(0);
+  const [loading, setLoading] = useState(false);
+  const { item } = useLocalSearchParams<PropertyDetailScreenParams>();
+  const params = useGlobalSearchParams<{ type: UserType }>();
+  const proposalItem: ProposalDataItem = JSON.parse(item ?? "{}");
+
+  console.log("Data Idhar Agaya "+JSON.stringify(proposalItem))
+ 
+  const onAcceptProposal = async () => {
+    setLoading(true)
+    try {
+      const response = await handleAcceptProposal(proposalItem.id)
+      setLoading(false);
+      if (response.status) {
+        showToast("Proposal accepted")
+        router.push(`(user)/${params?.type!}/inbox/chat`)
+      }
+      else {
+        showToast(response.message || "Proposals not found", 'error')
+      }
+    } catch (error) {
+      showToast('Failed to fetch Proposals', 'error')
+      setLoading(false);
+    }
+  };
+
+  const onRejectProposal = async () => {
+    setLoading(true)
+    const response = await handleRejectProposal(proposalItem.id)
+    setLoading(false);
+    try {
+      if (response.status) {
+        showToast("Proposal Rejected")
+        router.back();
+      }
+      else {
+        showToast(response.message || "Proposals not found", 'error')
+      }
+    } catch (error) {
+      showToast('Failed to fetch Proposals', 'error')
+      setLoading(false);
+    }
+  }
 
   return (
     <ScrollView
@@ -92,11 +140,7 @@ export default function ProposalDetails() {
       }}
       contentContainerStyle={{ paddingTop: 20 }}
     >
-      {/* <VideoView
-        url={"https://d23dyxeqlo5psv.cloudfront.net/big_buck_bunny.mp4"}
-        visible={visibleVid}
-        onRequestClose={() => setVisibleVid(false)}
-      /> */}
+      <OverlayLoader isShow={loading} />
       <ImageView
         images={data.imageMedia.map((item) => {
           return { uri: item };
@@ -119,13 +163,13 @@ export default function ProposalDetails() {
         }}
       >
         <MyAvatar
-          imageUrl={{ uri: "https://i.pravatar.cc/150?img=68" }}
+          imageUrl={{ uri: proposalItem.agentProperty.user?.profileImage || "https://i.pravatar.cc/150?img=68" }} // Use profile image from proposalItem
           size={45}
           status="online"
         />
         <View style={{ marginLeft: 7 }}>
           <MyText
-            text="John Doe"
+            text={`${proposalItem.agentProperty.user?.firstName || "John"} ${proposalItem.agentProperty.user?.lastName || "Doe"}`} // Use user's name
             size={14}
             weight="500"
             textColor={theme.colors.secondary}
@@ -134,7 +178,7 @@ export default function ProposalDetails() {
             <LocationIcon />
             <GapView mode="horizontal" length={5} />
             <MyText
-              text="Lahore, Pakistan - 3:16pm local time"
+              text={`${proposalItem.agentProperty.propertyAddress}, ${proposalItem.agentProperty.propertyCity} - ${new Date(proposalItem.agentProperty.createdAt).toLocaleTimeString()}`} // Use address and time
               weight="500"
               textColor="#757474"
               size={12}
@@ -160,6 +204,7 @@ export default function ProposalDetails() {
             paddingVertical: 8,
             width: 85,
           }}
+          onPress={() => onRejectProposal()}
         />
         <GapView mode="horizontal" />
         <MyButton
@@ -171,6 +216,7 @@ export default function ProposalDetails() {
             paddingVertical: 8,
             width: 85,
           }}
+          onPress={() => onAcceptProposal()}
         />
       </View>
       <View style={{ marginTop: 7 }}>
@@ -193,7 +239,7 @@ export default function ProposalDetails() {
               style={{ marginBottom: 5 }}
             />
             <MyText
-              text="John has applied to or been invited to your or your company’s job need experience custom template designers for custom posts archive creation"
+              text={`${proposalItem.agentProperty.user?.firstName || "John"} has applied to or been invited to your or your company’s job need experience custom template designers for custom posts archive creation`}
               weight="400"
               size={12}
             />
@@ -209,7 +255,7 @@ export default function ProposalDetails() {
               style={{ marginBottom: 10 }}
             />
             <MyText
-              text="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip.Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip."
+              text={proposalItem.agentProperty.propertyDescription || "No description available."}
               weight="400"
               size={12}
             />
@@ -228,20 +274,34 @@ export default function ProposalDetails() {
               size={16}
               style={{ marginBottom: 10 }}
             />
-            <LabelValue label="Purpose" value="Buying" />
-            <LabelValue label="Property Type" value="Apartment" />
-            <LabelValue label="City" value="Karachi" />
-            <LabelValue label="Location" value="Gulshen-e-Iqbal" />
-            <View
-              style={{
-                width: "100%",
-                height: 150,
-                backgroundColor: "pink",
-                marginTop: 25,
-              }}
-            >
-              {/** //FIXME: Insert Mapbox */}
-            </View>
+            <LabelValue label="Purpose" value={proposalItem.agentProperty.purpose || "N/A"} />
+            <LabelValue label="Property Type" value={proposalItem.agentProperty.propertyType?.subTypeName || "N/A"} />
+            <LabelValue label="City" value={proposalItem.agentProperty.propertyCity || "N/A"} />
+            <LabelValue label="Location" value={proposalItem.agentProperty.propertyAddress || "N/A"} />
+            {proposalItem.agentProperty.latitude && proposalItem.agentProperty.longitude ? (
+                <MapView
+                  provider={PROVIDER_GOOGLE}
+                  style={{ width: "100%", height: 150 }}
+                  initialRegion={{
+                    latitude: parseFloat(proposalItem.agentProperty.latitude),
+                    longitude: parseFloat(proposalItem.agentProperty.longitude),
+                    latitudeDelta: 0.005,
+                    longitudeDelta: 0.005,
+                  }}
+                >
+                  <Marker
+                    identifier="mainMarker"
+                    coordinate={{
+                      latitude: parseFloat(proposalItem.agentProperty.latitude),
+                      longitude: parseFloat(proposalItem.agentProperty.longitude),
+                    }}
+                  />
+                </MapView>
+              ) : (
+                <View style={{ width: "90%", height: 150, justifyContent: 'center', alignItems: 'center' }}>
+                  <MyText text="Loading map..." textColor={theme.colors.placeholderText} />
+                </View>
+              )}
           </View>
           <Card.Divider />
           <View
@@ -257,10 +317,10 @@ export default function ProposalDetails() {
               size={16}
               style={{ marginBottom: 10 }}
             />
-            <LabelValue label="Area Size" value="Large" />
-            <LabelValue label="Range" value="1000000" />
-            <LabelValue label="Instalment" value="Available" />
-            <LabelValue label="Ready for" value="Possession" />
+            <LabelValue label="Area Size" value={proposalItem.agentProperty.propertyArea+" Sq. ft" || "N/A"} />
+            <LabelValue label="Range" value={formatPrice(proposalItem.agentProperty.propertyPrice || 0) || "N/A"} />
+            <LabelValue label="Installment" value="Not Available" />
+            <LabelValue label="Ready for" value={proposalItem.agentProperty.propertyStatus ? "Possession" : "Not Ready"} />
           </View>
           <Card.Divider />
           <View
@@ -278,7 +338,7 @@ export default function ProposalDetails() {
             />
             <View>
               <MediaGallery
-                media={data.imageMedia}
+                media={proposalItem.agentProperty.PropertyData.filter(item => item.type === "image").map(image => image.url) || []}
                 theme={theme}
                 onSelect={(index: number) => {
                   setVisibleImg(true);
@@ -288,7 +348,7 @@ export default function ProposalDetails() {
             </View>
           </View>
           <Card.Divider />
-          <View
+          {/* <View
             style={{
               paddingTop: 10,
               paddingHorizontal: 15,
@@ -303,12 +363,12 @@ export default function ProposalDetails() {
             />
             <View>
               <MediaGallery
-                media={data.videoMedia}
+                media={proposalItem.agentProperty.PropertyData.filter(item => item.type === "video").map(video => video.url) || []}
                 theme={theme}
                 onSelect={(index) => setVisibleVid(true)}
               />
             </View>
-          </View>
+          </View> */}
         </Card>
       </View>
     </ScrollView>

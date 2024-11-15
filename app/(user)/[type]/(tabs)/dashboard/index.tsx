@@ -208,7 +208,7 @@ const renderPostingList = ({ item, theme, params }: {
         router.navigate({
           pathname: `(user)/${params?.type}/(tabs)/dashboard/proposalList`,
           params: {
-            userPropertyId: JSON.stringify(item.id),
+            item: JSON.stringify(item),
           }
         })
       }
