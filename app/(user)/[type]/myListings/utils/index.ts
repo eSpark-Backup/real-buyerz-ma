@@ -58,7 +58,10 @@ const handleCreatePropertiesAndProposal = async (reqPropertyData: ReqPropertyDat
         }
         requestData[key] = value;
       } else {
-        if (key === 'image') {
+        if(key==='propertyID'){
+          formData.append('userPropertyId', value as string)
+        }
+        else if (key === 'image') {
           const images = value as ImageFile[];
           images.forEach((image) => {
             formData.append('image', image);
@@ -80,7 +83,7 @@ const handleCreatePropertiesAndProposal = async (reqPropertyData: ReqPropertyDat
         }
       }
     });
-    console.log(`formData ${JSON.stringify(requestData)}`);
+    console.log(`formData ${JSON.stringify(formData)}`);
 
     const endpoint = type === 'user' ? '/userProperty' : reqPropertyData?.propertyID && reqPropertyData.propertyID.trim() !== '' ? `/bidding/singleProperty` : '/property';
     console.log(`endPoint ${endpoint}`)

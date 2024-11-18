@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   StyleSheet,
   View,
@@ -7,88 +7,76 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { useTheme } from "@react-navigation/native";
-import { router, useGlobalSearchParams, useLocalSearchParams } from "expo-router";
+import { router, useGlobalSearchParams } from "expo-router";
 
-import { Card, GapView, LabelValue, MyButton, MyText } from "@components";
+import { Card, GapView, LabelValue, MyButton, MyText, OverlayLoader } from "@components";
 import { MyTheme, UserType } from "@types";
-import { Feather, Ionicons } from "@expo/vector-icons";
+import { Ionicons } from "@expo/vector-icons";
 import Bidding from "./bidding";
-
-interface Posting {
-  id: number;
-  title: string;
-  estRange: string;
-  postedTime: Date;
-  description: string;
-  status: "Buying" | "Selling";
-  city: string;
-  area: string;
-  proposal: number;
-}
+import { ProposalData } from "../../myProposals/utils";
+import { handleGetAllProposals } from "./utils";
+import { showToast } from "@utils/showToast";
+import { PropertyItem } from "../home/utils";
+import { formatPrice } from "app/utils/priceConverter";
 
 const minutesAgo: number = 30;
-const pastDate: Date = new Date(new Date().getTime() - minutesAgo * 60000);
 
-const testPostingData: Posting[] = [
-  {
-    id: 1,
-    title: "Need 4 Room Apartments",
-    estRange: "80M",
-    postedTime: pastDate,
-    description:
-      "Sunt exercitation enim magna exercitation fugiat fugiat excepteur. Est dolor commodo commodo reprehenderit eiusmod dolore culpa.",
-    status: "Buying",
-    city: "karachi",
-    area: "Gulshan-e-Iqbal",
-    proposal: 5,
-  },
-  {
-    id: 2,
-    title: "Need 4 Room Apartments",
-    estRange: "80M",
-    postedTime: pastDate,
-    description:
-      "Sunt exercitation enim magna exercitation fugiat fugiat excepteur.",
-    status: "Buying",
-    city: "karachi",
-    area: "Gulshan-e-Iqbal",
-    proposal: 5,
-  },
-  {
-    id: 3,
-    title: "Need 4 Room Apartments",
-    estRange: "80M",
-    postedTime: pastDate,
-    description:
-      "Sunt exercitation enim magna exercitation fugiat fugiat excepteur.",
-    status: "Buying",
-    city: "karachi",
-    area: "Gulshan-e-Iqbal",
-    proposal: 5,
-  },
-  {
-    id: 4,
-    title: "Need 4 Room Apartments",
-    estRange: "80M",
-    postedTime: pastDate,
-    description:
-      "Sunt exercitation enim magna exercitation fugiat fugiat excepteur.",
-    status: "Buying",
-    city: "karachi",
-    area: "Gulshan-e-Iqbal",
-    proposal: 5,
-  },
-];
+function timeAgo(date: string): string {
+  const dateObj = new Date(date);
+  const now = new Date();
+  const diffInSeconds = Math.floor((now.getTime() - dateObj.getTime()) / 1000);
 
-function timeAgo(date: Date, minutesAgo: number = 0): string {
-  const diff: number =
-    Math.floor((new Date().getTime() - date.getTime()) / 60000) - minutesAgo;
-  return `${diff} mins ago`;
+  const minutes = Math.floor(diffInSeconds / 60);
+  const hours = Math.floor(diffInSeconds / 3600);
+  const days = Math.floor(diffInSeconds / 86400);
+
+  if (days > 0) {
+    return `${days} day${days > 1 ? 's' : ''} ago`;
+  } else if (hours > 0) {
+    return `${hours} hour${hours > 1 ? 's' : ''} ago`;
+  } else if (minutes > 0) {
+    return `${minutes} minute${minutes > 1 ? 's' : ''} ago`;
+  } else {
+    return 'just now';
+  }
 }
 
 function Dashboard() {
   const theme = useTheme() as MyTheme;
   const params = useGlobalSearchParams<{ type: UserType }>();
+  const [propertiesData, setPropertiesData] = useState<ProposalData | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchAllProposals();
+  }, []);
+
+  const fetchAllProposals = async () => {
+    setLoading(true);
+    try {
+      const response = await handleGetAllProposals();
+      setLoading(false);
+      if (response.status && response.proposalData) {
+        setPropertiesData(response.proposalData);
+      } else {
+        showToast(response.message || "Proposals not found", 'error');
+      }
+    } catch (error) {
+      showToast('Failed to fetch Proposals', 'error');
+      setLoading(false);
+    }
+  };
+
+  const getProposalData = () => {
+    if (!propertiesData) return { data: [], title: "", submitted: [] };
+    const filteredData = propertiesData.active.filter(item => item.proposalCount > 0);
+    return {
+      data: filteredData,
+    };
+  };
+
+  const { data } = getProposalData();
+
   return (
     <>
       <ScrollView
@@ -96,6 +84,7 @@ function Dashboard() {
         contentContainerStyle={{ flexGrow: 1 }}
         showsVerticalScrollIndicator={false}
       >
+        <OverlayLoader isShow={loading} />
         <View style={styles.container}>
           <View style={styles.top}>
             <MyText
@@ -126,7 +115,7 @@ function Dashboard() {
                 <TouchableOpacity
                   activeOpacity={1}
                   onPress={() =>
-                    router.push(`(user)/${params?.type!}/myListings`)
+                    router.push(`(user)/${params?.type!}/myProperties`)
                   }
                 >
                   <View style={{ flexDirection: "row", alignItems: "center" }}>
@@ -134,25 +123,33 @@ function Dashboard() {
                       text="See all postings"
                       textColor={theme.colors.secondary}
                     />
+
                     <Ionicons
                       name="chevron-forward"
                       color={theme.colors.secondary}
                       style={{ paddingLeft: 10, top: 1 }}
                       size={16}
                     />
+
                   </View>
                 </TouchableOpacity>
               </View>
-              <FlatList
-                data={testPostingData}
-                scrollEnabled={false}
-                renderItem={({ item, index }) =>
-                  renderPostingList({ item, index, theme, params })
-                }
-                showsVerticalScrollIndicator={false}
-                ItemSeparatorComponent={() => <Card.Divider />}
-                keyExtractor={(item) => item.id.toString()}
-              />
+              {data.length > 0 ? (
+                <FlatList
+                  data={data}
+                  showsVerticalScrollIndicator={false}
+                  renderItem={({ item }) => renderPostingList({ item, theme, params })}
+                  ItemSeparatorComponent={() => <Card.Divider />}
+                  keyExtractor={(item) => item.id}
+                />
+              ) : !loading ? (
+                <View style={styles.errorContainer}>
+                  <MyText text="No Proposal Data found" size={16} textColor="red" />
+                  <TouchableOpacity onPress={fetchAllProposals}>
+                    <MyText text="Retry" size={16} textColor={theme.colors.primary} />
+                  </TouchableOpacity>
+                </View>
+              ) : null}
             </Card>
           </View>
         </View>
@@ -161,81 +158,72 @@ function Dashboard() {
   );
 }
 
-// export default Dashboard;
-
-export default Bidding;
-
-const renderPostingList = ({
-  item,
-  index,
-  theme,
-  params,
-}: {
-  item: Posting;
-  index: number;
-  theme: MyTheme;
-  params: { type?: UserType };
-}) => {
-  return (
-    <View style={{ padding: 20 }}>
-      <View>
-        <MyText text={item.title} weight="500" size={16} />
-      </View>
-      <View
-        style={{
-          flexDirection: "row",
-          justifyContent: "space-between",
-          marginBottom: 20,
-          marginTop: 10,
-        }}
-      >
-        <LabelValue
-          label="Est. Range"
-          value={"80M"}
-          valueStyle={{ color: theme.colors.negative }}
-        />
-        <MyText
-          text={`Posted ${timeAgo(item.postedTime, minutesAgo)}`}
-          weight="400"
-          size={12}
-        />
-      </View>
-      <View style={{ marginBottom: 20 }}>
-        <MyText
-          text={item.description}
-          numberOfLines={3}
-          size={12}
-          weight="300"
-        />
-      </View>
-      <View>
-        <LabelValue label="Status" value={item.status!} />
-        <LabelValue label="City" value={item.city!} />
-        <LabelValue label="Area" value={item.area!} />
-        <LabelValue
-          label="Proposal"
-          value={item.proposal!.toString() + " to 10"}
-        />
-      </View>
-      <MyButton
-        label="View Proposals"
-        textColor="#ffffff"
-        onPress={() =>
-          router.push(`(user)/${params?.type!}/(tabs)/dashboard/proposalList`)
-        }
-        labelStyle={{ fontSize: 12 }}
-        style={{
-          marginTop: 20,
-          alignSelf: "flex-start",
-          paddingHorizontal: 16,
-          paddingVertical: 8,
-          borderRadius: 4,
-        }}
-        backgroundColor={theme.colors.primary}
+const renderPostingList = ({ item, theme, params }: {
+  item: PropertyItem, theme: MyTheme, params: { type?: UserType };
+}) => (
+  <View style={{ padding: 20 }}>
+    <View>
+      <MyText text={item.propertyName} weight="500" size={16} />
+    </View>
+    <View
+      style={{
+        flexDirection: "row",
+        justifyContent: "space-between",
+        marginBottom: 6,
+        marginTop: 10,
+      }}
+    >
+      <LabelValue
+        label="Est. Range"
+        value={formatPrice(item.propertyPrice || 0)}
+        valueStyle={{ color: theme.colors.negative }}
+      />
+      <MyText
+        text={`Posted ${timeAgo(item.createdAt)}`}
+        weight="400"
+        size={12}
       />
     </View>
-  );
-};
+    <View style={{ marginBottom: 16 }}>
+      <MyText
+        text={item.propertyDescription}
+        numberOfLines={3}
+        size={12}
+        weight="300"
+      />
+    </View>
+    <View>
+      <LabelValue label="Status" value={item.purpose!} />
+      <LabelValue label="City" value={item.propertyCity!} />
+      <LabelValue label="Area" value={item.propertyAddress!} />
+      <LabelValue
+        label="Proposal"
+        value={item.proposalCount!.toString()}
+      />
+    </View>
+    <MyButton
+      label="View Proposals"
+      textColor="#ffffff"
+      onPress={() =>
+        router.navigate({
+          pathname: `(user)/${params?.type}/(tabs)/dashboard/proposalList`,
+          params: {
+            item: JSON.stringify(item),
+          }
+        })
+      }
+      labelStyle={{ fontSize: 12 }}
+      style={{
+        marginTop: 20,
+        alignSelf: "flex-start",
+        paddingHorizontal: 16,
+        paddingVertical: 8,
+        borderRadius: 4,
+      }}
+      backgroundColor={theme.colors.primary}
+    />
+  </View>
+);
 
 const styles = StyleSheet.create({
   container: {
@@ -247,6 +235,11 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     marginBottom: 17,
+  },
+  errorContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   content: { flex: 1 },
   ap_top: {
@@ -265,3 +258,8 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
 });
+
+export default function App() {
+  const params = useGlobalSearchParams<{ type: UserType }>();
+  return params?.type === 'agent' ? <Bidding /> : <Dashboard />;
+}

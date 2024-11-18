@@ -132,6 +132,7 @@ export default function Home() {
     <>
       <ScrollView style={[styles(theme).wrapper]}>
         <View style={styles(theme).container}>
+          { params.type!=='user' &&
           <AdCard
             label="View Your listings or post your ad to rent or sell your house"
             btnLabel="Go to Dashboard"
@@ -140,6 +141,7 @@ export default function Home() {
               Boolean(userData) ? router.push(`(user)/${params?.type!}/(tabs)/dashboard/bidding`) : setVisible(true)
             }
           />
+        }
           <GapView length={30} />
           <Title text="Browse Properties" theme={theme} />
           <View style={styles(theme).carousel}>
@@ -313,7 +315,7 @@ const ImageCard = () => {
             borderRadius: 3,
           }}
           onPress={() =>
-            router.push(`(user)/${params?.type!}/(tabs)/dashboard/bidding`)
+            router.push(params.type==='agent'?`(user)/${params?.type!}/(tabs)/dashboard/bidding`:`(user)/${params?.type!}/(tabs)/dashboard`)
           }
         >
           <MyText textColor="#ffffff" size={10} weight="600">

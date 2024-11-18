@@ -116,6 +116,7 @@ export interface Amenity {
 export interface PropertyType {
   id: string;
   typeName: string;
+  subTypeName: string;
   url: string;
   imageKey: string;
   createdAt: string;

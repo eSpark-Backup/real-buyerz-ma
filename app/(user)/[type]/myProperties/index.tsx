@@ -25,8 +25,10 @@ import {
 import { handleGetAllPropertyProposals, ProposalData } from "../myProposals/utils";
 import { showToast } from "@utils/showToast";
 import { PropertyItem } from "../(tabs)/home/utils";
-import { handleDraftProperty  } from "../myListings/utils";
+import { handleDraftProperty } from "../myListings/utils";
 import { TouchableOpacity } from "react-native-gesture-handler";
+import { handleGetAllProposals } from "../(tabs)/dashboard/utils";
+import { formatPrice } from "app/utils/priceConverter";
 
 interface DropDownList {
   data: string[];
@@ -118,26 +120,26 @@ export default function MyProperties() {
       title: `Drafts (${propertiesData?.draft?.length || 0})`,
       selected: currentTab === "Drafts"
     },
-            //// It will show for user
-    // {
-    //   title: `Trash (${propertiesData?.trash?.length || 0})`,
-    //   selected: currentTab === "Trash"
-    // },
+    
+    ...(params?.type === 'user' ? [{
+      title: `Trash (${propertiesData?.trash?.length || 0})`,
+      selected: currentTab === "Trash"
+    }] : [])
   ];
 
   const fetchProperties = async () => {
     setLoading(true);
     try {
-      const response = await handleGetAllPropertyProposals(false);
+      const response = params.type === 'agent' ? await handleGetAllPropertyProposals(false) : await handleGetAllProposals();
       setLoading(false);
       if (response.status && response.proposalData) {
         setPropertiesData(response.proposalData);
       }
       else {
-        showToast(response.message || "Properties not found", 'error')
+        showToast(response.message || "Proposals not found", 'error')
       }
     } catch (error) {
-      showToast('Failed to fetch Properties', 'error')
+      showToast('Failed to fetch Proposals', 'error')
       setLoading(false);
     }
   };
@@ -193,21 +195,13 @@ export default function MyProperties() {
           data: propertiesData.draft,
         };
 
-        //// It will show for user
-
-      // case "Trash":
-      //   return {
-      //     data: propertiesData.draft,
-      //   };
+      case "Trash":
+        return {
+          data: propertiesData.trash,
+        };
       default:
         return { data: [] };
     }
-  };
-
-  const formatPrice = (price: string | number | null): string => {
-    if (price === null) return "N/A";
-    if (typeof price === "string") return price;
-    return price.toLocaleString();
   };
 
   const renderPropertiesItem = ({ item }: { item: PropertyItem }) => (
@@ -217,7 +211,7 @@ export default function MyProperties() {
         description={item.propertyDescription}
         btns={btnsData(item)}
         points={[
-          { label: "Est. Range", value: formatPrice(item.propertyPrice) },
+          { label: "Est. Range", value: formatPrice(item.propertyPrice || 0) },
           { label: "Purpose", value: item.purpose },
           { label: "Property Type", value: item.propertyType.typeName },
           { label: "City", value: item.propertyCity },
@@ -278,11 +272,15 @@ export default function MyProperties() {
           marginBottom: 10,
         }}
       />
+      {params.type==='user'?(<MyTopTabs
+        data={topTabsData}
+        list
+        onTabPress={(title: string) => setCurrentTab(title.split(" ")[0])}
+      />):(
       <MyTopTabs
         data={topTabsData}
         onTabPress={(title: string) => setCurrentTab(title.split(" ")[0])}
-      />
-
+      />)}
       <View style={styles.content}>
         {data.length > 0 ? (
           <FlatList

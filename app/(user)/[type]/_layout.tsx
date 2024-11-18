@@ -42,7 +42,6 @@ import { RootState } from "@store";
 const DrawerContent = (props: DrawerContentComponentProps) => {
   const [confirmLogout, setConfirmLogout] = useState(false);
   const params = useLocalSearchParams<{ type: UserType }>();
-  const { index } = props.state;
   const theme = useTheme() as MyTheme;
   const { clearSession, clearTheme } = useSessionManagement();
   const dispatch = useDispatch();
@@ -57,21 +56,18 @@ const DrawerContent = (props: DrawerContentComponentProps) => {
   };
 
   return (
-    <View style={{ ...styles.container }}>
+    <View style={styles.container}>
       <View style={styles.header}>
-        <View style={{ flexDirection: "row" }}>
+        <View style={{ flexDirection: "row", marginTop:8 }}>
           <MyAvatar
             imageUrl={{
               uri: userData?.profileImage || "https://i.pravatar.cc/300?img=68",
             }}
             size={35}
           />
-
           <View style={{ marginLeft: 10 }}>
             <MyText
-              text={
-                `${userData?.firstName} ${userData?.lastName}` || "Arman Khan"
-              } // Use name from user data
+              text={`${userData?.firstName} ${userData?.lastName}` || "Arman Khan"}
               size={16}
               weight="600"
               textColor="#ffffff"
@@ -82,14 +78,12 @@ const DrawerContent = (props: DrawerContentComponentProps) => {
               textColor="#ffffff"
               style={{ marginVertical: 5 }}
             />
+            { params.type==='agent'&&
             <View style={{ flexDirection: "row", alignItems: "center" }}>
-              <MyText
-                text="Available connects: "
-                size={12}
-                textColor="#ffffff"
-              />
+              <MyText text="Available connects: " size={12} textColor="#ffffff" />
               <MyText text="50" size={12} weight="600" textColor="#ffffff" />
             </View>
+            }
           </View>
         </View>
         <BubbleIcon
@@ -115,23 +109,17 @@ const DrawerContent = (props: DrawerContentComponentProps) => {
           pressColor="transparent"
           activeBackgroundColor={"#ffffff1a"}
           icon={({ color, size, focused }) => (
-            <Draw_Logout
-              style={{
-                color: theme.colors.text,
-              }}
-            />
+            <Draw_Logout style={{ color: theme.colors.text }} />
           )}
           onPress={() => setConfirmLogout(true)}
         />
       </View>
-      {Platform.OS == "ios" && <GapView />}
+      {Platform.OS === "ios" && <GapView />}
       <MyPopupModal visible={confirmLogout} bgDim>
         <MyPopupModal.Alert
           message="Are you sure you want to Log out?"
           onClose={() => setConfirmLogout(false)}
-          onPress={() => {
-            handleLogout();
-          }}
+          onPress={handleLogout}
         />
       </MyPopupModal>
     </View>
@@ -142,64 +130,47 @@ export default function MainLayout() {
   const theme = useTheme() as MyTheme;
   const params = useLocalSearchParams<{ type: UserType }>();
 
-  console.log("🚀 ~ MainLayout ~ params:", params);
-
   return (
     <>
       <StatusBar backgroundColor={theme.colors.secondary} style="light" />
-
       <Drawer
         drawerContent={(props) => <DrawerContent {...props} />}
         backBehavior="history"
         screenOptions={({ route }) => ({
-          swipeEnabled: params?.type! === "anon" ? false : true,
-          // headerShown: false,
-          // sceneContainerStyle: { marginBottom: 10 },
-          header: (props) => {
-            return (
-              <MyHeader
-                {...props}
-                userType={params?.type!}
-                showRight
-                theme={theme}
-              />
-            );
-          },
+          swipeEnabled: params?.type === "anon" ? false : true,
+          header: (props) => (
+            <MyHeader {...props} userType={params?.type!} showRight theme={theme} />
+          ),
           drawerStyle: { width: "80%" },
         })}
       >
         <Drawer.Screen
-          name="index" // This is the name of the page and must match the url from root
+          name="index"
           options={{
             drawerItemStyle: { display: "none" },
           }}
         />
         <Drawer.Screen
-          name="(tabs)" // This is the name of the page and must match the url from root
+          name="(tabs)"
           options={{
             drawerItemStyle: { display: "none" },
             headerShown: false,
-            // sceneContainerStyle: { marginBottom: 10 },
           }}
         />
         <Drawer.Screen
-          name="search" // This is the name of the page and must match the url from root
+          name="search"
           options={{
             headerShown: false,
             drawerItemStyle: { display: "none" },
           }}
         />
         <Drawer.Screen
-          name="inbox" // This is the name of the page and must match the url from root
+          name="inbox"
           options={{
             drawerActiveBackgroundColor: "#DCEAF2",
             headerShown: false,
             drawerIcon: ({ focused }) => (
-              <Draw_Inbox
-                style={{
-                  color: focused ? theme.colors.secondary : theme.colors.text,
-                }}
-              />
+              <Draw_Inbox style={{ color: focused ? theme.colors.secondary : theme.colors.text }} />
             ),
             drawerLabel: ({ focused }) => (
               <DrawerLabel label="Inbox" theme={theme} focused={focused} />
@@ -208,23 +179,16 @@ export default function MainLayout() {
           initialParams={{ type: params?.type }}
         />
         <Drawer.Screen
-          name="myProposals" // This is the name of the page and must match the url from root
+          name="myProposals"
           options={{
             drawerActiveBackgroundColor: "#DCEAF2",
             drawerIcon: ({ focused }) => (
-              <Draw_Proposals
-                style={{
-                  color: focused ? theme.colors.secondary : theme.colors.text,
-                }}
-              />
+              <Draw_Proposals style={{ color: focused ? theme.colors.secondary : theme.colors.text }} />
             ),
             drawerLabel: ({ focused }) => (
-              <DrawerLabel
-                label="My Proposals"
-                theme={theme}
-                focused={focused}
-              />
+              <DrawerLabel label="My Proposals" theme={theme} focused={focused} />
             ),
+            drawerItemStyle: { display: params.type === "user" ? "none" : "flex" }, // Show for user type only
           }}
         />
         <Drawer.Screen
@@ -232,11 +196,7 @@ export default function MainLayout() {
           options={{
             drawerActiveBackgroundColor: "#DCEAF2",
             drawerIcon: ({ focused }) => (
-              <Draw_Properties
-                style={{
-                  color: focused ? theme.colors.secondary : theme.colors.text,
-                }}
-              />
+              <Draw_Properties style={{ color: focused ? theme.colors.secondary : theme.colors.text }} />
             ),
             drawerLabel: ({ focused }) => (
               <DrawerLabel
@@ -248,15 +208,11 @@ export default function MainLayout() {
           }}
         />
         <Drawer.Screen
-          name="favourites" // This is the name of the page and must match the url from root
+          name="favourites"
           options={{
             drawerActiveBackgroundColor: "#DCEAF2",
             drawerIcon: ({ focused }) => (
-              <Draw_Favorites
-                style={{
-                  color: focused ? theme.colors.secondary : theme.colors.text,
-                }}
-              />
+              <Draw_Favorites style={{ color: focused ? theme.colors.secondary : theme.colors.text }} />
             ),
             drawerLabel: ({ focused }) => (
               <DrawerLabel label="Favourites" theme={theme} focused={focused} />
@@ -264,132 +220,94 @@ export default function MainLayout() {
           }}
         />
         <Drawer.Screen
-          name="shop" // This is the name of the page and must match the url from root
+          name="shop"
           options={{
             headerShown: false,
             drawerActiveBackgroundColor: "#DCEAF2",
             drawerIcon: ({ focused }) => (
-              <Draw_Shop
-                style={{
-                  color: focused ? theme.colors.secondary : theme.colors.text,
-                }}
-              />
+              <Draw_Shop style={{ color: focused ? theme.colors.secondary : theme.colors.text }} />
             ),
             drawerLabel: ({ focused }) => (
               <DrawerLabel label="Shop" theme={theme} focused={focused} />
             ),
+            drawerItemStyle: { display: params.type === "user" ? "none" : "flex" }, // Show for user type only
           }}
         />
         <Drawer.Screen
-          name="orderHistory" // This is the name of the page and must match the url from root
+          name="orderHistory"
           options={{
             drawerActiveBackgroundColor: "#DCEAF2",
             drawerIcon: ({ focused }) => (
-              <Draw_OrderHistory
-                style={{
-                  color: focused ? theme.colors.secondary : theme.colors.text,
-                }}
-              />
+              <Draw_OrderHistory style={{ color: focused ? theme.colors.secondary : theme.colors.text }} />
             ),
             drawerLabel: ({ focused }) => (
-              <DrawerLabel
-                label="Order History"
-                theme={theme}
-                focused={focused}
-              />
+              <DrawerLabel label="Order History" theme={theme} focused={focused} />
             ),
+            drawerItemStyle: { display: params.type === "user" ? "none" : "flex" }, // Show for user type only
           }}
         />
         <Drawer.Screen
-          name="preferences" // This is the name of the page and must match the url from root
+          name="preferences"
           options={{
             drawerActiveBackgroundColor: "#DCEAF2",
             drawerIcon: ({ focused }) => (
-              <Draw_Preferences
-                style={{
-                  color: focused ? theme.colors.secondary : theme.colors.text,
-                }}
-              />
+              <Draw_Preferences style={{ color: focused ? theme.colors.secondary : theme.colors.text }} />
             ),
             drawerLabel: ({ focused }) => (
-              <DrawerLabel
-                label="Preferences"
-                theme={theme}
-                focused={focused}
-              />
+              <DrawerLabel label="Preferences" theme={theme} focused={focused} />
             ),
           }}
         />
         <Drawer.Screen
-          name="privacyPolicy" // This is the name of the page and must match the url from root
+          name="privacyPolicy"
           options={{
             drawerActiveBackgroundColor: "#DCEAF2",
-            header: (props) => {
-              return (
-                <MyHeader
-                  {...props}
-                  showBackIcon
-                  userType={params?.type!}
-                  title="Privacy Policy"
-                  hideCenter
-                  theme={theme}
-                />
-              );
-            },
-            drawerIcon: ({ focused }) => (
-              <Draw_Policy
-                style={{
-                  color: focused ? theme.colors.secondary : theme.colors.text,
-                }}
+            header: (props) => (
+              <MyHeader
+                {...props}
+                showBackIcon
+                userType={params?.type!}
+                title="Privacy Policy"
+                hideCenter
+                theme={theme}
               />
             ),
+            drawerIcon: ({ focused }) => (
+              <Draw_Policy style={{ color: focused ? theme.colors.secondary : theme.colors.text }} />
+            ),
             drawerLabel: ({ focused }) => (
-              <DrawerLabel
-                label="Privacy and Policy"
-                theme={theme}
-                focused={focused}
-              />
+              <DrawerLabel label="Privacy and Policy" theme={theme} focused={focused} />
             ),
           }}
         />
         <Drawer.Screen
-          name="termsAndConditions" // This is the name of the page and must match the url from root
+          name="termsAndConditions"
           options={{
             drawerActiveBackgroundColor: "#DCEAF2",
-            header: (props) => {
-              return (
-                <MyHeader
-                  {...props}
-                  showBackIcon
-                  userType={params?.type!}
-                  title="Terms & Conditions"
-                  hideCenter
-                  theme={theme}
-                />
-              );
-            },
-            drawerIcon: ({ focused }) => (
-              <Draw_Policy
-                style={{
-                  color: focused ? theme.colors.secondary : theme.colors.text,
-                }}
+            header: (props) => (
+              <MyHeader
+                {...props}
+                showBackIcon
+                userType={params?.type!}
+                title="Terms & Conditions"
+                hideCenter
+                theme={theme}
               />
             ),
+            drawerIcon: ({ focused }) => (
+              <Draw_Policy style={{ color: focused ? theme.colors.secondary : theme.colors.text }} />
+            ),
             drawerLabel: ({ focused }) => (
-              <DrawerLabel
-                label="Terms and conditions"
-                theme={theme}
-                focused={focused}
-              />
+              <DrawerLabel label="Terms and conditions" theme={theme} focused={focused} />
             ),
           }}
         />
         <Drawer.Screen
           name="myListings"
           options={({ route }) => ({
-            drawerItemStyle: { display: params.type === "agent" ? "flex" : "none" }, // Hide for non-agent types
-            drawerLabel: () => null, // Remove the label
-            drawerIcon: () => null, // Optionally remove the icon
+            drawerItemStyle: { display: "none" },
+            drawerLabel: () => null, 
+            drawerIcon: () => null,
           })}
         />
       </Drawer>
