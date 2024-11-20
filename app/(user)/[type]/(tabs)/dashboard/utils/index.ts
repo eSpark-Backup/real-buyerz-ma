@@ -28,13 +28,13 @@ export interface ProposalDataItem {
   agentProperty: PropertyItem;
 }
 
-const handleGetAllProposals = async (): Promise<{
+const handleGetAllProposals = async (filters?: Record<string, any>): Promise<{
   status: boolean;
   proposalData?: ProposalData;
   message?: string;
 }> => {
   try {
-    const { data } = await api.get<FindAllProposalResponse>('/userProperty/user');
+    const { data } = await api.get<FindAllProposalResponse>('/userProperty/user', filters);
     if (data?.success) {
       return {
         status: true,

@@ -11,6 +11,12 @@ export interface PropertySliceState {
   filter: {
     propertyType: string | null;
     purpose: string | null;
+    price1: string | null;
+    price2: string | null;
+    area1: string | null;
+    area2: string | null;
+    propertyCity:string | null;
+    location:string | null
   };
   amenities: IAmenity[]
 }
@@ -21,6 +27,10 @@ const initialState: PropertySliceState = {
   filter: {
     propertyType: null,
     purpose: null,
+    price1: null,
+    price2: null,
+    area1: null,
+    area2: null
   },
   amenities: []
 };

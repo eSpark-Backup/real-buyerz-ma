@@ -1,6 +1,5 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
-import { useTheme } from "@react-navigation/native";
 import RnSlider from "rn-range-slider";
 
 import MyText from "@components/MyText";
@@ -9,11 +8,22 @@ import { MyTheme } from "@types";
 interface RangeSliderProps {
   title: string;
   theme: MyTheme;
+  initialValHigh:string,
+  initialValLow:string,
+  onChangeVal: (low: string, high: string) => void; 
 }
 
-export default function RangeSlider({ title, theme }: RangeSliderProps) {
-  const [start, setStart] = useState("0");
-  const [end, setEnd] = useState("Any");
+export default function RangeSlider({ title, theme,initialValHigh, initialValLow, onChangeVal }: RangeSliderProps) {
+  const [start, setStart] = useState(parseInt(initialValLow)); 
+  const [end, setEnd] = useState(parseInt(initialValHigh));
+
+  useEffect(() => {
+    setStart(parseInt(initialValLow));
+    setEnd(parseInt(initialValHigh));
+    console.log("initialVal"+ initialValLow)
+    console.log("initialValHigh"+ initialValHigh)
+  }, [initialValLow, initialValHigh]);
+
   return (
     <View>
       {title && (
@@ -81,8 +91,13 @@ export default function RangeSlider({ title, theme }: RangeSliderProps) {
           />
         )}
         onValueChanged={(low, high) => {
-          setStart(low.toString());
-          setEnd(high.toString());
+          setStart(low); 
+          setEnd(high);
+        }}
+        low={start} // Use state for low value
+        high={end} // Use state for high value
+        onSliderTouchEnd={(low, high) => {
+          onChangeVal(low.toString(), high.toString());
         }}
         renderThumb={() => (
           <View

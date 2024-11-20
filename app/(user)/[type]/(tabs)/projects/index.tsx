@@ -8,6 +8,7 @@ import {
   MyButton,
   MyDropdown,
   MyListItem,
+  MyText,
   MyTopFilter,
   MyTopTabs,
   OverlayLoader,
@@ -75,18 +76,25 @@ export default function Projects() {
     }, [filter])
   );
 
+
   const fetchProperties = async () => {
     try {
       setLoading(true);
-      const params = createUrlParams(filter);
-      const response = await handleGetAllProperties(params);
-      if (response?.data?.totalCount && response.data.totalCount > 0) {
+      const param = createUrlParams(filter);
+
+      const filters = Object.fromEntries(
+        Object.entries(filter).filter(([_, value]) => value !== null)
+      );
+
+      const response = await handleGetAllProperties(param, filters);
+      if (response?.data) {
+        console.log("data " + JSON.stringify(response.data));
         setProperties(response?.data.items);
         updateTabs(response.data.items);
       }
       setLoading(false);
     } catch (error) {
-      console.error("Error fetching properties:", error); // Log any errors
+      console.error("Error fetching properties:", error);
       setLoading(false);
     }
   };
@@ -95,37 +103,34 @@ export default function Projects() {
     const uniqueTabs = new Set<string>();
 
     items.forEach(item => {
-        const propertyType = item.propertyType?.typeName;
+      const propertyType = item.propertyType?.typeName;
 
-        // If the property type is Residential, add its subtype
-        if (propertyType === "Residential" && item.propertyType.subTypes) {
-            const subType = item.propertyType.subTypes.typeName;
-            if (subType) {
-                uniqueTabs.add(subType);
-            }
+      if (propertyType === "Residential" && item.propertyType.subTypes) {
+        const subType = item.propertyType.subTypes.typeName;
+        if (subType) {
+          uniqueTabs.add(subType);
         }
+      }
 
-        // If the property type is Commercial, add it
-        if (propertyType === "Commercial") {
-            uniqueTabs.add(propertyType);
-        }
+      if (propertyType === "Commercial") {
+        uniqueTabs.add(propertyType);
+      }
     });
 
-    // Create an array from the Set and prioritize Residential tabs first
     const newTabsData: { title: string; selected: boolean }[] = Array.from(uniqueTabs)
-        .filter(tab => tab !== "Commercial")
-        .map(type => ({ title: type, selected: false }))
-        .concat(
-            Array.from(uniqueTabs)
-                .filter(tab => tab === "Commercial")
-                .map(type => ({ title: type, selected: false }))
-        );
+      .filter(tab => tab !== "Commercial")
+      .map(type => ({ title: type, selected: false }))
+      .concat(
+        Array.from(uniqueTabs)
+          .filter(tab => tab === "Commercial")
+          .map(type => ({ title: type, selected: false }))
+      );
 
     setTabsData(newTabsData);
     if (newTabsData.length > 0) {
-        setSelectedTab(newTabsData[0].title);
+      setSelectedTab(newTabsData[0].title);
     }
-};
+  };
 
   const renderTabContent = () => {
     const filteredProperties = properties.filter(item => {
@@ -158,16 +163,45 @@ export default function Projects() {
   };
 
   const onApplyFilter = () => {
-    const obj = Object.entries(unappliedFilters).reduce(
-      (prev, [key, value]) => {
-        prev[key] = value?.value?.[0] ?? null;
-        return prev;
-      },
-      {} as Record<string, unknown>
-    );
+    const obj: Record<string, unknown> = {};
+    if (unappliedFilters.propertyType) {
+      obj.propertyType = unappliedFilters.propertyType.value.value[0];
+    }
+    if (unappliedFilters.purpose) {
+      obj.purpose = unappliedFilters.purpose.value.value[0];
+    }
+    if (unappliedFilters.priceRange) {
+      obj.price1 = unappliedFilters.priceRange.value[0];
+      obj.price2 = unappliedFilters.priceRange.value[1];
+    }
+    if (unappliedFilters.area) {
+      obj.area1 = unappliedFilters.area.value[0];
+      obj.area2 = unappliedFilters.area.value[1];
+    }
+    console.log("purpose1 " + JSON.stringify(obj))
     dispatch(setFilter(obj));
-    fetchProperties();
     setVisible(false);
+  };
+
+  const onResetFilters = () => {
+    console.log("idhar reset mai aya")
+    setUnappliedFilters({});
+    dispatch(setFilter({
+      propertyType: null,
+      purpose: null,
+      price1: null,
+      price2: null,
+      area1: null,
+      area2: null
+    }));
+    fetchProperties();
+  };
+
+  const handleRangeChange = (low: string, high: string, filterType: string) => {
+    setUnappliedFilters((prev) => ({
+      ...prev,
+      [filterType]: { value: [low, high] },
+    }));
   };
 
   return (
@@ -176,16 +210,19 @@ export default function Projects() {
       <MyBottomSheet.Modal
         visible={visible}
         theme={theme}
-        onClose={(val) => setVisible(val)}
+        onClose={(val) => {
+          setVisible(val);
+        }}
       >
-        {dropdownData.map((item, index) => (
-          <View key={index}>
+        {dropdownData.map((item, index) => {
+          console.log("unappliedFilters" + JSON.stringify(unappliedFilters))
+          return <View key={index}>
             <MyDropdown
               id={item.id}
               data={item.data}
               placeholder={item.placeholder}
               onSelect={(val) => {
-                unappliedFilters[item.id] = val;
+                unappliedFilters[item.id] = { value: val };
                 setUnappliedFilters({ ...unappliedFilters });
               }}
               style={{ width: "100%" }}
@@ -197,14 +234,27 @@ export default function Projects() {
             />
             {dropdownData.length - 1 && <GapView length={20} />}
           </View>
-        ))}
-        {["Price Range", "Area"].map((item, index) => (
-          <View key={index}>
-            <RangeSlider title={item} theme={theme} />
-            {index === 1 && <GapView length={20} />}
-          </View>
-        ))}
-        <GapView length={40} />
+        }
+
+        )}
+        <View>
+          <RangeSlider
+            title="Price Range"
+            theme={theme}
+            initialValLow={unappliedFilters.priceRange?.value[0] || "0"}
+            initialValHigh={unappliedFilters.priceRange?.value[1] || "10000000"}
+            onChangeVal={(low, high) => handleRangeChange(low, high, 'priceRange')}
+          />
+          <GapView length={20} />
+          <RangeSlider
+            title="Area"
+            theme={theme}
+            initialValLow={unappliedFilters.area?.value[0] || "0"}
+            initialValHigh={unappliedFilters.area?.value[1] || "100"}
+            onChangeVal={(low, high) => handleRangeChange(low, high, 'area')}
+          />
+        </View>
+        <GapView length={10} />
         <MyButton
           label={"Apply"}
           labelStyle={{
@@ -226,15 +276,7 @@ export default function Projects() {
         onPressFilter={() => setVisible(true)}
         style={styles.topFilter}
         applied={Boolean(createUrlParams(filter))}
-        onReset={() => {
-          dispatch(
-            setFilter({
-              propertyType: null,
-              purpose: null,
-            })
-          );
-          fetchProperties();
-        }}
+        onReset={onResetFilters}
       />
       <MyTopTabs
         data={tabsData.map((tab) => ({
@@ -248,7 +290,13 @@ export default function Projects() {
         }}
       />
       <View style={styles.searchList}>
-        {renderTabContent()}
+        {properties.length === 0 ? (
+          <View style={{ alignItems: 'center', justifyContent: 'center', flex: 1 }}>
+            <MyText>No Properties Found</MyText>
+          </View>
+        ) : (
+          renderTabContent()
+        )}
       </View>
     </View>
   );
