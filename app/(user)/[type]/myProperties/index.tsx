@@ -112,6 +112,7 @@ export default function MyProperties() {
   ]);
   const [unappliedFilters, setUnappliedFilters] = useState<{ [key: string]: any }>({});
   const dispatch = useDispatch();
+
   useFocusEffect(
     useCallback(() => {
       const updatedDropdown = dropdownData.map((val) => {
@@ -126,6 +127,12 @@ export default function MyProperties() {
       fetchProposals();
     }, [filter])
   );
+
+  useEffect(() => {
+    return () => {
+      onResetFilters()
+    };
+  }, []);
 
   const topTabsData = [
     {
@@ -152,17 +159,14 @@ export default function MyProperties() {
       const filters = Object.fromEntries(
         Object.entries(filter).filter(([_, value]) => value !== null)
       );
-      console.log("FILTER HOGUA"+JSON.stringify(filters))
-      const response = params.type === 'agent' ? await handleGetAllPropertyProposals(false) : await handleGetAllProposals(filters);
+      const response = params.type === 'agent' ? await handleGetAllPropertyProposals(false,filters) : await handleGetAllProposals(filters);
       setLoading(false);
       if (response.status && response.proposalData) {
-        // console.log("ANDAR BHI AGAYA"+ JSON.stringify(response.proposalData))
         setPropertiesData(response.proposalData);
       }
       else {
         showToast(response.message || "Proposals not found", 'error')
       }
-      // console.log("response " + JSON.stringify(response))
     } catch (error) {
       showToast('Failed to fetch Proposals', 'error')
       setLoading(false);
@@ -267,7 +271,6 @@ export default function MyProperties() {
   };
 
   const onResetFilters = () => {
-    console.log("idhar reset mai aya")
     setUnappliedFilters({});
     dispatch(setFilter({
       propertyType: null,
@@ -300,7 +303,7 @@ export default function MyProperties() {
               zIndex={4 - index}
               title={item.title}
               theme={theme}
-              id={`dropdown-${index}`}
+              id={item.id}
               selected={item.selected}
             />
             {index < dropdownData.length - 1 && <GapView length={20} />}

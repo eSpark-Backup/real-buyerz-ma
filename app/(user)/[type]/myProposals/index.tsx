@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import {
   FlatList,
   StyleSheet,
@@ -8,7 +8,7 @@ import {
   Dimensions,
 } from "react-native";
 import { useTheme } from "@react-navigation/native";
-import { router, useGlobalSearchParams } from "expo-router";
+import { router, useFocusEffect, useGlobalSearchParams } from "expo-router";
 import { MyTheme, UserType } from "@types";
 import {
   AdBox,
@@ -26,69 +26,112 @@ import { handleDeletePropertyProposal, handleGetAllPropertyProposals, ProposalDa
 import { PropertyItem } from "../(tabs)/home/utils";
 import { showToast } from "@utils/showToast";
 import { TouchableOpacity } from "react-native-gesture-handler";
+import { useSelector } from "react-redux";
+import { RootState } from "@store";
+import { PropertySliceState, setFilter } from "features/property/propertySlice";
+import { useDispatch } from "react-redux";
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
-
-const dropdownData = [
-  {
-    data: ["Selling", "Buying", "Rent"],
-    height: 40,
-    zIndex: 4,
-    placeholder: "Purpose",
-    title: "Purpose",
-    style: {
-      width: '100%' as const
-    } as StyleProp<ViewStyle>,
-  },
-  {
-    data: [
-      "Karachi",
-      "Lahore",
-      "Islamabad",
-      "Faisalabad",
-      "Quetta",
-      "Peshawar",
-      "Sialkot",
-    ],
-    height: 40,
-    zIndex: 3,
-    placeholder: "City",
-    title: "City",
-    style: { width: "100%" },
-  },
-  {
-    data: [
-      "Gulshan-e-Iqbal",
-      "Gulistan-e-Johar",
-      "Liaquatabad",
-      "Gulberg",
-      "Malir",
-      "Shar-e-Faisal",
-      "Karimabad",
-    ],
-    height: 40,
-    zIndex: 2,
-    placeholder: "Location",
-    title: "Location",
-    style: { width: "100%" },
-  },
-  {
-    data: ["House", "Plot", "Commercial"],
-    height: 40,
-    zIndex: 1,
-    placeholder: "Property Type",
-    title: "Property Type",
-    style: { width: "100%" },
-  },
-];
 
 export default function MyProposals() {
   const theme = useTheme() as MyTheme;
   const [visible, setVisible] = useState(false);
   const [proposalData, setProposalData] = useState<ProposalData | null>(null);
+  const { filter } = useSelector<RootState, PropertySliceState>(
+    (state) => state.property
+  );
   const [activeTab, setActiveTab] = useState("Active");
   const [loading, setLoading] = useState(true);
   const params = useGlobalSearchParams<{ type: UserType }>();
+  const [unappliedFilters, setUnappliedFilters] = useState<{ [key: string]: any }>({});
+  const dispatch = useDispatch();
+  const [dropdownData, setDropDownData] = useState([
+    {
+      data: ["Sell", "Buy", "Rent"],
+      height: 40,
+      zIndex: 4,
+      onSelect: (val: string) => {
+      },
+      placeholder: "Purpose",
+      title: "Purpose",
+      style: { width: "100%" },
+      id: "purpose",
+      selected: filter.purpose ? [filter.purpose] : null,
+    },
+    {
+      data: [
+        "Karachi",
+        "Lahore",
+        "Islamabad",
+        "Faisalabad",
+        "Quetta",
+        "Peshawar",
+        "Sialkot",
+      ],
+      height: 40,
+      zIndex: 4,
+      onSelect: (val: string) => {
+      },
+      placeholder: "City",
+      title: "City",
+      style: { width: "100%" },
+      id: "propertyCity",
+      selected: filter.propertyCity ? [filter.propertyCity] : null,
+    },
+    {
+      data: [
+        "Gulshan-e-Iqbal",
+        "Gulistan-e-Johar",
+        "Liaquatabad",
+        "Gulberg",
+        "Malir",
+        "Shar-e-Faisal",
+        "Karimabad",
+      ],
+      height: 40,
+      zIndex: 4,
+      onSelect: (val: string) => {
+      },
+      placeholder: "Location",
+      title: "Location",
+      style: { width: "100%" },
+      id: "location",
+      selected: filter.location ? [filter.location] : null,
+    },
+    {
+      data: ["Residential", "Commercial"],
+      height: 40,
+      zIndex: 4,
+      onSelect: (val: string) => {
+      },
+      placeholder: "Property Type",
+      title: "Property Type",
+      style: { width: "100%" },
+      id: "propertyType",
+      selected: filter.propertyType ? [filter.propertyType] : null,
+    },
+  ]);
+
+  useFocusEffect(
+    useCallback(() => {
+      const updatedDropdown = dropdownData.map((val) => {
+        const id = Object.keys(filter).find((key) => val.id === key) as "propertyType" | "purpose";
+        return {
+          ...val,
+          selected: filter?.[id] ? [filter?.[id]] : null,
+        };
+      });
+      setDropDownData(updatedDropdown);
+      console.log("IDHAR AKAR CALL HOGYA")
+      fetchProposals();
+    }, [filter])
+  );
+
+  useEffect(() => {
+    return () => {
+      onResetFilters()
+    };
+  }, []);
 
   const topTabsData = [
     {
@@ -112,7 +155,10 @@ export default function MyProposals() {
   const fetchProposals = async () => {
     setLoading(true);
     try {
-      const response = await handleGetAllPropertyProposals(true);
+      const filters = Object.fromEntries(
+        Object.entries(filter).filter(([_, value]) => value !== null)
+      );
+      const response = await handleGetAllPropertyProposals(true, filters);
       setLoading(false);
       if (response.status && response.proposalData) {
         setProposalData(response.proposalData);
@@ -210,6 +256,37 @@ export default function MyProposals() {
 
   const { data, title, submitted } = getActiveData();
 
+  const onApplyFilter = () => {
+    const obj: Record<string, unknown> = {};
+    if (unappliedFilters.purpose) {
+      obj.purpose = unappliedFilters.purpose.value.value[0];
+    }
+    if (unappliedFilters.propertyCity) {
+      obj.propertyCity = unappliedFilters.propertyCity.value.value[0]
+    }
+    if (unappliedFilters.location) {
+      obj.location = unappliedFilters.location.value.value[0]
+    }
+    if (unappliedFilters.propertyType) {
+      obj.propertyType = unappliedFilters.propertyType.value.value[0];
+    }
+    console.log("Object " + JSON.stringify(obj))
+    dispatch(setFilter(obj));
+    setVisible(false);
+  };
+
+  const onResetFilters = () => {
+    console.log("idhar reset mai aya")
+    setUnappliedFilters({});
+    dispatch(setFilter({
+      propertyType: null,
+      purpose: null,
+      propertyCity: null,
+      location: null,
+    }));
+    fetchProposals();
+  };
+
   return (
     <View style={[styles(theme).container, { flex: 1 }]}>
       <OverlayLoader isShow={loading} />
@@ -223,13 +300,17 @@ export default function MyProposals() {
             <MyDropdown
               data={item.data}
               placeholder={item.placeholder}
-              onSelect={(val) => console.log("val", val)}
+              onSelect={(val) => {
+                unappliedFilters[item.id] = { value: val };
+                setUnappliedFilters({ ...unappliedFilters });
+              }}
               style={{ width: '100%' } as StyleProp<ViewStyle>}
               height={item.height}
               zIndex={item.zIndex}
               title={item.title}
               theme={theme}
-              id={`dropdown-${index}`}
+              id={item.id}
+              selected={item.selected}
             />
             {index < dropdownData.length - 1 && <GapView length={20} />}
           </View>
@@ -237,6 +318,7 @@ export default function MyProposals() {
         <GapView length={60} />
         <MyButton
           label="Save"
+          onPress={onApplyFilter}
           labelStyle={styles(theme).saveButtonLabel}
           style={[styles(theme).saveButton, { backgroundColor: theme.colors.primary }]}
         />
@@ -253,7 +335,8 @@ export default function MyProposals() {
         <MyTopFilter
           theme={theme}
           onPressFilter={() => setVisible(!visible)}
-          style={{ alignSelf: "flex-end" }}
+          style={{ alignSelf: "flex-end" }}        
+          onReset={onResetFilters}
         />
       </View>
 

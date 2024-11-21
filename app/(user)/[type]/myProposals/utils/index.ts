@@ -28,9 +28,9 @@ export interface ProposalData {
 }
 
 
-const handleGetAllPropertyProposals = async (isProposal:boolean): Promise<{ status: boolean; proposalData?: ProposalData; message?: string }> => {
+const handleGetAllPropertyProposals = async (isProposal:boolean,filters?: Record<string, any>): Promise<{ status: boolean; proposalData?: ProposalData; message?: string }> => {
   try {
-    const { data } = await api.get<ApiResponse>(`/property/agent?page=1&pageSize=20&proposals=${isProposal}`);
+    const { data } = await api.get<ApiResponse>(`/property/agent?page=1&pageSize=20&proposals=${isProposal}`,filters);
     if (data?.response?.data) {
       return {
         status: true,

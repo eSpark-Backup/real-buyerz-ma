@@ -47,6 +47,7 @@ const DrawerContent = (props: DrawerContentComponentProps) => {
   const dispatch = useDispatch();
   const { userData } = useSelector<RootState, UserState>((state) => state.user);
 
+  console.log("param milrha hai kiya "+JSON.stringify(params))
   const handleLogout = () => {
     clearTheme();
     clearSession();
@@ -129,6 +130,7 @@ const DrawerContent = (props: DrawerContentComponentProps) => {
 export default function MainLayout() {
   const theme = useTheme() as MyTheme;
   const params = useLocalSearchParams<{ type: UserType }>();
+  console.log("param idhar hai"+JSON.stringify(params))
 
   return (
     <>
@@ -190,6 +192,7 @@ export default function MainLayout() {
             ),
             drawerItemStyle: { display: params.type === "user" ? "none" : "flex" }, // Show for user type only
           }}
+          initialParams={{ type: params.type }}
         />
         <Drawer.Screen
           name="myProperties"
@@ -206,6 +209,7 @@ export default function MainLayout() {
               />
             ),
           }}
+          initialParams={{ type: params.type }}
         />
         <Drawer.Screen
           name="favourites"
@@ -218,6 +222,7 @@ export default function MainLayout() {
               <DrawerLabel label="Favourites" theme={theme} focused={focused} />
             ),
           }}
+          initialParams={{ type: params.type }}
         />
         <Drawer.Screen
           name="shop"
@@ -232,6 +237,7 @@ export default function MainLayout() {
             ),
             drawerItemStyle: { display: params.type === "user" ? "none" : "flex" }, // Show for user type only
           }}
+          initialParams={{ type: params.type }}
         />
         <Drawer.Screen
           name="orderHistory"
@@ -245,6 +251,7 @@ export default function MainLayout() {
             ),
             drawerItemStyle: { display: params.type === "user" ? "none" : "flex" }, // Show for user type only
           }}
+          initialParams={{ type: params.type }}
         />
         <Drawer.Screen
           name="preferences"
@@ -257,6 +264,7 @@ export default function MainLayout() {
               <DrawerLabel label="Preferences" theme={theme} focused={focused} />
             ),
           }}
+          initialParams={{ type: params.type }}
         />
         <Drawer.Screen
           name="privacyPolicy"
@@ -279,6 +287,7 @@ export default function MainLayout() {
               <DrawerLabel label="Privacy and Policy" theme={theme} focused={focused} />
             ),
           }}
+          initialParams={{ type: params.type }}
         />
         <Drawer.Screen
           name="termsAndConditions"
@@ -301,6 +310,7 @@ export default function MainLayout() {
               <DrawerLabel label="Terms and conditions" theme={theme} focused={focused} />
             ),
           }}
+          initialParams={{ type: params.type }}
         />
         <Drawer.Screen
           name="myListings"
@@ -309,6 +319,7 @@ export default function MainLayout() {
             drawerLabel: () => null, 
             drawerIcon: () => null,
           })}
+          initialParams={{ type: params.type }}
         />
       </Drawer>
     </>

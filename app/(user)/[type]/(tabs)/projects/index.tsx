@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { FlatList, StyleProp, StyleSheet, View, ViewStyle } from "react-native";
 import { useTheme } from "@react-navigation/native";
 
@@ -76,6 +76,11 @@ export default function Projects() {
     }, [filter])
   );
 
+  useEffect(() => {
+    return () => {
+      onResetFilters()
+    };
+  }, []);
 
   const fetchProperties = async () => {
     try {
