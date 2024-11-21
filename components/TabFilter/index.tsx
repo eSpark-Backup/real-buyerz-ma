@@ -20,7 +20,7 @@ export default function TabFilter({
   onSelect,
   wrap,
   isSearch,
-  multiSelect = true, // Default to multi-select if not provided
+  multiSelect = false, // Default to multi-select if not provided
 }: TabFilterProps) {
   const theme = useTheme() as MyTheme;
   const [list, setList] = useState<SearchDataProps[] | null>(data);

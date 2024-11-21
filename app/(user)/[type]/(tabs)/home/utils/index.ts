@@ -121,10 +121,10 @@ export interface PropertyType {
   imageKey: string;
   createdAt: string;
   updatedAt: string;
-  subTypes?: PropertySubType;
+  subTypes?: PropertySubType[];
 }
 
-interface PropertySubType {
+export interface PropertySubType {
   id: string;
   typeName: string;
   url: string;

@@ -2,7 +2,6 @@ import React from "react";
 import { StyleSheet, View } from "react-native";
 import { router, useLocalSearchParams } from "expo-router";
 import { useTheme } from "@react-navigation/native";
-
 import {
   Card,
   GapView,
@@ -12,70 +11,127 @@ import {
   TabFilter,
   MyButton,
 } from "@components";
-import { testData } from "@constants";
-import { MyTheme, UserType } from "@types";
+import { MyTheme, SearchListProps, UserType } from "@types";
+import { PropertySliceState, setSearch } from "features/property/propertySlice";
+import { RootState } from "@store";
+import { useSelector, useDispatch } from "react-redux";
 
 export default function Search() {
   const theme = useTheme() as MyTheme;
   const params = useLocalSearchParams<{ type: UserType }>();
+  const dispatch = useDispatch();
+  const { search, propertyTypes } = useSelector<RootState, PropertySliceState>(
+    (state) => state.property
+  );
+
+  const handleSearch = () => {
+    // Log the current search state for debugging
+    console.log("Search parameters: ", JSON.stringify(search));
+
+    // Navigate to the search results screen
+    router.push(`(user)/${params?.type!}/search/searchList`);
+  };
+
+  const handleClearSearch = () => {
+    // Clear search state by dispatching an action to reset the filters
+    dispatch(
+      setSearch({
+        propertyType: null,
+        propertySubType: null,
+        propertyCity: null,
+        purpose: [],
+      })
+    );
+  };
 
   return (
     <View style={styles.container}>
       <View style={styles.searchBar}>
         <SearchBar leftIcon clearIcon />
       </View>
+
       <GapView length={25} />
+
       <View style={styles.purpose}>
-        <MyText text="Purpose" size={14} />
         <MyDropdown
+          id="purpose"
           placeholder="Select Purpose"
-          multiSelect
-          data={["Buy", "Rent"]}
-          onSelect={(value) => {
-            console.log("data", value);
-          }}
+          data={["Buy", "Rent", "Sell"]}
           theme={theme}
+          onSelect={(val) => {
+            dispatch(
+              setSearch({
+                ...search,
+                purpose: val.value[0],
+              })
+            );
+          }}
+          style={{ width: "100%" }}
+          height={40}
         />
       </View>
+
       <GapView length={30} />
-      <Card.Divider />
-      <GapView length={30} />
+
       <View style={styles.city}>
-        <MyText text="City" />
         <MyDropdown
+          id="propertyCity"
           placeholder="Select City"
-          multiSelect
+          multiSelect={false}
           zIndex={8}
           data={[
-            "Karachi",
-            "Lahore",
-            "Islamabad",
-            "Quetta",
-            "Peshawar",
-            "Sialkot",
+            "Karachi", "Lahore", "Islamabad", "Quetta", "Peshawar", "Sialkot"
           ]}
-          onSelect={(value) => {
-            console.log("data", value);
-          }}
+          onSelect={(value) =>
+            dispatch(
+              setSearch({
+                ...search,
+                propertyCity: value.value[0],
+              })
+            )
+          }
           theme={theme}
+          style={{ width: "100%" }}
+          height={40}
         />
       </View>
+
       <GapView length={30} />
+
       <View style={styles.genre}>
         <TabFilter
           isSearch
-          data={testData}
-          onSelect={(value) => {
-            console.log("value", value);
+          data={propertyTypes?.map((type) => ({
+            id: type.id,
+            title: type.typeName,
+            list: type.subTypes?.map((subType) => ({
+              id: type.id,
+              label: subType.typeName, 
+            })) || [],
+          })) || []}
+          onSelect={(selected: SearchListProps[]) => {
+            const propertyType = propertyTypes?.find(
+                (item) => item.id === selected[0].id
+              )?.typeName || null;
+            const propertySubType = selected?.[0]?.label || null;
+            console.log("selected hogya"+JSON.stringify(propertyTypes))
+            dispatch(
+              setSearch({
+                ...search,
+                propertyType,
+                propertySubType,
+              })
+            );
           }}
         />
       </View>
+
       <View style={styles.button}>
         <MyButton
           label="Clear Filter"
           textColor={theme.colors.primary}
-          backgroundColor={"transparent"}
-          onPress={() => {}}
+          backgroundColor="transparent"
+          onPress={handleClearSearch}
           style={{
             borderRadius: 4,
             paddingHorizontal: 10,
@@ -88,11 +144,9 @@ export default function Search() {
         <GapView mode="horizontal" length={5} />
         <MyButton
           label="Search"
-          textColor={"#ffffff"}
+          textColor="#ffffff"
           backgroundColor={theme.colors.primary}
-          onPress={() =>
-            router.push(`(user)/${params?.type!}/search/searchList`)
-          }
+          onPress={handleSearch}
           style={{ borderRadius: 4, paddingHorizontal: 21, paddingVertical: 6 }}
           labelStyle={{ fontSize: 15 }}
         />
@@ -130,8 +184,4 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     marginTop: 50,
   },
-  filter: {
-    textDecorationLine: "underline",
-  },
-  filterCont: { alignSelf: "flex-end" },
 });

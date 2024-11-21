@@ -19,7 +19,7 @@ import { useFocusEffect, useGlobalSearchParams } from "expo-router";
 import { RootState } from "@store";
 import { PropertySliceState, setFilter } from "features/property/propertySlice";
 import { useSelector } from "react-redux";
-import { handleGetAllProperties, PropertyItem } from "../home/utils";
+import { handleGetAllProperties, PropertyItem, PropertySubType } from "../home/utils";
 import { createUrlParams } from "@utils/functions";
 import { useDispatch } from "react-redux";
 
@@ -59,7 +59,6 @@ export default function Projects() {
   ]);
   const [tabsData, setTabsData] = useState<{ title: string; selected: boolean }[]>([]);
   const [selectedTab, setSelectedTab] = useState<string>("");
-
   const dispatch = useDispatch();
 
   useFocusEffect(
@@ -111,12 +110,20 @@ export default function Projects() {
       const propertyType = item.propertyType?.typeName;
 
       if (propertyType === "Residential" && item.propertyType.subTypes) {
-        const subType = item.propertyType.subTypes.typeName;
-        if (subType) {
-          uniqueTabs.add(subType);
+        if (Array.isArray(item.propertyType.subTypes)) {
+          item.propertyType.subTypes.forEach((subType) => {
+            if (subType.typeName) {
+              uniqueTabs.add(subType.typeName);
+            }
+          });
+        }
+        else {
+          const subType = item.propertyType.subTypes as PropertySubType;
+          if (subType && subType.typeName) {
+            uniqueTabs.add(subType.typeName);
+          }
         }
       }
-
       if (propertyType === "Commercial") {
         uniqueTabs.add(propertyType);
       }

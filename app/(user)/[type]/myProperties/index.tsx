@@ -123,7 +123,6 @@ export default function MyProperties() {
         };
       });
       setDropDownData(updatedDropdown);
-      console.log("IDHAR AKAR CALL HOGYA")
       fetchProposals();
     }, [filter])
   );
