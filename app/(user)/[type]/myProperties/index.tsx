@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import {
   FlatList,
   ScrollView,
@@ -8,7 +8,7 @@ import {
   ViewStyle,
 } from "react-native";
 import { useTheme } from "@react-navigation/native";
-import { router, useGlobalSearchParams } from "expo-router";
+import { router, useFocusEffect, useGlobalSearchParams } from "expo-router";
 
 import { MyTheme, UserType } from "@types";
 import {
@@ -29,82 +29,108 @@ import { handleDraftProperty } from "../myListings/utils";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { handleGetAllProposals } from "../(tabs)/dashboard/utils";
 import { formatPrice } from "app/utils/priceConverter";
-
-interface DropDownList {
-  data: string[];
-  placeholder: string;
-  title: string;
-  height: number;
-  zIndex: number;
-  style?: StyleProp<ViewStyle>;
-  onSelect: (val: string) => void;
-}
-
-const dropdownData: DropDownList[] = [
-  {
-    data: ["Selling", "Buying", "Rent"],
-    height: 40,
-    zIndex: 4,
-    onSelect: (val: string) => { },
-    placeholder: "Purpose",
-    title: "Purpose",
-    style: { width: "100%" },
-  },
-  {
-    data: [
-      "Karachi",
-      "Lahore",
-      "Islamabad",
-      "Faisalabad",
-      "Quetta",
-      "Peshawar",
-      "Sialkot",
-    ],
-    height: 40,
-    zIndex: 4,
-    onSelect: (val: string) => { },
-    placeholder: "City",
-    title: "City",
-    style: { width: "100%" },
-  },
-  {
-    data: [
-      "Gulshan-e-Iqbal",
-      "Gulistan-e-Johar",
-      "Liaquatabad",
-      "Gulberg",
-      "Malir",
-      "Shar-e-Faisal",
-      "Karimabad",
-    ],
-    height: 40,
-    zIndex: 4,
-    onSelect: (val: string) => { },
-    placeholder: "Location",
-    title: "Location",
-    style: { width: "100%" },
-  },
-  {
-    data: ["House", "Plot", "Commercial"],
-    height: 40,
-    zIndex: 4,
-    onSelect: (val: string) => { },
-    placeholder: "Purpose",
-    title: "Purpose",
-    style: { width: "100%" },
-  },
-];
+import { PropertySliceState, setFilter } from "features/property/propertySlice";
+import { useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
+import { RootState } from "@store";
 
 export default function MyProperties() {
   const theme = useTheme() as MyTheme;
   const [visible, setVisible] = useState(false);
   const [loading, setLoading] = useState(true);
+  const { filter } = useSelector<RootState, PropertySliceState>(
+    (state) => state.property
+  );
   const [propertiesData, setPropertiesData] = useState<ProposalData | null>(null);
   const [currentTab, setCurrentTab] = useState("All");
   const params = useGlobalSearchParams<{ type: UserType }>();
+  const [dropdownData, setDropDownData] = useState([
+    {
+      data: ["Sell", "Buy", "Rent"],
+      height: 40,
+      zIndex: 4,
+      onSelect: (val: string) => {
+      },
+      placeholder: "Purpose",
+      title: "Purpose",
+      style: { width: "100%" },
+      id: "purpose",
+      selected: filter.purpose ? [filter.purpose] : null,
+    },
+    {
+      data: [
+        "Karachi",
+        "Lahore",
+        "Islamabad",
+        "Faisalabad",
+        "Quetta",
+        "Peshawar",
+        "Sialkot",
+      ],
+      height: 40,
+      zIndex: 4,
+      onSelect: (val: string) => {
+      },
+      placeholder: "City",
+      title: "City",
+      style: { width: "100%" },
+      id: "propertyCity",
+      selected: filter.propertyCity ? [filter.propertyCity] : null,
+    },
+    {
+      data: [
+        "Gulshan-e-Iqbal",
+        "Gulistan-e-Johar",
+        "Liaquatabad",
+        "Gulberg",
+        "Malir",
+        "Shar-e-Faisal",
+        "Karimabad",
+      ],
+      height: 40,
+      zIndex: 4,
+      onSelect: (val: string) => {
+      },
+      placeholder: "Location",
+      title: "Location",
+      style: { width: "100%" },
+      id: "location",
+      selected: filter.location ? [filter.location] : null,
+    },
+    {
+      data: ["Residential", "Commercial"],
+      height: 40,
+      zIndex: 4,
+      onSelect: (val: string) => {
+      },
+      placeholder: "Property Type",
+      title: "Property Type",
+      style: { width: "100%" },
+      id: "propertyType",
+      selected: filter.propertyType ? [filter.propertyType] : null,
+    },
+  ]);
+  const [unappliedFilters, setUnappliedFilters] = useState<{ [key: string]: any }>({});
+  const dispatch = useDispatch();
+
+  useFocusEffect(
+    useCallback(() => {
+      const updatedDropdown = dropdownData.map((val) => {
+        const id = Object.keys(filter).find((key) => val.id === key) as "propertyType" | "purpose";
+        return {
+          ...val,
+          selected: filter?.[id] ? [filter?.[id]] : null,
+        };
+      });
+      setDropDownData(updatedDropdown);
+      fetchProposals();
+    }, [filter])
+  );
 
   useEffect(() => {
-    fetchProperties();
+    return () => {
+      onResetFilters()
+    };
   }, []);
 
   const topTabsData = [
@@ -120,17 +146,19 @@ export default function MyProperties() {
       title: `Drafts (${propertiesData?.draft?.length || 0})`,
       selected: currentTab === "Drafts"
     },
-    
     ...(params?.type === 'user' ? [{
       title: `Trash (${propertiesData?.trash?.length || 0})`,
       selected: currentTab === "Trash"
     }] : [])
   ];
 
-  const fetchProperties = async () => {
+  const fetchProposals = async () => {
     setLoading(true);
     try {
-      const response = params.type === 'agent' ? await handleGetAllPropertyProposals(false) : await handleGetAllProposals();
+      const filters = Object.fromEntries(
+        Object.entries(filter).filter(([_, value]) => value !== null)
+      );
+      const response = params.type === 'agent' ? await handleGetAllPropertyProposals(false,filters) : await handleGetAllProposals(filters);
       setLoading(false);
       if (response.status && response.proposalData) {
         setPropertiesData(response.proposalData);
@@ -149,7 +177,7 @@ export default function MyProperties() {
     try {
       const response = await handleDraftProperty(item.id);
       if (response.status) {
-        fetchProperties()
+        fetchProposals()
       }
       else {
         setLoading(false);
@@ -194,7 +222,6 @@ export default function MyProperties() {
         return {
           data: propertiesData.draft,
         };
-
       case "Trash":
         return {
           data: propertiesData.trash,
@@ -223,6 +250,36 @@ export default function MyProperties() {
 
   const { data } = getPropertiesData();
 
+  const onApplyFilter = () => {
+    const obj: Record<string, unknown> = {};
+    if (unappliedFilters.purpose) {
+      obj.purpose = unappliedFilters.purpose.value.value[0];
+    }
+    if (unappliedFilters.propertyCity) {
+      obj.propertyCity = unappliedFilters.propertyCity.value.value[0]
+    }
+    if (unappliedFilters.location) {
+      obj.location = unappliedFilters.location.value.value[0]
+    }
+    if (unappliedFilters.propertyType) {
+      obj.propertyType = unappliedFilters.propertyType.value.value[0];
+    }
+    console.log("Object " + JSON.stringify(obj))
+    dispatch(setFilter(obj));
+    setVisible(false);
+  };
+
+  const onResetFilters = () => {
+    setUnappliedFilters({});
+    dispatch(setFilter({
+      propertyType: null,
+      purpose: null,
+      propertyCity: null,
+      location: null,
+    }));
+    fetchProposals();
+  };
+
   return (
     <View style={{ flex: 1, ...styles.container }}>
       <OverlayLoader isShow={loading} />
@@ -236,24 +293,29 @@ export default function MyProperties() {
             <MyDropdown
               data={item.data}
               placeholder={item.placeholder}
-              onSelect={(val) => console.log("val", val)}
+              onSelect={(val) => {
+                unappliedFilters[item.id] = { value: val };
+                setUnappliedFilters({ ...unappliedFilters });
+              }}
               style={{ width: "100%" }}
               height={40}
               zIndex={4 - index}
               title={item.title}
               theme={theme}
-              id={`dropdown-${index}`}
+              id={item.id}
+              selected={item.selected}
             />
             {index < dropdownData.length - 1 && <GapView length={20} />}
           </View>
         ))}
         <GapView length={60} />
         <MyButton
-          label={"Save"}
+          label={"Apply"}
           labelStyle={{
             color: "#ffffff",
             fontSize: 10,
           }}
+          onPress={onApplyFilter}
           style={{
             alignSelf: "flex-end",
             width: 100,
@@ -271,6 +333,7 @@ export default function MyProperties() {
           alignSelf: "flex-end",
           marginBottom: 10,
         }}
+        onReset={onResetFilters}
       />
       {params.type==='user'?(<MyTopTabs
         data={topTabsData}
@@ -293,7 +356,7 @@ export default function MyProperties() {
         ) : (
           <View style={styles.errorContainer}>
             <MyText text="No Data found" size={16} textColor="red" />
-            <TouchableOpacity onPress={fetchProperties}>
+            <TouchableOpacity onPress={fetchProposals}>
               <MyText text="Retry" size={16} textColor={theme.colors.primary} />
             </TouchableOpacity>
           </View>

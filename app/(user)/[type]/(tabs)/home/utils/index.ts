@@ -84,7 +84,7 @@ export interface PropertyItem {
   isFeatured: boolean;
   isDeleted: boolean;
   propertyTypeId: string;
-  image:ImageFile[]
+  image: ImageFile[]
   createdAt: string;
   updatedAt: string;
   amenities: Amenity[];
@@ -121,10 +121,10 @@ export interface PropertyType {
   imageKey: string;
   createdAt: string;
   updatedAt: string;
-  subTypes?: PropertySubType;
+  subTypes?: PropertySubType[];
 }
 
-interface PropertySubType {
+export interface PropertySubType {
   id: string;
   typeName: string;
   url: string;
@@ -171,12 +171,12 @@ export interface AgentData {
 
 export interface OrganizedProperties {
   Rent?: {
-    count:number;
+    count: number;
     Residential?: OrganizedCategory;
     Commercial?: OrganizedCategory;
   };
   Sale?: {
-    count:number;
+    count: number;
     Residential?: OrganizedCategory;
     Commercial?: OrganizedCategory;
   };
@@ -189,14 +189,14 @@ export interface OrganizedCategory {
   };
 }
 
-const handleGetAllProperties = async (params?: string): Promise<{
+const handleGetAllProperties = async (params?: string, filters?: Record<string, any>): Promise<{
   status: boolean;
   data?: AllPropertiesData;
   message?: string;
 }> => {
   try {
-    const endpoint = params?.trim() === 'agent'? `/property`: '/userProperty';
-    const { data } = await api.get<FindAllPropertiesResponse>(endpoint);
+    const endpoint = params?.trim() === 'agent' ? `/property` : '/userProperty';
+    const { data } = await api.get<FindAllPropertiesResponse>(endpoint, filters);
     if (data?.success) {
       return {
         status: true,
@@ -210,7 +210,7 @@ const handleGetAllProperties = async (params?: string): Promise<{
   }
 };
 
-const handleDeleteProperty = async (propertyID:string): Promise<{ status: boolean; message?: string }> => {
+const handleDeleteProperty = async (propertyID: string): Promise<{ status: boolean; message?: string }> => {
   try {
     const { data } = await api.delete<FindAllPropertiesResponse>(`/userProperty/${propertyID}`);
     if (data?.success) {
@@ -303,9 +303,9 @@ const handleGetAdminProfile = async (agentId: string): Promise<{
   data?: findAgentProfileData;
 }> => {
   try {
-    console.log("agentID "+agentId)
+    console.log("agentID " + agentId)
     const { data } = await api.get<findAgentProfileData>(`/property/agent/${agentId}`);
-    console.log("organizedProperties"+ JSON.stringify(data))
+    console.log("organizedProperties" + JSON.stringify(data))
     if (data?.success) {
       return {
         status: true,
@@ -315,9 +315,9 @@ const handleGetAdminProfile = async (agentId: string): Promise<{
 
     return { status: false, message: data?.message };
   } catch (error) {
-    console.log("organizedProperties"+ JSON.stringify(error))
+    console.log("organizedProperties" + JSON.stringify(error))
     return { status: false, message: "An error occurred." };
   }
 };
 
-export { handleGetAllProperties, handleGetAllPropertType,handleDeleteProperty, handleGetAllAmenities, IAmenity,handleGetAdminProfile };
+export { handleGetAllProperties, handleGetAllPropertType, handleDeleteProperty, handleGetAllAmenities, IAmenity, handleGetAdminProfile };
