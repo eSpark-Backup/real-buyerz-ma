@@ -16,7 +16,7 @@
       "supportsTablet": true,
       "bundleIdentifier": "com.eSpark.realbuyerz",
       "config": {
-        "googleMapsApiKey": "AIzaSyBtV-GGsfjnZCiXb9inYBNyXWbaHIxKt_c"
+        "googleMapsApiKey": "AIzaSyBieHxRQPlXufh9CnWw0a3s5LOhiZd69zA"
       }
     },
     "android": {
@@ -28,7 +28,7 @@
       "permissions": ["android.permission.RECORD_AUDIO"],
       "config": {
         "googleMaps": {
-          "apiKey": "AIzaSyBtV-GGsfjnZCiXb9inYBNyXWbaHIxKt_c"
+          "apiKey": "AIzaSyBieHxRQPlXufh9CnWw0a3s5LOhiZd69zA"
         }
       }
     },
