@@ -7,6 +7,7 @@ import {
   Pressable,
   FlatList,
   Image,
+  Platform,
 } from "react-native";
 import Modal from "react-native-modal";
 import { useTheme } from "@react-navigation/native";
@@ -306,7 +307,12 @@ export default function Listing() {
               return false;
             }
             return key !== 'propertyID';
-          }).some(([_, value]) => !value || value.length === 0)}
+          }).some(([_, value]) => {
+            if (Array.isArray(value)) {
+              return !value || value.length === 0;
+            }
+            return !value;
+          })}
           onPress={() => {
             router.push({
               pathname: `(user)/${params.type}/(tabs)/dashboard/proposalPreview`,
@@ -327,7 +333,12 @@ export default function Listing() {
                 return false;
               }
               return key !== 'propertyID';
-            }).some(([_, value]) => !value || value.length === 0)}
+            }).some(([_, value]) => {
+              if (Array.isArray(value)) {
+                return !value || value.length === 0;
+              }
+              return !value;
+            })}
             title="Save as draft"
             btnStyle={styles(theme).draft}
             textColor={theme.colors.primary}
@@ -343,7 +354,13 @@ export default function Listing() {
               return false;
             }
             return key !== 'propertyID';
-          }).some(([_, value]) => !value || value.length === 0)} title={redirectionFrom === "proposalPreview" ? "Submit Proposal" : "Submit Ad"}
+          }).some(([_, value]) => {
+            if (Array.isArray(value)) {
+              return !value || value.length === 0;
+            }
+            return !value;
+          })}
+          title={redirectionFrom === "proposalPreview" ? "Submit Proposal" : "Submit Ad"}
           weight="500"
           width={100}
           onPress={() => {
@@ -924,6 +941,7 @@ function AmenitiesPopup({ isVisible, onCancel, onSave, amenities }: AmenitiesPop
           }}
         />
       </View>
+      {Platform.OS == "ios" && <View style={{height: 20, backgroundColor: '#fff'}} />}
     </Modal>
   );
 }
