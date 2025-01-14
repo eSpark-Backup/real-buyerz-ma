@@ -37,6 +37,12 @@
           <string>exp+realbuyerz-mobile</string>
         </array>
       </dict>
+      <dict>
+        <key>CFBundleURLSchemes</key>
+        <array>
+          <string>com.googleusercontent.apps.492548208583-4i851s5dkvcslrb1p9qvntjlna18ebcb</string>
+        </array>
+      </dict>
     </array>
     <key>CFBundleVersion</key>
     <string>1</string>
@@ -86,5 +92,7 @@
     <string>Light</string>
     <key>UIViewControllerBasedStatusBarAppearance</key>
     <false/>
+    <key>GIDClientID</key>
+    <string>492548208583-4i851s5dkvcslrb1p9qvntjlna18ebcb.apps.googleusercontent.com</string>
   </dict>
 </plist>

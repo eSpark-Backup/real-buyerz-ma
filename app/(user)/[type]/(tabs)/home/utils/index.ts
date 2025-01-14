@@ -26,6 +26,14 @@ export interface SavedLeadsItem {
   propertyId: string;
   createdAt: string;
   updatedAt: string;
+  user?: {
+    id: string;
+    firstName?: string;
+    lastName?: string;
+    address?: string | null;
+    profileImage?: string | null;
+    socialId?: string | null;
+  };
   property: SaveLeadsProperty;
   propertyType: PropertyType;
   PropertyData: PropertyDataItem[];
@@ -54,14 +62,14 @@ interface SaveLeadsProperty {
   createdAt: string;
   updatedAt: string;
   amenities: Amenity[];
-  user?: {
+ /*  user?: {
     id: string;
     firstName?: string;
     lastName?: string;
     address?: string | null;
     profileImage?: string | null;
     socialId?: string | null;
-  };
+  }; */
 }
 
 export interface PropertyItem {

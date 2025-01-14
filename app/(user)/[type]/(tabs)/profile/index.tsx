@@ -2,12 +2,24 @@ import React, { useEffect, useState } from "react";
 import { StyleSheet, View, ScrollView, TouchableOpacity } from "react-native";
 import { useTheme } from "@react-navigation/native";
 import * as ImagePicker from "expo-image-picker";
-import { MyText, MyAvatar, MyField, Variants, OverlayLoader } from "@components";
+import {
+  MyText,
+  MyAvatar,
+  MyField,
+  Variants,
+  OverlayLoader,
+} from "@components";
 import { MyTheme } from "@types";
 import { requestPermissionsMedia } from "@utils/functions";
 import { AppDispatch, RootState } from "@store";
 import { useDispatch, useSelector } from "react-redux";
-import { ChangePassword, handleGetUserProfile, handleUpdateUserProfile, handleUserChangePassword, UserProfileData } from "./utils";
+import {
+  ChangePassword,
+  handleGetUserProfile,
+  handleUpdateUserProfile,
+  handleUserChangePassword,
+  UserProfileData,
+} from "./utils";
 import { setUserData, UserState } from "features/user/userSlice";
 import { getLoggedInUserInfo } from "app/auth/utils/authUtils";
 import { showToast } from "@utils/showToast";
@@ -32,6 +44,7 @@ interface ProfileState {
   landlineNumber: string;
   city: string;
   bio: string;
+  socialLogin: boolean;
   whatsapp: string;
   country: string;
   address: string;
@@ -52,6 +65,7 @@ const initialProfileState: ProfileState = {
   landlineNumber: "",
   city: "",
   bio: "",
+  socialLogin: false,
   whatsapp: "",
   country: "",
   address: "",
@@ -68,18 +82,21 @@ export default function ProfileSettings() {
   const dispatch: AppDispatch = useDispatch();
   const { userData } = useSelector<RootState, UserState>((state) => state.user);
   const [loading, setLoading] = useState(false);
-  const [statusMedia, requestPermissionMedia] = ImagePicker.useMediaLibraryPermissions();
-  const [profileState, setProfileState] = useState<ProfileState>(initialProfileState);
+  const [statusMedia, requestPermissionMedia] =
+    ImagePicker.useMediaLibraryPermissions();
+  const [profileState, setProfileState] =
+    useState<ProfileState>(initialProfileState);
   const [passwords, setPasswords] = useState({
-    oldPassword: '',
-    newPassword: '',
-    confirmPassword: '',
+    oldPassword: "",
+    newPassword: "",
+    confirmPassword: "",
   });
-  const { updateUserInSession, updateUserIsLoggedInSession } = useSessionManagement();
+  const { updateUserInSession, updateUserIsLoggedInSession } =
+    useSessionManagement();
   const [profileImage, setProfileImage] = useState<string>(
     userData?.profileImage || "https://i.pravatar.cc/300?img=68"
   );
-  const [fileImage, setFileImage] = useState<File | null>(null)
+  const [fileImage, setFileImage] = useState<File | null>(null);
 
   useEffect(() => {
     fetchAllUserProfileData();
@@ -92,9 +109,8 @@ export default function ProfileSettings() {
         ...userData,
         preferences: userData.preferences || null,
       }));
-      setProfileImage(userData.profileImage)
+      setProfileImage(userData.profileImage);
     }
-
   }, [userData]);
 
   const handleInputChange = (name: string, value: string) => {
@@ -111,10 +127,11 @@ export default function ProfileSettings() {
         title: "Enter Old Password",
         inputs: [
           {
-            id: 'oldpassword',
+            id: "oldpassword",
             placeholder: "Old Password",
             value: passwords.oldPassword || "",
-            onChangeText: (text: string) => handlePasswordChange('oldPassword', text),
+            onChangeText: (text: string) =>
+              handlePasswordChange("oldPassword", text),
           },
         ],
       },
@@ -125,10 +142,11 @@ export default function ProfileSettings() {
         title: "Enter New Password",
         inputs: [
           {
-            id: 'newpassword',
+            id: "newpassword",
             placeholder: "New Password",
             value: passwords.newPassword || "",
-            onChangeText: (text: string) => handlePasswordChange('newPassword', text),
+            onChangeText: (text: string) =>
+              handlePasswordChange("newPassword", text),
           },
         ],
       },
@@ -139,10 +157,11 @@ export default function ProfileSettings() {
         title: "Confirm Password",
         inputs: [
           {
-            id: 'confirmpassword',
+            id: "confirmpassword",
             placeholder: "Enter Confirm Password",
             value: passwords.confirmPassword || "",
-            onChangeText: (text: string) => handlePasswordChange('confirmPassword', text),
+            onChangeText: (text: string) =>
+              handlePasswordChange("confirmPassword", text),
           },
         ],
       },
@@ -154,15 +173,19 @@ export default function ProfileSettings() {
       variant: Variants.PRIMARY,
       title: "Verify",
       onPress: () => {
-        if (!passwords.newPassword || !passwords.oldPassword || !passwords.confirmPassword) {
-          showToast("Please enter all the fields")
+        if (
+          !passwords.newPassword ||
+          !passwords.oldPassword ||
+          !passwords.confirmPassword
+        ) {
+          showToast("Please enter all the fields");
           return;
         }
         if (passwords.newPassword != passwords.confirmPassword) {
-          showToast("Your password doesn't matched")
+          showToast("Your password doesn't matched");
           return;
         }
-        handleUserChangePass()
+        handleUserChangePass();
       },
     },
   ];
@@ -181,16 +204,16 @@ export default function ProfileSettings() {
         title: "First Name",
         inputs: [
           {
-            id: 'firstname',
+            id: "firstname",
             placeholder: "Enter First Name",
             label: "First Name",
             value: profileState.firstName || "",
             onChangeText: (text: string) => {
-              handleInputChange("firstName", text)
+              handleInputChange("firstName", text);
             },
           },
           {
-            id: 'lastname',
+            id: "lastname",
             placeholder: "Enter Last Name",
             label: "Last Name",
             value: profileState.lastName || "",
@@ -205,7 +228,7 @@ export default function ProfileSettings() {
         title: "Email",
         inputs: [
           {
-            id: 'email',
+            id: "email",
             placeholder: "Enter Email",
             value: profileState.email || "",
             onChangeText: (text: string) => handleInputChange("email", text),
@@ -219,10 +242,11 @@ export default function ProfileSettings() {
         title: "Mobile",
         inputs: [
           {
-            id: 'mobile',
+            id: "mobile",
             placeholder: "+92",
             value: profileState.mobileNumber || "",
-            onChangeText: (text: string) => handleInputChange("mobileNumber", text),
+            onChangeText: (text: string) =>
+              handleInputChange("mobileNumber", text),
           },
         ],
       },
@@ -233,10 +257,11 @@ export default function ProfileSettings() {
         title: "Landline",
         inputs: [
           {
-            id: 'landline',
+            id: "landline",
             placeholder: "Enter Landline",
             value: profileState.landlineNumber || "",
-            onChangeText: (text: string) => handleInputChange("landlineNumber", text),
+            onChangeText: (text: string) =>
+              handleInputChange("landlineNumber", text),
           },
         ],
       },
@@ -247,7 +272,7 @@ export default function ProfileSettings() {
         title: "Whatsapp",
         inputs: [
           {
-            id: 'whatsapp',
+            id: "whatsapp",
             placeholder: "+92",
             value: profileState.whatsapp || "",
             onChangeText: (text: string) => handleInputChange("whatsapp", text),
@@ -261,7 +286,7 @@ export default function ProfileSettings() {
         title: "Country",
         inputs: [
           {
-            id: 'country',
+            id: "country",
             placeholder: "Enter Country",
             value: profileState.country || "",
             onChangeText: (text: string) => handleInputChange("country", text),
@@ -275,11 +300,11 @@ export default function ProfileSettings() {
         title: "City",
         inputs: [
           {
-            id: 'city',
+            id: "city",
             placeholder: "Select City",
             value: profileState.city || "",
             onChangeText: (text: string) => {
-              handleInputChange("city", text)
+              handleInputChange("city", text);
             },
           },
         ],
@@ -291,7 +316,7 @@ export default function ProfileSettings() {
         title: "Address",
         inputs: [
           {
-            id: 'address',
+            id: "address",
             placeholder: "Add Address",
             value: profileState.address || "",
             onChangeText: (text: string) => handleInputChange("address", text),
@@ -305,7 +330,7 @@ export default function ProfileSettings() {
         title: "Bio",
         inputs: [
           {
-            id: 'bio',
+            id: "bio",
             placeholder: "Add Bio",
             value: profileState.bio || "",
             onChangeText: (text: string) => handleInputChange("bio", text),
@@ -317,27 +342,33 @@ export default function ProfileSettings() {
       variant: Variants.PRIMARY,
       title: "Save Changes",
       onPress: () => {
-        updateUserProfileData()
+        updateUserProfileData();
       },
     },
   ];
 
-
-  const mergeUserRoleWithProfile = (profileData: UserProfileData, role: string): UserProfileData => {
+  const mergeUserRoleWithProfile = (
+    profileData: UserProfileData,
+    role: string
+  ): UserProfileData => {
     return { ...profileData, role };
   };
 
   const handleUpdateProfilePic = async () => {
-    const res = await requestPermissionsMedia(statusMedia, requestPermissionMedia, true);
+    const res = await requestPermissionsMedia(
+      statusMedia,
+      requestPermissionMedia,
+      true
+    );
     if (!res) return;
     const file: File = {
       uri: res[0].uri,
-      type: res[0].mimeType || 'image/jpeg',
-      name: res[0].fileName || 'profile.jpg',
+      type: res[0].mimeType || "image/jpeg",
+      name: res[0].fileName || "profile.jpg",
       lastModified: Date.now(),
-      size: res[0].fileSize || 0
+      size: res[0].fileSize || 0,
     };
-    setProfileImage(res[0].uri)
+    setProfileImage(res[0].uri);
     setFileImage(file);
   };
 
@@ -346,9 +377,13 @@ export default function ProfileSettings() {
       const response = await handleGetUserProfile();
       if (response.data) {
         const userInfo = getLoggedInUserInfo();
-        const userProfileData = mergeUserRoleWithProfile(response.data, userInfo?.user?.role || "user");
-        setProfileImage(response.data.profileImage)
+        const userProfileData = mergeUserRoleWithProfile(
+          response.data,
+          userInfo?.user?.role || "user"
+        );
+        setProfileImage(response.data.profileImage);
         dispatch(setUserData(userProfileData));
+        console.log(userProfileData);
       }
     } catch (error) {
       console.error("Error fetching user profile:", error);
@@ -356,46 +391,51 @@ export default function ProfileSettings() {
   };
 
   const updateUserProfileData = async () => {
-    setLoading(true)
+    setLoading(true);
     try {
-      const response = await handleUpdateUserProfile(getUserProfileData(), fileImage);
-      setLoading(false)
-      const userData = response.data
+      const response = await handleUpdateUserProfile(
+        getUserProfileData(),
+        fileImage
+      );
+      setLoading(false);
+      const userData = response.data;
       if (userData) {
-        showToast("User profile updated successfully", 'success')
+        showToast("User profile updated successfully", "success");
         const userInfo = getLoggedInUserInfo();
-        const userProfileData = mergeUserRoleWithProfile(userData, userInfo?.user?.role || "user");
+        const userProfileData = mergeUserRoleWithProfile(
+          userData,
+          userInfo?.user?.role || "user"
+        );
         dispatch(setUserData(userProfileData));
-        updateUserInSession(userProfileData, storage.getString("userToken")||"");
-        setProfileImage(userData.profileImage)
-      }
-      else {
-        showToast(response.message || "User profile updation Failed", 'error')
+        updateUserInSession(
+          userProfileData,
+          storage.getString("userToken") || ""
+        );
+        setProfileImage(userData.profileImage);
+      } else {
+        showToast(response.message || "User profile updation Failed", "error");
       }
     } catch (error) {
-      setLoading(false)
-      showToast("Something went wrong", 'error')
+      setLoading(false);
+      showToast("Something went wrong", "error");
     }
   };
 
   const handleUserChangePass = async () => {
-    setLoading(true)
+    setLoading(true);
     const userObject: ChangePassword = {
       password: passwords.newPassword,
       oldPassword: passwords.oldPassword,
     };
     const response = await handleUserChangePassword(userObject);
     if (response.status) {
-      setLoading(false)
-      showToast(response.message || "Password Successfully Changed", 'success');
+      setLoading(false);
+      showToast(response.message || "Password Successfully Changed", "success");
     } else {
-      setLoading(false)
-      showToast(
-        response.message || 'Sign in failed',
-        'error',
-      )
-    };
-  }
+      setLoading(false);
+      showToast(response.message || "Sign in failed", "error");
+    }
+  };
 
   const getUserProfileData = (): UserProfileData => {
     return {
@@ -428,7 +468,13 @@ export default function ProfileSettings() {
           onPress={handleUpdateProfilePic}
           style={styles(theme).avatarWrapper}
         >
-          <MyAvatar imageUrl={{ uri: profileImage || "https://i.pravatar.cc/300?img=68" }} size={85} edit={true} />
+          <MyAvatar
+            imageUrl={{
+              uri: profileImage || "https://i.pravatar.cc/300?img=68",
+            }}
+            size={85}
+            edit={true}
+          />
         </TouchableOpacity>
         <View style={styles(theme).infoListWrapper}>
           <View>
@@ -455,31 +501,33 @@ export default function ProfileSettings() {
             </View>
           </View>
         </View>
-        <View style={styles(theme).passListWrapper}>
-          <View>
-            <View style={styles(theme).headingStyle}>
-              <MyText
-                text="Password Settings"
-                size={16}
-                weight="600"
-                textColor={theme.colors.negative}
-              />
-            </View>
-            <View style={styles(theme).formWrapper}>
-              {passList.map((item, index) => (
-                <View style={{ marginTop: 3 }} key={index}>
-                  <MyField
-                    key={index}
-                    variant={item.variant}
-                    list={item.list}
-                    onPress={item.onPress}
-                    title={item.title}
-                  />
-                </View>
-              ))}
+        {!profileState.socialLogin && (
+          <View style={styles(theme).passListWrapper}>
+            <View>
+              <View style={styles(theme).headingStyle}>
+                <MyText
+                  text="Password Settings"
+                  size={16}
+                  weight="600"
+                  textColor={theme.colors.negative}
+                />
+              </View>
+              <View style={styles(theme).formWrapper}>
+                {passList.map((item, index) => (
+                  <View style={{ marginTop: 3 }} key={index}>
+                    <MyField
+                      key={index}
+                      variant={item.variant}
+                      list={item.list}
+                      onPress={item.onPress}
+                      title={item.title}
+                    />
+                  </View>
+                ))}
+              </View>
             </View>
           </View>
-        </View>
+        )}
       </View>
     </ScrollView>
   );

@@ -70,10 +70,19 @@ import { useSelector } from "react-redux";
 import { PropertySliceState } from "features/property/propertySlice";
 import { RootState } from "@store";
 import { IAmenity, PropertyItem, SavedLeadsItem } from "../home/utils";
-import { useGlobalSearchParams, useLocalSearchParams, useRouter } from "expo-router";
-import MapView, { Marker, PROVIDER_GOOGLE, Region } from 'react-native-maps';
-import * as Location from 'expo-location';
-import { Amenity, handleCreatePropertiesAndProposal, ImageFile, ReqPropertyData } from "../../myListings/utils";
+import {
+  useGlobalSearchParams,
+  useLocalSearchParams,
+  useRouter,
+} from "expo-router";
+import MapView, { Marker, PROVIDER_GOOGLE, Region } from "react-native-maps";
+import * as Location from "expo-location";
+import {
+  Amenity,
+  handleCreatePropertiesAndProposal,
+  ImageFile,
+  ReqPropertyData,
+} from "../../myListings/utils";
 import { showToast } from "@utils/showToast";
 
 interface CustomTableProps {
@@ -96,14 +105,15 @@ interface AmenitiesPopupProps {
   isVisible: boolean;
   onCancel: () => void;
   onSave: (e: IAmenity[]) => void;
-  amenities: IAmenity[]
+  amenities: IAmenity[];
 }
 
 export default function Listing() {
   const theme = useTheme() as MyTheme;
   const params = useGlobalSearchParams<{ type: UserType }>();
-  const router = useRouter()
-  const { item, redirectionFrom } = useLocalSearchParams<PropertyDetailScreenParams>();
+  const router = useRouter();
+  const { item, redirectionFrom } =
+    useLocalSearchParams<PropertyDetailScreenParams>();
   const productDetail: PropertyItem | SavedLeadsItem = JSON.parse(item ?? "{}");
   const [visible, setVisible] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -127,7 +137,9 @@ export default function Listing() {
     propertyStatus: boolean;
   }>(() => {
     return {
-      propertyID: isSavedLeadsItem(productDetail) ? productDetail?.property?.id : productDetail?.id || "",
+      propertyID: isSavedLeadsItem(productDetail)
+        ? productDetail?.property?.id
+        : productDetail?.id || "",
       propertyName: "",
       propertySubTypeId: "",
       propertyPrice: "",
@@ -143,7 +155,7 @@ export default function Listing() {
       amenity: [],
       video: ["https://www.youtube.com/watch?v=HcQ5kspSi0I"],
       amenities: "",
-      propertyStatus: true
+      propertyStatus: true,
     };
   });
 
@@ -164,36 +176,43 @@ export default function Listing() {
     video: propertyData.video,
     amenities: propertyData.amenity,
     propertyStatus: propertyData.propertyStatus,
-    user: isSavedLeadsItem(productDetail) ? productDetail?.property?.user : productDetail?.user
+    /*     user: isSavedLeadsItem(productDetail) ? productDetail?.property?.user : productDetail?.user */
+    user: productDetail?.user,
   } as const;
 
   const createPropertyOrProposal = async (isSaveDraft: boolean) => {
-    const updatedPropertyData = { ...propertyData, propertyStatus: isSaveDraft ? false : true };
+    const updatedPropertyData = {
+      ...propertyData,
+      propertyStatus: isSaveDraft ? false : true,
+    };
     setLoading(true);
     try {
-      const response = await handleCreatePropertiesAndProposal(updatedPropertyData as ReqPropertyData, params.type);
+      const response = await handleCreatePropertiesAndProposal(
+        updatedPropertyData as ReqPropertyData,
+        params.type
+      );
       setLoading(false);
       if (response.data) {
         if (isSaveDraft) {
-          showToast('Saved in Draft', 'success')
+          showToast("Saved in Draft", "success");
+        } else {
+          setVisible(true);
         }
-        else {
-          setVisible(true)
-        }
-        resetData()
-      }
-      else {
-        showToast(response.message || 'Failed to create', 'error')
+        resetData();
+      } else {
+        showToast(response.message || "Failed to create", "error");
       }
     } catch (error) {
-      showToast('Failed to create', 'error')
+      showToast("Failed to create", "error");
       setLoading(false);
     }
   };
 
   const resetData = () => {
     setPropertyData({
-      propertyID: isSavedLeadsItem(productDetail) ? productDetail?.property?.id : productDetail?.id || "",
+      propertyID: isSavedLeadsItem(productDetail)
+        ? productDetail?.property?.id
+        : productDetail?.id || "",
       propertyName: "",
       propertySubTypeId: "",
       propertyPrice: "",
@@ -209,11 +228,11 @@ export default function Listing() {
       amenity: [],
       video: ["https://www.youtube.com/watch?v=HcQ5kspSi0I"],
       amenities: "",
-      propertyStatus: true
+      propertyStatus: true,
     });
     setVisible(false);
     setLoading(false);
-  }
+  };
 
   return (
     <ScrollView
@@ -238,10 +257,11 @@ export default function Listing() {
         title={propertyData.propertyName}
         description={propertyData.propertyDescription}
         onChange={(data) => {
-          setPropertyData(prev => ({
+          setPropertyData((prev) => ({
             ...prev,
             propertyName: data.propertyName || prev.propertyName,
-            propertyDescription: data.propertyDescription || prev.propertyDescription,
+            propertyDescription:
+              data.propertyDescription || prev.propertyDescription,
           }));
         }}
       />
@@ -251,7 +271,7 @@ export default function Listing() {
         zipCode={propertyData.propertyZip}
         address={propertyData.propertyAddress}
         onChange={(data) => {
-          setPropertyData(prev => ({
+          setPropertyData((prev) => ({
             ...prev,
             purpose: data.purpose || prev.purpose,
             propertyCity: data.propertyCity || prev.propertyCity,
@@ -268,8 +288,8 @@ export default function Listing() {
         price={propertyData.propertyPrice}
         size={propertyData.propertyArea}
         onChange={(data) => {
-          console.log(`data ${JSON.stringify(propertyData)}`)
-          setPropertyData(prev => ({
+          console.log(`data ${JSON.stringify(propertyData)}`);
+          setPropertyData((prev) => ({
             ...prev,
             propertyArea: data.propertyArea || prev.propertyArea,
             propertyPrice: data.propertyPrice || prev.propertyPrice,
@@ -279,7 +299,7 @@ export default function Listing() {
       <GapView length={20} />
       <FeaturesAndAmenities
         onChange={(data) => {
-          setPropertyData(prev => ({
+          setPropertyData((prev) => ({
             ...prev,
             amenities: data.amenities || prev.amenities,
             amenity: data.amenity || prev.amenity,
@@ -287,10 +307,10 @@ export default function Listing() {
         }}
       />
       <GapView length={20} />
-      {params.type === 'agent' && (
+      {params.type === "agent" && (
         <PropertyImagesAndVideo
           onChange={(images: ImageFile[]) => {
-            setPropertyData(prev => ({
+            setPropertyData((prev) => ({
               ...prev,
               image: images,
               video: ["https://www.youtube.com/watch?v=HcQ5kspSi0I"],
@@ -299,20 +319,24 @@ export default function Listing() {
         />
       )}
       <View style={styles(theme).footerButtons}>
-
         <PrimaryBtn
-          disabled={Object.entries(propertyData).filter(([key]) => {
-            if (params.type === "user" && (key === 'image' || key === 'video' || key === 'propertyID')) {
-              return false;
-            }
-            return key !== 'propertyID';
-          }).some(([_, value]) => !value || value.length === 0)}
+          disabled={Object.entries(propertyData)
+            .filter(([key]) => {
+              if (
+                params.type === "user" &&
+                (key === "image" || key === "video" || key === "propertyID")
+              ) {
+                return false;
+              }
+              return key !== "propertyID";
+            })
+            .some(([_, value]) => !value || value.length === 0)}
           onPress={() => {
             router.push({
               pathname: `(user)/${params.type}/(tabs)/dashboard/proposalPreview`,
               params: {
                 item: JSON.stringify(previewData),
-                redirectionFrom: 'listing'
+                redirectionFrom: "listing",
               },
             });
           }}
@@ -322,39 +346,57 @@ export default function Listing() {
         </PrimaryBtn>
         {redirectionFrom != "proposalPreview" && (
           <PrimaryBtn
-            disabled={Object.entries(propertyData).filter(([key]) => {
-              if (params.type === "user" && (key === 'image' || key === 'video' || key === 'propertyID')) {
-                return false;
-              }
-              return key !== 'propertyID';
-            }).some(([_, value]) => !value || value.length === 0)}
+            disabled={Object.entries(propertyData)
+              .filter(([key]) => {
+                if (
+                  params.type === "user" &&
+                  (key === "image" || key === "video" || key === "propertyID")
+                ) {
+                  return false;
+                }
+                return key !== "propertyID";
+              })
+              .some(([_, value]) => !value || value.length === 0)}
             title="Save as draft"
             btnStyle={styles(theme).draft}
             textColor={theme.colors.primary}
             weight="500"
             onPress={() => {
-              createPropertyOrProposal(true)
+              createPropertyOrProposal(true);
             }}
           />
         )}
         <PrimaryBtn
-          disabled={Object.entries(propertyData).filter(([key]) => {
-            if (params.type === "user" && (key === 'image' || key === 'video' || key === 'propertyID')) {
-              return false;
-            }
-            return key !== 'propertyID';
-          }).some(([_, value]) => !value || value.length === 0)} title={redirectionFrom === "proposalPreview" ? "Submit Proposal" : "Submit Ad"}
+          disabled={Object.entries(propertyData)
+            .filter(([key]) => {
+              if (
+                params.type === "user" &&
+                (key === "image" || key === "video" || key === "propertyID")
+              ) {
+                return false;
+              }
+              return key !== "propertyID";
+            })
+            .some(([_, value]) => !value || value.length === 0)}
+          title={
+            redirectionFrom === "proposalPreview"
+              ? "Submit Proposal"
+              : "Submit Ad"
+          }
           weight="500"
           width={100}
           onPress={() => {
-            createPropertyOrProposal(false)
+            createPropertyOrProposal(false);
           }}
         />
-
       </View>
       <MyPopupModal visible={visible} bgDim>
         <MyPopupModal.Success
-          message={params.type==='user'?"Your Ad is submitted successfully":"Your Proposal is submitted successfully"}
+          message={
+            params.type === "user"
+              ? "Your Ad is submitted successfully"
+              : "Your Proposal is submitted successfully"
+          }
           onPress={() => {
             setVisible(false);
           }}
@@ -389,9 +431,12 @@ function CustomTable({ title, indexIcon, children }: CustomTableProps) {
 function AdInformation({
   onChange,
   title,
-  description
+  description,
 }: {
-  onChange: (e: { propertyName?: string; propertyDescription?: string }) => void;
+  onChange: (e: {
+    propertyName?: string;
+    propertyDescription?: string;
+  }) => void;
   title: string;
   description: string;
 }) {
@@ -412,7 +457,7 @@ function AdInformation({
             placeholderColor={theme.colors.placeholderText}
             multiline
             onChange={(value) => {
-              onChange({ propertyName: value })
+              onChange({ propertyName: value });
             }}
           />
         </View>
@@ -443,16 +488,26 @@ function LocationAndPurpose({
   onChange,
   zipCode,
   address,
-  city
+  city,
 }: {
-  onChange?: (e: { purpose?: string; propertyCity?: string, propertySubTypeId?: string, propertyAddress?: string, propertyZip?: string, longitude?: string; latitude?: string; }) => void;
-  city: string,
-  zipCode: string,
-  address: string
+  onChange?: (e: {
+    purpose?: string;
+    propertyCity?: string;
+    propertySubTypeId?: string;
+    propertyAddress?: string;
+    propertyZip?: string;
+    longitude?: string;
+    latitude?: string;
+  }) => void;
+  city: string;
+  zipCode: string;
+  address: string;
 }) {
   const theme = useTheme() as MyTheme;
   const [selected, setSelected] = useState("");
-  const { propertyTypes } = useSelector<RootState, PropertySliceState>(state => state.property)
+  const { propertyTypes } = useSelector<RootState, PropertySliceState>(
+    (state) => state.property
+  );
   const [location, setLocation] = useState<{
     latitude: number;
     longitude: number;
@@ -460,7 +515,7 @@ function LocationAndPurpose({
   useEffect(() => {
     (async () => {
       const { status } = await Location.requestForegroundPermissionsAsync();
-      if (status !== 'granted') {
+      if (status !== "granted") {
         return;
       }
 
@@ -472,7 +527,7 @@ function LocationAndPurpose({
 
       onChange?.({
         longitude: currentLocation.coords.longitude.toString(),
-        latitude: currentLocation.coords.latitude.toString()
+        latitude: currentLocation.coords.latitude.toString(),
       });
     })();
   }, []);
@@ -480,38 +535,40 @@ function LocationAndPurpose({
     const newCoords = e.nativeEvent.coordinate;
     setLocation({
       latitude: newCoords.latitude,
-      longitude: newCoords.longitude
+      longitude: newCoords.longitude,
     });
     onChange?.({
       longitude: newCoords.longitude.toString(),
-      latitude: newCoords.latitude.toString()
+      latitude: newCoords.latitude.toString(),
     });
   };
 
   const onRegionChange = (region: Region) => {
     setLocation({
       latitude: region.latitude,
-      longitude: region.longitude
+      longitude: region.longitude,
     });
     onChange?.({
       longitude: region.longitude.toString(),
-      latitude: region.latitude.toString()
+      latitude: region.latitude.toString(),
     });
   };
 
-  const types = propertyTypes?.map(val => {
-    return {
-      id: val.id,
-      title: val.typeName,
-      list: !!val?.subTypes?.length ?
-        val?.subTypes?.map?.(val => {
-          return {
-            id: val?.id,
-            label: val?.typeName,
-          };
-        }) : []
-    }
-  }) ?? []
+  const types =
+    propertyTypes?.map((val) => {
+      return {
+        id: val.id,
+        title: val.typeName,
+        list: !!val?.subTypes?.length
+          ? val?.subTypes?.map?.((val) => {
+              return {
+                id: val?.id,
+                label: val?.typeName,
+              };
+            })
+          : [],
+      };
+    }) ?? [];
 
   return (
     <CustomTable title="Location & Purpose" indexIcon={3}>
@@ -636,8 +693,18 @@ function LocationAndPurpose({
               />
             </MapView>
           ) : (
-            <View style={{ width: "90%", height: 150, justifyContent: 'center', alignItems: 'center' }}>
-              <MyText text="Loading map..." textColor={theme.colors.placeholderText} />
+            <View
+              style={{
+                width: "90%",
+                height: 150,
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <MyText
+                text="Loading map..."
+                textColor={theme.colors.placeholderText}
+              />
             </View>
           )}
         </View>
@@ -647,16 +714,14 @@ function LocationAndPurpose({
         <View style={styles().AdField}>
           <RequiredText text="Zipcode" />
           <MyInput
-            placeholder={
-              "Enter Zipcode"
-            }
+            placeholder={"Enter Zipcode"}
             text={zipCode}
             style={styles(theme).titleInputStyle}
             inputStyle={[styles(theme).inputInnerStyle]}
             placeholderColor={theme.colors.placeholderText}
             keyboardType="number-pad"
             onChange={(value) => {
-              onChange?.({ propertyZip: value })
+              onChange?.({ propertyZip: value });
             }}
           />
         </View>
@@ -666,15 +731,13 @@ function LocationAndPurpose({
         <View style={styles().AdField}>
           <RequiredText text="Address" />
           <MyInput
-            placeholder={
-              "Enter Address"
-            }
+            placeholder={"Enter Address"}
             text={address}
             style={styles(theme).titleInputStyle}
             inputStyle={[styles(theme).inputInnerStyle]}
             placeholderColor={theme.colors.placeholderText}
             onChange={(value) => {
-              onChange?.({ propertyAddress: value })
+              onChange?.({ propertyAddress: value });
             }}
           />
         </View>
@@ -686,7 +749,7 @@ function LocationAndPurpose({
 function PropertySizeandPricing({
   onChange,
   size,
-  price
+  price,
 }: {
   onChange?: (e: { propertyArea?: string; propertyPrice?: string }) => void;
   price: string;
@@ -714,7 +777,7 @@ function PropertySizeandPricing({
             id="unit"
             data={[]}
             placeholder="sq ft"
-            onSelect={() => { }}
+            onSelect={() => {}}
             theme={theme}
           />
         </View>
@@ -736,7 +799,7 @@ function PropertySizeandPricing({
             id="currency"
             data={[]}
             placeholder="PKR"
-            onSelect={() => { }}
+            onSelect={() => {}}
             theme={theme}
           />
         </View>
@@ -805,14 +868,14 @@ function FeaturesAndAmenities({
     const amenityArray = selected?.map((e) => ({
       name: e.amenetiesName,
       count: e.count ?? 1,
-      imageUrl: ''
+      imageUrl: "",
     }));
 
-    const amenityIds = selected?.map(e => e.id).join(',');
+    const amenityIds = selected?.map((e) => e.id).join(",");
 
     onChange?.({
       amenities: amenityIds,
-      amenity: amenityArray
+      amenity: amenityArray,
     });
   }, [selected]);
 
@@ -823,16 +886,20 @@ function FeaturesAndAmenities({
         <View style={styles().AdField}>
           <MyText textColor={theme.colors.negative}>Feature & Amenities</MyText>
           {selected?.map((val) => (
-            <Counter onChange={(count) => {
-              setSelected(prev => {
-                return prev.map(e => {
-                  return {
-                    ...e,
-                    count: e.id == val.id ? count : 1
-                  }
-                })
-              })
-            }} key={val.id} type={val?.amenetiesName} />
+            <Counter
+              onChange={(count) => {
+                setSelected((prev) => {
+                  return prev.map((e) => {
+                    return {
+                      ...e,
+                      count: e.id == val.id ? count : 1,
+                    };
+                  });
+                });
+              }}
+              key={val.id}
+              type={val?.amenetiesName}
+            />
           ))}
         </View>
       </View>
@@ -870,20 +937,25 @@ function FeaturesAndAmenities({
   );
 }
 
-function AmenitiesPopup({ isVisible, onCancel, onSave, amenities }: AmenitiesPopupProps) {
+function AmenitiesPopup({
+  isVisible,
+  onCancel,
+  onSave,
+  amenities,
+}: AmenitiesPopupProps) {
   const theme = useTheme() as MyTheme;
-  const [data, setData] = useState(amenities)
+  const [data, setData] = useState(amenities);
 
   const onSelect = (e: IAmenity & { checked?: boolean }) => {
-    setData(prev => {
-      return prev?.map(val => {
+    setData((prev) => {
+      return prev?.map((val) => {
         return {
           ...val,
-          checked: e.id == val.id ? e.checked : val.checked
-        }
-      })
-    })
-  }
+          checked: e.id == val.id ? e.checked : val.checked,
+        };
+      });
+    });
+  };
 
   return (
     <Modal isVisible={isVisible} style={styles().modal}>
@@ -931,11 +1003,11 @@ function AmenitiesPopup({ isVisible, onCancel, onSave, amenities }: AmenitiesPop
 const renderListItem = ({
   item,
   theme,
-  onSelect
+  onSelect,
 }: {
   theme: MyTheme;
   item: IAmenity & { checked?: boolean };
-  onSelect: (e: IAmenity & { checked?: boolean }) => void
+  onSelect: (e: IAmenity & { checked?: boolean }) => void;
 }) => {
   const svgIcons: SvgIcon = {
     0: <Swimming />,
@@ -1029,21 +1101,22 @@ const PropertyImagesAndVideo: React.FC<PropertyImagesAndVideoProps> = ({
   onChange,
 }) => {
   const theme = useTheme() as MyTheme;
-  const [statusMedia, requestPermissionMedia] = ImagePicker.useMediaLibraryPermissions();
+  const [statusMedia, requestPermissionMedia] =
+    ImagePicker.useMediaLibraryPermissions();
 
   const [media, setMedia] = useState<ImagePicker.ImagePickerAsset[]>([]);
 
   useEffect(() => {
-    const formDataImages = media.map(image => {
+    const formDataImages = media.map((image) => {
       const imageFile: ImageFile = {
         uri: image.uri,
-        type: `image/${image.uri.split('.').pop()}`,
-        name: `image-${Date.now()}.${image.uri.split('.').pop()}`,
+        type: `image/${image.uri.split(".").pop()}`,
+        name: `image-${Date.now()}.${image.uri.split(".").pop()}`,
         size: image.fileSize || 0,
         arrayBuffer: async () => new ArrayBuffer(0),
         slice: () => new Blob(),
         stream: () => new ReadableStream(),
-        text: async () => '',
+        text: async () => "",
       };
       return imageFile;
     });
@@ -1107,18 +1180,22 @@ const PropertyImagesAndVideo: React.FC<PropertyImagesAndVideoProps> = ({
         >
           <Ionicons name="close" color={theme.colors.primary} size={15} />
         </PrimaryBtn>
-        {item.type === 'video' ? (
+        {item.type === "video" ? (
           <View
             style={{
               height: WINDOW_WIDTH / 3 - 45,
               width: WINDOW_WIDTH / 3 - 45,
-              justifyContent: 'center',
-              alignItems: 'center',
+              justifyContent: "center",
+              alignItems: "center",
               backgroundColor: theme.colors.cardBg,
               borderRadius: 4,
             }}
           >
-            <Ionicons name="film-outline" size={24} color={theme.colors.primary} />
+            <Ionicons
+              name="film-outline"
+              size={24}
+              color={theme.colors.primary}
+            />
           </View>
         ) : (
           <Image

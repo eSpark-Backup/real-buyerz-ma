@@ -38,14 +38,21 @@ function isImageUrl(url: string): boolean {
 }
 
 function isSavedLeadsItem(item: any): item is SavedLeadsItem {
-  return item && typeof item === 'object' && 'property' in item;
+  return item && typeof item === "object" && "property" in item;
 }
 
 function createUrlParams(filter: Record<string, string | null>): string {
   const params = new URLSearchParams(
-    Object.entries(filter).filter(([_, value]) => value !== null && value !== "").map(([key, value]) => [key, value as string])
+    Object.entries(filter)
+      .filter(([_, value]) => value !== null && value !== "")
+      .map(([key, value]) => [key, value as string])
   );
-  return params.toString() ? `?${params.toString()}` : '';
+  return params.toString() ? `?${params.toString()}` : "";
 }
 
-export { requestPermissionsMedia, isImageUrl, createUrlParams, isSavedLeadsItem };
+export {
+  requestPermissionsMedia,
+  isImageUrl,
+  createUrlParams,
+  isSavedLeadsItem,
+};

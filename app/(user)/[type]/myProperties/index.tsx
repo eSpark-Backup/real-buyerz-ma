@@ -175,7 +175,7 @@ export default function MyProperties() {
   const draftProperty = async (item: PropertyItem) => {
     setLoading(true);
     try {
-      const response = await handleDraftProperty(item.id);
+      const response = await handleDraftProperty(item,params.type);
       if (response.status) {
         fetchProposals()
       }

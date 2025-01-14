@@ -9,6 +9,7 @@ export type User = {
   landlineNumber: string;
   city: string;
   bio: string;
+  socialLogin:boolean;
   whatsapp: string;
   country: string;
   address: string;

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Appearance, StyleSheet, View, ScrollView, Text } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { MaterialIcons } from "@expo/vector-icons";
@@ -6,16 +6,28 @@ import { Link, router } from "expo-router";
 import { Formik } from "formik";
 import { Back, GLogo, SLogo } from "@assets/images/svg";
 import { DarkTheme, LightTheme } from "@theme";
-import { MyText, MyButton, MyCheckbox, MyInput, OverlayLoader } from "@components";
+import {
+  MyText,
+  MyButton,
+  MyCheckbox,
+  MyInput,
+  OverlayLoader,
+} from "@components";
 import { UserSignUpSchema } from "@validations/schema";
 import useSessionManagement from "hooks/useSessionManagement";
 import { UserObject, handleSignUpUser } from "./utils";
-import { useDispatch } from 'react-redux';
-
-import { setUserData, setUserToken } from '../../../features/user/userSlice';
-import { handleGetUserProfile, UserProfileData } from "app/(user)/[type]/(tabs)/profile/utils";
+import { useDispatch } from "react-redux";
+import { GoogleSignin } from "@react-native-google-signin/google-signin";
+import { setUserData, setUserToken } from "../../../features/user/userSlice";
+import {
+  handleGetUserProfile,
+  UserProfileData,
+} from "app/(user)/[type]/(tabs)/profile/utils";
 import { showToast } from "@utils/showToast";
-import { handleSavePreferences, PreferencesData } from "app/(user)/[type]/preferences/utils";
+import {
+  handleSavePreferences,
+  PreferencesData,
+} from "app/(user)/[type]/preferences/utils";
 import { api } from "api";
 
 interface SignUpFormValues {
@@ -32,9 +44,14 @@ export default function SignUp() {
   const colorScheme = Appearance.getColorScheme();
   const theme = colorScheme === "dark" ? DarkTheme : LightTheme;
   const [loading, setLoading] = useState(false);
-  const { updateUserInSession, updateUserIsLoggedInSession } = useSessionManagement();
+  const { updateUserInSession, updateUserIsLoggedInSession } =
+    useSessionManagement();
   const dispatch = useDispatch();
-  const mergeUserRoleWithProfile = (profileData: UserProfileData, role: string): UserProfileData => {
+
+  const mergeUserRoleWithProfile = (
+    profileData: UserProfileData,
+    role: string
+  ): UserProfileData => {
     return { ...profileData, role };
   };
   const [preferences, setPreferences] = useState<PreferencesData>({
@@ -51,69 +68,125 @@ export default function SignUp() {
     { placeholder: "Email Address", name: "email" },
     { placeholder: "Contact Number", name: "phone", keyboardType: "numeric" }, // Set keyboardType to "numeric"
     { placeholder: "Password", name: "password", secureTextEntry: true },
-    { placeholder: "Confirm Password", name: "confirmPassword", secureTextEntry: true },
+    {
+      placeholder: "Confirm Password",
+      name: "confirmPassword",
+      secureTextEntry: true,
+    },
   ];
 
   const callApiSignUp = async (values: SignUpFormValues) => {
     setLoading(true);
-    const response = await handleSignUpUser({
-      firstName: values.firstName,
-      lastName: values.lastName,
-      email: values.email,
-      mobileNumber: values.phone,
-      password: values.password,
-      role: 'user',
-    });
+    const response = await handleSignUpUser(
+      {
+        firstName: values.firstName,
+        lastName: values.lastName,
+        email: values.email,
+        mobileNumber: values.phone,
+        password: values.password,
+        role: "user",
+        profileImage: "",
+        socialId: "",
+      },
+      false
+    );
     if (response.status) {
       const userInfo = response.userInfo;
       if (userInfo) {
-        api.setHeader('Authorization', `Bearer ${userInfo?.token as string}`);
-        savePreferences(userInfo)
+        api.setHeader("Authorization", `Bearer ${userInfo?.token as string}`);
+        savePreferences(userInfo);
       } else {
-        setLoading(false)
-        showToast('User info not available', 'error');
+        setLoading(false);
+        showToast("User info not available", "error");
       }
     } else {
-      setLoading(false)
-      showToast(response.message || 'Sign in failed', 'error');
+      setLoading(false);
+      showToast(response.message || "Sign up failed", "error");
     }
   };
 
   const savePreferences = async (userInfo: UserObject) => {
     const response = await handleSavePreferences(preferences);
     if (response.status && response.preferencesResponse) {
-      fetchAllUserProfileData(userInfo)
+      fetchAllUserProfileData(userInfo);
     } else {
-      showToast(response.message || "Failed to save preferences", 'error')
-      setLoading(false)
+      showToast(response.message || "Failed to save preferences", "error");
+      setLoading(false);
     }
-  }
+  };
 
   const fetchAllUserProfileData = async (userInfo: UserObject) => {
     try {
-      const response = await handleGetUserProfile()
-      setLoading(false)
+      const response = await handleGetUserProfile();
+      setLoading(false);
       if (response.data) {
-        showToast("User Created Successfully", 'error')
+        showToast("User Created Successfully", "success");
         savingDataToSessionStorage(userInfo, response.data);
         router.push(`/(user)/${userInfo.user.role}/home`);
-      }
-      else {
-        showToast(response.message || "Failed to fetch user profile data", 'error')
+      } else {
+        showToast(
+          response.message || "Failed to fetch user profile data",
+          "error"
+        );
       }
     } catch (error) {
-      showToast("Something went wrong while fetching user profile", 'error')
-      setLoading(false)
+      showToast("Something went wrong while fetching user profile", "error");
+      setLoading(false);
     }
-  }
+  };
 
-  const savingDataToSessionStorage = (userInfo: UserObject, userProfileData: UserProfileData) => {
-    let userProfileInfo = mergeUserRoleWithProfile(userProfileData, userInfo.user.role || "user");
+  const savingDataToSessionStorage = (
+    userInfo: UserObject,
+    userProfileData: UserProfileData
+  ) => {
+    let userProfileInfo = mergeUserRoleWithProfile(
+      userProfileData,
+      userInfo.user.role || "user"
+    );
     updateUserInSession(userProfileInfo, userInfo?.token as string);
     updateUserIsLoggedInSession(false);
     dispatch(setUserToken(userInfo?.token));
     dispatch(setUserData(userProfileInfo));
-  }
+  };
+
+  const handleGoogleSignUp = async () => {
+    try {
+      await GoogleSignin.hasPlayServices();
+      const response = await GoogleSignin.signIn();
+      console.log("Google Sign In Success:", JSON.stringify(response));
+
+      if (response) {
+        const userResp = await handleSignUpUser(
+          {
+            firstName: response?.data?.user.givenName || "",
+            lastName: response.data?.user.familyName || "",
+            email: response.data?.user.email || "",
+            mobileNumber: "",
+            password: "",
+            role: "user",
+            socialId: response.data?.user.id || "",
+            profileImage: response.data?.user.photo || "",
+          },
+          true
+        );
+        console.log("Latest one" + JSON.stringify(userResp.userInfo?.token));
+        if (userResp.status && userResp.userInfo) {
+          api.setHeader("Authorization", `Bearer ${userResp.userInfo.token}`);
+          savePreferences(userResp.userInfo);
+        } else {
+          showToast("Sign up failed", "error");
+        }
+      }
+    } catch (error) {
+      if (error instanceof Error) {
+        console.error("Detailed error:", error.message);
+        showToast(`Google sign-in error: ${error.message}`, "error");
+      } else {
+        console.error("Unknown error occurred");
+        showToast("An unknown error occurred during Google sign-in", "error");
+      }
+    }
+  };
 
   return (
     <Formik<SignUpFormValues>
@@ -130,7 +203,7 @@ export default function SignUp() {
         if (values.agreeToTerms) {
           await callApiSignUp(values);
         } else {
-          showToast('You must agree to the Terms and Conditions!', 'error');
+          showToast("You must agree to the Terms and Conditions!", "error");
         }
       }}
       validationSchema={UserSignUpSchema.signUpForm}
@@ -165,7 +238,11 @@ export default function SignUp() {
                 weight="500"
                 textColor="black"
               />
-              <MaterialIcons name="keyboard-arrow-right" size={24} color="black" />
+              <MaterialIcons
+                name="keyboard-arrow-right"
+                size={24}
+                color="black"
+              />
             </TouchableOpacity>
           </View>
           <View style={styles.form}>
@@ -182,14 +259,20 @@ export default function SignUp() {
                   <MyInput
                     placeholder={field.placeholder}
                     onChange={handleChange(field.name)}
-                    value={values[field.name as keyof SignUpFormValues] as string}
+                    value={
+                      values[field.name as keyof SignUpFormValues] as string
+                    }
                     placeholderColor="#666666"
                     password={field.secureTextEntry}
                     secureTextEntry={field.secureTextEntry}
-                    keyboardType={field.keyboardType} />
-                  {errors[field.name as keyof SignUpFormValues] && touched[field.name as keyof SignUpFormValues] && (
-                    <Text style={styles.errorText}>{errors[field.name as keyof SignUpFormValues]}</Text>
-                  )}
+                    keyboardType={field.keyboardType}
+                  />
+                  {errors[field.name as keyof SignUpFormValues] &&
+                    touched[field.name as keyof SignUpFormValues] && (
+                      <Text style={styles.errorText}>
+                        {errors[field.name as keyof SignUpFormValues]}
+                      </Text>
+                    )}
                 </View>
               ))}
             </View>
@@ -197,13 +280,18 @@ export default function SignUp() {
           <View style={styles.terms}>
             <MyCheckbox
               label=""
-              onChange={() => setFieldValue("agreeToTerms", !values.agreeToTerms)}
+              onChange={() =>
+                setFieldValue("agreeToTerms", !values.agreeToTerms)
+              }
               style={{ marginRight: 5 }}
               checkboxStyle={styles.checkbox}
               isAuth
             />
             <View style={styles.termsTextContainer}>
-              <MyText text="I have read and agree to the " style={styles.termsText} />
+              <MyText
+                text="I have read and agree to the "
+                style={styles.termsText}
+              />
               <MyText text="Terms and Conditions" style={styles.termsDecText} />
               <MyText text=" and " style={styles.termsText} />
               <MyText text="Privacy Policy" style={styles.termsDecText} />
@@ -224,8 +312,15 @@ export default function SignUp() {
               style={styles.google}
             />
             <View style={styles.google}>
-              <MyText text="Sign Up with  " size={14} weight="600" textColor="white" />
-              <GLogo />
+              <MyText
+                text="Sign Up with  "
+                size={14}
+                weight="600"
+                textColor="white"
+              />
+              <TouchableOpacity onPress={handleGoogleSignUp}>
+                <GLogo />
+              </TouchableOpacity>
             </View>
           </View>
         </ScrollView>
@@ -313,10 +408,10 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   errorText: {
-    color: 'red',
+    color: "red",
     fontSize: 12,
     marginTop: 5,
     rowGap: 15,
-    width: '90%',
+    width: "90%",
   },
 });
