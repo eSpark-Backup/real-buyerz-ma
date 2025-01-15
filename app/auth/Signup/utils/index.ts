@@ -7,7 +7,7 @@ interface Creds {
   lastName: string;
   email: string;
   mobileNumber?: string;
-  password: string;
+  password?: string;
   role: string;
   profileImage: string | "";
   socialId: string | "";
