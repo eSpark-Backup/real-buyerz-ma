@@ -191,7 +191,7 @@ export default function Home() {
             <BrowseProps
               theme={theme}
               data={propertyTypes ?? []}
-              type={params.type}
+              type={params.type as UserType}
             />
             <Feather
               name="chevron-right"
