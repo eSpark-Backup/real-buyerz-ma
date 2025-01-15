@@ -101,14 +101,12 @@ export default function SignIn() {
       console.log("Google Sign In Success:", JSON.stringify(response));
 
       if (response) {
-        setLoading(true);
+          setLoading(true);
         const userResp = await handleSignUpUser(
           {
             firstName: response?.data?.user.givenName || "",
             lastName: response.data?.user.familyName || "",
             email: response.data?.user.email || "",
-            // mobileNumber: "",
-            // password: "",
             role: "user",
             socialId: response.data?.user.id || "",
             profileImage: response.data?.user.photo || "",
