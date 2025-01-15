@@ -22,7 +22,7 @@
   // You can add your custom initial props in the dictionary below.
   // They will be passed down to the ViewController used by React Native.
   self.initialProps = @{};
-
+  GIDSignIn.sharedInstance().clientID = "492548208583-4i851s5dkvcslrb1p9qvntjlna18ebcb.apps.googleusercontent.com"
   return [super application:application didFinishLaunchingWithOptions:launchOptions];
 }
 

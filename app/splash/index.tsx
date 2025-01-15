@@ -28,6 +28,7 @@ import {
 import { useDispatch } from "react-redux";
 import { setUserData, setUserToken } from "features/user/userSlice";
 import { api } from "api";
+import { GoogleSignin } from "@react-native-google-signin/google-signin";
 
 SplashScreen.preventAutoHideAsync(); //? Disable Auto Hide
 
@@ -142,6 +143,12 @@ export default function App() {
   }, [translateY, scale]);
 
   useEffect(() => {
+    console.log("Google Configuration Done");
+    GoogleSignin.configure({
+      webClientId:"492548208583-rpi38i7kjp5ml1vnujaak5p82prurde9.apps.googleusercontent.com",
+      iosClientId: "492548208583-4i851s5dkvcslrb1p9qvntjlna18ebcb.apps.googleusercontent.com",
+      offlineAccess: true,
+    });
     sessionCheckLoggedIn();
   }, []);
 

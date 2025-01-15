@@ -1,13 +1,27 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { FlatList, ScrollView, StyleSheet, View, ActivityIndicator, Text } from "react-native";
+import {
+  FlatList,
+  ScrollView,
+  StyleSheet,
+  View,
+  ActivityIndicator,
+  Text,
+} from "react-native";
 import { useTheme } from "@react-navigation/native";
-import { router, useGlobalSearchParams, useLocalSearchParams } from "expo-router";
+import {
+  router,
+  useGlobalSearchParams,
+  useLocalSearchParams,
+} from "expo-router";
 import { useDispatch, useSelector } from "react-redux";
 
 import { MyTheme, UserType } from "@types";
 import { AdBox, GapView, MyText, MyTopTabs, OverlayLoader } from "@components";
 import { handleGetAllProperties } from "../home/utils";
-import { PropertySliceState, setAllProperties } from "features/property/propertySlice";
+import {
+  PropertySliceState,
+  setAllProperties,
+} from "features/property/propertySlice";
 import { AppDispatch, RootState } from "@store";
 import { dateConverter } from "app/utils/dateConverter";
 import { priceConversion } from "app/utils/priceConverter";
@@ -18,11 +32,13 @@ export default function Bidding() {
   const theme = useTheme() as MyTheme;
   const params = useGlobalSearchParams<{ type?: UserType }>();
   const dispatch: AppDispatch = useDispatch();
-  const { allProperties } = useSelector<RootState, PropertySliceState>((state) => state.property);
+  const { allProperties } = useSelector<RootState, PropertySliceState>(
+    (state) => state.property
+  );
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [selectedTab, setSelectedTab] = useState("Best Matches");
-  
+
   useEffect(() => {
     fetchAllProperties();
   }, []);
@@ -47,23 +63,20 @@ export default function Bidding() {
     try {
       const response = await handleDeletePropertyProposal(proposalID);
       if (response.status) {
-        fetchAllProperties()
-      }
-      else {
+        fetchAllProperties();
+      } else {
         setIsLoading(false);
       }
     } catch (error) {
-      showToast('Failed to delete proposal', 'error')
+      showToast("Failed to delete proposal", "error");
       setIsLoading(false);
     }
   };
-
 
   const topTabsData = [
     { title: "Best Matches", selected: selectedTab === "Best Matches" },
     { title: "Saved Leads", selected: selectedTab === "Saved Leads" },
   ];
-
 
   const btnsData = (item: any) => [
     // { label: "Trash", onPress: () => {
@@ -77,8 +90,8 @@ export default function Bidding() {
           pathname: `(user)/${params.type}/(tabs)/dashboard/proposalPreview`,
           params: {
             item: JSON.stringify(item),
-            redirectionFrom: 'dashboard'
-          }
+            redirectionFrom: "dashboard",
+          },
         });
       },
     },
@@ -89,14 +102,19 @@ export default function Bidding() {
   };
 
   if (error) {
-    return <Text style={{ color: 'red' }}>{error}</Text>;
+    return <Text style={{ color: "red" }}>{error}</Text>;
   }
 
   return (
     <ScrollView nestedScrollEnabled showsVerticalScrollIndicator={false}>
       <OverlayLoader isShow={isLoading} />
       <View style={styles.top}>
-        <MyText text="Bidding" size={20} weight="600" textColor={theme.colors.negative} />
+        <MyText
+          text="Bidding"
+          size={20}
+          weight="600"
+          textColor={theme.colors.negative}
+        />
         <GapView />
         <MyText
           text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed venenatis gravida lectus nec sodales."
@@ -110,20 +128,30 @@ export default function Bidding() {
           <FlatList
             data={allProperties.items}
             showsVerticalScrollIndicator={false}
-            nestedScrollEnabled
             renderItem={({ item }) => (
               <AdBox
                 title={item.propertyName || "Unknown Title"}
-                description={item.propertyDescription || "No description available."}
+                description={
+                  item.propertyDescription || "No description available."
+                }
                 botPost
                 btns={btnsData(item)}
                 botPostText={dateConverter(item.createdAt)}
                 points={[
-                  { label: "Est. Range", value: priceConversion(item.propertyPrice || "") + " PKR" },
+                  {
+                    label: "Est. Range",
+                    value: priceConversion(item.propertyPrice || "") + " PKR",
+                  },
                   { label: "Purpose", value: item.purpose || "Buying" },
-                  { label: "Property Type", value: item.propertyType?.typeName || "Commercial" },
+                  {
+                    label: "Property Type",
+                    value: item.propertyType?.typeName || "Commercial",
+                  },
                   { label: "City", value: item.propertyCity || "Unknown City" },
-                  { label: "Location", value: item.propertyAddress || "Unknown Location" },
+                  {
+                    label: "Location",
+                    value: item.propertyAddress || "Unknown Location",
+                  },
                 ]}
               />
             )}
@@ -134,20 +162,39 @@ export default function Bidding() {
           <FlatList
             data={allProperties.savedLeadItems}
             showsVerticalScrollIndicator={false}
-            nestedScrollEnabled
             renderItem={({ item }) => (
               <AdBox
                 title={item.property.propertyName || "Unknown Title"}
-                description={item.property.propertyDescription || "No description available."}
+                description={
+                  item.property.propertyDescription ||
+                  "No description available."
+                }
                 botPost
                 btns={btnsData(item)}
                 botPostText={dateConverter(item.createdAt)}
                 points={[
-                  { label: "Est. Range", value: priceConversion(item.property.propertyPrice || "") + " PKR" },
-                  { label: "Purpose", value: item.property.purpose || "Buying" },
-                  { label: "Property Type", value: item.propertyType?.typeName || "Commercial" },
-                  { label: "City", value: item.property.propertyCity || "Unknown City" },
-                  { label: "Location", value: item.property.propertyAddress || "Unknown Location" },
+                  {
+                    label: "Est. Range",
+                    value:
+                      priceConversion(item.property.propertyPrice || "") +
+                      " PKR",
+                  },
+                  {
+                    label: "Purpose",
+                    value: item.property.purpose || "Buying",
+                  },
+                  {
+                    label: "Property Type",
+                    value: item.propertyType?.typeName || "Commercial",
+                  },
+                  {
+                    label: "City",
+                    value: item.property.propertyCity || "Unknown City",
+                  },
+                  {
+                    label: "Location",
+                    value: item.property.propertyAddress || "Unknown Location",
+                  },
                 ]}
               />
             )}

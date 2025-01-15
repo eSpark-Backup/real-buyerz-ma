@@ -1,5 +1,6 @@
-import Toast from 'react-native-toast-message';
-import {api} from 'api';
+import Toast from "react-native-toast-message";
+import { api } from "api";
+import { err } from "react-native-svg";
 
 interface Creds {
   firstName: string;
@@ -8,6 +9,8 @@ interface Creds {
   mobileNumber?: string;
   password: string;
   role: string;
+  profileImage: string | "";
+  socialId: string | "";
 }
 
 interface Response {
@@ -16,7 +19,7 @@ interface Response {
   response: {
     timestamp_ms: number;
     data: {
-      token: string;
+      token: string | UserObject;
       user: User;
     };
   };
@@ -33,22 +36,34 @@ export interface UserObject {
   user: User;
 }
 
-
 const handleSignUpUser = async (
   req: Creds,
-): Promise<{status: boolean; userInfo?: UserObject; message?: string}> => {
+  isSocialLogin: boolean
+): Promise<{ status: boolean; userInfo?: UserObject; message?: string }> => {
   try {
-    const response = await api.post<Response>('/user/signup', {
+    const response = await api.post<Response>("/user/signup", {
       ...req,
     });
+    console.log("Reponse signup " + JSON.stringify(response));
     if (response.data?.success) {
-      return {status: true,userInfo: response.data.response.data};  
+      if (isSocialLogin) {
+        return {
+          status: true,
+          userInfo: response.data.response.data.token as UserObject,
+        };
       } else {
-      return {status: false, message: response.data?.message};
+        return {
+          status: true,
+          userInfo: response.data.response.data as UserObject,
+        };
+      }
+    } else {
+      return { status: false, message: response.data?.message };
     }
   } catch (error) {
-    return {status: false};
+    console.log("Error signup " + error);
+    return { status: false };
   }
 };
 
-export {handleSignUpUser};
+export { handleSignUpUser };
