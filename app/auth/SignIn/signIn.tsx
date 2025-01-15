@@ -107,8 +107,6 @@ export default function SignIn() {
             firstName: response?.data?.user.givenName || "",
             lastName: response.data?.user.familyName || "",
             email: response.data?.user.email || "",
-            mobileNumber: "",
-            password: "",
             role: "user",
             socialId: response.data?.user.id || "",
             profileImage: response.data?.user.photo || "",
