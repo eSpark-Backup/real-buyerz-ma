@@ -156,6 +156,7 @@ export default function SignUp() {
       console.log("Google Sign In Success:", JSON.stringify(response));
 
       if (response) {
+        setLoading(true);
         const userResp = await handleSignUpUser(
           {
             firstName: response?.data?.user.givenName || "",
@@ -174,10 +175,12 @@ export default function SignUp() {
           api.setHeader("Authorization", `Bearer ${userResp.userInfo.token}`);
           savePreferences(userResp.userInfo);
         } else {
+          setLoading(false);
           showToast("Sign up failed", "error");
         }
       }
     } catch (error) {
+      setLoading(false);
       if (error instanceof Error) {
         console.error("Detailed error:", error.message);
         showToast(`Google sign-in error: ${error.message}`, "error");

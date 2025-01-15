@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import { Platform, StyleSheet, View } from "react-native";
 import { useTheme } from "@react-navigation/native";
 import {
@@ -38,6 +38,7 @@ import useSessionManagement from "hooks/useSessionManagement";
 import { setUserData, setUserToken, UserState } from "features/user/userSlice";
 import { useSelector } from "react-redux";
 import { RootState } from "@store";
+import { GoogleSignin } from "@react-native-google-signin/google-signin";
 
 const DrawerContent = (props: DrawerContentComponentProps) => {
   const [confirmLogout, setConfirmLogout] = useState(false);
@@ -47,8 +48,11 @@ const DrawerContent = (props: DrawerContentComponentProps) => {
   const dispatch = useDispatch();
   const { userData } = useSelector<RootState, UserState>((state) => state.user);
 
-  console.log("param milrha hai kiya "+JSON.stringify(params))
+  console.log("param milrha hai kiya " + JSON.stringify(params));
   const handleLogout = () => {
+    if (userData?.socialLogin) {
+      handleSignOut();
+    }
     clearTheme();
     clearSession();
     dispatch(setUserToken(""));
@@ -56,10 +60,20 @@ const DrawerContent = (props: DrawerContentComponentProps) => {
     router.replace("/auth/SignIn/signIn"); // Redirect user to sign-in screen
   };
 
+  const handleSignOut = async () => {
+    try {
+      await GoogleSignin.revokeAccess();
+      await GoogleSignin.signOut();
+      console.log("User signed out");
+    } catch (error) {
+      console.error("Error signing out: ", error);
+    }
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <View style={{ flexDirection: "row", marginTop:8 }}>
+        <View style={{ flexDirection: "row", marginTop: 8 }}>
           <MyAvatar
             imageUrl={{
               uri: userData?.profileImage || "https://i.pravatar.cc/300?img=68",
@@ -68,7 +82,9 @@ const DrawerContent = (props: DrawerContentComponentProps) => {
           />
           <View style={{ marginLeft: 10 }}>
             <MyText
-              text={`${userData?.firstName} ${userData?.lastName}` || "Arman Khan"}
+              text={
+                `${userData?.firstName} ${userData?.lastName}` || "Arman Khan"
+              }
               size={16}
               weight="600"
               textColor="#ffffff"
@@ -79,12 +95,16 @@ const DrawerContent = (props: DrawerContentComponentProps) => {
               textColor="#ffffff"
               style={{ marginVertical: 5 }}
             />
-            { params.type==='agent'&&
-            <View style={{ flexDirection: "row", alignItems: "center" }}>
-              <MyText text="Available connects: " size={12} textColor="#ffffff" />
-              <MyText text="50" size={12} weight="600" textColor="#ffffff" />
-            </View>
-            }
+            {params.type === "agent" && (
+              <View style={{ flexDirection: "row", alignItems: "center" }}>
+                <MyText
+                  text="Available connects: "
+                  size={12}
+                  textColor="#ffffff"
+                />
+                <MyText text="50" size={12} weight="600" textColor="#ffffff" />
+              </View>
+            )}
           </View>
         </View>
         <BubbleIcon
@@ -130,7 +150,7 @@ const DrawerContent = (props: DrawerContentComponentProps) => {
 export default function MainLayout() {
   const theme = useTheme() as MyTheme;
   const params = useLocalSearchParams<{ type: UserType }>();
-  console.log("param idhar hai"+JSON.stringify(params))
+  console.log("param idhar hai" + JSON.stringify(params));
 
   return (
     <>
@@ -141,7 +161,12 @@ export default function MainLayout() {
         screenOptions={({ route }) => ({
           swipeEnabled: params?.type === "anon" ? false : true,
           header: (props) => (
-            <MyHeader {...props} userType={params?.type!} showRight theme={theme} />
+            <MyHeader
+              {...props}
+              userType={params?.type!}
+              showRight
+              theme={theme}
+            />
           ),
           drawerStyle: { width: "80%" },
         })}
@@ -172,7 +197,11 @@ export default function MainLayout() {
             drawerActiveBackgroundColor: "#DCEAF2",
             headerShown: false,
             drawerIcon: ({ focused }) => (
-              <Draw_Inbox style={{ color: focused ? theme.colors.secondary : theme.colors.text }} />
+              <Draw_Inbox
+                style={{
+                  color: focused ? theme.colors.secondary : theme.colors.text,
+                }}
+              />
             ),
             drawerLabel: ({ focused }) => (
               <DrawerLabel label="Inbox" theme={theme} focused={focused} />
@@ -185,12 +214,22 @@ export default function MainLayout() {
           options={{
             drawerActiveBackgroundColor: "#DCEAF2",
             drawerIcon: ({ focused }) => (
-              <Draw_Proposals style={{ color: focused ? theme.colors.secondary : theme.colors.text }} />
+              <Draw_Proposals
+                style={{
+                  color: focused ? theme.colors.secondary : theme.colors.text,
+                }}
+              />
             ),
             drawerLabel: ({ focused }) => (
-              <DrawerLabel label="My Proposals" theme={theme} focused={focused} />
+              <DrawerLabel
+                label="My Proposals"
+                theme={theme}
+                focused={focused}
+              />
             ),
-            drawerItemStyle: { display: params.type === "user" ? "none" : "flex" }, // Show for user type only
+            drawerItemStyle: {
+              display: params.type === "user" ? "none" : "flex",
+            }, // Show for user type only
           }}
           initialParams={{ type: params.type }}
         />
@@ -199,7 +238,11 @@ export default function MainLayout() {
           options={{
             drawerActiveBackgroundColor: "#DCEAF2",
             drawerIcon: ({ focused }) => (
-              <Draw_Properties style={{ color: focused ? theme.colors.secondary : theme.colors.text }} />
+              <Draw_Properties
+                style={{
+                  color: focused ? theme.colors.secondary : theme.colors.text,
+                }}
+              />
             ),
             drawerLabel: ({ focused }) => (
               <DrawerLabel
@@ -216,7 +259,11 @@ export default function MainLayout() {
           options={{
             drawerActiveBackgroundColor: "#DCEAF2",
             drawerIcon: ({ focused }) => (
-              <Draw_Favorites style={{ color: focused ? theme.colors.secondary : theme.colors.text }} />
+              <Draw_Favorites
+                style={{
+                  color: focused ? theme.colors.secondary : theme.colors.text,
+                }}
+              />
             ),
             drawerLabel: ({ focused }) => (
               <DrawerLabel label="Favourites" theme={theme} focused={focused} />
@@ -230,12 +277,18 @@ export default function MainLayout() {
             headerShown: false,
             drawerActiveBackgroundColor: "#DCEAF2",
             drawerIcon: ({ focused }) => (
-              <Draw_Shop style={{ color: focused ? theme.colors.secondary : theme.colors.text }} />
+              <Draw_Shop
+                style={{
+                  color: focused ? theme.colors.secondary : theme.colors.text,
+                }}
+              />
             ),
             drawerLabel: ({ focused }) => (
               <DrawerLabel label="Shop" theme={theme} focused={focused} />
             ),
-            drawerItemStyle: { display: params.type === "user" ? "none" : "flex" }, // Show for user type only
+            drawerItemStyle: {
+              display: params.type === "user" ? "none" : "flex",
+            }, // Show for user type only
           }}
           initialParams={{ type: params.type }}
         />
@@ -244,12 +297,22 @@ export default function MainLayout() {
           options={{
             drawerActiveBackgroundColor: "#DCEAF2",
             drawerIcon: ({ focused }) => (
-              <Draw_OrderHistory style={{ color: focused ? theme.colors.secondary : theme.colors.text }} />
+              <Draw_OrderHistory
+                style={{
+                  color: focused ? theme.colors.secondary : theme.colors.text,
+                }}
+              />
             ),
             drawerLabel: ({ focused }) => (
-              <DrawerLabel label="Order History" theme={theme} focused={focused} />
+              <DrawerLabel
+                label="Order History"
+                theme={theme}
+                focused={focused}
+              />
             ),
-            drawerItemStyle: { display: params.type === "user" ? "none" : "flex" }, // Show for user type only
+            drawerItemStyle: {
+              display: params.type === "user" ? "none" : "flex",
+            }, // Show for user type only
           }}
           initialParams={{ type: params.type }}
         />
@@ -258,10 +321,18 @@ export default function MainLayout() {
           options={{
             drawerActiveBackgroundColor: "#DCEAF2",
             drawerIcon: ({ focused }) => (
-              <Draw_Preferences style={{ color: focused ? theme.colors.secondary : theme.colors.text }} />
+              <Draw_Preferences
+                style={{
+                  color: focused ? theme.colors.secondary : theme.colors.text,
+                }}
+              />
             ),
             drawerLabel: ({ focused }) => (
-              <DrawerLabel label="Preferences" theme={theme} focused={focused} />
+              <DrawerLabel
+                label="Preferences"
+                theme={theme}
+                focused={focused}
+              />
             ),
           }}
           initialParams={{ type: params.type }}
@@ -281,10 +352,18 @@ export default function MainLayout() {
               />
             ),
             drawerIcon: ({ focused }) => (
-              <Draw_Policy style={{ color: focused ? theme.colors.secondary : theme.colors.text }} />
+              <Draw_Policy
+                style={{
+                  color: focused ? theme.colors.secondary : theme.colors.text,
+                }}
+              />
             ),
             drawerLabel: ({ focused }) => (
-              <DrawerLabel label="Privacy and Policy" theme={theme} focused={focused} />
+              <DrawerLabel
+                label="Privacy and Policy"
+                theme={theme}
+                focused={focused}
+              />
             ),
           }}
           initialParams={{ type: params.type }}
@@ -304,10 +383,18 @@ export default function MainLayout() {
               />
             ),
             drawerIcon: ({ focused }) => (
-              <Draw_Policy style={{ color: focused ? theme.colors.secondary : theme.colors.text }} />
+              <Draw_Policy
+                style={{
+                  color: focused ? theme.colors.secondary : theme.colors.text,
+                }}
+              />
             ),
             drawerLabel: ({ focused }) => (
-              <DrawerLabel label="Terms and conditions" theme={theme} focused={focused} />
+              <DrawerLabel
+                label="Terms and conditions"
+                theme={theme}
+                focused={focused}
+              />
             ),
           }}
           initialParams={{ type: params.type }}
@@ -316,7 +403,7 @@ export default function MainLayout() {
           name="myListings"
           options={({ route }) => ({
             drawerItemStyle: { display: "none" },
-            drawerLabel: () => null, 
+            drawerLabel: () => null,
             drawerIcon: () => null,
           })}
           initialParams={{ type: params.type }}

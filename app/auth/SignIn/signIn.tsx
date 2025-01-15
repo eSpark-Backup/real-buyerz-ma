@@ -101,7 +101,7 @@ export default function SignIn() {
       console.log("Google Sign In Success:", JSON.stringify(response));
 
       if (response) {
-        setLoading(true);
+          setLoading(true);
         const userResp = await handleSignUpUser(
           {
             firstName: response?.data?.user.givenName || "",

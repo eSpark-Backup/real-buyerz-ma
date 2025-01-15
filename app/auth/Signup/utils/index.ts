@@ -41,8 +41,23 @@ const handleSignUpUser = async (
   isSocialLogin: boolean
 ): Promise<{ status: boolean; userInfo?: UserObject; message?: string }> => {
   try {
+    const filteredReq: Partial<Creds> = {
+      firstName: req.firstName,
+      lastName: req.lastName,
+      email: req.email,
+      role: req.role,
+      profileImage: req.profileImage,
+      socialId: req.socialId,
+    };
+
+    if (req.password != "") {
+      filteredReq.password = req.password;
+    }
+    if (req.mobileNumber != "") {
+      filteredReq.mobileNumber = req.mobileNumber;
+    }
     const response = await api.post<Response>("/user/signup", {
-      ...req,
+      ...filteredReq,
     });
     console.log("Reponse signup " + JSON.stringify(response));
     if (response.data?.success) {
