@@ -211,6 +211,7 @@ export default function ProfileSettings() {
             onChangeText: (text: string) => {
               handleInputChange("firstName", text);
             },
+            editable: true,
           },
           {
             id: "lastname",
@@ -218,6 +219,7 @@ export default function ProfileSettings() {
             label: "Last Name",
             value: profileState.lastName || "",
             onChangeText: (text: string) => handleInputChange("lastName", text),
+            editable: true,
           },
         ],
       },
@@ -232,6 +234,7 @@ export default function ProfileSettings() {
             placeholder: "Enter Email",
             value: profileState.email || "",
             onChangeText: (text: string) => handleInputChange("email", text),
+            editable: !profileState.socialLogin,
           },
         ],
       },
@@ -247,6 +250,7 @@ export default function ProfileSettings() {
             value: profileState.mobileNumber || "",
             onChangeText: (text: string) =>
               handleInputChange("mobileNumber", text),
+            editable: true,
           },
         ],
       },
@@ -262,6 +266,7 @@ export default function ProfileSettings() {
             value: profileState.landlineNumber || "",
             onChangeText: (text: string) =>
               handleInputChange("landlineNumber", text),
+            editable: true,
           },
         ],
       },
@@ -288,8 +293,9 @@ export default function ProfileSettings() {
           {
             id: "country",
             placeholder: "Enter Country",
-            value: profileState.country || "",
+            value: profileState.country || "Pakistan",
             onChangeText: (text: string) => handleInputChange("country", text),
+            editable: false,
           },
         ],
       },
@@ -320,6 +326,7 @@ export default function ProfileSettings() {
             placeholder: "Add Address",
             value: profileState.address || "",
             onChangeText: (text: string) => handleInputChange("address", text),
+            editable: true,
           },
         ],
       },
@@ -334,6 +341,7 @@ export default function ProfileSettings() {
             placeholder: "Add Bio",
             value: profileState.bio || "",
             onChangeText: (text: string) => handleInputChange("bio", text),
+            editable: true,
           },
         ],
       },

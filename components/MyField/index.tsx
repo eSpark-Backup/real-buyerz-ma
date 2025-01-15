@@ -27,6 +27,7 @@ type Iinputs = {
   placeholder: string;
   value: string;
   onChangeText?: (text: string) => void;
+  editable?: boolean;
 };
 
 interface IMyField {
@@ -80,6 +81,7 @@ const MyField = ({ variant, list, onPress, title }: IMyField) => {
                     placeholderColor={theme.colors.placeholderText}
                     text={input.value}
                     onChange={input.onChangeText}
+                    editable={input.editable ?? true}
                   />
                   {index < list?.inputs.length - 1 && (
                     <GapView length={10} mode="horizontal" />
@@ -111,6 +113,7 @@ const MyField = ({ variant, list, onPress, title }: IMyField) => {
                 placeholderColor={theme.colors.placeholderText}
                 text={input.value}
                 onChange={input.onChangeText}
+                editable={input.editable ?? true}
               />
               {input.label && (
                 <MyText
@@ -140,6 +143,7 @@ const MyField = ({ variant, list, onPress, title }: IMyField) => {
                 password
                 text={input.value}
                 onChange={input.onChangeText}
+                editable={input.editable ?? true}
               />
               {input.label && (
                 <MyText
@@ -178,6 +182,7 @@ const MyField = ({ variant, list, onPress, title }: IMyField) => {
                     placeholderColor={theme.colors.placeholderText}
                     text={input.value}
                     onChange={input.onChangeText}
+                    editable={input.editable ?? true}
                   />
                 </View>
               ))}
@@ -237,6 +242,7 @@ const MyField = ({ variant, list, onPress, title }: IMyField) => {
                 placeholderColor={theme.colors.placeholderText}
                 text={input.value}
                 onChange={input.onChangeText}
+                editable={input.editable ?? true}
               />
               {input?.label && (
                 <MyText
