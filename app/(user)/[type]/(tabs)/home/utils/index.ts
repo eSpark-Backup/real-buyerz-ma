@@ -197,6 +197,7 @@ const handleGetAllProperties = async (params?: string, filters?: Record<string, 
   try {
     const endpoint = params?.trim() === 'agent' ? `/property` : '/userProperty';
     const { data } = await api.get<FindAllPropertiesResponse>(endpoint, filters);
+    console.log("data handleGetAllProperties", data)
     if (data?.success) {
       return {
         status: true,
@@ -284,6 +285,7 @@ const handleGetAllAmenities = async (): Promise<{
 }> => {
   try {
     const { data } = await api.get<GetAllAmenitiesResponse>("/admin/amenities");
+    console.log("handleGetAllAmenities data", data);
     if (data?.success) {
       return {
         status: true,
@@ -293,6 +295,7 @@ const handleGetAllAmenities = async (): Promise<{
 
     return { status: false, message: data?.message };
   } catch (error) {
+    console.log("handleGetAllAmenities error", error);
     return { status: false, message: "An error occurred." };
   }
 };

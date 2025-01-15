@@ -1,5 +1,6 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
+  Platform,
   Pressable,
   StyleProp,
   StyleSheet,
@@ -8,7 +9,9 @@ import {
   ViewStyle,
 } from "react-native";
 import { Entypo, Feather } from "@expo/vector-icons";
-import { ScrollView } from "react-native-gesture-handler"; //? for scrolling inside a absolute view
+import { ScrollView } from "react-native-gesture-handler";
+import ActionSheet, { ActionSheetRef } from "react-native-actions-sheet";
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import MyText from "@components/MyText";
 import { MyTheme } from "@types";
@@ -27,14 +30,13 @@ interface DropdownProps {
   bgColor?: string;
   theme: MyTheme;
   id: string;
-  selected?: string[] | null
+  selected?: string[] | null;
 }
 
 export default function MyDropdown({
   data,
   onSelect,
   placeholder = "",
-  zIndex = 10,
   multiSelect = false,
   style,
   placeholderColor,
@@ -44,25 +46,26 @@ export default function MyDropdown({
   bgColor,
   theme,
   id,
-  selected
+  selected,
 }: DropdownProps) {
   const [show, setShow] = useState(false);
   const [selectedItems, setSelectedItems] = useState<string[]>(selected ?? []);
-  const [label, setLabel] = useState(selected ?? "");
+  const [label, setLabel] = useState(selected?.toString() ?? "");
   const listData = multiSelect ? ["All", ...data] : data;
+  const actionSheetRef = React.useRef<ActionSheetRef>(null);
+  const insets = useSafeAreaInsets();
 
-  useEffect(()=>{
-    if(!label?.toString()) {
-      setLabel(selected?.toString() ?? "")
+  useEffect(() => {
+    if (!label?.toString()) {
+      setLabel(selected?.toString() ?? "");
     }
-  },[label])
+  }, [label, selected]);
 
   const handleSelection = (item: string) => {
     let updatedSelection: string[] = [...selectedItems];
 
     if (item === "All") {
-      updatedSelection =
-        updatedSelection.length === data.length ? [] : [...data];
+      updatedSelection = updatedSelection.length === data.length ? [] : [...data];
     } else {
       const index = updatedSelection.indexOf(item);
       if (index === -1) {
@@ -82,7 +85,7 @@ export default function MyDropdown({
     }
 
     setSelectedItems(updatedSelection);
-    onSelect({key: id, value: updatedSelection});
+    onSelect({ key: id, value: updatedSelection });
 
     if (!multiSelect && updatedSelection.length > 0) {
       setLabel(item);
@@ -95,6 +98,14 @@ export default function MyDropdown({
           : `Select ${placeholder}`
       );
     }
+
+    if (!multiSelect) {
+      if (Platform.OS === "ios") {
+        actionSheetRef.current?.hide();
+      } else {
+        setShow(false);
+      }
+    }
   };
 
   const isSelected = (item: string) => {
@@ -104,8 +115,56 @@ export default function MyDropdown({
     );
   };
 
+  const renderAndroidDropdown = () => {
+    return show ? (
+      <View style={styles.dropdownContainer}>
+        <ScrollView
+          style={[
+            styles.dropdownList,
+            {
+              maxHeight: Math.min(listData.length * height, 200),
+              backgroundColor: bgColor || theme.colors.background,
+              borderColor: theme.colors.border,
+            },
+          ]}
+          bounces={false}
+          showsVerticalScrollIndicator={true}
+        >
+          {listData.map((item, index) => (
+            <TouchableOpacity
+              key={index}
+              activeOpacity={0.7}
+              style={[
+                styles.dropdownItem,
+                {
+                  height,
+                  borderTopWidth: index > 0 ? 1 : 0,
+                  borderColor: theme.colors.border,
+                },
+              ]}
+              onPress={() => handleSelection(item)}
+            >
+              <MyText text={item} textColor={theme.colors.text} />
+              {isSelected(item) && (
+                <Feather name="check" size={16} color="#34e145" />
+              )}
+            </TouchableOpacity>
+          ))}
+        </ScrollView>
+      </View>
+    ) : null;
+  };
+
+  const handlePress = () => {
+    if (Platform.OS === "ios") {
+      actionSheetRef.current?.show();
+    } else {
+      setShow(!show);
+    }
+  };
+
   return (
-    <View>
+    <View style={[containerStyle, { zIndex: Platform.OS === "ios" ? 0 : 1000 }]}>
       {title && (
         <MyText
           text={title}
@@ -116,26 +175,15 @@ export default function MyDropdown({
         />
       )}
 
-      <View
-        style={[
-          style,
-          { height },
-        ]}
-      >
+      <View style={[style, { height }]}>
         <Pressable
-          style={{
-            flexDirection: "row",
-            justifyContent: "space-between",
-            alignItems: "center",
-            width: "100%",
-            height: "100%",
-            paddingHorizontal: 15,
-            borderColor: theme.colors.border,
-            borderWidth: 1,
-            borderBottomRightRadius: 5,
-            borderBottomLeftRadius: 5,
-          }}
-          onPress={() => setShow(!show)}
+          style={[
+            styles.trigger,
+            {
+              borderColor: theme.colors.border,
+            },
+          ]}
+          onPress={handlePress}
         >
           <MyText
             text={label ? label?.toString() : `${placeholder}`}
@@ -148,115 +196,140 @@ export default function MyDropdown({
           />
         </Pressable>
 
-        {show && (
-          <Pressable
-            style={{
-              position: "absolute",
-              width: "100%",
-              zIndex: 1,
-              borderColor: theme.colors.border,
-              borderWidth: 1,
-              borderBottomRightRadius: 5,
-              borderBottomLeftRadius: 5,
+        {Platform.OS === "android" && renderAndroidDropdown()}
+
+        {Platform.OS === "ios" && (
+          <ActionSheet
+            ref={actionSheetRef}
+            containerStyle={{
+              ...styles.actionSheet,
+              paddingBottom: insets.bottom,
             }}
-            onPress={() => setShow(!show)}
+            indicatorStyle={styles.indicator}
+            gestureEnabled={true}
           >
-            <ScrollView
-              removeClippedSubviews
-              keyboardShouldPersistTaps="handled"
-              style={{
-                overflow: "hidden",
-                top: height - 2,
-                backgroundColor: bgColor ? bgColor : theme.colors.background,
-                borderColor: theme.colors.border,
-                borderWidth: 1,
-                borderBottomRightRadius: 5,
-                borderBottomLeftRadius: 5,
-                height: listData.length > 3 ? 120 : "auto",
-              }}
-              contentContainerStyle={{
-                flexGrow: 1,
-                justifyContent: "space-between",
-                overflow: "hidden",
-                zIndex: zIndex + 200,
-              }}
-            >
-              {listData.map((item, index) =>
-                renderList({
-                  item,
-                  index,
-                  handleSelection,
-                  height,
-                  isSelected,
-                  multiSelect,
-                  setShow,
-                  theme,
-                })
+            <View style={styles.actionSheetHeader}>
+              <MyText
+                text={title || placeholder}
+                size={18}
+                weight="600"
+                textColor={theme.colors.text}
+              />
+              {multiSelect && (
+                <TouchableOpacity
+                  onPress={() => actionSheetRef.current?.hide()}
+                  style={styles.doneButton}
+                >
+                  <MyText
+                    text="Done"
+                    size={16}
+                    weight="600"
+                    textColor="#007AFF"
+                  />
+                </TouchableOpacity>
               )}
+            </View>
+            <ScrollView
+              style={[
+                styles.actionSheetContent,
+                {
+                  maxHeight: Platform.OS === "ios" ? 
+                    Math.min(listData.length * 50, (insets.bottom > 0 ? 400 : 300)) : 
+                    undefined
+                }
+              ]}
+              bounces={false}
+              showsVerticalScrollIndicator={true}
+            >
+              {listData.map((item, index) => (
+                <TouchableOpacity
+                  key={index}
+                  style={styles.actionSheetItem}
+                  onPress={() => handleSelection(item)}
+                >
+                  <MyText
+                    text={item}
+                    size={16}
+                    textColor={theme.colors.text}
+                  />
+                  {isSelected(item) && (
+                    <Feather name="check" size={20} color="#34e145" />
+                  )}
+                </TouchableOpacity>
+              ))}
             </ScrollView>
-          </Pressable>
+          </ActionSheet>
         )}
       </View>
     </View>
   );
 }
 
-const renderList = ({
-  item,
-  index,
-  multiSelect,
-  height,
-  handleSelection,
-  isSelected,
-  setShow,
-  theme,
-}: {
-  item: string;
-  index: number;
-  multiSelect: boolean;
-  height: number;
-  handleSelection: (val: string) => void;
-  isSelected: (val: string) => boolean;
-  setShow: (val: boolean) => void;
-  theme: MyTheme;
-}) => {
-  return (
-    <TouchableOpacity
-      activeOpacity={1}
-      key={index}
-      style={{
-        overflow: "hidden",
-        height: height,
-        borderTopWidth: index > 0 ? 1 : 0,
-        justifyContent: "space-between",
-        borderColor: theme.colors.border,
-        paddingHorizontal: 15,
-        flexDirection: "row",
-        alignItems: "center",
-        zIndex: 100,
-        width: '100%'
-      }}
-      onPress={() => {
-        if (!multiSelect) {
-          setShow(false);
-        }
-        handleSelection(item);
-      }}
-    >
-      <MyText text={item} textColor={theme.colors.text} />
-      {isSelected(item) && <Feather name="check" size={16} color="#34e145" />}
-    </TouchableOpacity>
-  );
-};
+const styles = StyleSheet.create({
+  trigger: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    width: "100%",
+    height: "100%",
+    paddingHorizontal: 15,
+    borderWidth: 1,
+    borderRadius: 5,
+  },
+  dropdownContainer: {
+    position: "absolute",
+    top: "100%",
+    left: 0,
+    right: 0,
+    marginTop: 1,
+    zIndex: 1000,
+  },
+  dropdownList: {
+    borderWidth: 1,
+    borderRadius: 5,
+    elevation: 5,
+  },
+  dropdownItem: {
+    paddingHorizontal: 15,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+  },
+  actionSheet: {
+    // backgroundColor: "#F3F4F6",
+    borderTopLeftRadius: 10,
+    borderTopRightRadius: 10,
+  },
+  indicator: {
+    backgroundColor: "#DEDEDE",
+    width: 60,
+  },
+  actionSheetHeader: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    paddingHorizontal: 16,
+    paddingVertical: 14,
+    borderBottomWidth: StyleSheet.hairlineWidth,
+    borderBottomColor: "#DEDEDE",
+    backgroundColor: "#FFFFFF",
+  },
+  doneButton: {
+    paddingVertical: 4,
+    paddingHorizontal: 8,
+  },
+  actionSheetContent: {
+    backgroundColor: "#FFFFFF",
+  },
+  actionSheetItem: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    paddingVertical: 14,
+    paddingHorizontal: 16,
+    borderBottomWidth: StyleSheet.hairlineWidth,
+    borderBottomColor: "#DEDEDE",
+    minHeight: 50,
+  },
+});
 
-const styles = (theme?: MyTheme) =>
-  StyleSheet.create({
-    container: {
-      width: 150,
-      // height: 30,
-      borderWidth: 1,
-      borderRadius: 5,
-      borderColor: theme?.colors.border,
-      alignItems: "center",
-    },
-  });

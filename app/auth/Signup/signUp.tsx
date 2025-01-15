@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Appearance, StyleSheet, View, ScrollView, Text } from "react-native";
+import { Appearance, StyleSheet, View, ScrollView, Text, KeyboardTypeOptions } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { MaterialIcons } from "@expo/vector-icons";
 import { Link, router } from "expo-router";
@@ -184,9 +184,8 @@ export default function SignUp() {
                     onChange={handleChange(field.name)}
                     value={values[field.name as keyof SignUpFormValues] as string}
                     placeholderColor="#666666"
-                    password={field.secureTextEntry}
                     secureTextEntry={field.secureTextEntry}
-                    keyboardType={field.keyboardType} />
+                    keyboardType={field.keyboardType as KeyboardTypeOptions} />
                   {errors[field.name as keyof SignUpFormValues] && touched[field.name as keyof SignUpFormValues] && (
                     <Text style={styles.errorText}>{errors[field.name as keyof SignUpFormValues]}</Text>
                   )}
