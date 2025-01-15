@@ -29,7 +29,10 @@ import { showToast } from "@utils/showToast";
 
 import { GoogleSignin } from "@react-native-google-signin/google-signin";
 import { handleSignUpUser } from "../Signup/utils";
-import { handleSavePreferences, PreferencesData } from "app/(user)/[type]/preferences/utils";
+import {
+  handleSavePreferences,
+  PreferencesData,
+} from "app/(user)/[type]/preferences/utils";
 
 export default function SignIn() {
   const colorScheme = Appearance.getColorScheme();
@@ -63,7 +66,7 @@ export default function SignIn() {
       const userInfo = response.userInfo;
       if (userInfo) {
         api.setHeader("Authorization", `Bearer ${userInfo?.token as string}`);
-        fetchAllUserProfileData(userInfo);
+        fetchAllUserProfileData(userInfo, isRememberedMe);
       } else {
         showToast("User info not available", "error");
       }
@@ -73,13 +76,16 @@ export default function SignIn() {
     }
   };
 
-  const fetchAllUserProfileData = async (userInfo: UserObject) => {
+  const fetchAllUserProfileData = async (
+    userInfo: UserObject,
+    isRememberMe: boolean
+  ) => {
     try {
       const response = await handleGetUserProfile();
       if (response.data) {
         setLoading(false);
         showToast("Login successful", "success");
-        savingDataToSessionStorage(userInfo, response.data);
+        savingDataToSessionStorage(userInfo, response.data, isRememberMe);
         router.push(`/(user)/${userInfo.user.role}/(tabs)/home`);
       }
     } catch (error) {
@@ -88,61 +94,57 @@ export default function SignIn() {
     }
   };
 
-    const handleGoogleSignIn = async () => {
-      try {
-        await GoogleSignin.hasPlayServices();
-        const response = await GoogleSignin.signIn();
-        console.log("Google Sign In Success:", JSON.stringify(response));
-  
-           if (response) {
-             const userResp = await handleSignUpUser({
-               firstName: response?.data?.user.givenName||"",
-               lastName: response.data?.user.familyName||"",
-               email: response.data?.user.email||"",
-               mobileNumber: "",
-               password: "",
-               role: "user",
-               socialId: response.data?.user.id||"",
-               profileImage: response.data?.user.photo||""
-             },true);
-             if (userResp.status && userResp.userInfo) {
-               api.setHeader("Authorization", `Bearer ${userResp.userInfo.token}`);
-               savePreferences(userResp.userInfo);
-             } else {
-               showToast("Sign up failed", "error");
-             }
-             }
-      } catch (error) {
-        if (error instanceof Error) {
-          console.error("Detailed error:", error.message);
-          showToast(`Google sign-in error: ${error.message}`, "error");
+  const handleGoogleSignIn = async () => {
+    try {
+      await GoogleSignin.hasPlayServices();
+      const response = await GoogleSignin.signIn();
+      console.log("Google Sign In Success:", JSON.stringify(response));
+
+      if (response) {
+        setLoading(true);
+        const userResp = await handleSignUpUser(
+          {
+            firstName: response?.data?.user.givenName || "",
+            lastName: response.data?.user.familyName || "",
+            email: response.data?.user.email || "",
+            mobileNumber: "",
+            password: "",
+            role: "user",
+            socialId: response.data?.user.id || "",
+            profileImage: response.data?.user.photo || "",
+          },
+          true
+        );
+        if (userResp.status && userResp.userInfo) {
+          api.setHeader("Authorization", `Bearer ${userResp.userInfo.token}`);
+          fetchAllUserProfileData(userResp.userInfo, true);
         } else {
-          console.error("Unknown error occurred");
-          showToast("An unknown error occurred during Google sign-in", "error");
+          showToast("Sign up failed", "error");
         }
       }
-    };
-
-    const savePreferences = async (userInfo: UserObject) => {
-      const response = await handleSavePreferences(preferences);
-      if (response.status && response.preferencesResponse) {
-        fetchAllUserProfileData(userInfo);
+    } catch (error) {
+      setLoading(false);
+      if (error instanceof Error) {
+        console.error("Detailed error:", error.message);
+        showToast(`Google sign-in error: ${error.message}`, "error");
       } else {
-        showToast(response.message || "Failed to save preferences", "error");
-        setLoading(false);
+        console.error("Unknown error occurred");
+        showToast("An unknown error occurred during Google sign-in", "error");
       }
-    };
+    }
+  };
 
   const savingDataToSessionStorage = (
     userInfo: UserObject,
-    userProfileData: UserProfileData
+    userProfileData: UserProfileData,
+    isRememberMe: boolean
   ) => {
     let userProfileInfo = mergeUserRoleWithProfile(
       userProfileData,
       userInfo.user.role || "user"
     );
     updateUserInSession(userProfileInfo, userInfo?.token as string);
-    updateUserIsLoggedInSession(isRememberedMe);
+    updateUserIsLoggedInSession(isRememberMe);
     dispatch(setUserToken(userInfo?.token));
     dispatch(setUserData(userProfileInfo));
   };

@@ -28,13 +28,27 @@ import {
   UpPortion,
 } from "@assets/images";
 import { checkLoggedInUser } from "app/auth/utils/authUtils";
-import { AllPropertiesData, handleGetAllAmenities, handleGetAllProperties, handleGetAllPropertType, PropertyItem, PropertyType } from "./utils";
+import {
+  AllPropertiesData,
+  handleGetAllAmenities,
+  handleGetAllProperties,
+  handleGetAllPropertType,
+  PropertyItem,
+  PropertyType,
+} from "./utils";
 import { useDispatch } from "react-redux";
-import { PropertySliceState, setAllProperties, setAmenities, setFilter, setPropertyType } from "features/property/propertySlice";
+import {
+  PropertySliceState,
+  setAllProperties,
+  setAmenities,
+  setFilter,
+  setPropertyType,
+} from "features/property/propertySlice";
 import { useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@store";
 import { UserState } from "features/user/userSlice";
 import { isImageUrl } from "@utils/functions";
+import { BackHandler, Alert } from "react-native";
 
 interface BrowseProps {
   onPress: () => void;
@@ -46,45 +60,64 @@ export default function Home() {
   const theme = useTheme() as MyTheme;
   const params = useLocalSearchParams<{ type?: UserType }>();
   const dispatch: AppDispatch = useDispatch();
-  const [visible, setVisible] = useState<boolean>(false)
-  const { allProperties, propertyTypes } = useSelector<RootState, PropertySliceState>((state) => state.property);
+  const [visible, setVisible] = useState<boolean>(false);
+  const { allProperties, propertyTypes } = useSelector<
+    RootState,
+    PropertySliceState
+  >((state) => state.property);
   const { userData } = useSelector<RootState, UserState>((state) => state.user);
-  
+
   useEffect(() => {
-    fetchAllProperties()
-    fetchAllPropertyTypes()
-    fetchAmenities()
+    fetchAllProperties();
+    fetchAllPropertyTypes();
+    fetchAmenities();
+
+    const backAction = () => {
+      Alert.alert("Confirmation", "Are you sure you want to exit the app?", [
+        {
+          text: "Cancel",
+          onPress: () => null,
+          style: "cancel",
+        },
+        { text: "YES", onPress: () => BackHandler.exitApp() },
+      ]);
+      return true;
+    };
+
+    const backHandler = BackHandler.addEventListener(
+      "hardwareBackPress",
+      backAction
+    );
+
+    return () => backHandler.remove();
   }, []);
 
   const fetchAllProperties = async () => {
     try {
-      const response = await handleGetAllProperties()
-      if(response.data) {
-        dispatch(setAllProperties(response.data))
+      const response = await handleGetAllProperties();
+      if (response.data) {
+        dispatch(setAllProperties(response.data));
       }
-    } catch (error) {
-    }
-  }
+    } catch (error) {}
+  };
 
   const fetchAllPropertyTypes = async () => {
     try {
-      const response = await handleGetAllPropertType()
-      if(response.status) {
-        dispatch(setPropertyType(response.data))
+      const response = await handleGetAllPropertType();
+      if (response.status) {
+        dispatch(setPropertyType(response.data));
       }
-    } catch (error) {
-    }
-  }
+    } catch (error) {}
+  };
 
   const fetchAmenities = async () => {
     try {
-      const response = await handleGetAllAmenities()
-      if(response.status && Boolean(response.data?.length)) {
-        dispatch(setAmenities(response.data))
+      const response = await handleGetAllAmenities();
+      if (response.status && Boolean(response.data?.length)) {
+        dispatch(setAmenities(response.data));
       }
-    } catch (error) {
-    }
-  }
+    } catch (error) {}
+  };
   const PropertiesData = [
     {
       icon: <ResHouse />,
@@ -132,16 +165,20 @@ export default function Home() {
     <>
       <ScrollView style={[styles(theme).wrapper]}>
         <View style={styles(theme).container}>
-          { params.type!=='user' &&
-          <AdCard
-            label="View Your listings or post your ad to rent or sell your house"
-            btnLabel="Go to Dashboard"
-            theme={theme}
-            onPress={() =>
-              Boolean(userData) ? router.push(`(user)/${params?.type!}/(tabs)/dashboard/bidding`) : setVisible(true)
-            }
-          />
-        }
+          {params.type !== "user" && (
+            <AdCard
+              label="View Your listings or post your ad to rent or sell your house"
+              btnLabel="Go to Dashboard"
+              theme={theme}
+              onPress={() =>
+                Boolean(userData)
+                  ? router.push(
+                      `(user)/${params?.type!}/(tabs)/dashboard/bidding`
+                    )
+                  : setVisible(true)
+              }
+            />
+          )}
           <GapView length={30} />
           <Title text="Browse Properties" theme={theme} />
           <View style={styles(theme).carousel}>
@@ -151,7 +188,11 @@ export default function Home() {
               color={theme.colors.text + "77"}
               style={{ right: 5 }}
             />
-            <BrowseProps theme={theme} data={propertyTypes ?? []} type={params.type} />
+            <BrowseProps
+              theme={theme}
+              data={propertyTypes ?? []}
+              type={params.type}
+            />
             <Feather
               name="chevron-right"
               size={18}
@@ -171,7 +212,9 @@ export default function Home() {
             btnLabel="Post an Ad"
             theme={theme}
             onPress={() =>
-              Boolean(userData) ? router.push(`(user)/${params?.type!}/(tabs)/listings`) : setVisible(true)
+              Boolean(userData)
+                ? router.push(`(user)/${params?.type!}/(tabs)/listings`)
+                : setVisible(true)
             }
           />
           <PropertyListing
@@ -182,7 +225,11 @@ export default function Home() {
           />
         </View>
       </ScrollView>
-      <LoginModal visible={visible} onClose={() => setVisible(false)} lastRoute={`home`} />
+      <LoginModal
+        visible={visible}
+        onClose={() => setVisible(false)}
+        lastRoute={`home`}
+      />
     </>
   );
 }
@@ -315,7 +362,11 @@ const ImageCard = () => {
             borderRadius: 3,
           }}
           onPress={() =>
-            router.push(params.type==='agent'?`(user)/${params?.type!}/(tabs)/dashboard/bidding`:`(user)/${params?.type!}/(tabs)/dashboard`)
+            router.push(
+              params.type === "agent"
+                ? `(user)/${params?.type!}/(tabs)/dashboard/bidding`
+                : `(user)/${params?.type!}/(tabs)/dashboard`
+            )
           }
         >
           <MyText textColor="#ffffff" size={10} weight="600">
@@ -330,7 +381,7 @@ const ImageCard = () => {
 const BrowseProps = ({
   data,
   theme,
-  type
+  type,
 }: {
   data: PropertyType[];
   theme?: MyTheme;
@@ -340,15 +391,23 @@ const BrowseProps = ({
 
   function renderList({ item, index }: { item: PropertyType; index: number }) {
     return (
-      <Card onPress={() => {
-        router.push({
-          pathname: `(user)/${type!}/(tabs)/projects`,
-        });
-        dispatch(setFilter({
-          propertyType: item.typeName
-        }))
-      }} style={styles(theme).bCard}>
-        <Image source={{uri: isImageUrl(item?.url) ? item?.url : dummyImage}} style={{ height: 40, width: 40 }} />
+      <Card
+        onPress={() => {
+          router.push({
+            pathname: `(user)/${type!}/(tabs)/projects`,
+          });
+          dispatch(
+            setFilter({
+              propertyType: item.typeName,
+            })
+          );
+        }}
+        style={styles(theme).bCard}
+      >
+        <Image
+          source={{ uri: isImageUrl(item?.url) ? item?.url : dummyImage }}
+          style={{ height: 40, width: 40 }}
+        />
         <GapView />
         <MyText
           size={10}
@@ -377,14 +436,13 @@ export const PropertyListing = ({
   title,
   theme,
   params,
-  data
+  data,
 }: {
   title?: string;
   theme?: MyTheme;
   params: { type?: UserType };
-  data: AllPropertiesData | null
+  data: AllPropertiesData | null;
 }) => {
-
   function renderList({
     item,
     index,
@@ -394,51 +452,53 @@ export const PropertyListing = ({
     index: number;
     params: { type?: UserType };
   }) {
-    const images = item?.PropertyData?.filter(val => val.type == "image")
+    const images = item?.PropertyData?.filter((val) => val.type == "image");
     return (
       <Card
         onPress={() => {
           router.navigate({
             pathname: `(user)/${params?.type!}/(tabs)/home/propertyDetail`,
             params: {
-              item: JSON.stringify(item)
-            }
+              item: JSON.stringify(item),
+            },
           });
         }}
-      radius={2}
-      style={{ height: 180, width: 130 }}
-    >
-      <Image
-        source={{ uri: isImageUrl(images?.[0]?.url) ? images?.[0]?.url : dummyImage}}
-        style={{ height: 80, borderRadius: 2 }}
-      />
-      <View style={{ padding: 8 }}>
-        <MyText
-          text="Contact for price"
-          size={10}
-          textColor={theme?.colors.text}
-          style={{ fontWeight: "500", marginBottom: 10 }}
+        radius={2}
+        style={{ height: 180, width: 130 }}
+      >
+        <Image
+          source={{
+            uri: isImageUrl(images?.[0]?.url) ? images?.[0]?.url : dummyImage,
+          }}
+          style={{ height: 80, borderRadius: 2 }}
         />
-        <MyText
-          text={item.propertyName}
-          size={10}
-          textColor={theme?.colors.text}
-          style={{ fontWeight: "400", marginBottom: 10 }}
-        />
-        <MyText
-          text={item.propertyAddress}
-          size={10}
-          textColor="#898989"
-          style={{ fontWeight: "400", marginBottom: 10 }}
-        />
-        <MyText
-          text={item.propertyArea}
-          size={8}
-          textColor="#898989"
-          style={{ fontWeight: "400", marginBottom: 10 }}
-        />
-      </View>
-    </Card>
+        <View style={{ padding: 8 }}>
+          <MyText
+            text="Contact for price"
+            size={10}
+            textColor={theme?.colors.text}
+            style={{ fontWeight: "500", marginBottom: 10 }}
+          />
+          <MyText
+            text={item.propertyName}
+            size={10}
+            textColor={theme?.colors.text}
+            style={{ fontWeight: "400", marginBottom: 10 }}
+          />
+          <MyText
+            text={item.propertyAddress}
+            size={10}
+            textColor="#898989"
+            style={{ fontWeight: "400", marginBottom: 10 }}
+          />
+          <MyText
+            text={item.propertyArea}
+            size={8}
+            textColor="#898989"
+            style={{ fontWeight: "400", marginBottom: 10 }}
+          />
+        </View>
+      </Card>
     );
   }
 
