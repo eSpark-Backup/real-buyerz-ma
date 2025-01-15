@@ -14,7 +14,10 @@
     },
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.eSpark.realbuyerz"
+      "bundleIdentifier": "com.eSpark.realbuyerz",
+      "config": {
+        "googleMapsApiKey": "AIzaSyBieHxRQPlXufh9CnWw0a3s5LOhiZd69zA"
+      }
     },
     "android": {
       "adaptiveIcon": {
@@ -22,7 +25,12 @@
         "backgroundColor": "#ffffff"
       },
       "package": "com.eSpark.realbuyerz",
-      "permissions": ["android.permission.RECORD_AUDIO"]
+      "permissions": ["android.permission.RECORD_AUDIO"],
+      "config": {
+        "googleMaps": {
+          "apiKey": "AIzaSyBieHxRQPlXufh9CnWw0a3s5LOhiZd69zA"
+        }
+      }
     },
     "web": {
       "favicon": "./assets/favicon.png"

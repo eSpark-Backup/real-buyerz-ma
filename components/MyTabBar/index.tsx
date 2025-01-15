@@ -39,7 +39,7 @@ function MyTabBar({
       style={[
         styles({ theme }).container,
         {
-          height: Platform.OS == "ios" ? 52 + insets.bottom / 2 : 52,
+          height: Platform.OS == "ios" ? 65 + insets.bottom / 2 : 52,
         },
       ]}
     >
