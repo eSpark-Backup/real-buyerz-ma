@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { FontAwesome, Ionicons } from "@expo/vector-icons";
 import { useTheme } from "@react-navigation/native";
@@ -14,6 +14,7 @@ interface SearchBarProps {
   leftIcon?: boolean;
   placeholder?: string;
   searchBtnColor?: string;
+  value?:string
 }
 
 export default function SearchBar({
@@ -24,11 +25,14 @@ export default function SearchBar({
   onValueChange,
   placeholder,
   searchBtnColor = "#fb631c",
+  value
 }: SearchBarProps) {
   const theme = useTheme() as MyTheme;
-
   const [searchText, setSearchText] = useState<string>("");
-
+  useEffect(()=>{
+    setSearchText(value??"")
+  },[value])
+  
   const handleValueChange = (text: string) => {
     console.log("coming here " + text);
     setSearchText(text);
@@ -57,7 +61,7 @@ export default function SearchBar({
         inputStyle={styles(theme).inputStyle}
         placeholder={placeholder ? placeholder : "Search"}
         placeholderColor={theme.colors.placeholderText}
-        value={searchText}
+        text={searchText}
         onChange={handleValueChange}
       />
       {clearIcon && (

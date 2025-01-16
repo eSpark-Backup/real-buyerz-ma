@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { router, useLocalSearchParams } from "expo-router";
 import { useTheme } from "@react-navigation/native";
@@ -15,6 +15,7 @@ import { MyTheme, SearchListProps, UserType } from "@types";
 import { PropertySliceState, setSearch } from "features/property/propertySlice";
 import { RootState } from "@store";
 import { useSelector, useDispatch } from "react-redux";
+import { showToast } from "@utils/showToast";
 
 export default function Search() {
   const theme = useTheme() as MyTheme;
@@ -23,11 +24,20 @@ export default function Search() {
   const { search, propertyTypes } = useSelector<RootState, PropertySliceState>(
     (state) => state.property
   );
+  const [resetTabFilter, setResetTabFilter] = useState(false);
 
   const handleSearch = () => {
-    console.log("Search parameters: ", JSON.stringify(search));
+    const hasFilter = Object.values(search).some(
+      (value) => value !== null && value !== undefined
+    );
 
-    router.push(`(user)/${params?.type!}/search/searchList`);
+    if (hasFilter) {
+      setResetTabFilter(true);
+      setTimeout(() => setResetTabFilter(false), 0);
+      router.push(`(user)/${params?.type!}/search/searchList`);
+    } else {
+      showToast("There is no filters selected");
+    }
   };
 
   const handleClearSearch = () => {
@@ -40,6 +50,8 @@ export default function Search() {
         propertyName: null,
       })
     );
+    setResetTabFilter(true);
+    setTimeout(() => setResetTabFilter(false), 0);
   };
 
   return (
@@ -50,12 +62,13 @@ export default function Search() {
           clearIcon
           onValueChange={(value) =>
             dispatch(
-            setSearch({
-              ...search,
-              propertyName: value,
-            })
-          )
-        }
+              setSearch({
+                ...search,
+                propertyName: value,
+              })
+            )
+          }
+          value={search.propertyName || ""}
         />
       </View>
 
@@ -77,6 +90,7 @@ export default function Search() {
           }}
           style={{ width: "100%" }}
           height={40}
+          selected={search.purpose ? [search.purpose] : []}
         />
       </View>
 
@@ -107,6 +121,7 @@ export default function Search() {
           theme={theme}
           style={{ width: "100%" }}
           height={40}
+          selected={search.propertyCity ? [search.propertyCity] : []}
         />
       </View>
 
@@ -140,6 +155,7 @@ export default function Search() {
               })
             );
           }}
+          resetSelectedValues={resetTabFilter}
         />
       </View>
 

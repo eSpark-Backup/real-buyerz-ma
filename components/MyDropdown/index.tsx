@@ -58,9 +58,7 @@ export default function MyDropdown({
   const insets = useSafeAreaInsets();
 
   useEffect(() => {
-    if (!label?.toString()) {
       setLabel(selected?.toString() ?? "");
-    }
   }, [label, selected]);
 
   useEffect(() => {
