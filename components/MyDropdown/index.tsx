@@ -16,6 +16,9 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import MyText from "@components/MyText";
 import { MyTheme } from "@types";
 
+// Add a static variable to track the currently open dropdown
+let activeDropdownId: string | null = null;
+
 interface DropdownProps {
   data: string[];
   placeholder?: string;
@@ -61,6 +64,22 @@ export default function MyDropdown({
     }
   }, [label, selected]);
 
+  // Add cleanup effect to reset activeDropdownId when component unmounts
+  useEffect(() => {
+    return () => {
+      if (activeDropdownId === id) {
+        activeDropdownId = null;
+      }
+    };
+  }, [id]);
+
+  // Update show state when another dropdown becomes active
+  useEffect(() => {
+    if (activeDropdownId !== id && show) {
+      setShow(false);
+    }
+  }, [activeDropdownId, id, show]);
+
   const handleSelection = (item: string) => {
     let updatedSelection: string[] = [...selectedItems];
 
@@ -104,6 +123,7 @@ export default function MyDropdown({
         actionSheetRef.current?.hide();
       } else {
         setShow(false);
+        activeDropdownId = null;
       }
     }
   };
@@ -117,7 +137,12 @@ export default function MyDropdown({
 
   const renderAndroidDropdown = () => {
     return show ? (
-      <View style={styles.dropdownContainer}>
+      <View 
+        style={[
+          styles.dropdownContainer,
+          { zIndex: show ? 1000 : 0 }
+        ]}
+      >
         <ScrollView
           style={[
             styles.dropdownList,
@@ -159,12 +184,29 @@ export default function MyDropdown({
     if (Platform.OS === "ios") {
       actionSheetRef.current?.show();
     } else {
-      setShow(!show);
+      // Close any other open dropdown before opening this one
+      if (activeDropdownId && activeDropdownId !== id) {
+        // You might need to implement a global state management solution
+        // to properly handle this across components
+        activeDropdownId = null;
+      }
+      
+      const newShowState = !show;
+      setShow(newShowState);
+      activeDropdownId = newShowState ? id : null;
     }
   };
 
   return (
-    <View style={[containerStyle, { zIndex: Platform.OS === "ios" ? 0 : 1000 }]}>
+    <View 
+      style={[
+        containerStyle,
+        { 
+          zIndex: Platform.OS === "ios" ? 0 : (show ? 1000 : 1),
+          position: 'relative'
+        }
+      ]}
+    >
       {title && (
         <MyText
           text={title}
@@ -282,7 +324,6 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     marginTop: 1,
-    zIndex: 1000,
   },
   dropdownList: {
     borderWidth: 1,
@@ -296,7 +337,6 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
   },
   actionSheet: {
-    // backgroundColor: "#F3F4F6",
     borderTopLeftRadius: 10,
     borderTopRightRadius: 10,
   },
@@ -332,4 +372,3 @@ const styles = StyleSheet.create({
     minHeight: 50,
   },
 });
-

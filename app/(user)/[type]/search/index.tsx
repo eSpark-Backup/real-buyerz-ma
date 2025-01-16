@@ -25,21 +25,19 @@ export default function Search() {
   );
 
   const handleSearch = () => {
-    // Log the current search state for debugging
     console.log("Search parameters: ", JSON.stringify(search));
 
-    // Navigate to the search results screen
     router.push(`(user)/${params?.type!}/search/searchList`);
   };
 
   const handleClearSearch = () => {
-    // Clear search state by dispatching an action to reset the filters
     dispatch(
       setSearch({
         propertyType: null,
         propertySubType: null,
         propertyCity: null,
-        purpose: [],
+        purpose: null,
+        propertyName: null,
       })
     );
   };
@@ -47,7 +45,18 @@ export default function Search() {
   return (
     <View style={styles.container}>
       <View style={styles.searchBar}>
-        <SearchBar leftIcon clearIcon />
+        <SearchBar
+          leftIcon
+          clearIcon
+          onValueChange={(value) =>
+            dispatch(
+            setSearch({
+              ...search,
+              propertyName: value,
+            })
+          )
+        }
+        />
       </View>
 
       <GapView length={25} />
@@ -80,7 +89,12 @@ export default function Search() {
           multiSelect={false}
           zIndex={8}
           data={[
-            "Karachi", "Lahore", "Islamabad", "Quetta", "Peshawar", "Sialkot"
+            "Karachi",
+            "Lahore",
+            "Islamabad",
+            "Quetta",
+            "Peshawar",
+            "Sialkot",
           ]}
           onSelect={(value) =>
             dispatch(
@@ -101,20 +115,23 @@ export default function Search() {
       <View style={styles.genre}>
         <TabFilter
           isSearch
-          data={propertyTypes?.map((type) => ({
-            id: type.id,
-            title: type.typeName,
-            list: type.subTypes?.map((subType) => ({
+          data={
+            propertyTypes?.map((type) => ({
               id: type.id,
-              label: subType.typeName, 
-            })) || [],
-          })) || []}
+              title: type.typeName,
+              list:
+                type.subTypes?.map((subType) => ({
+                  id: type.id,
+                  label: subType.typeName,
+                })) || [],
+            })) || []
+          }
           onSelect={(selected: SearchListProps[]) => {
-            const propertyType = propertyTypes?.find(
-                (item) => item.id === selected[0].id
-              )?.typeName || null;
+            const propertyType =
+              propertyTypes?.find((item) => item.id === selected[0].id)
+                ?.typeName || null;
             const propertySubType = selected?.[0]?.label || null;
-            console.log("selected hogya"+JSON.stringify(propertyTypes))
+            console.log("selected hogya" + JSON.stringify(propertyTypes));
             dispatch(
               setSearch({
                 ...search,

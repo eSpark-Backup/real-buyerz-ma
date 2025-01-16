@@ -22,6 +22,7 @@ export interface PropertySliceState {
     propertyType: string | null;
     propertySubType: string | null;
     propertyCity: string | null;
+    purpose: string | null;
     propertyName: string | null;
   };
   amenities: IAmenity[]
