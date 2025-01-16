@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { router, useLocalSearchParams } from "expo-router";
 import { useTheme } from "@react-navigation/native";
@@ -15,6 +15,7 @@ import { MyTheme, SearchListProps, UserType } from "@types";
 import { PropertySliceState, setSearch } from "features/property/propertySlice";
 import { RootState } from "@store";
 import { useSelector, useDispatch } from "react-redux";
+import { showToast } from "@utils/showToast";
 
 export default function Search() {
   const theme = useTheme() as MyTheme;
@@ -23,31 +24,52 @@ export default function Search() {
   const { search, propertyTypes } = useSelector<RootState, PropertySliceState>(
     (state) => state.property
   );
+  const [resetTabFilter, setResetTabFilter] = useState(false);
 
   const handleSearch = () => {
-    // Log the current search state for debugging
-    console.log("Search parameters: ", JSON.stringify(search));
+    const hasFilter = Object.values(search).some(
+      (value) => value !== null && value !== undefined
+    );
 
-    // Navigate to the search results screen
-    router.push(`(user)/${params?.type!}/search/searchList`);
+    if (hasFilter) {
+      setResetTabFilter(true);
+      setTimeout(() => setResetTabFilter(false), 0);
+      router.push(`(user)/${params?.type!}/search/searchList`);
+    } else {
+      showToast("There is no filters selected");
+    }
   };
 
   const handleClearSearch = () => {
-    // Clear search state by dispatching an action to reset the filters
     dispatch(
       setSearch({
         propertyType: null,
         propertySubType: null,
         propertyCity: null,
-        purpose: [],
+        purpose: null,
+        propertyName: null,
       })
     );
+    setResetTabFilter(true);
+    setTimeout(() => setResetTabFilter(false), 0);
   };
 
   return (
     <View style={styles.container}>
       <View style={styles.searchBar}>
-        <SearchBar leftIcon clearIcon />
+        <SearchBar
+          leftIcon
+          clearIcon
+          onValueChange={(value) =>
+            dispatch(
+              setSearch({
+                ...search,
+                propertyName: value,
+              })
+            )
+          }
+          value={search.propertyName || ""}
+        />
       </View>
 
       <GapView length={25} />
@@ -68,6 +90,7 @@ export default function Search() {
           }}
           style={{ width: "100%" }}
           height={40}
+          selected={search.purpose ? [search.purpose] : []}
         />
       </View>
 
@@ -80,7 +103,12 @@ export default function Search() {
           multiSelect={false}
           zIndex={8}
           data={[
-            "Karachi", "Lahore", "Islamabad", "Quetta", "Peshawar", "Sialkot"
+            "Karachi",
+            "Lahore",
+            "Islamabad",
+            "Quetta",
+            "Peshawar",
+            "Sialkot",
           ]}
           onSelect={(value) =>
             dispatch(
@@ -93,6 +121,7 @@ export default function Search() {
           theme={theme}
           style={{ width: "100%" }}
           height={40}
+          selected={search.propertyCity ? [search.propertyCity] : []}
         />
       </View>
 
@@ -101,20 +130,23 @@ export default function Search() {
       <View style={styles.genre}>
         <TabFilter
           isSearch
-          data={propertyTypes?.map((type) => ({
-            id: type.id,
-            title: type.typeName,
-            list: type.subTypes?.map((subType) => ({
+          data={
+            propertyTypes?.map((type) => ({
               id: type.id,
-              label: subType.typeName, 
-            })) || [],
-          })) || []}
+              title: type.typeName,
+              list:
+                type.subTypes?.map((subType) => ({
+                  id: type.id,
+                  label: subType.typeName,
+                })) || [],
+            })) || []
+          }
           onSelect={(selected: SearchListProps[]) => {
-            const propertyType = propertyTypes?.find(
-                (item) => item.id === selected[0].id
-              )?.typeName || null;
+            const propertyType =
+              propertyTypes?.find((item) => item.id === selected[0].id)
+                ?.typeName || null;
             const propertySubType = selected?.[0]?.label || null;
-            console.log("selected hogya"+JSON.stringify(propertyTypes))
+            console.log("selected hogya" + JSON.stringify(propertyTypes));
             dispatch(
               setSearch({
                 ...search,
@@ -123,6 +155,7 @@ export default function Search() {
               })
             );
           }}
+          resetSelectedValues={resetTabFilter}
         />
       </View>
 

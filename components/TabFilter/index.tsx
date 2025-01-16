@@ -13,6 +13,7 @@ interface TabFilterProps {
   wrap?: boolean;
   isSearch?: boolean;
   multiSelect?: boolean; // New prop for multi/single select toggle
+  resetSelectedValues?: boolean; 
 }
 
 export default function TabFilter({
@@ -21,6 +22,7 @@ export default function TabFilter({
   wrap,
   isSearch,
   multiSelect = false, // Default to multi-select if not provided
+  resetSelectedValues = false, // Default to false
 }: TabFilterProps) {
   const theme = useTheme() as MyTheme;
   const [list, setList] = useState<SearchDataProps[] | null>(data);
@@ -45,6 +47,13 @@ export default function TabFilter({
       return updatedList;
     });
   };
+
+  useEffect(() => {
+    if (resetSelectedValues) {
+      setList(data);
+      setSelectedItem(data[0]);
+    }
+  }, [resetSelectedValues, data]);
 
   const handleItemSelect = (index: number) => {
     if (!selectedItem) return;

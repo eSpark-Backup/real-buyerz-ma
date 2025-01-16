@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { FontAwesome, Ionicons } from "@expo/vector-icons";
 import { useTheme } from "@react-navigation/native";
@@ -10,9 +10,11 @@ interface SearchBarProps {
   clearIcon?: boolean;
   button?: boolean;
   onPress?: () => void;
+  onValueChange?: (value: string) => void;
   leftIcon?: boolean;
   placeholder?: string;
   searchBtnColor?: string;
+  value?:string
 }
 
 export default function SearchBar({
@@ -20,10 +22,23 @@ export default function SearchBar({
   button,
   onPress,
   leftIcon,
+  onValueChange,
   placeholder,
   searchBtnColor = "#fb631c",
+  value
 }: SearchBarProps) {
   const theme = useTheme() as MyTheme;
+  const [searchText, setSearchText] = useState<string>("");
+  useEffect(()=>{
+    setSearchText(value??"")
+  },[value])
+  
+  const handleValueChange = (text: string) => {
+    console.log("coming here " + text);
+    setSearchText(text);
+    onValueChange?.(text);
+  };
+
   return (
     <View
       style={[
@@ -46,18 +61,25 @@ export default function SearchBar({
         inputStyle={styles(theme).inputStyle}
         placeholder={placeholder ? placeholder : "Search"}
         placeholderColor={theme.colors.placeholderText}
+        text={searchText}
+        onChange={handleValueChange}
       />
       {clearIcon && (
-        <Ionicons
-          name="close"
-          color={"#969696"}
-          size={16}
-          style={{ marginLeft: 10 }}
-        />
+        <TouchableOpacity onPress={() => handleValueChange("")}>
+          <Ionicons
+            name="close"
+            color={"#969696"}
+            size={16}
+            style={{ marginLeft: 10 }}
+          />
+        </TouchableOpacity>
       )}
       {button && (
         <TouchableOpacity
-          onPress={onPress}
+          onPress={() => {
+            onPress?.();
+            console.log("Search text:", searchText);
+          }}
           activeOpacity={1}
           style={{
             justifyContent: "center",
