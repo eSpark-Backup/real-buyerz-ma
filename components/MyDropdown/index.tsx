@@ -16,7 +16,6 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import MyText from "@components/MyText";
 import { MyTheme } from "@types";
 
-// Add a static variable to track the currently open dropdown
 let activeDropdownId: string | null = null;
 
 interface DropdownProps {
@@ -64,7 +63,6 @@ export default function MyDropdown({
     }
   }, [label, selected]);
 
-  // Add cleanup effect to reset activeDropdownId when component unmounts
   useEffect(() => {
     return () => {
       if (activeDropdownId === id) {
@@ -73,7 +71,6 @@ export default function MyDropdown({
     };
   }, [id]);
 
-  // Update show state when another dropdown becomes active
   useEffect(() => {
     if (activeDropdownId !== id && show) {
       setShow(false);
@@ -184,10 +181,7 @@ export default function MyDropdown({
     if (Platform.OS === "ios") {
       actionSheetRef.current?.show();
     } else {
-      // Close any other open dropdown before opening this one
       if (activeDropdownId && activeDropdownId !== id) {
-        // You might need to implement a global state management solution
-        // to properly handle this across components
         activeDropdownId = null;
       }
       
