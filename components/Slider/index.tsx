@@ -8,14 +8,14 @@ import {
   Easing,
 } from "react-native";
 import { createThumbnail } from "react-native-create-thumbnail";
-import { Ionicons } from '@expo/vector-icons';
+import { Ionicons } from "@expo/vector-icons";
+import YouTubeIframe from "react-native-youtube-iframe";
 
 import Card from "../Card";
 import MyText from "../MyText";
 import { LeftIconCarousel, RightIconCarousel } from "@assets/images/svg";
 import { MyTheme } from "@types";
 import { useTheme } from "@react-navigation/native";
-import { ImageViewer,YoutubeRedirect } from "@components";
 
 interface MediaItem {
   uri: string;
@@ -37,11 +37,11 @@ const CustomSlider = ({ images, title }: ICustomSlider) => {
   const [fadeAnim] = useState(new Animated.Value(1));
 
   useEffect(() => {
-   fetchThumbnails()
+    fetchThumbnails();
   }, [images]);
 
   const fetchThumbnails = async () => {
-    const videoItems = images.filter(item => item.type === "video");
+    const videoItems = images.filter((item) => item.type === "video");
     if (videoItems.length === 0) {
       console.log("No video items to process for thumbnails.");
       return;
@@ -53,13 +53,20 @@ const CustomSlider = ({ images, title }: ICustomSlider) => {
           const validVideoUri = await validateVideoUri(item.uri);
           console.log("Valid video URI:", validVideoUri);
           if (validVideoUri) {
-            if (validVideoUri.includes("youtube.com") || validVideoUri.includes("youtu.be")) {
+            if (
+              validVideoUri.includes("youtube.com") ||
+              validVideoUri.includes("youtu.be")
+            ) {
               const youtubeThumbnailUrl = getYouTubeThumbnailUrl(validVideoUri);
               console.log("YouTube thumbnail URL:", youtubeThumbnailUrl);
               return youtubeThumbnailUrl;
             }
             const thumbnailPath = await generateThumbnail(validVideoUri);
-            console.log("Generated thumbnail path for URI:", validVideoUri, thumbnailPath);
+            console.log(
+              "Generated thumbnail path for URI:",
+              validVideoUri,
+              thumbnailPath
+            );
             return thumbnailPath;
           } else {
             console.warn("Invalid video URI:", item.uri);
@@ -71,7 +78,6 @@ const CustomSlider = ({ images, title }: ICustomSlider) => {
     console.log("Generated Thumbnails:", generatedThumbnails);
     setThumbnails(generatedThumbnails as string[]);
   };
-  
 
   const fadeOut = () => {
     Animated.timing(fadeAnim, {
@@ -124,76 +130,90 @@ const CustomSlider = ({ images, title }: ICustomSlider) => {
     }
   };
 
+  const handleCloseVideo = () => {
+    setShowVideoViewer(false);
+  };
+
   const currentMedia = images[currentIndex];
 
-  console.log("currentMedia "+ JSON.stringify(currentMedia))
-  const imageUri = currentMedia.type === "video" && thumbnails[currentIndex]
-    ? thumbnails[currentIndex]
-    : currentMedia.uri;
-
+  console.log("currentMedia " + JSON.stringify(currentMedia));
+  const imageUri =
+    currentMedia.type === "video" && thumbnails[currentIndex]
+      ? thumbnails[currentIndex]
+      : currentMedia.uri;
 
   if (images.length === 0) return null;
 
   return (
     <Card>
       <View style={styles(theme).container}>
-        <TouchableOpacity activeOpacity={0.9} onPress={handleMediaPress}>
-          <Animated.View style={{ opacity: fadeAnim }}>
-            <ImageBackground
-              source={{ uri: imageUri }}
-              resizeMode="cover"
-              style={styles(theme).sliderTrack}
-            >
-              {currentMedia.type === "video" && (
-                <View style={styles(theme).playIconContainer}>
-                  <Ionicons name="play-circle" size={48} color="white" />
+        {!showVideoViewer ? (
+          <TouchableOpacity activeOpacity={0.9} onPress={handleMediaPress}>
+            <Animated.View style={{ opacity: fadeAnim }}>
+              <ImageBackground
+                source={{ uri: imageUri }}
+                resizeMode="cover"
+                style={styles(theme).sliderTrack}
+              >
+                {currentMedia.type === "video" && (
+                  <View style={styles(theme).playIconContainer}>
+                    <Ionicons name="play-circle" size={48} color="white" />
+                  </View>
+                )}
+                <View style={styles(theme).dFlex}>
+                  <TouchableOpacity
+                    activeOpacity={0.8}
+                    onPress={handlePrev}
+                    style={styles(theme).arrowButton}
+                  >
+                    {LeftIconCarousel ? <LeftIconCarousel /> : null}
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    activeOpacity={0.8}
+                    onPress={handleNext}
+                    style={styles(theme).arrowButton}
+                  >
+                    {RightIconCarousel ? <RightIconCarousel /> : null}
+                  </TouchableOpacity>
                 </View>
-              )}
-              <View style={styles(theme).dFlex}>
-                <TouchableOpacity
-                  activeOpacity={0.8}
-                  onPress={handlePrev}
-                  style={styles(theme).arrowButton}
-                >
-                  {LeftIconCarousel ? <LeftIconCarousel /> : null}
-                </TouchableOpacity>
-                <TouchableOpacity
-                  activeOpacity={0.8}
-                  onPress={handleNext}
-                  style={styles(theme).arrowButton}
-                >
-                  {RightIconCarousel ? <RightIconCarousel /> : null}
-                </TouchableOpacity>
-              </View>
-              <View style={styles(theme).paginationContainer}>
-                {images.map((_, index) => (
-                  <View
-                    key={index}
-                    style={[
-                      styles(theme).paginationDot,
-                      index === currentIndex && styles(theme).paginationDotActive,
-                    ]}
-                  />
-                ))}
-              </View>
-            </ImageBackground>
-          </Animated.View>
-        </TouchableOpacity>
+                <View style={styles(theme).paginationContainer}>
+                  {images.map((_, index) => (
+                    <View
+                      key={index}
+                      style={[
+                        styles(theme).paginationDot,
+                        index === currentIndex &&
+                          styles(theme).paginationDotActive,
+                      ]}
+                    />
+                  ))}
+                </View>
+              </ImageBackground>
+            </Animated.View>
+          </TouchableOpacity>
+        ) : (
+          <View style={styles(theme).videoContainer}>
+            <YouTubeIframe
+              videoId={getYouTubeVideoId(currentMedia.uri)}
+              height={228}
+              play
+              onError={(e) => console.log("Error playing video", e)}
+              onChangeState={(state) =>
+                console.log("Video state changed:", state)
+              }
+            />
+            <TouchableOpacity
+              style={styles(theme).closeButton}
+              onPress={handleCloseVideo}
+            >
+              <Ionicons name="close-circle" size={24} color="white" />
+            </TouchableOpacity>
+          </View>
+        )}
       </View>
       <View style={styles(theme).textStyle}>
         <MyText text={title} size={16} weight="600" />
       </View>
-      {showImageViewer && (
-        <ImageViewer
-          imageUri={currentMedia.uri}
-          title={title}
-          onClose={() => setShowImageViewer(false)}
-        />
-      )}
-
-      {showVideoViewer && (
-        <YoutubeRedirect url={currentMedia.uri} />
-      )}
     </Card>
   );
 };
@@ -212,9 +232,13 @@ const generateThumbnail = async (videoUri: string) => {
   }
 };
 
-const getYouTubeThumbnailUrl = (videoUrl:string) => {
+const getYouTubeThumbnailUrl = (videoUrl: string) => {
   const videoId = videoUrl.split("v=")[1].split("&")[0];
   return `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`;
+};
+
+const getYouTubeVideoId = (videoUrl: string) => {
+  return videoUrl.split("v=")[1].split("&")[0];
 };
 
 const styles = (theme?: MyTheme) =>
@@ -232,6 +256,13 @@ const styles = (theme?: MyTheme) =>
       justifyContent: "center",
       position: "relative",
       overflow: "hidden",
+    },
+    closeButton: {
+      position: "absolute",
+      top: 12,
+      right: 1,
+      borderRadius: 16,
+      padding: 5,
     },
     textStyle: {
       display: "flex",
@@ -281,6 +312,12 @@ const styles = (theme?: MyTheme) =>
       backgroundColor: "white",
       width: 10,
       height: 10,
+    },
+    videoContainer: {
+      height: 228,
+      backgroundColor: theme?.colors.background,
+      borderRadius: 5,
+      overflow: "hidden",
     },
   });
 

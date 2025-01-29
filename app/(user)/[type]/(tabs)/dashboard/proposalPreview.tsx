@@ -31,6 +31,7 @@ import { showToast } from "@utils/showToast";
 import MapView, { Marker, PROVIDER_GOOGLE, Region } from "react-native-maps";
 import { ImageFile } from "../../myListings/utils";
 import { FlatList } from "react-native-gesture-handler";
+import YouTubeRedirect from "@components/VideoView/YoutubeRedirect";
 
 interface Preview {
   title: string;
@@ -92,7 +93,7 @@ function ProposalPreview() {
     /* const user = isSavedLeadsItem(productDetail)
       ? productDetail.property.user
       : productDetail.user; */
-      const user = productDetail.user;
+    const user = productDetail.user;
     const createdAtLocal = productDetail.createdAt
       ? new Date(productDetail.createdAt).toLocaleString("en-US", {
           hour: "numeric",
@@ -212,6 +213,10 @@ function ProposalPreview() {
         image: detail.image
           ? detail.image
           : getImageFromPropertyData(detail.PropertyData),
+        video:
+          detail.PropertyData?.filter((item) => item.type === "video").map(
+            (item) => item.url
+          ) || [],
       };
     }
   };
@@ -222,7 +227,6 @@ function ProposalPreview() {
     const imageItem = propertyData?.find((item) => item.type === "image");
     if (imageItem) {
       const blob = new Blob();
-
       return [
         {
           uri: imageItem.url,
@@ -342,24 +346,12 @@ function ProposalPreview() {
                       showsHorizontalScrollIndicator={false}
                     />
                   </View>
-                  {/* <View style={styles(theme).part1}>
-                <MyText text="Property Videos" size={16} weight="500" />
-                <FlatList
-                  data={item.image}
-                  renderItem={({ item, index }) => {
-                    return (
-                      <Image
-                        key={index}
-                        source={{ uri: item.uri }}
-                        style={{ height: 80, width: 100, borderRadius: 2, marginRight: 5 }}
-                      />
-                    );
-                  }}
-                  keyExtractor={(item, index) => index.toString()}
-                  horizontal
-                  showsHorizontalScrollIndicator={false}
-                />
-              </View> */}
+                  <View style={styles(theme).part1}>
+                    <MyText text="Property Videos" size={16} weight="500" />
+                    {item.video && item.video.length > 0 && (
+                      <YouTubeRedirect videos={item.video} theme={theme} />
+                    )}
+                  </View>
                 </>
               )}
           </View>
