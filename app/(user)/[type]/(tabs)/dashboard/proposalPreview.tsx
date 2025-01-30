@@ -213,10 +213,11 @@ function ProposalPreview() {
         image: detail.image
           ? detail.image
           : getImageFromPropertyData(detail.PropertyData),
-        video:
-          detail.PropertyData?.filter((item) => item.type === "video").map(
-            (item) => item.url
-          ) || [],
+        video: detail.video
+          ? detail.video
+          : detail.PropertyData?.filter((item) => item.type === "video").map(
+              (item) => item.url
+            ) || [],
       };
     }
   };
@@ -347,9 +348,11 @@ function ProposalPreview() {
                     />
                   </View>
                   <View style={styles(theme).part1}>
-                    <MyText text="Property Videos" size={16} weight="500" />
                     {item.video && item.video.length > 0 && (
-                      <YouTubeRedirect videos={item.video} theme={theme} />
+                      <>
+                        <MyText text="Property Videos" size={16} weight="500" />
+                        <YouTubeRedirect videos={item.video} theme={theme} />
+                      </>
                     )}
                   </View>
                 </>
