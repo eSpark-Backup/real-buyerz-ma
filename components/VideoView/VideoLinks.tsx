@@ -14,7 +14,7 @@ const VideoLinkInput: React.FC<VideoLinkInputProps> = ({ links, onChange }) => {
 
   useEffect(() => {
     if (links.length === 0) {
-      onChange([""]); 
+      onChange([""]);
     }
   }, [links]);
 
@@ -41,30 +41,34 @@ const VideoLinkInput: React.FC<VideoLinkInputProps> = ({ links, onChange }) => {
     const showTrashIcon = links.length > 1;
 
     return (
-      <View key={index} style={styles.inputContainer}>
-        <View style={styles.inputWrapper}>
-          <TextInput
-            placeholder="Enter video link"
-            value={link}
-            onChangeText={(value) => handleLinkChange(value, index)}
-            style={styles.input}
-            placeholderTextColor="#9CA3AF"
-          />
-          {showAddIcon ? (
-            <TouchableOpacity
-              onPress={handleAddLink}
-              style={styles.iconButton}
-            >
-              <Feather name="plus-circle" size={20} color="#3B82F6" />
-            </TouchableOpacity>
-          ) : showTrashIcon ? (
-            <TouchableOpacity
-              onPress={() => handleRemoveLink(index)}
-              style={styles.iconButton}
-            >
-              <Feather name="trash-2" size={20} color="#EF4444" />
-            </TouchableOpacity>
-          ) : null}
+      <View key={index}>
+        <View style={styles.inputView}>
+          <Feather name="link" size={18} color="#FF8C00" />
+          <View style={styles.inputWrapper}>
+            <TextInput
+              placeholder="Enter video link"
+              value={link}
+              onChangeText={(value) => handleLinkChange(value, index)}
+              style={styles.input}
+              placeholderTextColor="#9CA3AF"
+            />
+
+            {showAddIcon ? (
+              <TouchableOpacity
+                onPress={handleAddLink}
+                style={styles.iconButton}
+              >
+                <Feather name="plus-circle" size={20} color="#3B82F6" />
+              </TouchableOpacity>
+            ) : showTrashIcon ? (
+              <TouchableOpacity
+                onPress={() => handleRemoveLink(index)}
+                style={styles.iconButton}
+              >
+                <Feather name="trash-2" size={20} color="#EF4444" />
+              </TouchableOpacity>
+            ) : null}
+          </View>
         </View>
       </View>
     );
@@ -74,7 +78,7 @@ const VideoLinkInput: React.FC<VideoLinkInputProps> = ({ links, onChange }) => {
     <View style={styles.container}>
       {links.map((link, index) => renderField(link, index))}
       <MyText style={styles.helperText}>
-        Maximum {maxLinks} video links allowed
+        Max {maxLinks} video links allowed
       </MyText>
     </View>
   );
@@ -85,12 +89,9 @@ const styles = StyleSheet.create({
     marginTop: 16,
     gap: 6,
   },
-  inputContainer: {
-    marginStart:12,
-    marginRight:12
-  },
   inputWrapper: {
     flexDirection: "row",
+    marginStart:6,
     alignItems: "center",
     backgroundColor: "#F9FAFB",
     borderWidth: 1,
@@ -98,15 +99,19 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     overflow: "hidden",
   },
+  inputView: {
+    flexDirection: "row",
+    alignItems: "center",
+    overflow: "hidden",
+  },
   input: {
-    flex: 1,
-    padding: 14,
+    padding: 11,
     fontSize: 16,
+    width:265,
     color: "#1F2937",
   },
   iconButton: {
     padding: 12,
-    marginRight: 4,
   },
   helperText: {
     fontSize: 14,
