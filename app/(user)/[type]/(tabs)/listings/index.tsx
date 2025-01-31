@@ -85,6 +85,7 @@ import {
   ReqPropertyData,
 } from "../../myListings/utils";
 import { showToast } from "@utils/showToast";
+import VideoLinkInput from "@components/VideoView/VideoLinks";
 
 interface CustomTableProps {
   children?: React.ReactNode;
@@ -154,7 +155,7 @@ export default function Listing() {
       latitude: "",
       image: [],
       amenity: [],
-      video: ["https://www.youtube.com/watch?v=HcQ5kspSi0I"],
+      video: [],
       amenities: "",
       propertyStatus: true,
     };
@@ -177,7 +178,6 @@ export default function Listing() {
     video: propertyData.video,
     amenities: propertyData.amenity,
     propertyStatus: propertyData.propertyStatus,
-    /*     user: isSavedLeadsItem(productDetail) ? productDetail?.property?.user : productDetail?.user */
     user: productDetail?.user,
   } as const;
 
@@ -227,11 +227,10 @@ export default function Listing() {
       latitude: "",
       image: [],
       amenity: [],
-      video: ["https://www.youtube.com/watch?v=HcQ5kspSi0I"],
+      video: [],
       amenities: "",
       propertyStatus: true,
     });
-    setVisible(false);
     setLoading(false);
   };
 
@@ -309,15 +308,25 @@ export default function Listing() {
       />
       <GapView length={20} />
       {params.type === "agent" && (
-        <PropertyImagesAndVideo
-          onChange={(images: ImageFile[]) => {
-            setPropertyData((prev) => ({
-              ...prev,
-              image: images,
-              video: ["https://www.youtube.com/watch?v=HcQ5kspSi0I"],
-            }));
-          }}
-        />
+    <CustomTable title="Property Images and Video" indexIcon={16}>
+          <PropertyImagesAndVideo
+            onChange={(images: ImageFile[]) => {
+              setPropertyData((prev) => ({
+                ...prev,
+                image: images,
+              }));
+            }}
+          />
+          <VideoLinkInput
+            links={propertyData.video}
+            onChange={(videos: string[]) => {
+              setPropertyData((prev) => ({
+                ...prev,
+                video: videos,
+              }));
+            }}
+          />
+        </CustomTable>
       )}
       <View style={styles(theme).footerButtons}>
         <PrimaryBtn
@@ -387,7 +396,7 @@ export default function Listing() {
           }}
         />
       </View>
-      <MyPopupModal visible={visible} bgDim>
+      <MyPopupModal visible={visible}>
         <MyPopupModal.Success
           message={
             params.type === "user"
@@ -1227,7 +1236,7 @@ const PropertyImagesAndVideo: React.FC<PropertyImagesAndVideoProps> = ({
   const mediaStyles = media.length > 0 ? styles().mediaStyles : {};
 
   return (
-    <CustomTable title="Property Images and Video" indexIcon={16}>
+    <>
       <View style={styles().AdInfo}>
         <ListingIcon iconIndex={4} />
         <View style={styles().AdField}>
@@ -1291,7 +1300,7 @@ const PropertyImagesAndVideo: React.FC<PropertyImagesAndVideoProps> = ({
           </>
         )}
       </View>
-    </CustomTable>
+    </>
   );
 };
 

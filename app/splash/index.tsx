@@ -29,6 +29,7 @@ import { useDispatch } from "react-redux";
 import { setUserData, setUserToken } from "features/user/userSlice";
 import { api } from "api";
 import { GoogleSignin } from "@react-native-google-signin/google-signin";
+import { SocketProvider } from "@components/SocketProvider";
 
 SplashScreen.preventAutoHideAsync(); //? Disable Auto Hide
 
@@ -52,6 +53,7 @@ export default function App() {
   const scale = useRef(new Animated.Value(1)).current;
   const rotate = useRef(new Animated.Value(0)).current;
   const dispatch = useDispatch();
+  const [authToken, setAuthToken] = useState<string | null>(null);
 
   const loadResourcesAsync = async () => {
     try {
@@ -85,6 +87,7 @@ export default function App() {
       api.setHeader("Authorization", `Bearer ${actualToken}`);
       dispatch(setUserData(userInfo?.user));
       dispatch(setUserToken(userInfo?.token as string));
+      setAuthToken(userInfo?.token as string);
       const role =
         userInfo && userInfo.user && userInfo.user.role
           ? userInfo.user.role
@@ -145,8 +148,10 @@ export default function App() {
   useEffect(() => {
     console.log("Google Configuration Done");
     GoogleSignin.configure({
-      webClientId:"492548208583-rpi38i7kjp5ml1vnujaak5p82prurde9.apps.googleusercontent.com",
-      iosClientId: "492548208583-4i851s5dkvcslrb1p9qvntjlna18ebcb.apps.googleusercontent.com",
+      webClientId:
+        "492548208583-rpi38i7kjp5ml1vnujaak5p82prurde9.apps.googleusercontent.com",
+      iosClientId:
+        "492548208583-4i851s5dkvcslrb1p9qvntjlna18ebcb.apps.googleusercontent.com",
       offlineAccess: true,
     });
     sessionCheckLoggedIn();
@@ -157,33 +162,35 @@ export default function App() {
   }
 
   return (
-    <ImageBackground
-      source={require("@assets/images/png/background.png")}
-      style={styles.background}
-      resizeMode="cover"
-    >
-      <Animated.Image
-        source={require("@assets/images/png/RB_Logo.png")}
-        style={[styles.logo, { transform: [{ translateY }, { scale }] }]}
-      />
-      <Animated.Image
-        source={require("@assets/images/png/loader_white.png")}
-        style={[
-          styles.loader,
-          {
-            transform: [
-              { translateY },
-              {
-                rotate: rotate.interpolate({
-                  inputRange: [0, 1],
-                  outputRange: ["360deg", "0deg"],
-                }),
-              },
-            ],
-          },
-        ]}
-      />
-    </ImageBackground>
+    <SocketProvider authToken={authToken}>
+      <ImageBackground
+        source={require("@assets/images/png/background.png")}
+        style={styles.background}
+        resizeMode="cover"
+      >
+        <Animated.Image
+          source={require("@assets/images/png/RB_Logo.png")}
+          style={[styles.logo, { transform: [{ translateY }, { scale }] }]}
+        />
+        <Animated.Image
+          source={require("@assets/images/png/loader_white.png")}
+          style={[
+            styles.loader,
+            {
+              transform: [
+                { translateY },
+                {
+                  rotate: rotate.interpolate({
+                    inputRange: [0, 1],
+                    outputRange: ["360deg", "0deg"],
+                  }),
+                },
+              ],
+            },
+          ]}
+        />
+      </ImageBackground>
+    </SocketProvider>
   );
 }
 

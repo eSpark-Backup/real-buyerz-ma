@@ -42,7 +42,7 @@ export default function MyPopupModal({
       <View
         style={[
           styles(theme).popupStyle,
-          { backgroundColor: bgDim ? "#00000088" : "transparent" },
+          { backgroundColor:/*  bgDim ?  */"#00000088"/*  : "transparent"  */},
         ]}
       >
         {children}

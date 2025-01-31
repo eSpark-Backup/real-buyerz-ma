@@ -92,7 +92,8 @@ export interface PropertyItem {
   isFeatured: boolean;
   isDeleted: boolean;
   propertyTypeId: string;
-  image: ImageFile[]
+  image: ImageFile[];
+  video:string[];
   createdAt: string;
   updatedAt: string;
   amenities: Amenity[];

@@ -33,6 +33,7 @@ const handleLoginUser = async (
 ): Promise<{ status: boolean; userInfo?: UserObject; message?: string }> => {
   try {
     const { data } = await api.post<AuthResponse>('/user/login', creds);
+    console.log("LOGIN RESPONSE "+JSON.stringify(data))
     if (data?.response?.data?.token) {
       return {
         status: true,

@@ -29,16 +29,14 @@ import { showToast } from "@utils/showToast";
 
 import { GoogleSignin } from "@react-native-google-signin/google-signin";
 import { handleSignUpUser } from "../Signup/utils";
-import {
-  handleSavePreferences,
-  PreferencesData,
-} from "app/(user)/[type]/preferences/utils";
+import { SocketProvider, useSocket } from "@components/SocketProvider";
 
 export default function SignIn() {
   const colorScheme = Appearance.getColorScheme();
   const theme = colorScheme === "dark" ? DarkTheme : LightTheme;
   const [loading, setLoading] = useState(false);
   const [isRememberedMe, setRememberedMe] = useState(false);
+  const [authToken, setAuthToken] = useState<string | null>(null);
   const { updateUserInSession, updateUserIsLoggedInSession } =
     useSessionManagement();
   const mergeUserRoleWithProfile = (
@@ -48,14 +46,11 @@ export default function SignIn() {
     return { ...profileData, role };
   };
   const dispatch = useDispatch();
+  const { newLoginMessage, sendMessage } = useSocket();
 
-  const [preferences, setPreferences] = useState<PreferencesData>({
-    emailNotification: false,
-    newsLetter: false,
-    automatedReport: false,
-    currency: "PKR",
-    areaUnit: "Sq. Ft",
-  });
+  useEffect(() => {
+    console.log("Socket Data Received " + JSON.stringify(newLoginMessage));
+  }, [newLoginMessage]);
 
   const signInUser = async (values: { email: string; password: string }) => {
     setLoading(true);
@@ -66,6 +61,8 @@ export default function SignIn() {
       const userInfo = response.userInfo;
       if (userInfo) {
         api.setHeader("Authorization", `Bearer ${userInfo?.token as string}`);
+        console.log("called")
+        setAuthToken(userInfo?.token as string);
         fetchAllUserProfileData(userInfo, isRememberedMe);
       } else {
         showToast("User info not available", "error");
@@ -101,7 +98,7 @@ export default function SignIn() {
       console.log("Google Sign In Success:", JSON.stringify(response));
 
       if (response) {
-          setLoading(true);
+        setLoading(true);
         const userResp = await handleSignUpUser(
           {
             firstName: response?.data?.user.givenName || "",
@@ -148,165 +145,171 @@ export default function SignIn() {
   };
 
   return (
-    <ScrollView contentContainerStyle={styles.main}>
-      <OverlayLoader isShow={loading} />
-      <View style={styles.top}>
-        <TouchableOpacity
-          activeOpacity={1}
-          onPress={() => router.push("(user)/anon/home")}
+    <SocketProvider authToken={authToken}>
+      <ScrollView contentContainerStyle={styles.main}>
+        <OverlayLoader isShow={loading} />
+        <View style={styles.top}>
+          <TouchableOpacity
+            activeOpacity={1}
+            onPress={() => router.push("(user)/anon/home")}
+          >
+            <MyText
+              text="Skip"
+              style={{ textDecorationLine: "underline" }}
+              size={16}
+              weight="500"
+              textColor="black"
+            />
+          </TouchableOpacity>
+          <MaterialIcons name="keyboard-arrow-right" size={24} color="black" />
+        </View>
+        <View style={styles.logo}>
+          <RLogo />
+        </View>
+
+        <Formik
+          initialValues={{
+            email: "",
+            password: "",
+            agreeToTerms: false,
+          }}
+          onSubmit={async (values, { resetForm }) => {
+            if (values.agreeToTerms) {
+              await signInUser(values);
+            } else {
+              showToast("You must agree to the Terms and Conditions!", "error");
+            }
+          }}
+          validationSchema={UserSignInSchema.signInForm}
         >
-          <MyText
-            text="Skip"
-            style={{ textDecorationLine: "underline" }}
-            size={16}
-            weight="500"
-            textColor="black"
-          />
-        </TouchableOpacity>
-        <MaterialIcons name="keyboard-arrow-right" size={24} color="black" />
-      </View>
-      <View style={styles.logo}>
-        <RLogo />
-      </View>
-
-      <Formik
-        initialValues={{
-          email: "",
-          password: "",
-          agreeToTerms: false,
-        }}
-        onSubmit={async (values, { resetForm }) => {
-          if (values.agreeToTerms) {
-            await signInUser(values);
-          } else {
-            showToast("You must agree to the Terms and Conditions!", "error");
-          }
-        }}
-        validationSchema={UserSignInSchema.signInForm}
-      >
-        {({
-          handleChange,
-          handleSubmit,
-          errors,
-          setFieldTouched,
-          touched,
-          values,
-          setFieldValue,
-        }) => (
-          <View style={styles.form}>
-            <MyInput
-              placeholder="Email address"
-              onChange={handleChange("email")}
-              onBlur={() => setFieldTouched("email")}
-              value={values.email}
-              style={styles.input}
-              placeholderColor="#666666"
-            />
-            {errors.email && touched.email && (
-              <MyText style={styles.errorText}>{errors.email}</MyText>
-            )}
-            <GapView length={25} />
-
-            <MyInput
-              placeholder="Password"
-              onChange={handleChange("password")}
-              onBlur={() => setFieldTouched("password")}
-              value={values.password}
-              style={styles.input}
-              password
-              placeholderColor="#666666"
-            />
-            {errors.password && touched.password && (
-              <MyText style={styles.errorText}>{errors.password}</MyText>
-            )}
-
-            <View style={styles.coupleContainer}>
-              <MyCheckbox
-                label="Remember"
-                onChange={(value) => {
-                  setRememberedMe(value);
-                }}
-                style={styles.rememberCont}
-                labelStyle={styles.label}
-                isAuth
+          {({
+            handleChange,
+            handleSubmit,
+            errors,
+            setFieldTouched,
+            touched,
+            values,
+            setFieldValue,
+          }) => (
+            <View style={styles.form}>
+              <MyInput
+                placeholder="Email address"
+                onChange={handleChange("email")}
+                onBlur={() => setFieldTouched("email")}
+                value={values.email}
+                style={styles.input}
+                placeholderColor="#666666"
               />
-              <Link
-                href={"/auth/ForgotPassword/forgotPassword"}
-                style={styles.forgotPass}
-              >
-                <MyText text="Forgot Password?" textColor="#2e6fac" size={14} />
-              </Link>
-            </View>
+              {errors.email && touched.email && (
+                <MyText style={styles.errorText}>{errors.email}</MyText>
+              )}
+              <GapView length={25} />
 
-            <View style={styles.box}>
-              <View style={styles.terms}>
+              <MyInput
+                placeholder="Password"
+                onChange={handleChange("password")}
+                onBlur={() => setFieldTouched("password")}
+                value={values.password}
+                style={styles.input}
+                password
+                placeholderColor="#666666"
+              />
+              {errors.password && touched.password && (
+                <MyText style={styles.errorText}>{errors.password}</MyText>
+              )}
+
+              <View style={styles.coupleContainer}>
                 <MyCheckbox
-                  label=""
-                  onChange={() => {
-                    setFieldValue("agreeToTerms", !values.agreeToTerms);
+                  label="Remember"
+                  onChange={(value) => {
+                    setRememberedMe(value);
                   }}
-                  checkboxStyle={styles.checkbox}
+                  style={styles.rememberCont}
+                  labelStyle={styles.label}
                   isAuth
                 />
-                <View style={styles.termsTextContainer}>
+                <Link
+                  href={"/auth/ForgotPassword/forgotPassword"}
+                  style={styles.forgotPass}
+                >
                   <MyText
-                    text="I have read and agree to the "
-                    style={styles.termsText}
+                    text="Forgot Password?"
+                    textColor="#2e6fac"
+                    size={14}
                   />
-                  <MyText
-                    text="Terms and Conditions"
-                    style={styles.termsDecText}
-                  />
-                  <MyText text=" and " style={styles.termsText} />
-                  <MyText text="Privacy Policy" style={styles.termsDecText} />
-                </View>
+                </Link>
               </View>
-              <MyButton
-                label="Submit"
-                textColor="white"
-                style={styles.button}
-                onPress={handleSubmit}
-              />
-              <MyText
-                text="Or"
-                size={14}
-                weight="600"
-                textColor="white"
-                style={styles.logo}
-              />
-              <View style={styles.google}>
+
+              <View style={styles.box}>
+                <View style={styles.terms}>
+                  <MyCheckbox
+                    label=""
+                    onChange={() => {
+                      setFieldValue("agreeToTerms", !values.agreeToTerms);
+                    }}
+                    checkboxStyle={styles.checkbox}
+                    isAuth
+                  />
+                  <View style={styles.termsTextContainer}>
+                    <MyText
+                      text="I have read and agree to the "
+                      style={styles.termsText}
+                    />
+                    <MyText
+                      text="Terms and Conditions"
+                      style={styles.termsDecText}
+                    />
+                    <MyText text=" and " style={styles.termsText} />
+                    <MyText text="Privacy Policy" style={styles.termsDecText} />
+                  </View>
+                </View>
+                <MyButton
+                  label="Submit"
+                  textColor="white"
+                  style={styles.button}
+                  onPress={handleSubmit}
+                />
                 <MyText
-                  text="Login with  "
+                  text="Or"
                   size={14}
                   weight="600"
                   textColor="white"
+                  style={styles.logo}
                 />
-                <TouchableOpacity onPress={handleGoogleSignIn}>
-                  <GLogo />
-                </TouchableOpacity>
+                <View style={styles.google}>
+                  <MyText
+                    text="Login with  "
+                    size={14}
+                    weight="600"
+                    textColor="white"
+                  />
+                  <TouchableOpacity onPress={handleGoogleSignIn}>
+                    <GLogo />
+                  </TouchableOpacity>
+                </View>
               </View>
-            </View>
 
-            <View style={styles.bottom}>
-              <MyText
-                text="Don't have an account?"
-                size={14}
-                weight="700"
-                textColor="white"
-              />
-              <Link href={"/auth/Signup/signUp"}>
+              <View style={styles.bottom}>
                 <MyText
-                  text=" Sign Up"
+                  text="Don't have an account?"
                   size={14}
                   weight="700"
-                  textColor={theme.colors.primary}
+                  textColor="white"
                 />
-              </Link>
+                <Link href={"/auth/Signup/signUp"}>
+                  <MyText
+                    text=" Sign Up"
+                    size={14}
+                    weight="700"
+                    textColor={theme.colors.primary}
+                  />
+                </Link>
+              </View>
             </View>
-          </View>
-        )}
-      </Formik>
-    </ScrollView>
+          )}
+        </Formik>
+      </ScrollView>
+    </SocketProvider>
   );
 }
 
