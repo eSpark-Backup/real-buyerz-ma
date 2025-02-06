@@ -30,6 +30,7 @@ import { showToast } from "@utils/showToast";
 import { GoogleSignin } from "@react-native-google-signin/google-signin";
 import { handleSignUpUser } from "../Signup/utils";
 import { SocketProvider, useSocket } from "@components/SocketProvider";
+import { SocketChatProvider } from "@components/SocketProvider/chat";
 
 export default function SignIn() {
   const colorScheme = Appearance.getColorScheme();
@@ -46,7 +47,7 @@ export default function SignIn() {
     return { ...profileData, role };
   };
   const dispatch = useDispatch();
-  const { newLoginMessage, sendMessage } = useSocket();
+  const { newLoginMessage } = useSocket();
 
   useEffect(() => {
     console.log("Socket Data Received " + JSON.stringify(newLoginMessage));
@@ -146,6 +147,7 @@ export default function SignIn() {
 
   return (
     <SocketProvider authToken={authToken}>
+    <SocketChatProvider authToken={authToken}>
       <ScrollView contentContainerStyle={styles.main}>
         <OverlayLoader isShow={loading} />
         <View style={styles.top}>
@@ -309,6 +311,7 @@ export default function SignIn() {
           )}
         </Formik>
       </ScrollView>
+      </SocketChatProvider>
     </SocketProvider>
   );
 }

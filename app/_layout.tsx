@@ -12,10 +12,9 @@ import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 import ToastConfig from "./utils/toastConfig";
+import { SocketProvider } from "@components/SocketProvider";
+import { SocketChatProvider } from "@components/SocketProvider/chat";
 
-LogBox.ignoreLogs([
-  "VirtualizedLists should never be nested inside plain ScrollViews",
-]);
 
 export default function RootLayout() {
   return (
@@ -35,22 +34,25 @@ function RootComponent() {
   );
 
   const [storedTheme, setStoredTheme] = useState(storage.getBoolean("theme"));
+  const [authToken, setAuthToken] = useState<string | null>(null);
 
   useEffect(() => {
-    const theme = storage.getBoolean("theme");
-    setStoredTheme(theme);
+    const token = storage.getString("userToken");
+    setAuthToken(token??null);
     console.log(theme ? "dark" : "default");
   }, [theme]);
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
-      <ThemeProvider value={theme === "Dark" ? DarkTheme : LightTheme}>
-        <StatusBar style={"dark"} translucent />
-        {/* <SafeAreaView style={{ flex: 1 }}> */}
-        <Slot />
-        {/* </SafeAreaView> */}
-        <ToastConfig />
-      </ThemeProvider>
+      <SocketProvider authToken={authToken}>
+      <SocketChatProvider authToken={authToken}> 
+        <ThemeProvider value={theme === "Dark" ? DarkTheme : LightTheme}>
+          <StatusBar style={"dark"} translucent />
+          <Slot />
+          <ToastConfig />
+        </ThemeProvider>
+        </SocketChatProvider>
+      </SocketProvider>
     </GestureHandlerRootView>
   );
 }

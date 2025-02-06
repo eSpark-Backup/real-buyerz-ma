@@ -6,7 +6,7 @@ import { setUserData, setUserToken } from "features/user/userSlice";
 import Toast from "react-native-toast-message";
 import { storage } from "store/mmkv";
 
-export const BASE_URL = "http://52.55.77.181/";
+export const BASE_URL = "https://dev-nest-realbuyerz.esparkconsultants.com/";
 
 export const api = create({
   baseURL: BASE_URL,
@@ -29,7 +29,6 @@ api.addResponseTransform((response) => {
   if (!response.ok) {
     switch (response.status) {
       case 401:
-        // Handle unauthorized, e.g., redirect to login
         Toast.show({
           text1: "Session Expired",
           text2: "Please log in again.",

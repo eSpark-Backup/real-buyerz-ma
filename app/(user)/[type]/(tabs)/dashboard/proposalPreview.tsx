@@ -54,8 +54,7 @@ interface Preview {
 
 function ProposalPreview() {
   const theme = useTheme() as MyTheme;
-  const { item, redirectionFrom } =
-    useLocalSearchParams<PropertyDetailScreenParams>();
+  const { item, redirectionFrom } = useLocalSearchParams<PropertyDetailScreenParams>();
   const params = useGlobalSearchParams<{
     type?: UserType;
     redirectionFrom: string;

@@ -1,22 +1,49 @@
-import React, { useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { StyleSheet, TouchableOpacity, View, FlatList } from "react-native";
 import { useTheme } from "@react-navigation/native";
 import {
   router,
   useLocalSearchParams,
   useGlobalSearchParams,
+  useFocusEffect,
 } from "expo-router";
 
 import { ReloadIcon } from "@assets/images";
 import { MyText, InboxList, Card } from "@components";
 import { MyTheme, UserType } from "@types";
+import { useSocket } from "@components/SocketProvider";
+import { Chat, handleGetChats } from "./utils";
+import { storage } from "store/mmkv";
 
 const Inbox: React.FC = () => {
   const theme = useTheme() as MyTheme;
   const [tab, setTab] = useState("inbox");
+  const [chats, setChats] = useState<Chat[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [alertCounts, setAlertCounts] = useState<Map<string, number>>(new Map());
   const params = useGlobalSearchParams<{ type: UserType }>();
+  const { refetchChats } = useSocket();
 
-  console.log("🚀 ~ Inbox params:", params);
+  useFocusEffect(
+    useCallback(() => {
+      fetchChats(); 
+      loadAlertCounts();
+    }, [])
+  );
+
+  useEffect(() => {
+    if (refetchChats) fetchChats();
+  }, [refetchChats]);
+
+  const fetchChats = async () => {
+    setIsLoading(true);
+    const result = await handleGetChats();
+    console.log("Chats " + JSON.stringify(result));
+    if (result.status && result.chats) {
+      setChats(result.chats);
+    }
+    setIsLoading(false);
+  };
 
   const handleTab = (buttonName: string) => {
     if (tab !== buttonName) {
@@ -24,61 +51,22 @@ const Inbox: React.FC = () => {
     }
   };
 
-  const listData = [
-    {
-      title: "John Doe",
-      subTitle: "Lorem ipsum dolor sit amet, consectetur adipiscing elit asdsa",
-      time: "10:00 AM",
-      count: "1",
-      avatarUrl: "https://picsum.photos/id/151/130",
-    },
-    {
-      title: "John Doe",
-      subTitle: "Lorem ipsum dolor sit amet, consectetur adipiscing elit",
-      time: "10:00 AM",
-      avatarUrl: "https://mui.com/static/images/avatar/2.jpg",
-    },
-    {
-      title: "John Doe",
-      subTitle: "Lorem ipsum dolor sit amet, consectetur adipiscing elit",
-      time: "10:00 AM",
-      count: "3",
-      avatarUrl: "https://mui.com/static/images/avatar/1.jpg",
-    },
-    {
-      title: "John Doe",
-      subTitle: "Lorem ipsum dolor sit amet, consectetur adipiscing elit",
-      time: "10:00 AM",
-      avatarUrl: "https://mui.com/static/images/avatar/3.jpg",
-    },
-    {
-      title: "John Doe",
-      subTitle: "Lorem ipsum dolor sit amet, consectetur adipiscing elit",
-      time: "10:00 AM",
-      count: "5",
-      avatarUrl: "https://picsum.photos/id/151/130",
-    },
-    {
-      title: "John Doe",
-      subTitle: "Lorem ipsum dolor sit amet, consectetur adipiscing elit",
-      time: "10:00 AM",
-      count: "2",
-      avatarUrl: "https://picsum.photos/id/151/130",
-    },
-    {
-      title: "John Doe",
-      subTitle: "Lorem ipsum dolor sit amet, consectetur adipiscing elit",
-      time: "10:00 AM",
-      avatarUrl: "https://picsum.photos/id/151/130",
-    },
-  ];
+  const loadAlertCounts = () => {
+    const storedAlerts = JSON.parse(storage.getString("alertCount") || "[]");
+    setAlertCounts(new Map<string, number>(storedAlerts));
+  };
+
+  const handleRefresh = () => {
+    fetchChats();
+    loadAlertCounts();
+  };
 
   return (
     <View style={styles(theme).wrapper}>
       <View style={styles(theme).card}>
         <View style={styles(theme).tabRow}>
           <View style={styles(theme).tabsStyle}>
-            <TouchableOpacity activeOpacity={1}>
+            <TouchableOpacity activeOpacity={1} onPress={handleRefresh}>
               <ReloadIcon />
             </TouchableOpacity>
             <View>
@@ -101,17 +89,17 @@ const Inbox: React.FC = () => {
             </View>
             <TouchableOpacity
               activeOpacity={1}
-              onPress={() => handleTab("archieve")}
+              onPress={() => handleTab("archive")}
               style={[
                 styles(theme).singleTab,
-                tab === "archieve" ? styles(theme).selectedTab : null,
+                tab === "archive" ? styles(theme).selectedTab : null,
               ]}
             >
               <MyText
                 text="Archive"
                 size={17}
                 textColor={
-                  tab === "archieve" ? theme.colors.primary : theme.colors.text
+                  tab === "archive" ? theme.colors.primary : theme.colors.text
                 }
               />
             </TouchableOpacity>
@@ -119,21 +107,40 @@ const Inbox: React.FC = () => {
         </View>
         {tab === "inbox" && (
           <FlatList
-            data={listData}
+            data={chats}
+            refreshing={isLoading}
+            onRefresh={fetchChats}
             showsVerticalScrollIndicator={false}
-            renderItem={({ item, index }) => (
+            ListEmptyComponent={() => (
+              <View style={{ alignItems: "center", marginTop: 20 }}>
+                <MyText
+                  text={isLoading ? "Loading chats..." : "No chats found"}
+                />
+              </View>
+            )}
+            renderItem={({ item, index }) => {
+              const unreadCount = alertCounts.get(item._id) || 0;
+              return(
               <InboxList
-                key={index}
-                title={item.title}
-                subTitle={item.subTitle}
-                time={item.time}
-                count={item.count}
-                avatarUrl={item.avatarUrl}
+                key={item._id}
+                title={item.members.name}
+                subTitle={`${item.lastMessage.content}`}
+                count={unreadCount > 0 ? unreadCount.toString() : ""}
+                avatarUrl={item.members.avatar.url??"https://picsum.photos/id/151/130"}
+                time={new Date(item.updatedAt).toLocaleTimeString()}
                 onPress={() =>
-                  router.push(`(user)/${params?.type!}/inbox/chat`)
+                  router.navigate({
+                    pathname: `(user)/${params?.type!}/inbox/chat`,
+                    params: {
+                      chatId: item._id,
+                      name: item.members.name,
+                      url: item.members.avatar.url??"https://picsum.photos/id/151/130"
+                    }
+                  })
                 }
               />
-            )}
+              )
+            }}
             ItemSeparatorComponent={() => (
               <Card.Divider style={{ width: "85%", alignSelf: "center" }} />
             )}
@@ -144,6 +151,7 @@ const Inbox: React.FC = () => {
     </View>
   );
 };
+
 export default Inbox;
 
 const styles = (theme?: MyTheme) =>

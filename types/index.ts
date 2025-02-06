@@ -177,3 +177,9 @@ export type PropertyDetailScreenParams = {
   item: string;
   redirectionFrom:string
 }
+
+export type ChatScreenParams = {
+  chatId: string;
+  url:string;
+  name:string;
+}
