@@ -82,6 +82,7 @@ const handleUpdateUserProfile = async (
     });
 
     if (profileImageFile != null) {
+      console.log("profileImageFile"+JSON.stringify(profileImageFile))
       formData.append('image', profileImageFile);
     }
 

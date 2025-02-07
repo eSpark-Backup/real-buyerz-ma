@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Platform, StyleSheet, View } from "react-native";
 import { useTheme } from "@react-navigation/native";
 import {
@@ -39,6 +39,7 @@ import { setUserData, setUserToken, UserState } from "features/user/userSlice";
 import { useSelector } from "react-redux";
 import { RootState } from "@store";
 import { GoogleSignin } from "@react-native-google-signin/google-signin";
+import { storage } from "store/mmkv";
 
 const DrawerContent = (props: DrawerContentComponentProps) => {
   const [confirmLogout, setConfirmLogout] = useState(false);
@@ -151,6 +152,14 @@ export default function MainLayout() {
   const theme = useTheme() as MyTheme;
   const params = useLocalSearchParams<{ type: UserType }>();
   console.log("param idhar hai" + JSON.stringify(params));
+  const [alertCounts, setAlertCounts] = useState<number>(0);
+  useEffect(() => {
+    const storedAlerts = JSON.parse(storage.getString("alertCount") || "[]");
+    console.log("storedAlerts "+ JSON.parse(storage.getString("alertCount") || "[]"))
+    const alertMap = new Map<string, number>(storedAlerts);
+    const totalAlerts = Array.from(alertMap.values()).reduce((sum, count) => sum + count, 0);
+    setAlertCounts(totalAlerts); 
+  });
 
   return (
     <>
@@ -204,7 +213,29 @@ export default function MainLayout() {
               />
             ),
             drawerLabel: ({ focused }) => (
-              <DrawerLabel label="Inbox" theme={theme} focused={focused} />
+              <View style={{ flexDirection: "row", alignItems: "center" }}>
+                <DrawerLabel label="Inbox" theme={theme} focused={focused} />
+                {alertCounts > 0 && (
+                  <View
+                    style={{
+                      backgroundColor: "red",
+                      borderRadius: 10,
+                      paddingHorizontal: 6,
+                      marginLeft: 8,
+                      minWidth: 20,
+                      alignItems: "center",
+                      justifyContent: "center",
+                    }}
+                  >
+                    <MyText
+                      text={alertCounts.toString()}
+                      size={12}
+                      weight="600"
+                      textColor="#fff"
+                    />
+                  </View>
+                )}
+              </View>
             ),
           }}
           initialParams={{ type: params?.type }}

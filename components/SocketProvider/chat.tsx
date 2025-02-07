@@ -5,6 +5,7 @@ import React, {
   useEffect,
   useContext,
   ReactNode,
+  useRef,
 } from "react";
 import Toast from "react-native-toast-message";
 import { io, Socket } from "socket.io-client";
@@ -80,10 +81,12 @@ export const SocketChatProvider: React.FC<SocketChatProviderProps> = ({
     useState<any>(null);
   const [newAttachments, setNewAttachments] = useState<any>(null);
   const [startTypingReceived, setStartTyping] = useState<boolean>(false);
+  const sentMessagesRef = useRef(new Set<string>());
 
   useEffect(() => {
     if (!authToken) return;
 
+    console.log("authToken "+authToken)
     const socketInstance = io(
       "https://dev-express-realbuyerz.esparkconsultants.com/socket",
       {
@@ -112,10 +115,16 @@ export const SocketChatProvider: React.FC<SocketChatProviderProps> = ({
 
     socketInstance.on("NEW_MESSAGE", (chatMessage: ChatMessage) => {
       console.log("New message received:", chatMessage);
+      // console.log("sentMessages:", sentMessagesRef);
+      if (!sentMessagesRef.current.has(chatMessage.chatId)) {
+        showToast();
+      } else {
+        sentMessagesRef.current.delete(chatMessage.chatId);
+      }
       setNewMessageReceived(chatMessage);
     });
     socketInstance.on("NEW_ATTACHMENT", (chatMessage: any) => {
-      console.log("New message received:", chatMessage);
+      console.log("NEW_ATTACHMENT received:", chatMessage);
       // setNewAttachments(chatMessage);
     });
     socketInstance.on("START_TYPING", (chatMessage: ChatTyping) => {
@@ -128,6 +137,7 @@ export const SocketChatProvider: React.FC<SocketChatProviderProps> = ({
     });
 
     socketInstance.on("NEW_MESSAGE_ALERT", (data) => {
+
       let alertCount = new Map<string, number>(
         JSON.parse(storage.getString("alertCount") || "[]")
       );
@@ -138,7 +148,6 @@ export const SocketChatProvider: React.FC<SocketChatProviderProps> = ({
       setTimeout(() => {
         setNewMessageAlertRecieved(null);
       }, 500);
-      console.log("Alert Count Stored:", storage.getString("alertCount"));
     });
 
     setSocket(socketInstance);
@@ -150,9 +159,21 @@ export const SocketChatProvider: React.FC<SocketChatProviderProps> = ({
     };
   }, [authToken]);
 
+  const showToast = () => {
+    Toast.show({
+      type: 'info', 
+      text1: 'Inbox',
+      text2: 'You may have unread messages.',
+      position: 'top', // 'top' | 'bottom'
+      visibilityTime: 4000,
+      autoHide: true,
+    });
+  };
+
   const sendMessage = (chatMessage: ChatMessage) => {
     if (socket && connected) {
       socket.emit("NEW_MESSAGE", chatMessage);
+      sentMessagesRef.current.add(chatMessage.chatId);
       console.log("Message sent:", chatMessage);
     } else {
       console.error("Socket Chat is not connected");

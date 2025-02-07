@@ -14,19 +14,23 @@ import { MyTheme, UserType } from "@types";
 import { useSocket } from "@components/SocketProvider";
 import { Chat, handleGetChats } from "./utils";
 import { storage } from "store/mmkv";
+import { useChatSocket } from "@components/SocketProvider/chat";
 
 const Inbox: React.FC = () => {
   const theme = useTheme() as MyTheme;
   const [tab, setTab] = useState("inbox");
   const [chats, setChats] = useState<Chat[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [alertCounts, setAlertCounts] = useState<Map<string, number>>(new Map());
+  const [alertCounts, setAlertCounts] = useState<Map<string, number>>(
+    new Map()
+  );
   const params = useGlobalSearchParams<{ type: UserType }>();
   const { refetchChats } = useSocket();
+  const { newMessageAlertReceived } = useChatSocket();
 
   useFocusEffect(
     useCallback(() => {
-      fetchChats(); 
+      fetchChats();
       loadAlertCounts();
     }, [])
   );
@@ -34,6 +38,13 @@ const Inbox: React.FC = () => {
   useEffect(() => {
     if (refetchChats) fetchChats();
   }, [refetchChats]);
+
+  useEffect(() => {
+    if (newMessageAlertReceived) {
+      fetchChats();
+      loadAlertCounts();
+    }
+  }, [newMessageAlertReceived]);
 
   const fetchChats = async () => {
     setIsLoading(true);
@@ -120,26 +131,31 @@ const Inbox: React.FC = () => {
             )}
             renderItem={({ item, index }) => {
               const unreadCount = alertCounts.get(item._id) || 0;
-              return(
-              <InboxList
-                key={item._id}
-                title={item.members.name}
-                subTitle={`${item.lastMessage.content}`}
-                count={unreadCount > 0 ? unreadCount.toString() : ""}
-                avatarUrl={item.members.avatar.url??"https://picsum.photos/id/151/130"}
-                time={new Date(item.updatedAt).toLocaleTimeString()}
-                onPress={() =>
-                  router.navigate({
-                    pathname: `(user)/${params?.type!}/inbox/chat`,
-                    params: {
-                      chatId: item._id,
-                      name: item.members.name,
-                      url: item.members.avatar.url??"https://picsum.photos/id/151/130"
-                    }
-                  })
-                }
-              />
-              )
+              return (
+                <InboxList
+                  key={item._id}
+                  title={item.members.name}
+                  subTitle={`${item.lastMessage.content}`}
+                  count={unreadCount > 0 ? unreadCount.toString() : ""}
+                  avatarUrl={
+                    item.members.avatar.url ??
+                    "https://picsum.photos/id/151/130"
+                  }
+                  time={new Date(item.updatedAt).toLocaleTimeString()}
+                  onPress={() =>
+                    router.navigate({
+                      pathname: `(user)/${params?.type!}/inbox/chat`,
+                      params: {
+                        chatId: item._id,
+                        name: item.members.name,
+                        url:
+                          item.members.avatar.url ??
+                          "https://picsum.photos/id/151/130",
+                      },
+                    })
+                  }
+                />
+              );
             }}
             ItemSeparatorComponent={() => (
               <Card.Divider style={{ width: "85%", alignSelf: "center" }} />

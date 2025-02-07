@@ -4,6 +4,9 @@ interface ApiResponse {
   Chats: Chat[];
   message: string;
 }
+interface ApiAttachmentResponse {
+  message: UserAllChats;
+}
 interface ApiChatDetailResponse {
   chat: ChatDetails;
   success: Boolean;
@@ -198,37 +201,41 @@ const handleAllUserChats = async (
 
 const handleChatAttachments = async (
   chatId: string,
-  profileImageFile?: File | null
+  imageFiles: File[]
 ): Promise<{
   status: boolean;
-  data?: any;
+  data?: UserAllChats;
   message?: string;
 }> => {
   try {
     const formData = new FormData();
-    if (profileImageFile != null) {
-      formData.append('files', profileImageFile);
+    if (imageFiles.length > 0) {
+      imageFiles.forEach((file) => {
+        formData.append('files', file);
+      });
     }
     formData.append('chatId', chatId);
-    const { data } = await api.post<any>("chat/upload", formData, {
+
+    const { data } = await api.post<ApiAttachmentResponse>("chat/upload", formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
       },
     });
-    if (data?.success) {
+
+    if (data?.message) {
       return {
         status: true,
-        data: data.response.data,
+        data: data.message,
       };
     }
-    console.log(`Response FORMDATA ${JSON.stringify(formData)}`)
-    console.log(`Response ${JSON.stringify(data)}`)
-    return { status: false, message: data?.message || "Update failed." };
+
+    console.log(`Response:`, JSON.stringify(formData));
+    
+    return { status: false, message: "Update failed." };
   } catch (error) {
     return { status: false, message: "An error occurred." };
   }
 };
-
 
 export {
   handleGetChats,
