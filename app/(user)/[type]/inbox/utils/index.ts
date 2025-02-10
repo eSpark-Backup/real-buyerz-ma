@@ -15,6 +15,7 @@ interface ApiUserAllChats {
   messages: UserAllChats[];
   success: Boolean;
   totalPages: number;
+  totalItems: number;
 }
 
 interface Chat {
@@ -160,16 +161,15 @@ const handleChatDetails = async (
 
 const handleAllUserChats = async (
   chatId: string,
-  page: number
+  pageNumber: number
 ): Promise<{
   status: boolean;
   userAllChats?: ApiUserAllChats;
   message?: string;
 }> => {
   try {
-    const response = await api.get<ApiUserAllChats>(`chat/message/${chatId}`, {
-      params: { page: page }
-    });
+    const response = await api.get<ApiUserAllChats>(`chat/message/${chatId}`, { page: pageNumber });
+
 
     if (response && response.data) {
       const { data } = response;

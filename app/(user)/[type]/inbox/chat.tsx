@@ -118,7 +118,7 @@ export default function ChatScreen() {
 
   useEffect(() => {
     if (allUserChats.length > 0) {
-      scrollToBottom()
+      // scrollToBottom()
     }
   }, [allUserChats]);
 
@@ -178,7 +178,6 @@ export default function ChatScreen() {
 
   const fetchUserAllChats = async (pageNumber = 1, isLoadMore = false) => {
     try {
-      // Don't fetch if we're already loading or know there are no more messages
       if (isLoadingMore || (!hasMoreMessages && isLoadMore)) {
         return;
       }
@@ -193,8 +192,11 @@ export default function ChatScreen() {
       
       if (result.status && result.userAllChats) {
         const newMessages = result.userAllChats.messages;
-        
-        if (result.userAllChats.totalPages >= pageNumber || !newMessages?.length) {
+        console.log("totalPages "+result.userAllChats.totalPages);
+        console.log("totalItems "+result.userAllChats.totalItems);
+        console.log("allUserChats "+allUserChats.length);
+
+        if (pageNumber>=result.userAllChats.totalPages || allUserChats.length>=result.userAllChats.totalItems) {
           console.log("No more messages");
           setHasMoreMessages(false);
           return;
@@ -203,19 +205,17 @@ export default function ChatScreen() {
         setHasMoreMessages(true);
         setAllUserChats(prevChats => {
           if (isLoadMore) {
+            console.log("isLoadMore");
             const existingIds = new Set(prevChats.map(chat => chat._id));
             const uniqueNewMessages = newMessages.filter(msg => !existingIds.has(msg._id));
             return [...prevChats, ...uniqueNewMessages];
           } else {
+            console.log("prevChats");
             return newMessages;
           }
         });
 
-        // if (newMessages.length < 20) { 
-        // }
       } 
-      // else {
-      // }
     } catch (error) {
       console.error("Error fetching chats:", error);
       setHasMoreMessages(false);
@@ -424,7 +424,6 @@ export default function ChatScreen() {
         }
         onEndReached={handleLoadMore}
         onEndReachedThreshold={0.5}
-        inverted={false}
         ListFooterComponent={() => 
           isLoadingMore ? (
             <View style={styles(theme).loadingIndicator}>
