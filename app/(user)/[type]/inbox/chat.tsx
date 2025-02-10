@@ -73,6 +73,8 @@ export default function ChatScreen() {
     : null;
   const flatListRef = useRef<FlatList<any> | null>(null);
   const currentUserChatId = userProfile?.chatId;
+  const [hasMoreMessages, setHasMoreMessages] = useState(true);
+  const [isEndReached, setIsEndReached] = useState(false);
 
   const mapIncomingMessage = (incomingMsg: IncomingMessage): UserAllChats => {
     return {
@@ -116,16 +118,17 @@ export default function ChatScreen() {
 
   useEffect(() => {
     if (allUserChats.length > 0) {
-      setTimeout(scrollToBottom, 100);
+      scrollToBottom()
     }
   }, [allUserChats]);
 
   useEffect(() => {
     (async () => {
-      const { status } =
-        await ImagePicker.requestMediaLibraryPermissionsAsync();
-      if (status !== "granted") {
-        alert("Sorry, we need camera roll permissions to upload images!");
+      const galleryStatus = await ImagePicker.requestMediaLibraryPermissionsAsync();
+      const cameraStatus = await ImagePicker.requestCameraPermissionsAsync();
+      
+      if (galleryStatus.status !== "granted" && cameraStatus.status !== "granted") {
+        alert("Sorry, we need camera and gallery permissions to share images!");
       }
     })();
   }, []);
@@ -173,15 +176,52 @@ export default function ChatScreen() {
     }
   };
 
-  const fetchUserAllChats = async () => {
+  const fetchUserAllChats = async (pageNumber = 1, isLoadMore = false) => {
     try {
-      const result = await handleAllUserChats(chatId);
-      // console.log("All User Chats " + JSON.stringify(result));
-      if (result.status && result.userAllChats) {
-        setAllUserChats(result.userAllChats);
+      // Don't fetch if we're already loading or know there are no more messages
+      if (isLoadingMore || (!hasMoreMessages && isLoadMore)) {
+        return;
       }
+
+      setIsLoadingMore(isLoadMore);
+      if (!isLoadMore) {
+        setIsLoading(true);
+      }
+
+      console.log("Fetching page:", pageNumber);
+      const result = await handleAllUserChats(chatId, pageNumber);
+      
+      if (result.status && result.userAllChats) {
+        const newMessages = result.userAllChats.messages;
+        
+        if (result.userAllChats.totalPages===pageNumber||(!newMessages || newMessages.length === 0)) {
+          console.log("No more messages");
+          setHasMoreMessages(false);
+        
+        }
+        else{
+          console.log("more messages"+newMessages.length);
+          setHasMoreMessages(true);
+        }
+
+        setAllUserChats(prevChats => {
+          if (isLoadMore) {
+            const existingIds = new Set(prevChats.map(chat => chat._id));
+            const uniqueNewMessages = newMessages.filter(msg => !existingIds.has(msg._id));
+            return [...prevChats, ...uniqueNewMessages];
+          } else {
+            return newMessages;
+          }
+        });
+
+        // if (newMessages.length < 20) { 
+        // }
+      } 
+      // else {
+      // }
     } catch (error) {
       console.error("Error fetching chats:", error);
+      setHasMoreMessages(false);
     } finally {
       setIsLoading(false);
       setIsLoadingMore(false);
@@ -192,8 +232,19 @@ export default function ChatScreen() {
   const onRefresh = useCallback(async () => {
     setRefreshing(true);
     setPage(1);
-    await fetchUserAllChats();
+    setHasMoreMessages(true);
+    await fetchUserAllChats(1, false);
   }, []);
+
+  const handleLoadMore = () => {
+    console.log("isLoadingMore"+isLoadingMore);
+    console.log("hasMoreMessages"+hasMoreMessages);
+    if (!isLoadingMore && hasMoreMessages) {
+      const nextPage = page + 1;
+      setPage(nextPage);
+      fetchUserAllChats(nextPage, true);
+    }
+  };
 
   const renderHeader = (toggleDropdown: () => void, theme?: MyTheme) => {
     return (
@@ -347,41 +398,61 @@ export default function ChatScreen() {
       </>
     );
   };
-
+  
   return (
     <View style={styles(theme).container}>
-      <OverlayLoader isShow={loading} />
-      <Card radius={9} style={styles(theme).card}>
-        {renderHeader(toggleDropdown, theme)}
-        {allUserChats.length > 0 && (
-          <FlatList
-            ref={flatListRef}
-            data={allUserChats}
-            contentContainerStyle={{ paddingBottom: 10 }}
-            showsVerticalScrollIndicator={true}
-            renderItem={renderMessage}
-            keyExtractor={(item, index) => `${item._id}-${index}`}
-            keyboardShouldPersistTaps="handled"
-            keyboardDismissMode="interactive"
-            refreshControl={
-              <RefreshControl
-                refreshing={refreshing}
-                onRefresh={onRefresh}
-                tintColor={theme?.colors.primary}
-              />
-            }
-            inverted={false}
-            ListFooterComponent={isLoadingMore ? LoadingIndicator(theme) : null}
-            initialNumToRender={15}
-            maxToRenderPerBatch={10}
-            windowSize={10}
-          />
-        )}
+    <Card radius={9} style={styles(theme).card}>
+      {renderHeader(toggleDropdown, theme)}
 
-        {renderFooter(theme, chatDetails, chatId)}
-        {isDropdownVisible && renderDropdown(theme)}
-      </Card>
-    </View>
+      {loading ? (
+        <View style={styles(theme).centeredContainer}>
+          <ActivityIndicator size="large" color={theme?.colors.primary} />
+        </View>
+      ) : allUserChats.length > 0 ? (
+        <FlatList
+        ref={flatListRef}
+        data={allUserChats}
+        contentContainerStyle={{ paddingBottom: 10 }}
+        showsVerticalScrollIndicator={true}
+        renderItem={renderMessage}
+        keyExtractor={(item, index) => `${item._id}-${index}`}
+        keyboardShouldPersistTaps="handled"
+        keyboardDismissMode="interactive"
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={onRefresh}
+            tintColor={theme?.colors.primary}
+          />
+        }
+        onEndReached={handleLoadMore}
+        onEndReachedThreshold={0.5}
+        inverted={false}
+        ListFooterComponent={() => 
+          isLoadingMore ? (
+            <View style={styles(theme).loadingIndicator}>
+              <ActivityIndicator size="small" color={theme?.colors.primary} />
+            </View>
+          ) : !hasMoreMessages && allUserChats.length > 0 ? (
+            <View style={styles(theme).noMoreMessages}>
+              {/* <MyText text="No more messages" size={12} textColor="#969696" /> */}
+            </View>
+          ) : null
+        }
+        initialNumToRender={15}
+        maxToRenderPerBatch={10}
+        windowSize={10}
+      />
+      ) : (
+        <View style={styles(theme).centeredContainer}>
+          <Text style={styles(theme).noChatsText}>No Chats Available</Text>
+        </View>
+      )}
+
+      {renderFooter(theme, chatDetails, chatId)}
+      {isDropdownVisible && renderDropdown(theme)}
+    </Card>
+  </View>
   );
 }
 
@@ -411,7 +482,11 @@ const renderDropdown = (theme?: MyTheme) => {
   );
 };
 
-const renderFooter = (theme: MyTheme, chatDetails: ChatDetails | undefined, chatId:string) => {
+const renderFooter = (
+  theme: MyTheme,
+  chatDetails: ChatDetails | undefined,
+  chatId: string
+) => {
   const [newMessage, setNewMessage] = useState("");
   const [isUserTyping, setTypingUser] = useState<boolean>(false);
   const typingTimeoutRef = useRef<any>(null);
@@ -462,7 +537,34 @@ const renderFooter = (theme: MyTheme, chatDetails: ChatDetails | undefined, chat
     }, 2000);
   };
 
-  const handleImageSelection = async () => {
+  const handleCameraCapture = async () => {
+    try {
+      const result = await ImagePicker.launchCameraAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        allowsEditing: true,
+        aspect: [4, 3],
+        quality: 1,
+      });
+  
+      if (!result.canceled && result.assets.length > 0) {
+        const selectedImage = result.assets[0];
+        const file: File = {
+          uri: selectedImage.uri,
+          type: selectedImage.type || "image/jpeg",
+          name: "camera_image.jpg",
+          lastModified: Date.now(),
+          size: selectedImage.fileSize || 0,
+        };
+  
+        handleSendAttachment(file);
+      }
+    } catch (error) {
+      console.error("Error capturing image:", error);
+      alert("Error capturing image. Please try again.");
+    }
+  };
+  
+  const handleGallerySelection = async () => {
     try {
       const result = await ImagePicker.launchImageLibraryAsync({
         mediaTypes: ImagePicker.MediaTypeOptions.Images,
@@ -470,12 +572,13 @@ const renderFooter = (theme: MyTheme, chatDetails: ChatDetails | undefined, chat
         aspect: [4, 3],
         quality: 1,
       });
+  
       if (!result.canceled && result.assets.length > 0) {
         const selectedImage = result.assets[0];
         const file: File = {
           uri: selectedImage.uri,
           type: selectedImage.type || "image/jpeg",
-          name: selectedImage.fileName || "image.jpg",
+          name: selectedImage.fileName || "gallery_image.jpg",
           lastModified: Date.now(),
           size: selectedImage.fileSize || 0,
         };
@@ -487,7 +590,7 @@ const renderFooter = (theme: MyTheme, chatDetails: ChatDetails | undefined, chat
       alert("Error selecting image. Please try again.");
     }
   };
-  
+
   const handleSendAttachment = async (file: File) => {
     try {
       const response = await handleChatAttachments(chatId || "", [file]);
@@ -517,8 +620,13 @@ const renderFooter = (theme: MyTheme, chatDetails: ChatDetails | undefined, chat
               items={[
                 {
                   key: "1",
-                  icon: "image-area",
-                  onPress: handleImageSelection,
+                  icon: "camera",
+                  onPress: handleCameraCapture,
+                },
+                {
+                  key: "2",
+                  icon: "image",
+                  onPress: handleGallerySelection,
                 },
               ]}
             />
@@ -544,24 +652,32 @@ const renderFooter = (theme: MyTheme, chatDetails: ChatDetails | undefined, chat
   );
 };
 
-const LoadingIndicator= (theme?: MyTheme) =>{
-  return(
-  <View>
-    <ActivityIndicator size="small" color={theme?.colors.primary} />
-  </View>
-  );
-}
-
 const styles = (theme?: MyTheme) =>
   StyleSheet.create({
+    loadingIndicator: {
+      paddingVertical: 20,
+      alignItems: 'center',
+    },
+    noMoreMessages: {
+      alignItems: 'center',
+    },
+    centeredContainer: {
+      flex: 1,
+      justifyContent: "center",
+      alignItems: "center",
+    },
+    noChatsText: {
+      fontSize: 18,
+      color: "black",
+    },
     container: {
       flex: 1,
       paddingHorizontal: 10,
       paddingVertical: 2,
-      paddingBottom:36,
+      paddingBottom: 36,
     },
     card: {
-      flex: 1, 
+      flex: 1,
       height: "100%",
     },
     messageContentContainer: {

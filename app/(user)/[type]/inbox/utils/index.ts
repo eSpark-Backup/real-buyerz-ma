@@ -159,14 +159,17 @@ const handleChatDetails = async (
 };
 
 const handleAllUserChats = async (
-  chatId: string
+  chatId: string,
+  page: number
 ): Promise<{
   status: boolean;
-  userAllChats?: UserAllChats[];
+  userAllChats?: ApiUserAllChats;
   message?: string;
 }> => {
   try {
-    const response = await api.get<ApiUserAllChats>(`chat/message/${chatId}`);
+    const response = await api.get<ApiUserAllChats>(`chat/message/${chatId}`, {
+      params: { page: page }
+    });
 
     if (response && response.data) {
       const { data } = response;
@@ -175,7 +178,7 @@ const handleAllUserChats = async (
       if (data.messages) {
         return {
           status: true,
-          userAllChats: data.messages,
+          userAllChats: data,
         };
       }
 
