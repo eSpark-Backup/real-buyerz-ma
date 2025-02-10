@@ -194,16 +194,13 @@ export default function ChatScreen() {
       if (result.status && result.userAllChats) {
         const newMessages = result.userAllChats.messages;
         
-        if (result.userAllChats.totalPages===pageNumber||(!newMessages || newMessages.length === 0)) {
+        if (result.userAllChats.totalPages >= pageNumber || !newMessages?.length) {
           console.log("No more messages");
           setHasMoreMessages(false);
-        
+          return;
         }
-        else{
-          console.log("more messages"+newMessages.length);
-          setHasMoreMessages(true);
-        }
-
+        console.log("more messages", newMessages.length);
+        setHasMoreMessages(true);
         setAllUserChats(prevChats => {
           if (isLoadMore) {
             const existingIds = new Set(prevChats.map(chat => chat._id));
