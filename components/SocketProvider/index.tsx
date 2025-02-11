@@ -5,12 +5,15 @@ import React, {
   useContext,
   ReactNode,
 } from "react";
+import Toast from "react-native-toast-message";
+import { io, Socket } from "socket.io-client";
 
 interface SocketContextType {
-  socket: WebSocket | null;
+  socket: Socket | null;
   connected: boolean;
-  error: Error | Event | null;
+  error: Error | null;
   newLoginMessage: any;
+  refetchChats: Boolean;
   sendMessage: (message: string) => void;
 }
 
@@ -19,6 +22,7 @@ const SocketContext = createContext<SocketContextType>({
   connected: false,
   error: null,
   newLoginMessage: null,
+  refetchChats: false,
   sendMessage: () => {},
 });
 
@@ -33,72 +37,76 @@ export const SocketProvider: React.FC<SocketProviderProps> = ({
   children,
   authToken,
 }) => {
-  const [socket, setSocket] = useState<WebSocket | null>(null);
+  const [socket, setSocket] = useState<Socket | null>(null);
   const [connected, setConnected] = useState<boolean>(false);
-  const [error, setError] = useState<Error | Event | null>(null);
+  const [error, setError] = useState<Error | null>(null);
   const [newLoginMessage, setNewLoginMessage] = useState<any>(null);
+  const [refetchChats, setNewRefetchChats] = useState<Boolean>(false);
 
   useEffect(() => {
-    let ws: WebSocket | null = null;
+    console.log("authToken:", authToken);
+    if (!authToken) return;
 
-    const connectWebSocket = () => {
-      console.log("authtoken"+authToken)
-      if (!authToken) return;
+    const socketInstance = io("https://dev-nest-realbuyerz.esparkconsultants.com/socket", {
+      extraHeaders: {
+      Authorization: `Bearer ${authToken}`
+      },
+      transports: ['websocket']
+    });
 
-      try {
-        ws = new WebSocket("ws://52.55.77.181/socket/", `Bearer ${authToken}`);
-        console.log("connecting")
+    socketInstance.on("connect", () => {
+      console.log("Socket.IO connected");
+      setConnected(true);
+      setError(null);
+    });
 
-        ws.onopen = () => {
-          console.log("WebSocket connected");
-          setConnected(true);
-          setError(null);
-        };
+    socketInstance.on("disconnect", () => {
+      console.log("Socket.IO disconnected");
+      setConnected(false);
+    });
 
-        ws.onclose = () => {
-          console.log("WebSocket disconnected");
-          setConnected(false);
-        };
+    socketInstance.on("connect_error", (err) => {
+      console.error("Socket.IO connection error:", err);
+      setError(err);
+    });
 
-        ws.onerror = (err: Event) => {
-          console.error("WebSocket error:", err);
-          setError(err);
-        };
+    socketInstance.on("NEW_LOGIN", (data) => {
+      console.log("New login event received:", data);
+      setNewLoginMessage(data);
+    });
+    socketInstance.on("REFETCH_CHATS", (data) => {
+      console.log("REFETCH_CHATS:", data);
+      setNewRefetchChats(true);
+      setTimeout(() => setNewRefetchChats(false), 100);
+    });
 
-        ws.onmessage = (event) => {
-          try {
-            const data = JSON.parse(event.data);
-            if (data.event === "NEW_LOGIN") {
-              console.log("New login event received:", data);
-              setNewLoginMessage(data);
-            }
-          } catch (err) {
-            console.error("Error parsing message:", err);
-          }
-        };
+    socketInstance.on("NEW_BIDDING", (data) => {
+      console.log("NEW_BIDDING:", data);
+      setTimeout(() => {
+        Toast.show({
+          type: "info",
+          text1: data.title || "New Bidding Alert",
+          text2: data.message || "A new bid has been placed!",
+          position: "top",
+          visibilityTime: 4000,
+          autoHide: true,
+        });
+      }, 100);
+    });
+    
+    console.log("socketInstance:", socketInstance);
+    setSocket(socketInstance);
 
-        setSocket(ws);
-      } catch (err) {
-        console.error("WebSocket connection error:", err);
-        setError(err as Error);
-      }
-    };
-
-    connectWebSocket();
-
-    // Cleanup function
-    return () => {
-      if (ws) {
-        ws.close();
-        setSocket(null);
-        setConnected(false);
-      }
-    };
+    // return () => {
+    //   socketInstance.disconnect();
+    //   setSocket(null);
+    //   setConnected(false);
+    // };
   }, [authToken]);
 
   const sendMessage = (message: string) => {
     if (socket && connected) {
-      socket.send(message);
+      socket.emit('message', message);
     } else {
       console.error("Socket is not connected");
     }
@@ -111,6 +119,7 @@ export const SocketProvider: React.FC<SocketProviderProps> = ({
         connected,
         error,
         newLoginMessage,
+        refetchChats,
         sendMessage,
       }}
     >

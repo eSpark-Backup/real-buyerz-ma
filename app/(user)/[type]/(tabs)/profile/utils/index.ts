@@ -20,6 +20,7 @@ export interface UserProfileData {
   landlineNumber: string;
   city: string;
   bio: string;
+  chatId:string;
   whatsapp: string;
   country: string;
   address: string;
@@ -43,7 +44,7 @@ const handleGetUserProfile = async (): Promise<{
   message?: string;
 }> => {
   try {
-    const { data } = await api.get<UserResponse>("/user/userProfile");
+    const { data } = await api.get<UserResponse>("user/userProfile");
     if (data?.success) {
       return {
         status: true,
@@ -81,10 +82,11 @@ const handleUpdateUserProfile = async (
     });
 
     if (profileImageFile != null) {
+      console.log("profileImageFile"+JSON.stringify(profileImageFile))
       formData.append('image', profileImageFile);
     }
 
-    const { data } = await api.post<UserResponse>("/user/update", formData, {
+    const { data } = await api.post<UserResponse>("user/update", formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
       },

@@ -35,6 +35,7 @@ export default function Favourite() {
     isDeleted: property.property.isDeleted,
     propertyTypeId: property.property.propertyTypeId,
     image:[],
+    video:[],
     createdAt: property.property.createdAt,
     updatedAt: property.property.updatedAt,
     amenities: property.property.amenities || [],

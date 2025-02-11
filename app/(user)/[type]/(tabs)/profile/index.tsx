@@ -44,6 +44,7 @@ interface ProfileState {
   landlineNumber: string;
   city: string;
   bio: string;
+  chatId:string;
   socialLogin: boolean;
   whatsapp: string;
   country: string;
@@ -65,6 +66,7 @@ const initialProfileState: ProfileState = {
   landlineNumber: "",
   city: "",
   bio: "",
+  chatId:"",
   socialLogin: false,
   whatsapp: "",
   country: "",
@@ -97,7 +99,7 @@ export default function ProfileSettings() {
     userData?.profileImage || "https://i.pravatar.cc/300?img=68"
   );
   const [fileImage, setFileImage] = useState<File | null>(null);
-
+  
   useEffect(() => {
     fetchAllUserProfileData();
   }, []);
@@ -444,6 +446,7 @@ export default function ProfileSettings() {
       showToast(response.message || "Sign in failed", "error");
     }
   };
+  
 
   const getUserProfileData = (): UserProfileData => {
     return {
@@ -455,6 +458,7 @@ export default function ProfileSettings() {
       landlineNumber: profileState.landlineNumber,
       city: profileState.city,
       bio: profileState.bio,
+      chatId:profileState.chatId,
       whatsapp: profileState.whatsapp,
       country: profileState.country,
       address: profileState.address,

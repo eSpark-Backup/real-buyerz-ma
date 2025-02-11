@@ -29,9 +29,9 @@ import { useDispatch } from "react-redux";
 import { setUserData, setUserToken } from "features/user/userSlice";
 import { api } from "api";
 import { GoogleSignin } from "@react-native-google-signin/google-signin";
-import { SocketProvider } from "@components/SocketProvider";
+import { Notifications } from "react-native-notifications";
 
-SplashScreen.preventAutoHideAsync(); //? Disable Auto Hide
+SplashScreen.preventAutoHideAsync(); 
 
 const cacheImages = (images: any[]) => {
   return images.map((image) => {
@@ -53,7 +53,8 @@ export default function App() {
   const scale = useRef(new Animated.Value(1)).current;
   const rotate = useRef(new Animated.Value(0)).current;
   const dispatch = useDispatch();
-  const [authToken, setAuthToken] = useState<string | null>(null);
+
+
 
   const loadResourcesAsync = async () => {
     try {
@@ -87,7 +88,7 @@ export default function App() {
       api.setHeader("Authorization", `Bearer ${actualToken}`);
       dispatch(setUserData(userInfo?.user));
       dispatch(setUserToken(userInfo?.token as string));
-      setAuthToken(userInfo?.token as string);
+      console.log("Agaya idhar "+userInfo?.token)
       const role =
         userInfo && userInfo.user && userInfo.user.role
           ? userInfo.user.role
@@ -162,7 +163,6 @@ export default function App() {
   }
 
   return (
-    <SocketProvider authToken={authToken}>
       <ImageBackground
         source={require("@assets/images/png/background.png")}
         style={styles.background}
@@ -190,7 +190,6 @@ export default function App() {
           ]}
         />
       </ImageBackground>
-    </SocketProvider>
   );
 }
 
