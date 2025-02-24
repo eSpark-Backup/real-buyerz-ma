@@ -204,6 +204,7 @@ const handleGetAllProperties = async (params?: string, filters?: Record<string, 
   message?: string;
 }> => {
   try {
+    console.log("params ", params?.toString())
     const endpoint = params?.trim() === 'agent' ? `/property` : '/userProperty';
     const { data } = await api.get<FindAllPropertiesResponse>(endpoint, filters);
     console.log("data handleGetAllProperties", data)

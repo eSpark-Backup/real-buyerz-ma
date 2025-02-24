@@ -115,6 +115,7 @@ export default function SignIn() {
           api.setHeader("Authorization", `Bearer ${userResp.userInfo.token}`);
           fetchAllUserProfileData(userResp.userInfo, true);
         } else {
+          setLoading(false);
           showToast("Sign up failed", "error");
         }
       }

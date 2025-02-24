@@ -45,6 +45,7 @@ const handleGetUserProfile = async (): Promise<{
 }> => {
   try {
     const { data } = await api.get<UserResponse>("user/userProfile");
+    console.log("User Profile Data", data);
     if (data?.success) {
       return {
         status: true,
@@ -70,7 +71,7 @@ const handleUpdateUserProfile = async (
     const formData = new FormData();
 
     Object.keys(userProfileData).forEach(key => {
-      if (key === 'profileImage' || key === 'email' || key === 'mobileNumber' || key === 'role' || key === 'id' || key === 'preferences') return;
+      if (key === 'profileImage' || key === 'email' || key === 'mobileNumber' || key === 'role' || key === 'id' || key === 'preferences' || key === 'chatId') return;
       const value = userProfileData[key as keyof UserProfileData];
       if (typeof value === 'string' && value !== undefined) {
         formData.append(key, value);

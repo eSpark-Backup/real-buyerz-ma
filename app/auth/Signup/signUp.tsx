@@ -63,10 +63,10 @@ export default function SignUp() {
   });
 
   const inputFields = [
-    { placeholder: "First Name", name: "firstName" },
-    { placeholder: "Last Name", name: "lastName" },
-    { placeholder: "Email Address", name: "email" },
-    { placeholder: "Contact Number", name: "phone", keyboardType: "numeric" }, // Set keyboardType to "numeric"
+    { placeholder: "First Name", name: "firstName", secureTextEntry: false },
+    { placeholder: "Last Name", name: "lastName", secureTextEntry: false },
+    { placeholder: "Email Address", name: "email", secureTextEntry: false  },
+    { placeholder: "Contact Number", name: "phone", keyboardType: "numeric", secureTextEntry: false }, 
     { placeholder: "Password", name: "password", secureTextEntry: true },
     {
       placeholder: "Confirm Password",
@@ -264,7 +264,7 @@ export default function SignUp() {
                       values[field.name as keyof SignUpFormValues] as string
                     }
                     placeholderColor="#666666"
-                    secureTextEntry={field.secureTextEntry}
+                    password={field.secureTextEntry}
                     keyboardType={field.keyboardType as KeyboardTypeOptions} />
                   {errors[field.name as keyof SignUpFormValues] && touched[field.name as keyof SignUpFormValues] && (
                     <Text style={styles.errorText}>{errors[field.name as keyof SignUpFormValues]}</Text>
