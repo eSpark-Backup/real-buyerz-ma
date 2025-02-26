@@ -118,16 +118,20 @@ export default function ChatScreen() {
 
   useEffect(() => {
     if (allUserChats.length > 0) {
-      // scrollToBottom()
+      scrollToBottom();
     }
   }, [allUserChats]);
 
   useEffect(() => {
     (async () => {
-      const galleryStatus = await ImagePicker.requestMediaLibraryPermissionsAsync();
+      const galleryStatus =
+        await ImagePicker.requestMediaLibraryPermissionsAsync();
       const cameraStatus = await ImagePicker.requestCameraPermissionsAsync();
-      
-      if (galleryStatus.status !== "granted" && cameraStatus.status !== "granted") {
+
+      if (
+        galleryStatus.status !== "granted" &&
+        cameraStatus.status !== "granted"
+      ) {
         alert("Sorry, we need camera and gallery permissions to share images!");
       }
     })();
@@ -176,7 +180,7 @@ export default function ChatScreen() {
     }
   };
 
-  const fetchUserAllChats = async (pageNumber = 1, isLoadMore = false) => {
+  async function fetchUserAllChats(pageNumber = 1, isLoadMore = false) {
     try {
       if (isLoadingMore || (!hasMoreMessages && isLoadMore)) {
         return;
@@ -189,33 +193,86 @@ export default function ChatScreen() {
 
       console.log("Fetching page:", pageNumber);
       const result = await handleAllUserChats(chatId, pageNumber);
-      
+
       if (result.status && result.userAllChats) {
         const newMessages = result.userAllChats.messages;
-        console.log("totalPages "+result.userAllChats.totalPages);
-        console.log("totalItems "+result.userAllChats.totalItems);
-        console.log("allUserChats "+allUserChats.length);
 
-        if (pageNumber>=result.userAllChats.totalPages || allUserChats.length>=result.userAllChats.totalItems) {
+        const sortedMessages = newMessages.sort((a, b) => {
+          return (
+            new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
+          );
+        });
+
+        const groupedMessages = sortedMessages.reduce((acc, message) => {
+          const date = new Date(message.createdAt).toDateString();
+          if (!acc[date]) {
+            acc[date] = [];
+          }
+          acc[date].push(message);
+          return acc;
+        }, {} as Record<string, UserAllChats[]>);
+
+        const sortedDates = Object.keys(groupedMessages).sort(
+          (a, b) => new Date(a).getTime() - new Date(b).getTime()
+        );
+
+        const finalSortedMessages = sortedDates.flatMap(
+          (date) => groupedMessages[date]
+        ).sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime());
+      
+
+        console.log("totalPages " + result.userAllChats.totalPages);
+        console.log("totalItems " + result.userAllChats.totalItems);
+        console.log("allUserChats " + allUserChats.length);
+
+        if (
+          pageNumber > result.userAllChats.totalPages ||
+          allUserChats.length >= result.userAllChats.totalItems
+        ) {
           console.log("No more messages");
           setHasMoreMessages(false);
           return;
         }
-        console.log("more messages", newMessages.length);
+        console.log("more messages", finalSortedMessages.length);
         setHasMoreMessages(true);
-        setAllUserChats(prevChats => {
-          if (isLoadMore) {
+        const PrevMessage = allUserChats;
+        if (isLoadMore) {
+          setAllUserChats((prevChats) => {
             console.log("isLoadMore");
-            const existingIds = new Set(prevChats.map(chat => chat._id));
-            const uniqueNewMessages = newMessages.filter(msg => !existingIds.has(msg._id));
-            return [...prevChats, ...uniqueNewMessages];
-          } else {
-            console.log("prevChats");
-            return newMessages;
-          }
-        });
+            const existingIds = new Set(prevChats.map((chat) => chat._id));
+            const uniqueNewMessages = finalSortedMessages.filter(
+              (msg) => !existingIds.has(msg._id)
+            );
 
-      } 
+            const mergedMessages = [...prevChats, ...uniqueNewMessages].reduce(
+              (acc, message) => {
+                const date = new Date(message.createdAt).toDateString();
+                if (!acc[date]) {
+                  acc[date] = [];
+                }
+                acc[date].push(message);
+                return acc;
+              },
+              {} as Record<string, UserAllChats[]>
+            );
+
+            const sortedDates = Object.keys(mergedMessages).sort(
+              (a, b) => new Date(a).getTime() - new Date(b).getTime()
+            );
+
+            return sortedDates
+              .flatMap((date) => mergedMessages[date])
+              .sort(
+                (a, b) =>
+                  new Date(a.createdAt).getTime() -
+                  new Date(b.createdAt).getTime()
+              );
+          });
+        } else {
+          console.log("prevChats");
+          setAllUserChats(finalSortedMessages);
+        }
+      }
     } catch (error) {
       console.error("Error fetching chats:", error);
       setHasMoreMessages(false);
@@ -224,7 +281,7 @@ export default function ChatScreen() {
       setIsLoadingMore(false);
       setRefreshing(false);
     }
-  };
+  }
 
   const onRefresh = useCallback(async () => {
     setRefreshing(true);
@@ -234,8 +291,8 @@ export default function ChatScreen() {
   }, []);
 
   const handleLoadMore = () => {
-    console.log("isLoadingMore"+isLoadingMore);
-    console.log("hasMoreMessages"+hasMoreMessages);
+    console.log("isLoadingMore" + isLoadingMore);
+    console.log("hasMoreMessages" + hasMoreMessages);
     if (!isLoadingMore && hasMoreMessages) {
       const nextPage = page + 1;
       setPage(nextPage);
@@ -319,6 +376,7 @@ export default function ChatScreen() {
     setIsDropdownVisible(!isDropdownVisible);
   };
   const renderMessage: ListRenderItem<UserAllChats> = ({ item, index }) => {
+    console.log("renderMessage", currentUserChatId);
     const isMe = item.sender._id === currentUserChatId;
     const isPreviousMsgSame =
       index > 0 && allUserChats[index - 1]?.sender._id === item.sender._id;
@@ -345,7 +403,7 @@ export default function ChatScreen() {
             },
           ]}
         >
-          {!isMe && !isPreviousMsgSame ? (
+          {!isMe ? (
             <Image
               source={{ uri: item.sender.avatar.url }}
               style={styles(theme).messageAvatar}
@@ -395,60 +453,63 @@ export default function ChatScreen() {
       </>
     );
   };
-  
+
   return (
     <View style={styles(theme).container}>
-    <Card radius={9} style={styles(theme).card}>
-      {renderHeader(toggleDropdown, theme)}
+      <Card radius={9} style={styles(theme).card}>
+        {renderHeader(toggleDropdown, theme)}
 
-      {loading ? (
-        <View style={styles(theme).centeredContainer}>
-          <ActivityIndicator size="large" color={theme?.colors.primary} />
-        </View>
-      ) : allUserChats.length > 0 ? (
-        <FlatList
-        ref={flatListRef}
-        data={allUserChats}
-        contentContainerStyle={{ paddingBottom: 10 }}
-        showsVerticalScrollIndicator={true}
-        renderItem={renderMessage}
-        keyExtractor={(item, index) => `${item._id}-${index}`}
-        keyboardShouldPersistTaps="handled"
-        keyboardDismissMode="interactive"
-        refreshControl={
-          <RefreshControl
-            refreshing={refreshing}
-            onRefresh={onRefresh}
-            tintColor={theme?.colors.primary}
+        {loading ? (
+          <View style={styles(theme).centeredContainer}>
+            <ActivityIndicator size="large" color={theme?.colors.primary} />
+          </View>
+        ) : allUserChats.length > 0 ? (
+          <FlatList
+            ref={flatListRef}
+            data={allUserChats}
+            contentContainerStyle={{ paddingBottom: 10 }}
+            showsVerticalScrollIndicator={true}
+            renderItem={renderMessage}
+            keyExtractor={(item, index) => `${item._id}-${index}`}
+            keyboardShouldPersistTaps="handled"
+            keyboardDismissMode="interactive"
+            refreshControl={
+              <RefreshControl
+                refreshing={refreshing}
+                onRefresh={onRefresh}
+                tintColor={theme?.colors.primary}
+              />
+            }
+            onEndReached={handleLoadMore}
+            onEndReachedThreshold={0.5}
+            ListFooterComponent={() =>
+              isLoadingMore ? (
+                <View style={styles(theme).loadingIndicator}>
+                  <ActivityIndicator
+                    size="small"
+                    color={theme?.colors.primary}
+                  />
+                </View>
+              ) : !hasMoreMessages && allUserChats.length > 0 ? (
+                <View style={styles(theme).noMoreMessages}>
+                  {/* <MyText text="No more messages" size={12} textColor="#969696" /> */}
+                </View>
+              ) : null
+            }
+            initialNumToRender={15}
+            maxToRenderPerBatch={10}
+            windowSize={10}
           />
-        }
-        onEndReached={handleLoadMore}
-        onEndReachedThreshold={0.5}
-        ListFooterComponent={() => 
-          isLoadingMore ? (
-            <View style={styles(theme).loadingIndicator}>
-              <ActivityIndicator size="small" color={theme?.colors.primary} />
-            </View>
-          ) : !hasMoreMessages && allUserChats.length > 0 ? (
-            <View style={styles(theme).noMoreMessages}>
-              {/* <MyText text="No more messages" size={12} textColor="#969696" /> */}
-            </View>
-          ) : null
-        }
-        initialNumToRender={15}
-        maxToRenderPerBatch={10}
-        windowSize={10}
-      />
-      ) : (
-        <View style={styles(theme).centeredContainer}>
-          <Text style={styles(theme).noChatsText}>No Chats Available</Text>
-        </View>
-      )}
+        ) : (
+          <View style={styles(theme).centeredContainer}>
+            <Text style={styles(theme).noChatsText}>No Chats Available</Text>
+          </View>
+        )}
 
-      {renderFooter(theme, chatDetails, chatId,name)}
-      {isDropdownVisible && renderDropdown(theme)}
-    </Card>
-  </View>
+        {renderFooter(theme, chatDetails, chatId, name)}
+        {isDropdownVisible && renderDropdown(theme)}
+      </Card>
+    </View>
   );
 }
 
@@ -482,7 +543,7 @@ const renderFooter = (
   theme: MyTheme,
   chatDetails: ChatDetails | undefined,
   chatId: string,
-  name:string
+  name: string
 ) => {
   const [newMessage, setNewMessage] = useState("");
   const [isUserTyping, setTypingUser] = useState<boolean>(false);
@@ -517,6 +578,7 @@ const renderFooter = (
   };
 
   const handleTyping = (text: string) => {
+    console.log("Typing:", text);
     setNewMessage(text);
     setTypingUser(true);
     startTyping(ChatTyping(chatDetails?._id ?? "", chatDetails?.members ?? []));
@@ -542,7 +604,7 @@ const renderFooter = (
         aspect: [4, 3],
         quality: 1,
       });
-  
+
       if (!result.canceled && result.assets.length > 0) {
         const selectedImage = result.assets[0];
         const file: File = {
@@ -552,7 +614,7 @@ const renderFooter = (
           lastModified: Date.now(),
           size: selectedImage.fileSize || 0,
         };
-  
+
         handleSendAttachment(file);
       }
     } catch (error) {
@@ -560,7 +622,7 @@ const renderFooter = (
       alert("Error capturing image. Please try again.");
     }
   };
-  
+
   const handleGallerySelection = async () => {
     try {
       const result = await ImagePicker.launchImageLibraryAsync({
@@ -569,7 +631,7 @@ const renderFooter = (
         aspect: [4, 3],
         quality: 1,
       });
-  
+
       if (!result.canceled && result.assets.length > 0) {
         const selectedImage = result.assets[0];
         const file: File = {
@@ -579,7 +641,7 @@ const renderFooter = (
           lastModified: Date.now(),
           size: selectedImage.fileSize || 0,
         };
-  
+
         handleSendAttachment(file);
       }
     } catch (error) {
@@ -653,10 +715,10 @@ const styles = (theme?: MyTheme) =>
   StyleSheet.create({
     loadingIndicator: {
       paddingVertical: 20,
-      alignItems: 'center',
+      alignItems: "center",
     },
     noMoreMessages: {
-      alignItems: 'center',
+      alignItems: "center",
     },
     centeredContainer: {
       flex: 1,
