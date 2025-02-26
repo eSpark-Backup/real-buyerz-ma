@@ -71,7 +71,7 @@ const handleCreatePropertiesAndProposal = async (
         } else if (key === "video") {
           const videos = value as string[];
           videos.forEach((video) => {
-            formData.append("video", video);
+            if(video.trim() !== "") formData.append("video", video);
           });
         } else if (key === "amenity") {
           const amenities = value as Amenity[];

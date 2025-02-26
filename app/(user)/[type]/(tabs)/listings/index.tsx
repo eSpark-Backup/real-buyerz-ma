@@ -267,6 +267,8 @@ export default function Listing() {
       />
       <GapView length={20} />
       <LocationAndPurpose
+        propertyType={propertyData.propertySubTypeId}
+        purpose={propertyData.purpose}
         city={propertyData.propertyCity}
         zipCode={propertyData.propertyZip}
         address={propertyData.propertyAddress}
@@ -298,6 +300,7 @@ export default function Listing() {
       />
       <GapView length={20} />
       <FeaturesAndAmenities
+        amenity={propertyData.amenity}
         onChange={(data) => {
           setPropertyData((prev) => ({
             ...prev,
@@ -308,8 +311,9 @@ export default function Listing() {
       />
       <GapView length={20} />
       {params.type === "agent" && (
-    <CustomTable title="Property Images and Video" indexIcon={16}>
+        <CustomTable title="Property Images and Video" indexIcon={16}>
           <PropertyImagesAndVideo
+            propertyImage={propertyData.image}
             onChange={(images: ImageFile[]) => {
               setPropertyData((prev) => ({
                 ...prev,
@@ -330,17 +334,22 @@ export default function Listing() {
       )}
       <View style={styles(theme).footerButtons}>
         <PrimaryBtn
-          disabled={Object.entries(propertyData).filter(([key]) => {
-            if (params.type === "user" && (key === 'image' || key === 'video' || key === 'propertyID')) {
-              return false;
-            }
-            return key !== 'propertyID';
-          }).some(([_, value]) => {
-            if (Array.isArray(value)) {
-              return !value || value.length === 0;
-            }
-            return !value;
-          })}
+          disabled={Object.entries(propertyData)
+            .filter(([key]) => {
+              if (
+                params.type === "user" &&
+                (key === "image" || key === "video" || key === "propertyID")
+              ) {
+                return false;
+              }
+              return key !== "propertyID";
+            })
+            .some(([_, value]) => {
+              if (Array.isArray(value)) {
+                return !value || value.length === 0;
+              }
+              return !value;
+            })}
           onPress={() => {
             router.push({
               pathname: `(user)/${params.type}/(tabs)/dashboard/proposalPreview`,
@@ -356,17 +365,22 @@ export default function Listing() {
         </PrimaryBtn>
         {redirectionFrom != "proposalPreview" && (
           <PrimaryBtn
-            disabled={Object.entries(propertyData).filter(([key]) => {
-              if (params.type === "user" && (key === 'image' || key === 'video' || key === 'propertyID')) {
-                return false;
-              }
-              return key !== 'propertyID';
-            }).some(([_, value]) => {
-              if (Array.isArray(value)) {
-                return !value || value.length === 0;
-              }
-              return !value;
-            })}
+            disabled={Object.entries(propertyData)
+              .filter(([key]) => {
+                if (
+                  params.type === "user" &&
+                  (key === "image" || key === "video" || key === "propertyID")
+                ) {
+                  return false;
+                }
+                return key !== "propertyID";
+              })
+              .some(([_, value]) => {
+                if (Array.isArray(value)) {
+                  return !value || value.length === 0;
+                }
+                return !value;
+              })}
             title="Save as draft"
             btnStyle={styles(theme).draft}
             textColor={theme.colors.primary}
@@ -377,18 +391,27 @@ export default function Listing() {
           />
         )}
         <PrimaryBtn
-          disabled={Object.entries(propertyData).filter(([key]) => {
-            if (params.type === "user" && (key === 'image' || key === 'video' || key === 'propertyID')) {
-              return false;
-            }
-            return key !== 'propertyID';
-          }).some(([_, value]) => {
-            if (Array.isArray(value)) {
-              return !value || value.length === 0;
-            }
-            return !value;
-          })}
-          title={redirectionFrom === "proposalPreview" ? "Submit Proposal" : "Submit Ad"}
+          disabled={Object.entries(propertyData)
+            .filter(([key]) => {
+              if (
+                params.type === "user" &&
+                (key === "image" || key === "video" || key === "propertyID")
+              ) {
+                return false;
+              }
+              return key !== "propertyID";
+            })
+            .some(([_, value]) => {
+              if (Array.isArray(value)) {
+                return !value || value.length === 0;
+              }
+              return !value;
+            })}
+          title={
+            redirectionFrom === "proposalPreview"
+              ? "Submit Proposal"
+              : "Submit Ad"
+          }
           weight="500"
           width={100}
           onPress={() => {
@@ -491,11 +514,15 @@ function AdInformation({
 }
 
 function LocationAndPurpose({
+  propertyType,
+  purpose,
   onChange,
   zipCode,
   address,
   city,
 }: {
+  propertyType?: string;
+  purpose: string;
   onChange?: (e: {
     purpose?: string;
     propertyCity?: string;
@@ -518,6 +545,13 @@ function LocationAndPurpose({
     latitude: number;
     longitude: number;
   } | null>(null);
+
+  useEffect(() => {
+    if (selected.trim() !== "" && purpose.trim()=== "") {
+      setSelected("");
+    }
+  }, [purpose]);
+
   useEffect(() => {
     (async () => {
       const { status } = await Location.requestForegroundPermissionsAsync();
@@ -649,6 +683,7 @@ function LocationAndPurpose({
           onSelect={(data) => {
             onChange?.({ propertySubTypeId: data?.[0]?.id });
           }}
+          resetSelectedValues={propertyType===""}
           wrap
         />
       </View>
@@ -860,8 +895,10 @@ function PropertySizeandPricing({
 
 function FeaturesAndAmenities({
   onChange,
+  amenity,
 }: {
   onChange?: (e: { amenities?: string; amenity?: Amenity[] }) => void;
+  amenity?: Amenity[];
 }) {
   const theme = useTheme() as MyTheme;
   const [visible, setVisible] = useState(false);
@@ -869,6 +906,12 @@ function FeaturesAndAmenities({
     (state) => state.property
   );
   const [selected, setSelected] = useState<IAmenity[]>([]);
+
+  useEffect(() => {
+    if (selected.length > 0 && (!amenity || amenity.length === 0)) {
+      setSelected([]);
+    }
+  }, [amenity]);
 
   useEffect(() => {
     const amenityArray = selected?.map((e) => ({
@@ -1002,7 +1045,9 @@ function AmenitiesPopup({
           }}
         />
       </View>
-      {Platform.OS == "ios" && <View style={{height: 20, backgroundColor: '#fff'}} />}
+      {Platform.OS == "ios" && (
+        <View style={{ height: 20, backgroundColor: "#fff" }} />
+      )}
     </Modal>
   );
 }
@@ -1101,10 +1146,12 @@ function Counter({ type, icon, onChange, initialCount = 1 }: CounterProps) {
 }
 
 interface PropertyImagesAndVideoProps {
+  propertyImage: ImageFile[];
   onChange?: (images: ImageFile[]) => void;
 }
 
 const PropertyImagesAndVideo: React.FC<PropertyImagesAndVideoProps> = ({
+  propertyImage,
   onChange,
 }) => {
   const theme = useTheme() as MyTheme;
@@ -1112,6 +1159,12 @@ const PropertyImagesAndVideo: React.FC<PropertyImagesAndVideoProps> = ({
     ImagePicker.useMediaLibraryPermissions();
 
   const [media, setMedia] = useState<ImagePicker.ImagePickerAsset[]>([]);
+
+  useEffect(() => {
+    if (media.length > 0 && propertyImage.length === 0) {
+      setMedia([]);
+    }
+  }, [propertyImage]);
 
   useEffect(() => {
     const formDataImages = media.map((image) => {

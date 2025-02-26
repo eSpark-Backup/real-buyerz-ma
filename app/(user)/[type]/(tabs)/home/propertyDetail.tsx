@@ -95,8 +95,8 @@ const PropertyDetail = () => {
     <ScrollView>
       <View style={styles(theme).wrapper}>
         <CustomSlider
-          images={productDetail.PropertyData.map((item) => ({
-            uri: item.url, 
+          images={(productDetail.PropertyData || []).map((item) => ({
+            uri: item.url,
             type: item.type,
           }))}
           title={productDetail?.propertyName ?? "4 BEDROOMS APARTMENT"}
@@ -108,7 +108,7 @@ const PropertyDetail = () => {
               imageUrl={{
                 uri:
                   productDetail.user?.profileImage &&
-                    isImageUrl(productDetail.user?.profileImage ?? "")
+                  isImageUrl(productDetail.user?.profileImage ?? "")
                     ? productDetail.user?.profileImage
                     : "https://picsum.photos/id/151/130",
               }}
@@ -145,8 +145,8 @@ const PropertyDetail = () => {
                   router.navigate({
                     pathname: `(user)/${type!}/(tabs)/home/AgentProfile`,
                     params: {
-                      item: JSON.stringify(productDetail.userId)
-                    }
+                      item: JSON.stringify(productDetail.userId),
+                    },
                   })
                 }
                 btnStyle={{

@@ -224,23 +224,24 @@ function ProposalPreview() {
   function getImageFromPropertyData(
     propertyData: PropertyDataItem[]
   ): ImageFile[] {
-    const imageItem = propertyData?.find((item) => item.type === "image");
-    if (imageItem) {
+    const imageItems = propertyData?.filter(
+      (item) => item.type === "image" && item.url
+    ) || [];
+    
+    return imageItems.map((imageItem) => {
       const blob = new Blob();
-      return [
-        {
-          uri: imageItem.url,
-          type: "image/jpeg",
-          name: imageItem.imageKey,
-          size: blob.size,
-          arrayBuffer: async () => new ArrayBuffer(0),
-          slice: () => new Blob(),
-          stream: () => new ReadableStream(),
-          text: async () => "",
-        },
-      ];
-    }
-    return [];
+      return {
+        uri: imageItem.url,
+        type: "image/jpeg",
+        name: imageItem.imageKey || "image",
+        size: blob.size,
+        arrayBuffer: async () => new ArrayBuffer(0),
+        slice: () => new Blob(),
+        stream: () => new ReadableStream(),
+        text: async () => "",
+        bytes: async () => new Uint8Array(0),
+      };
+    });
   }
 
   const data = [getPropertyData(productDetail)];
@@ -328,6 +329,9 @@ function ProposalPreview() {
                     <FlatList
                       data={item.image}
                       renderItem={({ item, index }) => {
+                        if (!item.uri) {
+                          return null;
+                        }
                         return (
                           <Image
                             key={index}

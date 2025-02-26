@@ -445,7 +445,7 @@ export default function ChatScreen() {
         </View>
       )}
 
-      {renderFooter(theme, chatDetails, chatId)}
+      {renderFooter(theme, chatDetails, chatId,name)}
       {isDropdownVisible && renderDropdown(theme)}
     </Card>
   </View>
@@ -481,7 +481,8 @@ const renderDropdown = (theme?: MyTheme) => {
 const renderFooter = (
   theme: MyTheme,
   chatDetails: ChatDetails | undefined,
-  chatId: string
+  chatId: string,
+  name:string
 ) => {
   const [newMessage, setNewMessage] = useState("");
   const [isUserTyping, setTypingUser] = useState<boolean>(false);

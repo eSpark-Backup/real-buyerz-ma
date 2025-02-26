@@ -43,7 +43,7 @@ export default function Projects() {
       title: "Purpose",
       style: { width: "100%" },
       id: "purpose",
-      selected: filter?.purpose ? [filter?.purpose] : null,
+      selected: null,
     },
     {
       data: propertyTypes ? propertyTypes?.map((val) => val?.typeName) : [],
@@ -54,21 +54,45 @@ export default function Projects() {
       title: "Property Type",
       style: { width: "100%" },
       id: "propertyType",
-      selected: filter?.propertyType ? [filter?.propertyType] : null,
+      selected: null,
     },
   ]);
   const [tabsData, setTabsData] = useState<{ title: string; selected: boolean }[]>([]);
   const [selectedTab, setSelectedTab] = useState<string>("");
   const dispatch = useDispatch();
 
+  useEffect(() => {
+    const initialUnappliedFilters: { [key: string]: any } = {};
+    if (filter?.purpose) {
+      initialUnappliedFilters.purpose = { value: { value: [filter.purpose] } };
+    }
+    if (filter?.propertyType) {
+      initialUnappliedFilters.propertyType = { value: { value: [filter.propertyType] } };
+    }
+    if (filter?.price1 !== null && filter?.price2 !== null) {
+      initialUnappliedFilters.priceRange = { value: [filter.price1, filter.price2] };
+    }
+    if (filter?.area1 !== null && filter?.area2 !== null) {
+      initialUnappliedFilters.area = { value: [filter.area1, filter.area2] };
+    }
+    setUnappliedFilters(initialUnappliedFilters);
+  }, []);
+
   useFocusEffect(
     useCallback(() => {
       const updatedDropdown = dropdownData.map((val) => {
-        const id = Object.keys(filter).find((key) => val.id === key) as "propertyType" | "purpose";
-        return {
-          ...val,
-          selected: filter?.[id] ? [filter?.[id]] : null,
-        };
+        if (val.id === "purpose") {
+          return {
+            ...val,
+            selected: unappliedFilters.purpose ? unappliedFilters.purpose.value.value : (filter?.purpose ? [filter?.purpose] : null),
+          };
+        } else if (val.id === "propertyType") {
+          return {
+            ...val,
+            selected: unappliedFilters.propertyType ? unappliedFilters.propertyType.value.value : (filter?.propertyType ? [filter?.propertyType] : null),
+          };
+        }
+        return val;
       });
       setDropDownData(updatedDropdown);
       fetchProperties();
@@ -242,7 +266,7 @@ export default function Projects() {
               zIndex={4 - index}
               title={item.title}
               theme={theme}
-              selected={item.selected}
+              selected={unappliedFilters[item.id]?.value?.value || item.selected}
             />
             {dropdownData.length - 1 && <GapView length={20} />}
           </View>
