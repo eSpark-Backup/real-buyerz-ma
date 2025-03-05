@@ -40,7 +40,7 @@ export default function SearchList() {
         "Fetching properties with filters:",
         JSON.stringify(filters)
       );
-      const response = await handleGetAllProperties(params.type, filters);
+      const response = await handleGetAllProperties(params.type, 1, filters);
       if (response?.data) {
         setProperties(response?.data.items);
       }

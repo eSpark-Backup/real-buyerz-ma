@@ -38,8 +38,8 @@ export default function MyTopTabs({ data, list, paddingH, onTabPress }: TopTabsP
   };
 
   return (
-    <View>
-      {list ? (
+<View style={{ marginBottom: 15 }}>
+        {list ? (
         <View style={{ ...styles(theme).scrollContainer }}>
           <ScrollView horizontal showsHorizontalScrollIndicator={false}>
             {data.map((item, index) => (

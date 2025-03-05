@@ -36,6 +36,27 @@ export interface ReqPropertyData {
   amenities: string;
 }
 
+interface ReqDraftData {
+  propertyID: string;
+  propertyName: string;
+  propertySubTypeId: string;
+  propertyPrice: string;
+  propertyArea: string;
+  purpose: string;
+  propertyAddress: string;
+  propertyCity: string;
+  propertyZip: string;
+  propertyDescription: string;
+  longitude: string;
+  latitude: string;
+  image: { url: string }[];
+  imageKeys: string[];
+  video: [];
+  propertyStatus: boolean;
+  amenity: string[];
+  amenities?: string;
+}
+
 export interface ImageFile extends Blob {
   uri: string;
   type: string;
@@ -71,7 +92,7 @@ const handleCreatePropertiesAndProposal = async (
         } else if (key === "video") {
           const videos = value as string[];
           videos.forEach((video) => {
-            if(video.trim() !== "") formData.append("video", video);
+            if (video.trim() !== "") formData.append("video", video);
           });
         } else if (key === "amenity") {
           const amenities = value as Amenity[];
@@ -120,7 +141,8 @@ const handleCreatePropertiesAndProposal = async (
 };
 
 const handleDraftProperty = async (
-  property: PropertyItem,
+  propertyItem: PropertyItem,
+  property: ReqDraftData,
   type?: string
 ): Promise<{
   status: boolean;
@@ -128,18 +150,62 @@ const handleDraftProperty = async (
   message?: string;
 }> => {
   try {
-    console.log("Draft  " + JSON.stringify(property));
-   const updatedProperty = {
-     ...property,
-     propertyStatus: "false",
-     propertyPrice: property.propertyPrice?.toString(),
-   };
+    const { propertyID, amenities, ...restProperty } = property;
+    const propertySubType = Array.isArray(propertyItem.propertyType?.subTypes)
+      ? propertyItem.propertyType.subTypes.length
+        ? propertyItem.propertyType.subTypes[0].typeName
+        : ""
+      : propertyItem.propertyType?.subTypes?.typeName || "";
+
+    const formData = new FormData();
+    formData.append("propertyCity", property.propertyCity || "");
+    formData.append("propertySubTypeId", property.propertySubTypeId || "");
+    formData.append("propertyName", property.propertyName || "");
+    formData.append("propertyArea", property.propertyArea?.toString() || "");
+    formData.append("propertyStatus", "false");
+    formData.append("propertyDescription", property.propertyDescription || "");
+    formData.append("latitude", property.latitude?.toString() || "");
+    formData.append("longitude", property.longitude?.toString() || "");
+    formData.append("propertyZip", property.propertyZip || "");
+    formData.append("propertyType", propertyItem.propertyType.typeName || "");
+    formData.append("propertyPrice", property.propertyPrice?.toString() || "");
+    formData.append("subType", propertySubType);
+    formData.append("purpose", property.purpose || "");
+    formData.append("propertyAddress", property.propertyAddress || "");
+
+    // Append amenities as JSON string
+    if (Array.isArray(property.amenity)) {
+      formData.append("amenity", JSON.stringify(property.amenity));
+    }
+    
+    if (Array.isArray(property.video)) {
+      formData.append("video", property.video.join(","));
+    } else if (property.video) {
+      formData.append("video", property.video);
+    }
+
+    if (Array.isArray(property.imageKeys)) {
+      formData.append("imageKeys", property.imageKeys.join(","));
+    } else if (property.imageKeys) {
+      formData.append("imageKeys", property.imageKeys);
+    }
+    if (Array.isArray(property.image)) {
+      const imageUrls = property.image.map(img => img.url).join(",");
+      formData.append("image", imageUrls);
+    }
 
     const endpoint =
       type?.trim() === "agent"
-        ? `/property/${property.id}`
-        : `/userProperty/${property.id}`;
-    const { data } = await api.put<PropertyResponse>(endpoint, updatedProperty);
+        ? `/property/${property.propertyID}`
+        : `/userProperty/${property.propertyID}`;
+
+    const { data } = await api.put<PropertyResponse>(endpoint, formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+
+    console.log("Draft data:", JSON.stringify(data));
 
     if (data?.response?.data) {
       return {
@@ -149,9 +215,9 @@ const handleDraftProperty = async (
     }
     return { status: false, message: data?.message };
   } catch (error) {
-    console.log("Error  " + JSON.stringify(error));
+    console.log("Error:", JSON.stringify(error));
     return { status: false, message: "An error occurred." };
   }
 };
 
-export { handleCreatePropertiesAndProposal, handleDraftProperty };
+export { handleCreatePropertiesAndProposal, handleDraftProperty, ReqDraftData };

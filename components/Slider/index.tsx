@@ -19,7 +19,7 @@ import { useTheme } from "@react-navigation/native";
 
 interface MediaItem {
   uri: string;
-  type: "image" | "video";
+  type?: "image" | "video";
   thumbnailUri?: string;
 }
 

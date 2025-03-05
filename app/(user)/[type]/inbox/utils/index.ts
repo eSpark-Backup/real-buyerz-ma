@@ -3,6 +3,10 @@ import { api } from "api/chat";
 interface ApiResponse {
   Chats: Chat[];
   message: string;
+  totalCount: number;
+  currentPage: number;
+  totalPages: number;
+  itemsPerPage: number;
 }
 interface ApiAttachmentResponse {
   message: UserAllChats;
@@ -79,13 +83,13 @@ interface Sender {
   avatar: Avatar;
 }
 
-const handleGetChats = async (): Promise<{
+const handleGetChats = async (page: number = 1, pageSize: number = 50): Promise<{
   status: boolean;
-  chats?: Chat[];
+  chats?: ApiResponse;
   message?: string;
 }> => {
   try {
-    const response = await api.get<ApiResponse>("/chat/my");
+    const response = await api.get<ApiResponse>("/chat/my",{ page: page, pageSize: pageSize});
 
     if (response && response.data) {
       const { data } = response;
@@ -94,7 +98,7 @@ const handleGetChats = async (): Promise<{
       if (data.Chats) {
         return {
           status: true,
-          chats: data.Chats,
+          chats: data,
         };
       }
 

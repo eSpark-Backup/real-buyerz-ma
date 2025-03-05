@@ -31,6 +31,9 @@ export default function Projects() {
   const { propertyTypes, filter } = useSelector<RootState, PropertySliceState>(
     (state) => state.property
   );
+  const [refreshing, setRefreshing] = useState(false);
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
   const [loading, setLoading] = useState<boolean>(false);
   const [unappliedFilters, setUnappliedFilters] = useState<{ [key: string]: any }>({});
   const [dropdownData, setDropDownData] = useState([
@@ -105,67 +108,82 @@ export default function Projects() {
     };
   }, []);
 
-  const fetchProperties = async () => {
+  const fetchProperties = async (newPage: number = 1, isRefreshing = false) => {
     try {
-      setLoading(true);
+      if (newPage > totalPages) return;
+      if (isRefreshing) {
+        setRefreshing(true);
+      } else {
+        setLoading(true);
+      }
       const param = createUrlParams(filter);
-
       const filters = Object.fromEntries(
         Object.entries(filter).filter(([_, value]) => value !== null)
       );
 
-      const response = await handleGetAllProperties(param, filters);
+      const response = await handleGetAllProperties(param, newPage, filters);
       if (response?.data) {
-        console.log("data " + JSON.stringify(response.data));
-        setProperties(response?.data.items);
+        setProperties((prevProperties) => {
+          const allProperties = [...prevProperties, ...response?.data?.items||[]];
+          const uniqueProperties = Array.from(
+            new Map(allProperties.map((item) => [item.id, item])).values()
+          );
+          return uniqueProperties;
+        });
         updateTabs(response.data.items);
       }
-      setLoading(false);
+      setPage(response.data?.currentPage || newPage);
+      setTotalPages(response.data?.totalPages || 1);
+      if (isRefreshing) {
+        setRefreshing(false);
+      } else {
+        setLoading(false);
+      }
     } catch (error) {
       console.error("Error fetching properties:", error);
-      setLoading(false);
+      if (isRefreshing) {
+        setRefreshing(false);
+      } else {
+        setLoading(false);
+      }
     }
   };
 
   const updateTabs = (items: PropertyItem[]) => {
-    const uniqueTabs = new Set<string>();
-
-    items.forEach(item => {
-      const propertyType = item.propertyType?.typeName;
-
-      if (propertyType === "Residential" && item.propertyType.subTypes) {
-        if (Array.isArray(item.propertyType.subTypes)) {
-          item.propertyType.subTypes.forEach((subType) => {
-            if (subType.typeName) {
-              uniqueTabs.add(subType.typeName);
+    setTabsData((prevTabsData) => {
+      const existingTabs = new Set(prevTabsData.map((tab) => tab.title));
+  
+      items.forEach((item) => {
+        const propertyType = item.propertyType?.typeName;
+  
+        if (propertyType === "Residential" && item.propertyType.subTypes) {
+          if (Array.isArray(item.propertyType.subTypes)) {
+            item.propertyType.subTypes.forEach((subType) => {
+              if (subType.typeName) {
+                existingTabs.add(subType.typeName);
+              }
+            });
+          } else {
+            const subType = item.propertyType.subTypes as PropertySubType;
+            if (subType?.typeName) {
+              existingTabs.add(subType.typeName);
             }
-          });
-        }
-        else {
-          const subType = item.propertyType.subTypes as PropertySubType;
-          if (subType && subType.typeName) {
-            uniqueTabs.add(subType.typeName);
           }
         }
+        if (propertyType === "Commercial") {
+          existingTabs.add(propertyType);
+        }
+      });
+  
+      const newTabsData = Array.from(existingTabs).map((type) => ({
+        title: type,
+        selected: selectedTab === type,
+      }));
+      if (newTabsData.length > 0) {
+        setSelectedTab(newTabsData[0].title);
       }
-      if (propertyType === "Commercial") {
-        uniqueTabs.add(propertyType);
-      }
+      return newTabsData;
     });
-
-    const newTabsData: { title: string; selected: boolean }[] = Array.from(uniqueTabs)
-      .filter(tab => tab !== "Commercial")
-      .map(type => ({ title: type, selected: false }))
-      .concat(
-        Array.from(uniqueTabs)
-          .filter(tab => tab === "Commercial")
-          .map(type => ({ title: type, selected: false }))
-      );
-
-    setTabsData(newTabsData);
-    if (newTabsData.length > 0) {
-      setSelectedTab(newTabsData[0].title);
-    }
   };
 
   const renderTabContent = () => {
@@ -194,6 +212,8 @@ export default function Projects() {
         showsVerticalScrollIndicator={false}
         ItemSeparatorComponent={() => <GapView />}
         keyExtractor={(item) => item.id}
+        refreshing={refreshing}
+        onRefresh={onRefresh}
       />
     );
   };
@@ -238,6 +258,12 @@ export default function Projects() {
       ...prev,
       [filterType]: { value: [low, high] },
     }));
+  };
+
+  const onRefresh = () => {
+    if (page < totalPages) {
+      fetchProperties(page + 1, true);
+    }
   };
 
   return (

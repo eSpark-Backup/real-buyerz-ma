@@ -17,7 +17,7 @@ import { useDispatch, useSelector } from "react-redux";
 
 import { MyTheme, UserType } from "@types";
 import { AdBox, GapView, MyText, MyTopTabs, OverlayLoader } from "@components";
-import { handleGetAllProperties } from "../home/utils";
+import { handleGetAllProperties,PropertyItem,AllPropertiesData } from "../home/utils";
 import {
   PropertySliceState,
   setAllProperties,
@@ -36,6 +36,9 @@ export default function Bidding() {
     (state) => state.property
   );
   const [isLoading, setIsLoading] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
   const [error, setError] = useState<string | null>(null);
   const [selectedTab, setSelectedTab] = useState("Best Matches");
 
@@ -43,33 +46,56 @@ export default function Bidding() {
     fetchAllProperties();
   }, []);
 
-  const fetchAllProperties = async () => {
-    setIsLoading(true);
-    setError(null);
-    try {
-      const response = await handleGetAllProperties(params.type);
-      if (response.data) {
-        dispatch(setAllProperties(response.data));
-      }
-    } catch (error) {
-      setError("Failed to load properties.");
-    } finally {
-      setIsLoading(false);
+  const fetchAllProperties = async (newPage: number = 1, isRefreshing = false) => {
+    if (newPage > totalPages) return;
+    if (isRefreshing) {
+      setRefreshing(true);
+    } else {
+      setIsLoading(true);
     }
-  };
-
-  const deleteProperties = async (proposalID: string) => {
-    setIsLoading(true);
     try {
-      const response = await handleDeletePropertyProposal(proposalID);
-      if (response.status) {
-        fetchAllProperties();
+      const response = await handleGetAllProperties(params.type, newPage);
+      if (response.data) {
+        dispatch((dispatch, getState) => {
+          const prevState = getState().property.allProperties || { 
+            items: [], 
+            savedLeadItems: [], 
+            totalCount: 0, 
+            currentPage: 1, 
+            totalPages: 1, 
+            itemsPerPage: 3 
+          };
+  
+          const existingIds = new Set(prevState.items.map((item: PropertyItem) => item.id));
+          const newItems = response?.data?.items.filter(
+            (item: PropertyItem) => !existingIds.has(item.id)
+          );
+  
+          dispatch(
+            setAllProperties({
+              ...prevState,
+              items: [...prevState.items, ...(newItems || [])],
+              currentPage: response?.data?.currentPage || prevState.currentPage,
+              totalPages: response?.data?.totalPages || prevState.totalPages,
+            })
+          );
+        });
+      }
+      setPage(response.data?.currentPage || newPage);
+      setTotalPages(response.data?.totalPages || 1);
+      if (isRefreshing) {
+        setRefreshing(false);
       } else {
         setIsLoading(false);
       }
     } catch (error) {
-      showToast("Failed to delete proposal", "error");
-      setIsLoading(false);
+      setError("Failed to load properties.");
+    } finally {
+      if (isRefreshing) {
+        setRefreshing(false);
+      } else {
+        setIsLoading(false);
+      }
     }
   };
 
@@ -105,104 +131,76 @@ export default function Bidding() {
     return <Text style={{ color: "red" }}>{error}</Text>;
   }
 
+  const transformedData =
+  selectedTab === "Best Matches"
+    ? allProperties?.items || []
+    : allProperties?.savedLeadItems?.map((item) => ({
+        ...item.property, 
+        id: item.id,
+      })) || [];
+
+
+  const onRefresh = () => {
+    if (page < totalPages) {
+       fetchAllProperties(page + 1, true);
+    }
+  };
+
   return (
-    <ScrollView nestedScrollEnabled showsVerticalScrollIndicator={false}>
-      <OverlayLoader isShow={isLoading} />
-      <View style={styles.top}>
-        <MyText
-          text="Bidding"
-          size={20}
-          weight="600"
-          textColor={theme.colors.negative}
+    <FlatList
+      ListHeaderComponent={
+        <>
+          <OverlayLoader isShow={isLoading} />
+          <View style={styles.top}>
+            <MyText
+              text="Bidding"
+              size={20}
+              weight="600"
+              textColor={theme.colors.negative}
+            />
+            <GapView />
+            <MyText
+              text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed venenatis gravida lectus nec sodales."
+              size={12}
+              textColor={theme.colors.text}
+            />
+          </View>
+          <MyTopTabs data={topTabsData} onTabPress={handleTabPress} />
+        </>
+      }
+      data={transformedData as PropertyItem[]}
+      keyExtractor={(item) => item.id.toString()}
+      showsVerticalScrollIndicator={false}
+      renderItem={({ item }) => (
+        <AdBox
+          title={item.propertyName || "Unknown Title"}
+          description={item.propertyDescription || "No description available."}
+          botPost
+          btns={btnsData(item)}
+          botPostText={dateConverter(item.createdAt)}
+          points={[
+            {
+              label: "Est. Range",
+              value: priceConversion(item.propertyPrice || "") + " PKR",
+            },
+            { label: "Purpose", value: item.purpose || "Buying" },
+            {
+              label: "Property Type",
+              value: item.propertyType?.typeName || "Commercial",
+            },
+            { label: "City", value: item.propertyCity || "Unknown City" },
+            {
+              label: "Location",
+              value: item.propertyAddress || "Unknown Location",
+            },
+          ]}
         />
-        <GapView />
-        <MyText
-          text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed venenatis gravida lectus nec sodales."
-          size={12}
-          textColor={theme.colors.text}
-        />
-      </View>
-      <MyTopTabs data={topTabsData} onTabPress={handleTabPress} />
-      <View style={styles.content}>
-        {selectedTab === "Best Matches" && allProperties?.items && (
-          <FlatList
-            data={allProperties.items}
-            showsVerticalScrollIndicator={false}
-            renderItem={({ item }) => (
-              <AdBox
-                title={item.propertyName || "Unknown Title"}
-                description={
-                  item.propertyDescription || "No description available."
-                }
-                botPost
-                btns={btnsData(item)}
-                botPostText={dateConverter(item.createdAt)}
-                points={[
-                  {
-                    label: "Est. Range",
-                    value: priceConversion(item.propertyPrice || "") + " PKR",
-                  },
-                  { label: "Purpose", value: item.purpose || "Buying" },
-                  {
-                    label: "Property Type",
-                    value: item.propertyType?.typeName || "Commercial",
-                  },
-                  { label: "City", value: item.propertyCity || "Unknown City" },
-                  {
-                    label: "Location",
-                    value: item.propertyAddress || "Unknown Location",
-                  },
-                ]}
-              />
-            )}
-            ItemSeparatorComponent={() => <GapView />}
-          />
-        )}
-        {selectedTab === "Saved Leads" && allProperties?.savedLeadItems && (
-          <FlatList
-            data={allProperties.savedLeadItems}
-            showsVerticalScrollIndicator={false}
-            renderItem={({ item }) => (
-              <AdBox
-                title={item.property.propertyName || "Unknown Title"}
-                description={
-                  item.property.propertyDescription ||
-                  "No description available."
-                }
-                botPost
-                btns={btnsData(item)}
-                botPostText={dateConverter(item.createdAt)}
-                points={[
-                  {
-                    label: "Est. Range",
-                    value:
-                      priceConversion(item.property.propertyPrice || "") +
-                      " PKR",
-                  },
-                  {
-                    label: "Purpose",
-                    value: item.property.purpose || "Buying",
-                  },
-                  {
-                    label: "Property Type",
-                    value: item.propertyType?.typeName || "Commercial",
-                  },
-                  {
-                    label: "City",
-                    value: item.property.propertyCity || "Unknown City",
-                  },
-                  {
-                    label: "Location",
-                    value: item.property.propertyAddress || "Unknown Location",
-                  },
-                ]}
-              />
-            )}
-            ItemSeparatorComponent={() => <GapView />}
-          />
-        )}
-      </View>
-    </ScrollView>
+      )}
+      ItemSeparatorComponent={() => <GapView />}
+      contentContainerStyle={{ paddingHorizontal: 20 }}
+      refreshing={refreshing}
+      onRefresh={onRefresh}
+    />
   );
 }
 

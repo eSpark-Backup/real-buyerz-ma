@@ -21,6 +21,9 @@ const Inbox: React.FC = () => {
   const [tab, setTab] = useState("inbox");
   const [chats, setChats] = useState<Chat[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
   const [alertCounts, setAlertCounts] = useState<Map<string, number>>(
     new Map()
   );
@@ -46,19 +49,44 @@ const Inbox: React.FC = () => {
     }
   }, [newMessageAlertReceived]);
 
-  const fetchChats = async () => {
-    setIsLoading(true);
-    const result = await handleGetChats();
+  const fetchChats = async (newPage: number = 1, isRefreshing = false) => {
+    if (newPage > totalPages) return;
+
+    if (isRefreshing) {
+      setRefreshing(true);
+    } else {
+      setIsLoading(true);
+    }
+    const result = await handleGetChats(newPage);
     console.log("Chats " + JSON.stringify(result));
     if (result.status && result.chats) {
-      setChats(result.chats);
+      setChats((prevChats) => {
+        const newChats = result?.chats?.Chats || [];
+        const mergedChats = [...prevChats, ...newChats];
+        const uniqueChats = Array.from(
+          new Map(mergedChats.map((chat) => [chat._id, chat])).values()
+        );
+        return uniqueChats;
+      });
     }
-    setIsLoading(false);
+    setPage(result?.chats?.currentPage || newPage);
+    setTotalPages(result?.chats?.totalPages || 1);
+    if (isRefreshing) {
+      setRefreshing(false);
+    } else {
+      setIsLoading(false);
+    }
   };
 
   const handleTab = (buttonName: string) => {
     if (tab !== buttonName) {
       setTab(buttonName);
+    }
+  };
+
+  const onRefresh = () => {
+    if (page < totalPages) {
+      fetchChats(page + 1, true);
     }
   };
 
@@ -119,8 +147,8 @@ const Inbox: React.FC = () => {
         {tab === "inbox" && (
           <FlatList
             data={chats}
-            refreshing={isLoading}
-            onRefresh={fetchChats}
+            refreshing={refreshing}
+            onRefresh={onRefresh}
             showsVerticalScrollIndicator={false}
             ListEmptyComponent={() => (
               <View style={{ alignItems: "center", marginTop: 20 }}>

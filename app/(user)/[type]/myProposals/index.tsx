@@ -42,6 +42,9 @@ export default function MyProposals() {
   );
   const [activeTab, setActiveTab] = useState("Active");
   const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
   const params = useGlobalSearchParams<{ type: UserType }>();
   const [unappliedFilters, setUnappliedFilters] = useState<{ [key: string]: any }>({});
   const dispatch = useDispatch();
@@ -122,7 +125,6 @@ export default function MyProposals() {
         };
       });
       setDropDownData(updatedDropdown);
-      console.log("IDHAR AKAR CALL HOGYA")
       fetchProposals();
     }, [filter])
   );
@@ -148,27 +150,88 @@ export default function MyProposals() {
     },
   ];
 
-  useEffect(() => {
-    fetchProposals();
-  }, []);
+  const fetchProposals = async (newPage: number = 1, isRefreshing = false) => {
+    if (newPage > totalPages) return;
 
-  const fetchProposals = async () => {
-    setLoading(true);
+    if (isRefreshing) {
+      setRefreshing(true);
+    } else {
+      setLoading(true);
+    }
     try {
       const filters = Object.fromEntries(
         Object.entries(filter).filter(([_, value]) => value !== null)
       );
-      const response = await handleGetAllPropertyProposals(true, filters);
-      setLoading(false);
+      const response = await handleGetAllPropertyProposals(true, filters, newPage);
       if (response.status && response.proposalData) {
-        setProposalData(response.proposalData);
+        setProposalData((prevData) => {
+                const mergeUnique = (
+                  prevArray: PropertyItem[],
+                  newArray: PropertyItem[]
+                ) => {
+                  const combined = [...prevArray, ...newArray];
+                  return combined.filter(
+                    (item, index, self) =>
+                      self.findIndex((t) => t.id === item.id) === index
+                  );
+                };
+                return {
+                  activeProposals: mergeUnique(
+                    prevData?.activeProposals || [],
+                    response.proposalData?.activeProposals || []
+                  ),
+                  archivedProposals: mergeUnique(
+                    prevData?.archivedProposals || [],
+                    response.proposalData?.archivedProposals || []
+                  ),
+                  rejectedProposals: mergeUnique(
+                    prevData?.rejectedProposals || [],
+                    response.proposalData?.rejectedProposals || []
+                  ),
+                  submittedProposals: mergeUnique(
+                    prevData?.submittedProposals || [],
+                    response.proposalData?.submittedProposals || []
+                  ),
+                  trashProperties: mergeUnique(
+                    prevData?.trashProperties || [],
+                    response.proposalData?.trashProperties || []
+                  ),
+                  active: mergeUnique(
+                    prevData?.active || [],
+                    response.proposalData?.active || []
+                  ),
+                  draft: mergeUnique(
+                    prevData?.draft || [],
+                    response.proposalData?.draft || []
+                  ),
+                  trash: mergeUnique(
+                    prevData?.trash || [],
+                    response.proposalData?.trash || []
+                  ),
+                  totalCount:response.proposalData?.totalCount ?? prevData?.totalCount ?? 0,
+                  currentPage:response.proposalData?.currentPage ?? prevData?.currentPage ?? 1,
+                  totalPages:response.proposalData?.totalPages ?? prevData?.totalPages ?? 1,
+                  itemsPerPage:response.proposalData?.itemsPerPage ??prevData?.itemsPerPage ??10,
+                };
+              });
       }
       else {
         showToast(response.message || "Proposals not found", 'error')
       }
+      setPage(response.proposalData?.currentPage || newPage);
+      setTotalPages(response.proposalData?.totalPages || 1);
+      if (isRefreshing) {
+        setRefreshing(false);
+      } else {
+        setLoading(false);
+      }
     } catch (error) {
       showToast('Failed to fetch Proposal', 'error')
-      setLoading(false);
+      if (isRefreshing) {
+        setRefreshing(false);
+      } else {
+        setLoading(false);
+      }
     }
   };
 
@@ -177,7 +240,16 @@ export default function MyProposals() {
     try {
       const response = await handleDeletePropertyProposal(proposalID);
       if (response.status) {
-        fetchProposals()
+        setProposalData((prevData) => {
+          if (!prevData) return prevData;
+          return {
+            ...prevData,
+            activeProposals: prevData.activeProposals.filter((item) => item.id !== proposalID),
+            submittedProposals: prevData.submittedProposals.filter((item) => item.id !== proposalID),
+            archivedProposals: prevData.archivedProposals.filter((item) => item.id !== proposalID),
+            rejectedProposals: prevData.rejectedProposals.filter((item) => item.id !== proposalID),
+          };
+        });
       }
       else {
         setLoading(false);
@@ -188,6 +260,11 @@ export default function MyProposals() {
     }
   };
 
+  const onRefresh = () => {
+    if (page < totalPages) {
+      fetchProposals(page + 1, true);
+    }
+  };
 
   const btnsData = (item: PropertyItem) => [
     { label: "Trash", onPress: () => deleteProposal(item.id), outline: true },
@@ -364,6 +441,8 @@ export default function MyProposals() {
                     renderItem={({ item }) => renderProposalItem({ item })}
                     ItemSeparatorComponent={() => <GapView length={15} />}
                     keyExtractor={(item) => item.id}
+                    refreshing={refreshing}
+                    onRefresh={onRefresh}
                   />
                 </>
               )}
@@ -383,6 +462,8 @@ export default function MyProposals() {
                     renderItem={({ item }) => renderProposalItem({ item })}
                     ItemSeparatorComponent={() => <GapView length={15} />}
                     keyExtractor={(item) => item.id}
+                    refreshing={refreshing}
+                    onRefresh={onRefresh}
                   />
                 </>
               )}
@@ -390,7 +471,7 @@ export default function MyProposals() {
           ) : (
             <View style={styles(theme).errorContainer}>
               <MyText text="No Data found" size={16} textColor="red" />
-              <TouchableOpacity onPress={fetchProposals}>
+              <TouchableOpacity onPress={()=>fetchProposals()}>
                 <MyText text="Retry" size={16} textColor={theme.colors.primary} />
               </TouchableOpacity>
             </View>
@@ -411,12 +492,14 @@ export default function MyProposals() {
                 renderItem={({ item }) => renderProposalItem({ item })}
                 ItemSeparatorComponent={() => <GapView length={15} />}
                 keyExtractor={(item) => item.id}
+                refreshing={refreshing}
+                onRefresh={onRefresh}
               />
             </>
           ) : (
             <View style={styles(theme).errorContainer}>
               <MyText text="No Data found" size={16} textColor="red" />
-              <TouchableOpacity onPress={fetchProposals}>
+              <TouchableOpacity onPress={()=>fetchProposals()}>
                 <MyText text="Retry" size={16} textColor={theme.colors.primary} />
               </TouchableOpacity>
             </View>

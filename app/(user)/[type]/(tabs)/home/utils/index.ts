@@ -198,7 +198,7 @@ export interface OrganizedCategory {
   };
 }
 
-const handleGetAllProperties = async (params?: string, filters?: Record<string, any>): Promise<{
+const handleGetAllProperties = async (params?: string, page: number = 1, filters?: Record<string, any>, pageSize: number = 50): Promise<{
   status: boolean;
   data?: AllPropertiesData;
   message?: string;
@@ -206,7 +206,7 @@ const handleGetAllProperties = async (params?: string, filters?: Record<string, 
   try {
     console.log("params ", params?.toString())
     const endpoint = params?.trim() === 'agent' ? `/property` : '/userProperty';
-    const { data } = await api.get<FindAllPropertiesResponse>(endpoint, filters);
+    const { data } = await api.get<FindAllPropertiesResponse>(endpoint,{ page: page, pageSize: pageSize, ...filters });
     console.log("data handleGetAllProperties", data)
     if (data?.success) {
       return {
