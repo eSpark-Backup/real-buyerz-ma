@@ -4,6 +4,7 @@ import {
   View,
   FlatList,
   ActivityIndicator,
+  RefreshControl,
   TouchableOpacity,
 } from "react-native";
 import { useTheme } from "@react-navigation/native";
@@ -67,16 +68,19 @@ export default function Favourite() {
     } else {
       setLoading(true);
     }
-    console.log("fetching favorites "+params.type);
+    console.log("fetching favorites " + params.type);
     try {
       const result = await handleGetFavorite(params.type, newPage);
       setLoading(true);
       if (result.status) {
-        const mappedFavorites = result.properties?.modifiedProperties?.map(mapPropertyToItem) || [];
+        const mappedFavorites =
+          result.properties?.modifiedProperties?.map(mapPropertyToItem) || [];
         if (mappedFavorites.length == 0) setError("No Properties found");
         setFavorites((prevFavorites) => {
           const existingIds = new Set(prevFavorites.map((item) => item.id));
-          const uniqueFavorites = mappedFavorites.filter((item) => !existingIds.has(item.id));
+          const uniqueFavorites = mappedFavorites.filter(
+            (item) => !existingIds.has(item.id)
+          );
           return [...prevFavorites, ...uniqueFavorites];
         });
         setPage(result.properties?.currentPage || newPage);
@@ -99,7 +103,9 @@ export default function Favourite() {
 
   const handleUnfavorite = async (propertyId: string) => {
     try {
-      setFavorites((prevFavorites) => prevFavorites.filter((item) => item.id !== propertyId));
+      setFavorites((prevFavorites) =>
+        prevFavorites.filter((item) => item.id !== propertyId)
+      );
     } catch (error) {
       console.error("Error unfavoriting property:", error);
     }
@@ -134,7 +140,7 @@ export default function Favourite() {
         size={16}
         textColor="red"
       />
-      <TouchableOpacity onPress={()=>fetchFavorites()}>
+      <TouchableOpacity onPress={() => fetchFavorites()}>
         <MyText text="Retry" size={16} textColor={theme.colors.primary} />
       </TouchableOpacity>
     </View>
@@ -154,7 +160,7 @@ export default function Favourite() {
       ) : favorites.length === 0 ? (
         <View style={styles(theme).errorContainer}>
           <MyText text="No Properties found" size={16} textColor="red" />
-          <TouchableOpacity onPress={()=>fetchFavorites()}>
+          <TouchableOpacity onPress={() => fetchFavorites()}>
             <MyText text="Retry" size={16} textColor={theme.colors.primary} />
           </TouchableOpacity>
         </View>
@@ -178,8 +184,15 @@ export default function Favourite() {
               ListFooterComponent={() => <GapView length={36} />}
               ItemSeparatorComponent={() => <GapView />}
               keyExtractor={(item) => item.id}
-              refreshing={refreshing}
-              onRefresh={onRefresh}
+              refreshControl={
+                <RefreshControl
+                  refreshing={refreshing}
+                  onRefresh={fetchFavorites}
+                  tintColor={theme?.colors.primary}
+                />
+              }
+              onEndReached={onRefresh}
+              onEndReachedThreshold={0.5}
             />
           </View>
         </Card>

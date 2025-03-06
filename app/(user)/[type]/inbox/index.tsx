@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { StyleSheet, TouchableOpacity, View, FlatList } from "react-native";
+import { StyleSheet, TouchableOpacity, View, FlatList,RefreshControl } from "react-native";
 import { useTheme } from "@react-navigation/native";
 import {
   router,
@@ -147,8 +147,15 @@ const Inbox: React.FC = () => {
         {tab === "inbox" && (
           <FlatList
             data={chats}
-            refreshing={refreshing}
-            onRefresh={onRefresh}
+            refreshControl={
+              <RefreshControl
+                refreshing={refreshing}
+                onRefresh={fetchChats}
+                tintColor={theme?.colors.primary}
+              />
+            }
+            onEndReached={onRefresh}
+            onEndReachedThreshold={0.5}
             showsVerticalScrollIndicator={false}
             ListEmptyComponent={() => (
               <View style={{ alignItems: "center", marginTop: 20 }}>

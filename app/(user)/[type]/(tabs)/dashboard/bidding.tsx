@@ -5,6 +5,7 @@ import {
   StyleSheet,
   View,
   ActivityIndicator,
+  RefreshControl,
   Text,
 } from "react-native";
 import { useTheme } from "@react-navigation/native";
@@ -17,7 +18,11 @@ import { useDispatch, useSelector } from "react-redux";
 
 import { MyTheme, UserType } from "@types";
 import { AdBox, GapView, MyText, MyTopTabs, OverlayLoader } from "@components";
-import { handleGetAllProperties,PropertyItem,AllPropertiesData } from "../home/utils";
+import {
+  handleGetAllProperties,
+  PropertyItem,
+  AllPropertiesData,
+} from "../home/utils";
 import {
   PropertySliceState,
   setAllProperties,
@@ -46,7 +51,10 @@ export default function Bidding() {
     fetchAllProperties();
   }, []);
 
-  const fetchAllProperties = async (newPage: number = 1, isRefreshing = false) => {
+  const fetchAllProperties = async (
+    newPage: number = 1,
+    isRefreshing = false
+  ) => {
     if (newPage > totalPages) return;
     if (isRefreshing) {
       setRefreshing(true);
@@ -57,20 +65,22 @@ export default function Bidding() {
       const response = await handleGetAllProperties(params.type, newPage);
       if (response.data) {
         dispatch((dispatch, getState) => {
-          const prevState = getState().property.allProperties || { 
-            items: [], 
-            savedLeadItems: [], 
-            totalCount: 0, 
-            currentPage: 1, 
-            totalPages: 1, 
-            itemsPerPage: 3 
+          const prevState = getState().property.allProperties || {
+            items: [],
+            savedLeadItems: [],
+            totalCount: 0,
+            currentPage: 1,
+            totalPages: 1,
+            itemsPerPage: 3,
           };
-  
-          const existingIds = new Set(prevState.items.map((item: PropertyItem) => item.id));
+
+          const existingIds = new Set(
+            prevState.items.map((item: PropertyItem) => item.id)
+          );
           const newItems = response?.data?.items.filter(
             (item: PropertyItem) => !existingIds.has(item.id)
           );
-  
+
           dispatch(
             setAllProperties({
               ...prevState,
@@ -132,17 +142,16 @@ export default function Bidding() {
   }
 
   const transformedData =
-  selectedTab === "Best Matches"
-    ? allProperties?.items || []
-    : allProperties?.savedLeadItems?.map((item) => ({
-        ...item.property, 
-        id: item.id,
-      })) || [];
-
+    selectedTab === "Best Matches"
+      ? allProperties?.items || []
+      : allProperties?.savedLeadItems?.map((item) => ({
+          ...item.property,
+          id: item.id,
+        })) || [];
 
   const onRefresh = () => {
     if (page < totalPages) {
-       fetchAllProperties(page + 1, true);
+      fetchAllProperties(page + 1, true);
     }
   };
 
@@ -198,8 +207,15 @@ export default function Bidding() {
       )}
       ItemSeparatorComponent={() => <GapView />}
       contentContainerStyle={{ paddingHorizontal: 20 }}
-      refreshing={refreshing}
-      onRefresh={onRefresh}
+      refreshControl={
+        <RefreshControl
+          refreshing={refreshing}
+          onRefresh={fetchAllProperties}
+          tintColor={theme?.colors.primary}
+        />
+      }
+      onEndReached={onRefresh}
+      onEndReachedThreshold={0.5}
     />
   );
 }

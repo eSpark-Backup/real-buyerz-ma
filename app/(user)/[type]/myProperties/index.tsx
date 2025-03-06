@@ -5,6 +5,7 @@ import {
   StyleProp,
   StyleSheet,
   View,
+  RefreshControl,
   ViewStyle,
 } from "react-native";
 import { useTheme } from "@react-navigation/native";
@@ -516,8 +517,15 @@ export default function MyProperties() {
             renderItem={({ item }) => renderPropertiesItem({ item })}
             ItemSeparatorComponent={() => <GapView length={15} />}
             keyExtractor={(item) => item.id}
-            refreshing={refreshing}
-            onRefresh={onRefresh}
+            refreshControl={
+              <RefreshControl
+                refreshing={refreshing}
+                onRefresh={fetchProposals}
+                tintColor={theme?.colors.primary}
+              />
+            }
+            onEndReached={onRefresh}
+            onEndReachedThreshold={0.5}
           />
         ) : (
           <View style={styles.errorContainer}>
