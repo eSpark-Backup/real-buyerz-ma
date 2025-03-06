@@ -259,9 +259,8 @@ export default function Listing() {
         onChange={(data) => {
           setPropertyData((prev) => ({
             ...prev,
-            propertyName: data.propertyName || prev.propertyName,
-            propertyDescription:
-              data.propertyDescription || prev.propertyDescription,
+            propertyName: data.propertyName !== undefined ? data.propertyName : prev.propertyName,
+            propertyDescription: data.propertyDescription !== undefined ? data.propertyDescription : prev.propertyDescription,
           }));
         }}
       />
@@ -275,13 +274,13 @@ export default function Listing() {
         onChange={(data) => {
           setPropertyData((prev) => ({
             ...prev,
-            purpose: data.purpose || prev.purpose,
-            propertyCity: data.propertyCity || prev.propertyCity,
-            propertySubTypeId: data.propertySubTypeId || prev.propertySubTypeId,
-            propertyAddress: data.propertyAddress || prev.propertyAddress,
-            propertyZip: data.propertyZip || prev.propertyZip,
-            longitude: data.longitude || prev.longitude,
-            latitude: data.latitude || prev.latitude,
+            purpose: data.purpose !== undefined ? data.purpose : prev.purpose,
+            propertyCity: data.propertyCity !== undefined ? data.propertyCity : prev.propertyCity,
+            propertySubTypeId: data.propertySubTypeId !== undefined ? data.propertySubTypeId : prev.propertySubTypeId,
+            propertyAddress: data.propertyAddress !== undefined ? data.propertyAddress : prev.propertyAddress,
+            propertyZip: data.propertyZip !== undefined ? data.propertyZip : prev.propertyZip,
+            longitude: data.longitude !== undefined ? data.longitude : prev.longitude,
+            latitude: data.latitude !== undefined ? data.latitude : prev.latitude,
           }));
         }}
       />
@@ -290,11 +289,10 @@ export default function Listing() {
         price={propertyData.propertyPrice}
         size={propertyData.propertyArea}
         onChange={(data) => {
-          console.log(`data ${JSON.stringify(propertyData)}`);
           setPropertyData((prev) => ({
             ...prev,
-            propertyArea: data.propertyArea || prev.propertyArea,
-            propertyPrice: data.propertyPrice || prev.propertyPrice,
+            propertyArea: data.propertyArea !== undefined ? data.propertyArea : prev.propertyArea,
+            propertyPrice: data.propertyPrice !== undefined ? data.propertyPrice : prev.propertyPrice,
           }));
         }}
       />
@@ -486,7 +484,7 @@ function AdInformation({
             placeholderColor={theme.colors.placeholderText}
             multiline
             onChange={(value) => {
-              onChange({ propertyName: value });
+              onChange({ propertyName: value === "" ? "" : value });
             }}
           />
         </View>
@@ -762,7 +760,7 @@ function LocationAndPurpose({
             placeholderColor={theme.colors.placeholderText}
             keyboardType="number-pad"
             onChange={(value) => {
-              onChange?.({ propertyZip: value });
+              onChange?.({ propertyZip: value === "" ? "" : value });
             }}
           />
         </View>
@@ -778,7 +776,7 @@ function LocationAndPurpose({
             inputStyle={[styles(theme).inputInnerStyle]}
             placeholderColor={theme.colors.placeholderText}
             onChange={(value) => {
-              onChange?.({ propertyAddress: value });
+              onChange?.({ propertyAddress: value === "" ? "" : value });
             }}
           />
         </View>
@@ -812,8 +810,8 @@ function PropertySizeandPricing({
             style={styles(theme).singleInputStyle}
             inputStyle={styles(theme).inputInnerStyle}
             placeholderColor={theme.colors.placeholderText}
-            onChange={(val) => onChange?.({ propertyArea: val })}
-          />
+            onChange={(val) => onChange?.({ propertyArea: val === "" ? "" : val })}
+            />
           <MyDropdown
             id="unit"
             data={[]}
@@ -834,8 +832,8 @@ function PropertySizeandPricing({
             style={styles(theme).singleInputStyle}
             inputStyle={styles(theme).inputInnerStyle}
             placeholderColor={theme.colors.placeholderText}
-            onChange={(val) => onChange?.({ propertyPrice: val })}
-          />
+            onChange={(val) => onChange?.({ propertyPrice: val === "" ? "" : val })}
+            />
           <MyDropdown
             id="currency"
             data={[]}
