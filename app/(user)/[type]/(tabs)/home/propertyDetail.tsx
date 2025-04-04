@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import { MyTheme, PropertyDetailScreenParams } from "@types";
@@ -25,6 +25,8 @@ const PropertyDetail = () => {
   const { item, type } = useLocalSearchParams<PropertyDetailScreenParams>();
 
   const productDetail: PropertyItem = JSON.parse(item ?? "{}");
+
+  console.log("productDetail", productDetail);
 
   const images = [
     "https://picsum.photos/id/299/620",
@@ -95,10 +97,17 @@ const PropertyDetail = () => {
     <ScrollView>
       <View style={styles(theme).wrapper}>
         <CustomSlider
-          images={productDetail.PropertyData.map((item) => ({
-            uri: item.url, 
-            type: item.type,
-          }))}
+          images={
+            productDetail?.PropertyData?.length
+              ? productDetail.PropertyData.map((item) => ({
+                  uri: item.url, // Convert 'url' to 'uri'
+                  type: item.type || "image", // Ensure 'type' is always defined
+                }))
+              : images.map((url) => ({
+                  uri: url,
+                  type: "image",
+                }))
+          }
           title={productDetail?.propertyName ?? "4 BEDROOMS APARTMENT"}
         />
         <Card style={styles(theme).cardWrapper}>
@@ -108,7 +117,7 @@ const PropertyDetail = () => {
               imageUrl={{
                 uri:
                   productDetail.user?.profileImage &&
-                    isImageUrl(productDetail.user?.profileImage ?? "")
+                  isImageUrl(productDetail.user?.profileImage ?? "https://picsum.photos/id/151/130")
                     ? productDetail.user?.profileImage
                     : "https://picsum.photos/id/151/130",
               }}
@@ -145,8 +154,8 @@ const PropertyDetail = () => {
                   router.navigate({
                     pathname: `(user)/${type!}/(tabs)/home/AgentProfile`,
                     params: {
-                      item: JSON.stringify(productDetail.userId)
-                    }
+                      item: JSON.stringify(productDetail.userId),
+                    },
                   })
                 }
                 btnStyle={{
@@ -261,9 +270,8 @@ const PropertyDetail = () => {
             </View>
           </View>
         </Card>
-        <PropertyList title="Similar Projects" theme={theme} />
+        <PropertyList title="Similar Projects" theme={theme} data={[]} />
       </View>
-      {/* temporarily */}
       <MyPopupModal visible={isVisble} bgDim>
         <MyPopupModal.Feedback
           message="Moin Khan"

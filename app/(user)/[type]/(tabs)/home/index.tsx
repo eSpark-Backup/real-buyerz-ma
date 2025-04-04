@@ -94,7 +94,7 @@ export default function Home() {
 
   const fetchAllProperties = async () => {
     try {
-      const response = await handleGetAllProperties();
+      const response = await handleGetAllProperties(params?.type);
       if (response.data) {
         dispatch(setAllProperties(response.data));
       }

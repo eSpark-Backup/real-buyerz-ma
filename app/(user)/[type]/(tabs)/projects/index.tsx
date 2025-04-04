@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { FlatList, StyleProp, StyleSheet, View, ViewStyle } from "react-native";
+import { FlatList, StyleProp, StyleSheet, View, ViewStyle,RefreshControl } from "react-native";
 import { useTheme } from "@react-navigation/native";
 
 import {
@@ -19,7 +19,11 @@ import { useFocusEffect, useGlobalSearchParams } from "expo-router";
 import { RootState } from "@store";
 import { PropertySliceState, setFilter } from "features/property/propertySlice";
 import { useSelector } from "react-redux";
-import { handleGetAllProperties, PropertyItem, PropertySubType } from "../home/utils";
+import {
+  handleGetAllProperties,
+  PropertyItem,
+  PropertySubType,
+} from "../home/utils";
 import { createUrlParams } from "@utils/functions";
 import { useDispatch } from "react-redux";
 
@@ -31,44 +35,87 @@ export default function Projects() {
   const { propertyTypes, filter } = useSelector<RootState, PropertySliceState>(
     (state) => state.property
   );
+  const [refreshing, setRefreshing] = useState(false);
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
   const [loading, setLoading] = useState<boolean>(false);
-  const [unappliedFilters, setUnappliedFilters] = useState<{ [key: string]: any }>({});
+  const [unappliedFilters, setUnappliedFilters] = useState<{
+    [key: string]: any;
+  }>({});
   const [dropdownData, setDropDownData] = useState([
     {
       data: ["Sell", "Buy", "Rent"],
       height: 40,
       zIndex: 4,
-      onSelect: (val: string) => { },
+      onSelect: (val: string) => {},
       placeholder: "Purpose",
       title: "Purpose",
       style: { width: "100%" },
       id: "purpose",
-      selected: filter?.purpose ? [filter?.purpose] : null,
+      selected: null,
     },
     {
       data: propertyTypes ? propertyTypes?.map((val) => val?.typeName) : [],
       height: 40,
       zIndex: 4,
-      onSelect: (val: string) => { },
+      onSelect: (val: string) => {},
       placeholder: "Type",
       title: "Property Type",
       style: { width: "100%" },
       id: "propertyType",
-      selected: filter?.propertyType ? [filter?.propertyType] : null,
+      selected: null,
     },
   ]);
-  const [tabsData, setTabsData] = useState<{ title: string; selected: boolean }[]>([]);
+  const [tabsData, setTabsData] = useState<
+    { title: string; selected: boolean }[]
+  >([]);
   const [selectedTab, setSelectedTab] = useState<string>("");
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    const initialUnappliedFilters: { [key: string]: any } = {};
+    if (filter?.purpose) {
+      initialUnappliedFilters.purpose = { value: { value: [filter.purpose] } };
+    }
+    if (filter?.propertyType) {
+      initialUnappliedFilters.propertyType = {
+        value: { value: [filter.propertyType] },
+      };
+    }
+    if (filter?.price1 !== null && filter?.price2 !== null) {
+      initialUnappliedFilters.priceRange = {
+        value: [filter.price1, filter.price2],
+      };
+    }
+    if (filter?.area1 !== null && filter?.area2 !== null) {
+      initialUnappliedFilters.area = { value: [filter.area1, filter.area2] };
+    }
+    setUnappliedFilters(initialUnappliedFilters);
+  }, []);
 
   useFocusEffect(
     useCallback(() => {
       const updatedDropdown = dropdownData.map((val) => {
-        const id = Object.keys(filter).find((key) => val.id === key) as "propertyType" | "purpose";
-        return {
-          ...val,
-          selected: filter?.[id] ? [filter?.[id]] : null,
-        };
+        if (val.id === "purpose") {
+          return {
+            ...val,
+            selected: unappliedFilters.purpose
+              ? unappliedFilters.purpose.value.value
+              : filter?.purpose
+              ? [filter?.purpose]
+              : null,
+          };
+        } else if (val.id === "propertyType") {
+          return {
+            ...val,
+            selected: unappliedFilters.propertyType
+              ? unappliedFilters.propertyType.value.value
+              : filter?.propertyType
+              ? [filter?.propertyType]
+              : null,
+          };
+        }
+        return val;
       });
       setDropDownData(updatedDropdown);
       fetchProperties();
@@ -77,79 +124,99 @@ export default function Projects() {
 
   useEffect(() => {
     return () => {
-      onResetFilters()
+      onResetFilters();
     };
   }, []);
 
-  const fetchProperties = async () => {
+  const fetchProperties = async (newPage: number = 1, isRefreshing = false) => {
     try {
-      setLoading(true);
+      if (newPage > totalPages) return;
+      if (isRefreshing) {
+        setRefreshing(true);
+      } else {
+        setLoading(true);
+      }
       const param = createUrlParams(filter);
-
       const filters = Object.fromEntries(
         Object.entries(filter).filter(([_, value]) => value !== null)
       );
 
-      const response = await handleGetAllProperties(param, filters);
+      const response = await handleGetAllProperties(param, newPage, filters);
       if (response?.data) {
-        console.log("data " + JSON.stringify(response.data));
-        setProperties(response?.data.items);
+        setProperties((prevProperties) => {
+          const allProperties = [
+            ...prevProperties,
+            ...(response?.data?.items || []),
+          ];
+          const uniqueProperties = Array.from(
+            new Map(allProperties.map((item) => [item.id, item])).values()
+          );
+          return uniqueProperties;
+        });
         updateTabs(response.data.items);
       }
-      setLoading(false);
+      setPage(response.data?.currentPage || newPage);
+      setTotalPages(response.data?.totalPages || 1);
+      if (isRefreshing) {
+        setRefreshing(false);
+      } else {
+        setLoading(false);
+      }
     } catch (error) {
       console.error("Error fetching properties:", error);
-      setLoading(false);
+      if (isRefreshing) {
+        setRefreshing(false);
+      } else {
+        setLoading(false);
+      }
     }
   };
 
   const updateTabs = (items: PropertyItem[]) => {
-    const uniqueTabs = new Set<string>();
+    setTabsData((prevTabsData) => {
+      const existingTabs = new Set(prevTabsData.map((tab) => tab.title));
 
-    items.forEach(item => {
-      const propertyType = item.propertyType?.typeName;
+      items.forEach((item) => {
+        const propertyType = item.propertyType?.typeName;
 
-      if (propertyType === "Residential" && item.propertyType.subTypes) {
-        if (Array.isArray(item.propertyType.subTypes)) {
-          item.propertyType.subTypes.forEach((subType) => {
-            if (subType.typeName) {
-              uniqueTabs.add(subType.typeName);
+        if (propertyType === "Residential" && item.propertyType.subTypes) {
+          if (Array.isArray(item.propertyType.subTypes)) {
+            item.propertyType.subTypes.forEach((subType) => {
+              if (subType.typeName) {
+                existingTabs.add(subType.typeName);
+              }
+            });
+          } else {
+            const subType = item.propertyType.subTypes as PropertySubType;
+            if (subType?.typeName) {
+              existingTabs.add(subType.typeName);
             }
-          });
-        }
-        else {
-          const subType = item.propertyType.subTypes as PropertySubType;
-          if (subType && subType.typeName) {
-            uniqueTabs.add(subType.typeName);
           }
         }
+        if (propertyType === "Commercial") {
+          existingTabs.add(propertyType);
+        }
+      });
+
+      const newTabsData = Array.from(existingTabs).map((type) => ({
+        title: type,
+        selected: selectedTab === type,
+      }));
+      if (newTabsData.length > 0) {
+        setSelectedTab(newTabsData[0].title);
       }
-      if (propertyType === "Commercial") {
-        uniqueTabs.add(propertyType);
-      }
+      return newTabsData;
     });
-
-    const newTabsData: { title: string; selected: boolean }[] = Array.from(uniqueTabs)
-      .filter(tab => tab !== "Commercial")
-      .map(type => ({ title: type, selected: false }))
-      .concat(
-        Array.from(uniqueTabs)
-          .filter(tab => tab === "Commercial")
-          .map(type => ({ title: type, selected: false }))
-      );
-
-    setTabsData(newTabsData);
-    if (newTabsData.length > 0) {
-      setSelectedTab(newTabsData[0].title);
-    }
   };
 
   const renderTabContent = () => {
-    const filteredProperties = properties.filter(item => {
+    const filteredProperties = properties.filter((item) => {
       if (selectedTab === "Commercial") {
         return item.propertyType.typeName === "Commercial";
       }
-      const isResidential = item.propertyType.typeName === "Residential" && item.propertyType.subTypes?.typeName === selectedTab;
+      const isResidential =
+        item.propertyType.typeName === "Residential" &&
+        item.propertyType.subTypes?.typeName === selectedTab;
       return isResidential;
     });
 
@@ -170,6 +237,15 @@ export default function Projects() {
         showsVerticalScrollIndicator={false}
         ItemSeparatorComponent={() => <GapView />}
         keyExtractor={(item) => item.id}
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={fetchProperties}
+            tintColor={theme?.colors.primary}
+          />
+        }
+        onEndReached={onRefresh}
+        onEndReachedThreshold={0.5}
       />
     );
   };
@@ -190,22 +266,24 @@ export default function Projects() {
       obj.area1 = unappliedFilters.area.value[0];
       obj.area2 = unappliedFilters.area.value[1];
     }
-    console.log("purpose1 " + JSON.stringify(obj))
+    console.log("purpose1 " + JSON.stringify(obj));
     dispatch(setFilter(obj));
     setVisible(false);
   };
 
   const onResetFilters = () => {
-    console.log("idhar reset mai aya")
+    console.log("idhar reset mai aya");
     setUnappliedFilters({});
-    dispatch(setFilter({
-      propertyType: null,
-      purpose: null,
-      price1: null,
-      price2: null,
-      area1: null,
-      area2: null
-    }));
+    dispatch(
+      setFilter({
+        propertyType: null,
+        purpose: null,
+        price1: null,
+        price2: null,
+        area1: null,
+        area2: null,
+      })
+    );
     fetchProperties();
   };
 
@@ -214,6 +292,12 @@ export default function Projects() {
       ...prev,
       [filterType]: { value: [low, high] },
     }));
+  };
+
+  const onRefresh = () => {
+    if (page < totalPages) {
+      fetchProperties(page + 1, true);
+    }
   };
 
   return (
@@ -227,35 +311,39 @@ export default function Projects() {
         }}
       >
         {dropdownData.map((item, index) => {
-          console.log("unappliedFilters" + JSON.stringify(unappliedFilters))
-          return <View key={index}>
-            <MyDropdown
-              id={item.id}
-              data={item.data}
-              placeholder={item.placeholder}
-              onSelect={(val) => {
-                unappliedFilters[item.id] = { value: val };
-                setUnappliedFilters({ ...unappliedFilters });
-              }}
-              style={{ width: "100%" }}
-              height={40}
-              zIndex={4 - index}
-              title={item.title}
-              theme={theme}
-              selected={item.selected}
-            />
-            {dropdownData.length - 1 && <GapView length={20} />}
-          </View>
-        }
-
-        )}
+          console.log("unappliedFilters" + JSON.stringify(unappliedFilters));
+          return (
+            <View key={index}>
+              <MyDropdown
+                id={item.id}
+                data={item.data}
+                placeholder={item.placeholder}
+                onSelect={(val) => {
+                  unappliedFilters[item.id] = { value: val };
+                  setUnappliedFilters({ ...unappliedFilters });
+                }}
+                style={{ width: "100%" }}
+                height={40}
+                zIndex={4 - index}
+                title={item.title}
+                theme={theme}
+                selected={
+                  unappliedFilters[item.id]?.value?.value || item.selected
+                }
+              />
+              {dropdownData.length - 1 && <GapView length={20} />}
+            </View>
+          );
+        })}
         <View>
           <RangeSlider
             title="Price Range"
             theme={theme}
             initialValLow={unappliedFilters.priceRange?.value[0] || "0"}
             initialValHigh={unappliedFilters.priceRange?.value[1] || "10000000"}
-            onChangeVal={(low, high) => handleRangeChange(low, high, 'priceRange')}
+            onChangeVal={(low, high) =>
+              handleRangeChange(low, high, "priceRange")
+            }
           />
           <GapView length={20} />
           <RangeSlider
@@ -263,7 +351,7 @@ export default function Projects() {
             theme={theme}
             initialValLow={unappliedFilters.area?.value[0] || "0"}
             initialValHigh={unappliedFilters.area?.value[1] || "100"}
-            onChangeVal={(low, high) => handleRangeChange(low, high, 'area')}
+            onChangeVal={(low, high) => handleRangeChange(low, high, "area")}
           />
         </View>
         <GapView length={10} />
@@ -297,13 +385,18 @@ export default function Projects() {
         }))}
         onTabPress={(title) => {
           setSelectedTab(title);
-          const updatedTabs = tabsData.map(t => ({ ...t, selected: t.title === title }));
+          const updatedTabs = tabsData.map((t) => ({
+            ...t,
+            selected: t.title === title,
+          }));
           setTabsData(updatedTabs);
         }}
       />
       <View style={styles.searchList}>
         {properties.length === 0 ? (
-          <View style={{ alignItems: 'center', justifyContent: 'center', flex: 1 }}>
+          <View
+            style={{ alignItems: "center", justifyContent: "center", flex: 1 }}
+          >
             <MyText>No Properties Found</MyText>
           </View>
         ) : (

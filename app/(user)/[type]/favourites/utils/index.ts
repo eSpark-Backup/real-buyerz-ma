@@ -10,7 +10,14 @@ interface ApiResponse {
 interface ResponseData {
   timestamp_ms: number;
   action: string;
-  data: PropertyResponse[];
+  data: ModifiedProperties;
+}
+interface ModifiedProperties {
+  modifiedProperties: PropertyResponse[];
+  totalCount: number;
+  currentPage: number;
+  totalPages: number;
+  itemsPerPage: number;
 }
 
 export interface PropertyResponse {
@@ -49,12 +56,12 @@ export interface PropertyDetails {
 }
 
 
-const handleGetFavorite = async (type?: string): Promise<{ status: boolean; properties?: PropertyResponse[]; message?: string }> => {
+const handleGetFavorite = async (type?: string, page: number = 1, pageSize: number = 20) => {
   try {
-    const endpoint = type?.trim() === 'agent'? `/property/request`: '/userProperty/request';
-    const { data } = await api.get<ApiResponse>(endpoint);
+    const endpoint = type?.trim() === 'agent' ? `/property/request` : '/userProperty/request';
+    const { data } = await api.get<ApiResponse>(endpoint, { page: page, pageSize: pageSize });
     if (data?.response?.data) {
-      console.log(`Idhar: ${JSON.stringify(data)}`);
+      console.log(`Idhar: ${JSON.stringify(data.response.data)}`);
       return {
         status: true,
         properties: data.response.data,

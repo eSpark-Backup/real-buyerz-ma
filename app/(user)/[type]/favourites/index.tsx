@@ -1,5 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { StyleSheet, View, FlatList, ActivityIndicator, TouchableOpacity } from "react-native";
+import {
+  StyleSheet,
+  View,
+  FlatList,
+  ActivityIndicator,
+  RefreshControl,
+  TouchableOpacity,
+} from "react-native";
 import { useTheme } from "@react-navigation/native";
 import { MyListItem, GapView, MyText, Card, OverlayLoader } from "@components";
 import { MyTheme, UserType } from "@types";
@@ -14,12 +21,15 @@ export default function Favourite() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const params = useGlobalSearchParams<{ type: UserType }>();
+  const [refreshing, setRefreshing] = useState(false);
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
 
   const mapPropertyToItem = (property: PropertyResponse): PropertyItem => ({
     id: property.propertyId,
     userId: property.userId,
     propertyName: property.property.propertyName,
-    propertyPrice: formatPrice(property.property.propertyPrice)+" PKR",
+    propertyPrice: formatPrice(property.property.propertyPrice) + " PKR",
     propertyArea: property.property.propertyArea,
     purpose: property.property.purpose,
     propertyAddress: property.property.propertyAddress,
@@ -34,40 +44,70 @@ export default function Favourite() {
     isFeatured: property.property.isFeatured,
     isDeleted: property.property.isDeleted,
     propertyTypeId: property.property.propertyTypeId,
-    image:[],
-    video:[],
+    image: [],
+    video: [],
     createdAt: property.property.createdAt,
     updatedAt: property.property.updatedAt,
     amenities: property.property.amenities || [],
     propertyType: {
       ...property.propertyType,
-      url: property.propertyType?.url || '',
+      url: property.propertyType?.url || "",
     },
     PropertyData: property.property.PropertyData || [],
     user: {
       id: property.userId,
     },
-    isFavourite: true
+    isFavourite: true,
   });
 
-  const fetchFavorites = async () => {
-    setLoading(true);
-    setError(null);
+  const fetchFavorites = async (newPage: number = 1, isRefresh = false) => {
+    if (newPage > totalPages) return;
+
+    if (isRefresh) {
+      setRefreshing(true);
+    } else {
+      setLoading(true);
+    }
+    console.log("fetching favorites " + params.type);
     try {
-      const result = await handleGetFavorite(params.type);
+      const result = await handleGetFavorite(params.type, newPage);
       setLoading(true);
       if (result.status) {
-        const mappedFavorites = result.properties?.map(mapPropertyToItem) || [];
-        if (mappedFavorites.length == 0) setError('No Properties found');
-        setFavorites(mappedFavorites)
+        const mappedFavorites =
+          result.properties?.modifiedProperties?.map(mapPropertyToItem) || [];
+        if (mappedFavorites.length == 0) setError("No Properties found");
+        setFavorites((prevFavorites) => {
+          const existingIds = new Set(prevFavorites.map((item) => item.id));
+          const uniqueFavorites = mappedFavorites.filter(
+            (item) => !existingIds.has(item.id)
+          );
+          return [...prevFavorites, ...uniqueFavorites];
+        });
+        setPage(result.properties?.currentPage || newPage);
+        setTotalPages(result.properties?.totalPages || 1);
       } else {
-        setError(result.message || 'Failed to load favorites.');
+        setError(result.message || "Failed to load favorites.");
       }
     } catch (err) {
       console.error(err);
-      setError('An error occurred while fetching favorites.');
+      setError("An error occurred while fetching favorites.");
     } finally {
       setLoading(false);
+      if (isRefresh) {
+        setRefreshing(false);
+      } else {
+        setLoading(false);
+      }
+    }
+  };
+
+  const handleUnfavorite = async (propertyId: string) => {
+    try {
+      setFavorites((prevFavorites) =>
+        prevFavorites.filter((item) => item.id !== propertyId)
+      );
+    } catch (error) {
+      console.error("Error unfavoriting property:", error);
     }
   };
 
@@ -75,7 +115,13 @@ export default function Favourite() {
     fetchFavorites();
   }, []);
 
-  const renderItem = ({ index, item }: { index: number; item: PropertyItem }) => (
+  const renderItem = ({
+    index,
+    item,
+  }: {
+    index: number;
+    item: PropertyItem;
+  }) => (
     <MyListItem
       item={item}
       index={index}
@@ -83,18 +129,28 @@ export default function Favourite() {
       params={params}
       fav={item.isFavourite}
       isFavRed={true}
-      onFavClicked={() => fetchFavorites()}
+      onFavClicked={() => handleUnfavorite(item.id)}
     />
   );
 
   const renderError = () => (
     <View style={styles(theme).errorContainer}>
-      <MyText text={typeof error === 'string' ? error : 'An unknown error occurred.'} size={16} textColor="red" />
-      <TouchableOpacity onPress={fetchFavorites}>
+      <MyText
+        text={typeof error === "string" ? error : "An unknown error occurred."}
+        size={16}
+        textColor="red"
+      />
+      <TouchableOpacity onPress={() => fetchFavorites()}>
         <MyText text="Retry" size={16} textColor={theme.colors.primary} />
       </TouchableOpacity>
     </View>
   );
+
+  const onRefresh = () => {
+    if (page < totalPages) {
+      fetchFavorites(page + 1, true);
+    }
+  };
 
   return (
     <View style={styles(theme).container}>
@@ -104,7 +160,7 @@ export default function Favourite() {
       ) : favorites.length === 0 ? (
         <View style={styles(theme).errorContainer}>
           <MyText text="No Properties found" size={16} textColor="red" />
-          <TouchableOpacity onPress={fetchFavorites}>
+          <TouchableOpacity onPress={() => fetchFavorites()}>
             <MyText text="Retry" size={16} textColor={theme.colors.primary} />
           </TouchableOpacity>
         </View>
@@ -128,6 +184,15 @@ export default function Favourite() {
               ListFooterComponent={() => <GapView length={36} />}
               ItemSeparatorComponent={() => <GapView />}
               keyExtractor={(item) => item.id}
+              refreshControl={
+                <RefreshControl
+                  refreshing={refreshing}
+                  onRefresh={fetchFavorites}
+                  tintColor={theme?.colors.primary}
+                />
+              }
+              onEndReached={onRefresh}
+              onEndReachedThreshold={0.5}
             />
           </View>
         </Card>
@@ -165,7 +230,7 @@ const styles = (theme?: MyTheme) =>
     },
     errorContainer: {
       flex: 1,
-      justifyContent: 'center',
-      alignItems: 'center',
+      justifyContent: "center",
+      alignItems: "center",
     },
   });

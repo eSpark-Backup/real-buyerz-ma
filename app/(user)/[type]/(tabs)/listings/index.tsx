@@ -259,27 +259,28 @@ export default function Listing() {
         onChange={(data) => {
           setPropertyData((prev) => ({
             ...prev,
-            propertyName: data.propertyName || prev.propertyName,
-            propertyDescription:
-              data.propertyDescription || prev.propertyDescription,
+            propertyName: data.propertyName !== undefined ? data.propertyName : prev.propertyName,
+            propertyDescription: data.propertyDescription !== undefined ? data.propertyDescription : prev.propertyDescription,
           }));
         }}
       />
       <GapView length={20} />
       <LocationAndPurpose
+        propertyType={propertyData.propertySubTypeId}
+        purpose={propertyData.purpose}
         city={propertyData.propertyCity}
         zipCode={propertyData.propertyZip}
         address={propertyData.propertyAddress}
         onChange={(data) => {
           setPropertyData((prev) => ({
             ...prev,
-            purpose: data.purpose || prev.purpose,
-            propertyCity: data.propertyCity || prev.propertyCity,
-            propertySubTypeId: data.propertySubTypeId || prev.propertySubTypeId,
-            propertyAddress: data.propertyAddress || prev.propertyAddress,
-            propertyZip: data.propertyZip || prev.propertyZip,
-            longitude: data.longitude || prev.longitude,
-            latitude: data.latitude || prev.latitude,
+            purpose: data.purpose !== undefined ? data.purpose : prev.purpose,
+            propertyCity: data.propertyCity !== undefined ? data.propertyCity : prev.propertyCity,
+            propertySubTypeId: data.propertySubTypeId !== undefined ? data.propertySubTypeId : prev.propertySubTypeId,
+            propertyAddress: data.propertyAddress !== undefined ? data.propertyAddress : prev.propertyAddress,
+            propertyZip: data.propertyZip !== undefined ? data.propertyZip : prev.propertyZip,
+            longitude: data.longitude !== undefined ? data.longitude : prev.longitude,
+            latitude: data.latitude !== undefined ? data.latitude : prev.latitude,
           }));
         }}
       />
@@ -288,16 +289,16 @@ export default function Listing() {
         price={propertyData.propertyPrice}
         size={propertyData.propertyArea}
         onChange={(data) => {
-          console.log(`data ${JSON.stringify(propertyData)}`);
           setPropertyData((prev) => ({
             ...prev,
-            propertyArea: data.propertyArea || prev.propertyArea,
-            propertyPrice: data.propertyPrice || prev.propertyPrice,
+            propertyArea: data.propertyArea !== undefined ? data.propertyArea : prev.propertyArea,
+            propertyPrice: data.propertyPrice !== undefined ? data.propertyPrice : prev.propertyPrice,
           }));
         }}
       />
       <GapView length={20} />
       <FeaturesAndAmenities
+        amenity={propertyData.amenity}
         onChange={(data) => {
           setPropertyData((prev) => ({
             ...prev,
@@ -308,8 +309,9 @@ export default function Listing() {
       />
       <GapView length={20} />
       {params.type === "agent" && (
-    <CustomTable title="Property Images and Video" indexIcon={16}>
+        <CustomTable title="Property Images and Video" indexIcon={16}>
           <PropertyImagesAndVideo
+            propertyImage={propertyData.image}
             onChange={(images: ImageFile[]) => {
               setPropertyData((prev) => ({
                 ...prev,
@@ -330,17 +332,22 @@ export default function Listing() {
       )}
       <View style={styles(theme).footerButtons}>
         <PrimaryBtn
-          disabled={Object.entries(propertyData).filter(([key]) => {
-            if (params.type === "user" && (key === 'image' || key === 'video' || key === 'propertyID')) {
-              return false;
-            }
-            return key !== 'propertyID';
-          }).some(([_, value]) => {
-            if (Array.isArray(value)) {
-              return !value || value.length === 0;
-            }
-            return !value;
-          })}
+          disabled={Object.entries(propertyData)
+            .filter(([key]) => {
+              if (
+                params.type === "user" &&
+                (key === "image" || key === "video" || key === "propertyID")
+              ) {
+                return false;
+              }
+              return key !== "propertyID";
+            })
+            .some(([_, value]) => {
+              if (Array.isArray(value)) {
+                return !value || value.length === 0;
+              }
+              return !value;
+            })}
           onPress={() => {
             router.push({
               pathname: `(user)/${params.type}/(tabs)/dashboard/proposalPreview`,
@@ -356,17 +363,22 @@ export default function Listing() {
         </PrimaryBtn>
         {redirectionFrom != "proposalPreview" && (
           <PrimaryBtn
-            disabled={Object.entries(propertyData).filter(([key]) => {
-              if (params.type === "user" && (key === 'image' || key === 'video' || key === 'propertyID')) {
-                return false;
-              }
-              return key !== 'propertyID';
-            }).some(([_, value]) => {
-              if (Array.isArray(value)) {
-                return !value || value.length === 0;
-              }
-              return !value;
-            })}
+            disabled={Object.entries(propertyData)
+              .filter(([key]) => {
+                if (
+                  params.type === "user" &&
+                  (key === "image" || key === "video" || key === "propertyID")
+                ) {
+                  return false;
+                }
+                return key !== "propertyID";
+              })
+              .some(([_, value]) => {
+                if (Array.isArray(value)) {
+                  return !value || value.length === 0;
+                }
+                return !value;
+              })}
             title="Save as draft"
             btnStyle={styles(theme).draft}
             textColor={theme.colors.primary}
@@ -377,18 +389,27 @@ export default function Listing() {
           />
         )}
         <PrimaryBtn
-          disabled={Object.entries(propertyData).filter(([key]) => {
-            if (params.type === "user" && (key === 'image' || key === 'video' || key === 'propertyID')) {
-              return false;
-            }
-            return key !== 'propertyID';
-          }).some(([_, value]) => {
-            if (Array.isArray(value)) {
-              return !value || value.length === 0;
-            }
-            return !value;
-          })}
-          title={redirectionFrom === "proposalPreview" ? "Submit Proposal" : "Submit Ad"}
+          disabled={Object.entries(propertyData)
+            .filter(([key]) => {
+              if (
+                params.type === "user" &&
+                (key === "image" || key === "video" || key === "propertyID")
+              ) {
+                return false;
+              }
+              return key !== "propertyID";
+            })
+            .some(([_, value]) => {
+              if (Array.isArray(value)) {
+                return !value || value.length === 0;
+              }
+              return !value;
+            })}
+          title={
+            redirectionFrom === "proposalPreview"
+              ? "Submit Proposal"
+              : "Submit Ad"
+          }
           weight="500"
           width={100}
           onPress={() => {
@@ -463,7 +484,7 @@ function AdInformation({
             placeholderColor={theme.colors.placeholderText}
             multiline
             onChange={(value) => {
-              onChange({ propertyName: value });
+              onChange({ propertyName: value === "" ? "" : value });
             }}
           />
         </View>
@@ -491,11 +512,15 @@ function AdInformation({
 }
 
 function LocationAndPurpose({
+  propertyType,
+  purpose,
   onChange,
   zipCode,
   address,
   city,
 }: {
+  propertyType?: string;
+  purpose: string;
   onChange?: (e: {
     purpose?: string;
     propertyCity?: string;
@@ -518,6 +543,13 @@ function LocationAndPurpose({
     latitude: number;
     longitude: number;
   } | null>(null);
+
+  useEffect(() => {
+    if (selected.trim() !== "" && purpose.trim()=== "") {
+      setSelected("");
+    }
+  }, [purpose]);
+
   useEffect(() => {
     (async () => {
       const { status } = await Location.requestForegroundPermissionsAsync();
@@ -649,6 +681,7 @@ function LocationAndPurpose({
           onSelect={(data) => {
             onChange?.({ propertySubTypeId: data?.[0]?.id });
           }}
+          resetSelectedValues={propertyType===""}
           wrap
         />
       </View>
@@ -727,7 +760,7 @@ function LocationAndPurpose({
             placeholderColor={theme.colors.placeholderText}
             keyboardType="number-pad"
             onChange={(value) => {
-              onChange?.({ propertyZip: value });
+              onChange?.({ propertyZip: value === "" ? "" : value });
             }}
           />
         </View>
@@ -743,7 +776,7 @@ function LocationAndPurpose({
             inputStyle={[styles(theme).inputInnerStyle]}
             placeholderColor={theme.colors.placeholderText}
             onChange={(value) => {
-              onChange?.({ propertyAddress: value });
+              onChange?.({ propertyAddress: value === "" ? "" : value });
             }}
           />
         </View>
@@ -777,8 +810,8 @@ function PropertySizeandPricing({
             style={styles(theme).singleInputStyle}
             inputStyle={styles(theme).inputInnerStyle}
             placeholderColor={theme.colors.placeholderText}
-            onChange={(val) => onChange?.({ propertyArea: val })}
-          />
+            onChange={(val) => onChange?.({ propertyArea: val === "" ? "" : val })}
+            />
           <MyDropdown
             id="unit"
             data={[]}
@@ -799,8 +832,8 @@ function PropertySizeandPricing({
             style={styles(theme).singleInputStyle}
             inputStyle={styles(theme).inputInnerStyle}
             placeholderColor={theme.colors.placeholderText}
-            onChange={(val) => onChange?.({ propertyPrice: val })}
-          />
+            onChange={(val) => onChange?.({ propertyPrice: val === "" ? "" : val })}
+            />
           <MyDropdown
             id="currency"
             data={[]}
@@ -860,8 +893,10 @@ function PropertySizeandPricing({
 
 function FeaturesAndAmenities({
   onChange,
+  amenity,
 }: {
   onChange?: (e: { amenities?: string; amenity?: Amenity[] }) => void;
+  amenity?: Amenity[];
 }) {
   const theme = useTheme() as MyTheme;
   const [visible, setVisible] = useState(false);
@@ -869,6 +904,12 @@ function FeaturesAndAmenities({
     (state) => state.property
   );
   const [selected, setSelected] = useState<IAmenity[]>([]);
+
+  useEffect(() => {
+    if (selected.length > 0 && (!amenity || amenity.length === 0)) {
+      setSelected([]);
+    }
+  }, [amenity]);
 
   useEffect(() => {
     const amenityArray = selected?.map((e) => ({
@@ -1002,7 +1043,9 @@ function AmenitiesPopup({
           }}
         />
       </View>
-      {Platform.OS == "ios" && <View style={{height: 20, backgroundColor: '#fff'}} />}
+      {Platform.OS == "ios" && (
+        <View style={{ height: 20, backgroundColor: "#fff" }} />
+      )}
     </Modal>
   );
 }
@@ -1101,10 +1144,12 @@ function Counter({ type, icon, onChange, initialCount = 1 }: CounterProps) {
 }
 
 interface PropertyImagesAndVideoProps {
+  propertyImage: ImageFile[];
   onChange?: (images: ImageFile[]) => void;
 }
 
 const PropertyImagesAndVideo: React.FC<PropertyImagesAndVideoProps> = ({
+  propertyImage,
   onChange,
 }) => {
   const theme = useTheme() as MyTheme;
@@ -1112,6 +1157,12 @@ const PropertyImagesAndVideo: React.FC<PropertyImagesAndVideoProps> = ({
     ImagePicker.useMediaLibraryPermissions();
 
   const [media, setMedia] = useState<ImagePicker.ImagePickerAsset[]>([]);
+
+  useEffect(() => {
+    if (media.length > 0 && propertyImage.length === 0) {
+      setMedia([]);
+    }
+  }, [propertyImage]);
 
   useEffect(() => {
     const formDataImages = media.map((image) => {

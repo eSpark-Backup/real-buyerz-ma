@@ -253,6 +253,7 @@ export default function ProfileSettings() {
             onChangeText: (text: string) =>
               handleInputChange("mobileNumber", text),
             editable: true,
+            keyboardType: "numeric",
           },
         ],
       },
@@ -269,6 +270,7 @@ export default function ProfileSettings() {
             onChangeText: (text: string) =>
               handleInputChange("landlineNumber", text),
             editable: true,
+            keyboardType: "numeric"
           },
         ],
       },
@@ -283,6 +285,7 @@ export default function ProfileSettings() {
             placeholder: "+92",
             value: profileState.whatsapp || "",
             onChangeText: (text: string) => handleInputChange("whatsapp", text),
+            keyboardType: "numeric"
           },
         ],
       },
