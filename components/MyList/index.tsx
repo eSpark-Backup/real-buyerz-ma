@@ -22,8 +22,6 @@ const MyListItem: React.FC<MyListItemProps> = ({ item, index, theme, fav, isFavR
   const images = item?.PropertyData?.filter(val => val.type == "image")
   const router = useRouter()
 
-  console.log("Favorite user type "+JSON.stringify(params))
-
   const handleFavClicked = () => {
     addFavorite(item.id, params?.type!);
     setTimeout(() => {

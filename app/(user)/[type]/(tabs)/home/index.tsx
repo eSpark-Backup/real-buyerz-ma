@@ -510,11 +510,10 @@ export const PropertyListing = ({
         style={{
           paddingVertical: 15,
           paddingHorizontal: 5,
-          alignItems: "center",
-          justifyContent: "center",
         }}
       >
-        <MyText textColor={theme?.colors.primary} style={{ marginBottom: 25 }}>
+        <MyText textColor={theme?.colors.primary} style={{  alignItems: "center",
+          justifyContent: "center", marginBottom: 25 }}>
           Find your dream projects from our latest projects
         </MyText>
         <FlatList

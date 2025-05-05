@@ -68,6 +68,11 @@ function Dashboard() {
     newPage: number = 1,
     isRefreshing = false
   ) => {
+    if(newPage === 1) {
+      setPropertiesData(null);
+      setPage(1);
+      setTotalPages(1);
+    }
     if (newPage > totalPages) return;
 
     if (isRefreshing) {
