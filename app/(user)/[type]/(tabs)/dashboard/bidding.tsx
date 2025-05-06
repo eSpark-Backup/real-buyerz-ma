@@ -55,6 +55,12 @@ export default function Bidding() {
     newPage: number = 1,
     isRefreshing = false
   ) => {
+    if(newPage === 1) {
+      setAllProperties([]);
+      setPage(1);
+      setTotalPages(1);
+      setSelectedTab("Best Matches");
+    }
     if (newPage > totalPages) return;
     if (isRefreshing) {
       setRefreshing(true);

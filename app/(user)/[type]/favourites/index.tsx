@@ -61,6 +61,11 @@ export default function Favourite() {
   });
 
   const fetchFavorites = async (newPage: number = 1, isRefresh = false) => {
+    if(newPage === 1) {
+      setFavorites([]);
+      setPage(1);
+      setTotalPages(1);
+    }
     if (newPage > totalPages) return;
 
     if (isRefresh) {
@@ -83,6 +88,7 @@ export default function Favourite() {
           );
           return [...prevFavorites, ...uniqueFavorites];
         });
+        console.log("Fetched Prop Fav:", favorites);
         setPage(result.properties?.currentPage || newPage);
         setTotalPages(result.properties?.totalPages || 1);
       } else {

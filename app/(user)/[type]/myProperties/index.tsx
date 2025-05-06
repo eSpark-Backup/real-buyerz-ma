@@ -169,6 +169,12 @@ export default function MyProperties() {
   ];
 
   const fetchProposals = async (newPage: number = 1, isRefreshing = false) => {
+    if(newPage === 1) {
+      setPropertiesData(null);
+      setPage(1);
+      setTotalPages(1);
+      setCurrentTab("All");
+    }
     if (newPage > totalPages) return;
 
     if (isRefreshing) {

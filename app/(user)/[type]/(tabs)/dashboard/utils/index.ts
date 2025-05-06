@@ -35,6 +35,7 @@ const handleGetAllProposals = async (page: number = 1, filters?: Record<string, 
 }> => {
   try {
     const { data } = await api.get<FindAllProposalResponse>('/userProperty/user', { page: page, pageSize: pageSize, ...filters });
+    console.log("response", JSON.stringify(data));
     if (data?.success) {
       return {
         status: true,

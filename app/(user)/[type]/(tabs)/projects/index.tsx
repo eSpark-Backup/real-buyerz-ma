@@ -130,6 +130,13 @@ export default function Projects() {
 
   const fetchProperties = async (newPage: number = 1, isRefreshing = false) => {
     try {
+      if(newPage === 1) {
+        setProperties([]);
+        setPage(1);
+        setTotalPages(1);
+        setTabsData([]);
+        setSelectedTab("");
+      }
       if (newPage > totalPages) return;
       if (isRefreshing) {
         setRefreshing(true);
@@ -140,7 +147,7 @@ export default function Projects() {
       const filters = Object.fromEntries(
         Object.entries(filter).filter(([_, value]) => value !== null)
       );
-
+      console.log("filters", filters);
       const response = await handleGetAllProperties(param, newPage, filters);
       if (response?.data) {
         setProperties((prevProperties) => {

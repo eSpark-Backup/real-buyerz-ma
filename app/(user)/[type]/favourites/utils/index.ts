@@ -56,7 +56,7 @@ export interface PropertyDetails {
 }
 
 
-const handleGetFavorite = async (type?: string, page: number = 1, pageSize: number = 20) => {
+const handleGetFavorite = async (type?: string, page: number = 1, pageSize: number = 50) => {
   try {
     const endpoint = type?.trim() === 'agent' ? `/property/request` : '/userProperty/request';
     const { data } = await api.get<ApiResponse>(endpoint, { page: page, pageSize: pageSize });

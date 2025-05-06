@@ -159,6 +159,12 @@ export default function MyProposals() {
   ];
 
   const fetchProposals = async (newPage: number = 1, isRefreshing = false) => {
+    if(newPage === 1) {
+      setProposalData(null);
+      setPage(1);
+      setTotalPages(1);
+      setActiveTab("Active");
+    }
     if (newPage > totalPages) return;
 
     if (isRefreshing) {
